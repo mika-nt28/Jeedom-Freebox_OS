@@ -3,7 +3,7 @@
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 include_file('core', 'FreeboxAPI', 'class', 'Freebox_OS');
 class Freebox_OS extends eqLogic {	
-/*	public static $_widgetPossibility = array('custom' => array(
+	public static $_widgetPossibility = array('custom' => array(
 	        'visibility' => true,
 	        'displayName' => true,
 	        'displayObjectName' => true,
@@ -361,7 +361,7 @@ class Freebox_OS extends eqLogic {
 				$replace['#cmd#'] = $cmd_html;
 				return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $_version, 'eqLogic')));
 		}
-	}*/
+	}
 	public function preSave() {	
 		switch($this->getLogicalId())	{
 			case 'AirPlay':

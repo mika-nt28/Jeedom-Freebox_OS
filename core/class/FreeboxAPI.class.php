@@ -174,7 +174,7 @@ class FreeboxAPI{
 		else
 			return false;
 	}
-	public function disques($logicalId=''){
+	public function disques(){
 		$reponse = self::fetch('/api/v3/storage/disk/');
 		if($reponse['success']){
 			$value=0;
@@ -185,9 +185,18 @@ class FreeboxAPI{
 				log::add('Freebox_OS','debug','Occupation ['.$Disques['type'].'] - '.$Disques['id'].': '. $used_bytes.'/'.$total_bytes.' => '.$value.'%');
 				$Disque=Freebox_OS::AddEqLogic('Disque Dur','Disque');
 				$commande=$Disque->AddCommande('Occupation ['.$Disques['type'].'] - '.$Disques['id'],$Disques['id'],"info",'numeric','Freebox_OS_Disque','%');
-				$commande->setCollectDate(date('Y-m-d H:i:s'));
-				$commande->setConfiguration('doNotRepeatEvent', 1);
 				$commande->event($value);
+			}
+		}
+	}
+	public function getdisque($logicalId=''){
+		$reponse = self::fetch('/api/v3/storage/disk/'.$logicalId);
+		if($reponse['success']){
+			$value=0;
+			foreach($reponse['result'] as $Disques){
+				$total_bytes=$Disques['partitions'][0]['total_bytes'];
+				$used_bytes=$Disques['partitions'][0]['used_bytes'];
+				return round($used_bytes/$total_bytes*100,2);
 			}
 		}
 	}

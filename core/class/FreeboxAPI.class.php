@@ -125,6 +125,8 @@ class FreeboxAPI{
 			$http = new com_http($serveur . '/api/v3/login/logout/');
 			$http->setPost(array());
 			$json_close=$http->exec(2,2);
+			$cache = cache::byKey('Freebox_OS::SessionToken');
+			$cache->remove();
 			return $json_close;
 		} catch (Exception $e) {
 		    log::add('Freebox_OS','error', $e->getCode());

@@ -619,52 +619,28 @@ class Freebox_OS extends eqLogic {
 									if ($Equipement->getIsEnable() == 0) {
 										return false;
 									}
-									$cmd = is_object($data['ep_id']) ? $data['ep_id'] : $Equipement->getCmd('info', $data['ep_id']);
+									$cmd = $Equipement->getCmd('info', $data['ep_id']);
 									if (!is_object($cmd)) {
 										return false;
 									}
 									switch ($cmd->getSubType()) {
-										case 'slider':
+										case 'numeric':
 											if($cmd->getConfiguration('inverse'))
 												$_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
 											else
 												$_value = $data['value'];
 										break;
-										case 'color':
+										case 'string':
 											$_value = $data['value'];
 										break;
-										case 'message':
-											$_value = $data['value'];
-										break;
-										case 'select':
-											$_value = $data['value'];
-										break;
-										default:
+										case 'binary':
 											if($cmd->getConfiguration('inverse'))
 												$_value = !$data['value'];
 											else
 												$_value = $data['value'];
 										break;
 									}
-									$oldValue = $cmd->execCmd();
-									if ($oldValue !== $cmd->formatValue($_value) || $oldValue === '') {
-										$cmd->event($_value, $_updateTime);
-										return true;
-									}
-									if ($_updateTime !== null && $_updateTime !== false) {
-										if (strtotime($cmd->getCollectDate()) < strtotime($_updateTime)) {
-											$cmd->event($_value, $_updateTime);
-											return true;
-										}
-										return false;
-									} else if ($cmd->getConfiguration('repeatEventManagement', 'auto') == 'always') {
-										$cmd->event($_value, $_updateTime);
-										return true;
-									}
-									if ($_updateTime !== false) {
-										$cmd->setCache('collectDate', date('Y-m-d H:i:s'));
-										$Equipement->setStatus(array('lastCommunication' => date('Y-m-d H:i:s'), 'timeout' => 0));
-									}
+									$Equipement->checkAndUpdateCmd($data['ep_id'],$_value);
 								}
 							}
 						}

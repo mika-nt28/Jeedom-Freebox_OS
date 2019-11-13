@@ -108,7 +108,7 @@ class FreeboxAPI{
 					log::add('Freebox_OS','debug','error_code exists');
 					if($result["error_code"]=="auth_required") {
 						log::add('Freebox_OS','debug','auth_required');
-						self::deamon_stop();
+						Freebox_OS::deamon_stop();
 						log::add('Freebox_OS','debug','deamon stoped');
 					}
 				}

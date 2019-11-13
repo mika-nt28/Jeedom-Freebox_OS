@@ -1,0 +1,91 @@
+<div style="width:45px;min-height:25px;margin-left:10px;margin-top:-2px;" class="cmd tooltips cmd-widget" data-type="info" data-subtype="numeric" data-cmd_id="#id#" title="#collectDate#">
+	<div style="width:45px;height:25px;" id="group_phone#id#">
+		<div id="picture_phone#id#" style="position:absolute"></div>
+		<div id="alerte_couleur#id#">#state#</div>
+	</div>
+	<script>
+		$( "#dialog#id#" ).dialog({
+		  autoOpen: false
+		});
+
+		if('#state#'=="Collecte en cours")
+		{
+			$('#alerte_couleur#id#').css({"font-size":'9px',"background-color":'rgba(237,32,32,0.7)',"color":'white',"font-weight":'bold'});
+		}
+		else if('#state#'=="")
+		{
+			$('#alerte_couleur#id#').css({"font-size":'9px',"background-color":'rgba(237,32,32,0.7)',"color":'white',"font-weight":'bold'});
+			$('#alerte_couleur#id#').append("<p>Collecte en cours</p>");
+		}
+		else
+		{
+			if('#state#'=="0" || '#state#' == 0)
+			{
+				$('#alerte_couleur#id#').css({"position":'absolute',"margin-left":'5px',"margin-top":'-10px',"-moz-border-radius":'50%',"-webkit-border-radius":'15px',"border-radius":'15px',"width":'20px',"height":'20px',"text-align":'center',"background-color":'rgba(83,107,217,0.5)',"border":'1px solid rgba(83,107,217,1)'});
+			}
+			else
+			{
+				$('#alerte_couleur#id#').css({"position":'absolute',"margin-left":'5px',"margin-top":'-10px',"-moz-border-radius":'50%',"-webkit-border-radius":'15px',"border-radius":'15px',"width":'20px',"height":'20px',"text-align":'center',"background-color":'rgba(207,36,36,0.5)',"border":'1px solid rgba(207,36,36,1)'});
+			}
+		
+			switch('#logicalId#') 
+			{
+				case 'nbAppelsManquee':
+						$('#picture_phone#id#').append('<div class="icon techno-phone1" style="font-size:35px;" ></div>'); 
+						$('#group_phone#id#').css({"left":'0%'});
+						
+						$('#picture_phone#id#').on('click',function()
+						{
+							$('#divAppelsManquee').show();
+							$('#divAppelsManquee').css({	"padding":'1px',
+														"color":'white',
+														"font-size":'9px',
+														"text-align":'left',
+														"background":'transparent'
+													});
+							$('#divAppelsRecus').hide()
+							$('#divAppelsPasse').hide()
+						});
+					 break;
+				case 'nbAppelRecus':
+						$('#picture_phone#id#').append('<div class="icon techno-phone3" style="font-size:35px;"></div>');
+						$('#group_phone#id#').css({"right":'50%'});
+						
+						$('#picture_phone#id#').on('click',function()
+						{
+							$('#divAppelsRecus').show();
+							$('#divAppelsRecus').css({	"padding":'1px',
+														"color":'white',
+														"font-size":'9px',
+														"text-align":'left',
+														"background":'transparent'
+													});
+							$('#divAppelsManquee').hide();
+							$('#divAppelsPasse').hide()
+						});
+
+					break;
+				case 'nbAppelPasse':
+						$('#picture_phone#id#').append('<div class="icon techno-phone2" style="font-size:35px;"></div>');
+						$('#group_phone#id#').css({"right":'0%'});
+						
+						$('#picture_phone#id#').on('click',function()
+						{
+							$('#divAppelsPasse').show();
+							$('#divAppelsPasse').css({	"padding":'1px',
+														"color":'white',
+														"font-size":'9px',
+														"text-align":'left',
+														"background":'transparent'
+													});
+							$('#divAppelsManquee').hide();
+							$('#divAppelsRecus').hide()
+						});
+
+					break;
+				default:
+			}
+		}
+    </script>
+</div>
+

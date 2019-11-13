@@ -1,0 +1,39 @@
+<div class="eqLogic eqLogic-widget" data-eqLogic_id="#id#" data-version="mobile" style="width: #width#;height: #height#;background-color: #background#;">
+    <span class="statusCmd" style="position:absolute;left:5px;width:30px;"></span>
+	<center class="widget-name">#name#<span style="font-size: 0.85em;position: relative;top:-2px;"></span></center>
+	<fieldset style="text-align:center;">
+		<legend style="text-align:left;font-size:11px;color:rgba(255,255,255,0.9);border-bottom:1px solid rgba(255,255,255,0.5);">Aujourd'hui :</legend>
+		#nbAppelsManquee#
+		#nbAppelRecus#
+		#nbAppelPasse#
+		
+		<hr style="margin-bottom:8px;border: 0;height: 1px;background-image:-webkit-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,0.75),rgba(255,255,255,0));background-image:-moz-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,0.75),rgba(255,255,255,0));background-image:-ms-linear-gradient(left,rgba(255,255,255,0),rgba(255,255,255,0.75),rgba(255,255,255,0));background-image:-o-linear-gradient(left, rgba(255,255,255,0), rgba(255,255,255,0.75), rgba(255,255,255,0));}">
+		
+		<div style="height:100px">
+			<div id="divAppelsManquee">
+				<div>Appels Manqués</div>
+				#listAppelsManquee#
+			</div>
+			<div id="divAppelsRecus">
+				<div>Appels Reçus</div>
+				#listAppelsRecus#
+			</div>
+			<div id="divAppelsPasse">
+				<div>Appels Passés</div>
+				#listAppelsPasse#
+			</div>
+		</div>
+		
+	</fieldset>
+<script>
+	$('#divAppelsManquee').css({	"padding":'1px',
+								"color":'white',
+								"font-size":'9px',
+								"text-align":'left',
+								"background":'transparent'
+							});
+	//$('#divAppelsManquee').hide();
+	$('#divAppelsRecus').hide()
+	$('#divAppelsPasse').hide()
+</script>
+</div>

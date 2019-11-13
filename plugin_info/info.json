@@ -1,0 +1,15 @@
+{
+	"id" : "Freebox_OS",
+	"name" : "Freebox OS",
+	"description" : "Plugin pour commander la Freebox OS",
+	"licence" : "AGPL",
+	"author" : "Halbout Michael",
+	"require" : "3.0",
+	"category" : "monitoring",
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"],
+	"hasOwnDeamon" : true,
+	"hasDependency" : false,
+	"issue" : "https://github.com/mika-nt28/Jeedom-Freebox_OS/issues",
+ 	"changelog" : "https://github.com/mika-nt28/Jeedom-Freebox_OS/commits/stable",
+ 	"documentation" : "http://mika-nt28.github.io/Jeedom-Freebox_OS/"
+}

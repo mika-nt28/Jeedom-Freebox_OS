@@ -1,0 +1,17 @@
+<span class="cmd" data-type="action" data-subtype="other" data-cmd_id="#id#">
+	<a class="btn btn-sm btn-default action cmdName tooltips iconCmd#id#" style="background-color:#ac92ed !important;border-color : transparent !important;">
+	<i class="fa fa-times"></i>
+	</a>	
+</span>
+<script>
+	$(".iconCmd#id#").empty();
+	if ("#state#" == "1") {
+		$(".iconCmd#id#").html($('<i class="fa fa-wifi">'));
+	} else {
+		$(".iconCmd#id#").html($('<i class="fa fa-times">'));
+	}
+	$(".cmd[data-cmd_id=#id#] .action").off();
+	$(".cmd[data-cmd_id=#id#] .action").on("click", function() {
+		jeedom.cmd.execute({id: "#id#"});
+	});
+</script>

@@ -1,0 +1,29 @@
+<div class="cmd container-fluid tooltips cmd-widget" style="min-width:90px;min-height:60px;padding:0px !important;" data-type="info" data-subtype="numeric" data-cmd_id="#id#">
+    <div>#name#</div>
+    <div class="progress">
+        <div class="progress-bar" role="progressbar" aria-valuenow="#state#">
+            <span class="textValue" style="align:center;color:black;"></span>
+        </div>
+    </div>
+    <script>
+        var value = (is_numeric('#state#')) ? parseInt('#state#') : 0;
+        $('.cmd[data-cmd_id=#id#]').find('.progress-bar').attr('aria-valuenow', value);
+        var pourcentage = value;
+        $('.cmd[data-cmd_id=#id#]').find('.progress-bar').css('width', pourcentage + '%');
+        $('.cmd[data-cmd_id=#id#]').find('.textValue').text(pourcentage + '%');
+        var progressBarClass = '';
+        if (pourcentage < 100) {
+            progressBarClass = 'progress-bar-danger';
+        }
+        if (pourcentage < 75) {
+            progressBarClass = 'progress-bar-warning';
+        }
+        if (pourcentage < 50) {
+            progressBarClass = 'progress-bar-info';
+        }
+        if (pourcentage < 25) {
+            progressBarClass = 'progress-bar-success';
+        }
+        $('.cmd[data-cmd_id=#id#]').find('.progress-bar').addClass(progressBarClass);
+    </script>
+</div>

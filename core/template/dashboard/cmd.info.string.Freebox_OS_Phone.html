@@ -1,0 +1,32 @@
+<div class="cmd tooltips cmd-widget" data-type="info" data-subtype="string" data-cmd_id="#id#" title="#collectDate#">
+	
+	<div id="titleCalls#id#" style="padding-bottom:3px;"></div>
+	<div id="stats#id#">#state#</div>
+	
+	<script>
+		if('#state#'=="Collecte en cours")
+		{
+			$('#stats#id#').css({"font-size":'9px',"background-color":'rgba(237,32,32,0.7)',"color":'white',"font-weight":'bold'});
+		}
+		if('#state#'=="")
+		{
+			$('#stats#id#').append("<p>Aucun</p>");
+		}
+		
+		switch('#name#') 
+			{
+				case 'listAppelsManqueeVar':
+						$('#titleCalls#id#').html('Liste des appels manqués :');
+					 break;
+				case 'listAppelsRecusVar':
+						$('#titleCalls#id#').html('Liste des appels reçus :');
+					break;
+				case 'listAppelsPasseVar':
+						$('#titleCalls#id#').html('Liste des appels effectués :');					
+					break;
+				default:
+			}
+		
+    </script>
+</div>
+

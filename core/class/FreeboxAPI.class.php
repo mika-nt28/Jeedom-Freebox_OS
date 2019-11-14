@@ -82,6 +82,7 @@ class FreeboxAPI{
 			if($session_token == ''){
 				if($this->open_session()===false)
 					return false;
+				$cache = cache::byKey('Freebox_OS::SessionToken');
 				$session_token = $cache->getValue('');
 			}
 			$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));

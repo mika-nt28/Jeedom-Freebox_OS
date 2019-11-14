@@ -83,9 +83,9 @@ class Freebox_OS extends eqLogic {
 			$EqLogic->setEqType_name('Freebox_OS');
 			$EqLogic->setIsEnable(1);
 			$EqLogic->setIsVisible(0);
+			$EqLogic->setName($Name);
+			$EqLogic->save();
 		}
-		$EqLogic->setName($Name);
-		$EqLogic->save();
 		return $EqLogic;
 	}
 	public static function addReseau() {
@@ -361,8 +361,6 @@ class Freebox_OS extends eqLogic {
 		switch($this->getLogicalId())	{
 			case 'AirPlay':
 				$FreeboxAPI = new FreeboxAPI();
-				if($FreeboxAPI->open_session()===false)
-					break;
 				$parametre["enabled"]=$this->getIsEnable();
 				$parametre["password"]=$this->getConfiguration('password');
 				$FreeboxAPI->airmediaConfig($parametre);
@@ -389,12 +387,6 @@ class Freebox_OS extends eqLogic {
 		$Equipement = eqlogic::byId($_option['Freebox_id']); 
 		if (is_object($Equipement) && $Equipement->getIsEnable()) {
 			while(true){
-				$cache = cache::byKey('Freebox_OS::SessionToken');
-				$session_token = $cache->getValue('');
-				if($session_token == ''){
-					if($FreeboxAPI->open_session()===false)
-						break;
-				}
 				switch ($Equipement->getLogicalId()){
 					case 'AirPlay':
 					break;

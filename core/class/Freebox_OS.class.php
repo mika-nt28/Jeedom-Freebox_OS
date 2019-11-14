@@ -83,9 +83,9 @@ class Freebox_OS extends eqLogic {
 			$EqLogic->setEqType_name('Freebox_OS');
 			$EqLogic->setIsEnable(1);
 			$EqLogic->setIsVisible(0);
+			$EqLogic->setName($Name);
+			$EqLogic->save();
 		}
-		$EqLogic->setName($Name);
-		$EqLogic->save();
 		return $EqLogic;
 	}
 	public static function addReseau() {

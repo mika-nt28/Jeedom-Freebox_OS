@@ -79,7 +79,7 @@ class FreeboxAPI{
 			$session_token = $cache->getValue('');
 			if($session_token == ''){
 				if($this->open_session()===false)
-					break;
+					return false;
 			}
 			$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 			log::add('Freebox_OS','debug','Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');

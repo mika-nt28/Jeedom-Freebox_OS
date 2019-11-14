@@ -75,9 +75,13 @@ class FreeboxAPI{
 	}
 	public function fetch($api_url,$params=array(), $method='GET') {
 		try {
-			$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 			$cache = cache::byKey('Freebox_OS::SessionToken');
 			$session_token = $cache->getValue('');
+			if($session_token == ''){
+				if($this->open_session()===false)
+					break;
+			}
+			$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 			log::add('Freebox_OS','debug','Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $serveur.$api_url);
@@ -103,15 +107,8 @@ class FreeboxAPI{
 				return false;
 			}
 			if(!$result['success']){
-				log::add('Freebox_OS','debug','success KO');
-				if(isset($result["error_code"])){
-					log::add('Freebox_OS','debug','error_code exists');
-					if($result["error_code"]=="auth_required") {
-						log::add('Freebox_OS','debug','auth_required');
-						Freebox_OS::deamon_stop();
-						log::add('Freebox_OS','debug','deamon stoped');
-					}
-				}
+				$this->close_session();
+				$this->fetch($api_url,$params,$method);
 			}
 			return $result;	
 		} catch (Exception $e) {

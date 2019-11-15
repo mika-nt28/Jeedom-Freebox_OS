@@ -20,12 +20,14 @@ class Freebox_OS extends eqLogic {
 			$return['launchable'] = 'ok';
 		else
 			$return['launchable'] = 'nok';
-		$cache = cache::byKey('Freebox_OS::SessionToken');
 		$return['state'] = 'ok';
+		$FreeboxAPI = new FreeboxAPI();
+		if($FreeboxAPI->open_session()===false)
+			return false;
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){			
 			if($Equipement->getIsEnable()){
 				$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
-				if(!is_object($cron) || !$cron->running() || !is_object($cache) || !$cache->getValue('')!=''){
+				if(!is_object($cron) || !$cron->running()){
 					$return['state'] = 'nok';
 					return $return;
 				}

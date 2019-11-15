@@ -1,32 +1,14 @@
-<div class="cmd tooltips cmd-widget" data-type="info" data-subtype="string" data-cmd_id="#id#" title="#collectDate#">
-	
-	<div id="titleCalls#id#" style="padding-bottom:3px;"></div>
-	<div id="stats#id#">#state#</div>
-	
+<div class="cmd tooltips cmd-widget cursor #history#" data-type="info" data-subtype="binary" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" style="min-width:200px;">
+	<div class="title #hide_name#">
+		<div class="cmdName">#name_display#</div>
+	</div>
+	<div class="content-sm"></div>
 	<script>
-		if('#state#'=="Collecte en cours")
-		{
-			$('#stats#id#').css({"font-size":'9px',"background-color":'rgba(237,32,32,0.7)',"color":'white',"font-weight":'bold'});
-		}
-		if('#state#'=="")
-		{
-			$('#stats#id#').append("<p>Aucun</p>");
-		}
-		
-		switch('#name#') 
-			{
-				case 'listAppelsManqueeVar':
-						$('#titleCalls#id#').html('Liste des appels manqués :');
-					 break;
-				case 'listAppelsRecusVar':
-						$('#titleCalls#id#').html('Liste des appels reçus :');
-					break;
-				case 'listAppelsPasseVar':
-						$('#titleCalls#id#').html('Liste des appels effectués :');					
-					break;
-				default:
-			}
-		
-    </script>
+	jeedom.cmd.update['#id#'] =function(_options){
+		var cmd = $('.cmd[data-cmd_id=#id#]');
+		cmd.attr('title','Date de valeur : '+_options.valueDate+'<br/>Date de collecte : '+_options.collectDate);
+		cmd.find('.content-sm').html($('<div>').attr('id','#logicalId#').text(_options.display_value));
+	}
+	jeedom.cmd.update['#id#']({display_value:'#state#',valueDate:'#valueDate#',collectDate:'#collectDate#',alertLevel:'#alertLevel#'});
+	</script>
 </div>
-

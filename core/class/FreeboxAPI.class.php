@@ -195,13 +195,11 @@ class FreeboxAPI{
 	public function getdisque($logicalId=''){
 		$reponse = self::fetch('/api/v3/storage/disk/'.$logicalId);
 		if($reponse['success']){
-			$value=0;
-			foreach($reponse['result'] as $Disques){
-				$total_bytes=$Disques['partitions'][0]['total_bytes'];
-				$used_bytes=$Disques['partitions'][0]['used_bytes'];
-				return round($used_bytes/$total_bytes*100,2);
-			}
+			$total_bytes=$reponse['result']['partitions'][0]['total_bytes'];
+			$used_bytes=$reponse['result']['partitions'][0]['used_bytes'];
+			return round($used_bytes/$total_bytes*100,2);
 		}
+		return false;
 	}
 	public function wifi(){
 		$data_json = self::fetch('/api/v3/wifi/config/');

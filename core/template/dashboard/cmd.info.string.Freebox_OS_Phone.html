@@ -8,6 +8,13 @@
 		var cmd = $('.cmd[data-cmd_id=#id#]');
 		cmd.attr('title','Date de valeur : '+_options.valueDate+'<br/>Date de collecte : '+_options.collectDate);
 		cmd.find('.content-sm').html($('<div>').attr('id','#logicalId#').text(_options.display_value));
+		cmd.find('.content-sm').css({	
+			"padding":'1px',
+			"color":'white',
+			"font-size":'9px',
+			"text-align":'left',
+			"background":'transparent'
+		});
 		cmd.hide();
 	}
 	jeedom.cmd.update['#id#']({display_value:'#state#',valueDate:'#valueDate#',collectDate:'#collectDate#',alertLevel:'#alertLevel#'});

@@ -30,48 +30,27 @@
 					cmd.find('.group_phone').css({"left":'0%'});
 
 					cmd.find('.picture_phone').off().on('click',function(){
-						$('#listAppelsManquee').show();
-						$('#listAppelsManquee').css({	
-							"padding":'1px',
-							"color":'white',
-							"font-size":'9px',
-							"text-align":'left',
-							"background":'transparent'
-						});
-						$('#listAppelsRecus').hide()
-						$('#listAppelsPasse').hide()
+						$('#listAppelsManquee').closest('.cmd').show();
+						$('#listAppelsRecus').closest('.cmd').hide()
+						$('#listAppelsPasse').closest('.cmd').hide()
 					});
 				break;
 				case 'nbAppelRecus':
 					cmd.find('.picture_phone').append('<div class="icon techno-phone3" style="font-size:35px;"></div>');
 					cmd.find('.group_phone').css({"right":'50%'});
 					cmd.find('.picture_phone').off().on('click',function(){
-						$('#listAppelsRecus').show();
-						$('#listAppelsRecus').css({	
-							"padding":'1px',
-							"color":'white',
-							"font-size":'9px',
-							"text-align":'left',
-							"background":'transparent'
-						});
-						$('#listAppelsManquee').hide();
-						$('#listAppelsPasse').hide()
+						$('#listAppelsRecus').closest('.cmd').show();
+						$('#listAppelsManquee').closest('.cmd').hide();
+						$('#listAppelsPasse').closest('.cmd').hide()
 					});
 				break;
 				case 'nbAppelPasse':
 					cmd.find('.picture_phone').append('<div class="icon techno-phone2" style="font-size:35px;"></div>');
 					cmd.find('.group_phone').css({"right":'0%'});
 					cmd.find('.picture_phone').off().on('click',function(){
-						$('#listAppelsPasse').show();
-						$('#listAppelsPasse').css({	
-							"padding":'1px',
-							"color":'white',
-							"font-size":'9px',
-							"text-align":'left',
-							"background":'transparent'
-						});
-						$('#listAppelsManquee').hide();
-						$('#listAppelsRecus').hide()
+						$('#listAppelsPasse').closest('.cmd').show();
+						$('#listAppelsManquee').closest('.cmd').hide();
+						$('#listAppelsRecus').closest('.cmd').hide()
 					});
 				break;
 			}

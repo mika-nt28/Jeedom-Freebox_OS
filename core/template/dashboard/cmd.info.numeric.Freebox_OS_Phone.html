@@ -28,8 +28,7 @@
 				case 'nbAppelsManquee':
 					cmd.find('.picture_phone').append('<div class="icon techno-phone1" style="font-size:35px;" ></div>'); 
 					cmd.find('.group_phone').css({"left":'0%'});
-
-					cmd.find('.picture_phone').off().on('click',function(){
+					cmd.find('.group_phone').off().on('click',function(){
 						$('#listAppelsManquee').closest('.cmd').show();
 						$('#listAppelsRecus').closest('.cmd').hide()
 						$('#listAppelsPasse').closest('.cmd').hide()
@@ -38,7 +37,7 @@
 				case 'nbAppelRecus':
 					cmd.find('.picture_phone').append('<div class="icon techno-phone3" style="font-size:35px;"></div>');
 					cmd.find('.group_phone').css({"right":'50%'});
-					cmd.find('.picture_phone').off().on('click',function(){
+					cmd.find('.group_phone').off().on('click',function(){
 						$('#listAppelsRecus').closest('.cmd').show();
 						$('#listAppelsManquee').closest('.cmd').hide();
 						$('#listAppelsPasse').closest('.cmd').hide()
@@ -47,7 +46,7 @@
 				case 'nbAppelPasse':
 					cmd.find('.picture_phone').append('<div class="icon techno-phone2" style="font-size:35px;"></div>');
 					cmd.find('.group_phone').css({"right":'0%'});
-					cmd.find('.picture_phone').off().on('click',function(){
+					cmd.find('.group_phone').off().on('click',function(){
 						$('#listAppelsPasse').closest('.cmd').show();
 						$('#listAppelsManquee').closest('.cmd').hide();
 						$('#listAppelsRecus').closest('.cmd').hide()

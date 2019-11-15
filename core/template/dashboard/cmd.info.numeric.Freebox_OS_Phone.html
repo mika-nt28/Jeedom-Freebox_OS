@@ -30,48 +30,48 @@
 					cmd.find('.group_phone').css({"left":'0%'});
 
 					cmd.find('.picture_phone').off().on('click',function(){
-						$('#divAppelsManquee').show();
-						$('#divAppelsManquee').css({	
+						$('#listAppelsManquee').show();
+						$('#listAppelsManquee').css({	
 							"padding":'1px',
 							"color":'white',
 							"font-size":'9px',
 							"text-align":'left',
 							"background":'transparent'
 						});
-						$('#divAppelsRecus').hide()
-						$('#divAppelsPasse').hide()
+						$('#listAppelsRecus').hide()
+						$('#listAppelsPasse').hide()
 					});
 				break;
 				case 'nbAppelRecus':
 					cmd.find('.picture_phone').append('<div class="icon techno-phone3" style="font-size:35px;"></div>');
 					cmd.find('.group_phone').css({"right":'50%'});
 					cmd.find('.picture_phone').off().on('click',function(){
-						$('#divAppelsRecus').show();
-						$('#divAppelsRecus').css({	
+						$('#listAppelsRecus').show();
+						$('#listAppelsRecus').css({	
 							"padding":'1px',
 							"color":'white',
 							"font-size":'9px',
 							"text-align":'left',
 							"background":'transparent'
 						});
-						$('#divAppelsManquee').hide();
-						$('#divAppelsPasse').hide()
+						$('#listAppelsManquee').hide();
+						$('#listAppelsPasse').hide()
 					});
 				break;
 				case 'nbAppelPasse':
 					cmd.find('.picture_phone').append('<div class="icon techno-phone2" style="font-size:35px;"></div>');
 					cmd.find('.group_phone').css({"right":'0%'});
 					cmd.find('.picture_phone').off().on('click',function(){
-						$('#divAppelsPasse').show();
-						$('#divAppelsPasse').css({	
+						$('#listAppelsPasse').show();
+						$('#listAppelsPasse').css({	
 							"padding":'1px',
 							"color":'white',
 							"font-size":'9px',
 							"text-align":'left',
 							"background":'transparent'
 						});
-						$('#divAppelsManquee').hide();
-						$('#divAppelsRecus').hide()
+						$('#listAppelsManquee').hide();
+						$('#listAppelsRecus').hide()
 					});
 				break;
 			}

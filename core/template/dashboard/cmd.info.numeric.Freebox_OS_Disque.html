@@ -1,29 +1,37 @@
-<div class="cmd container-fluid tooltips cmd-widget" style="min-width:90px;min-height:60px;padding:0px !important;" data-type="info" data-subtype="numeric" data-cmd_id="#id#">
-    <div>#name#</div>
-    <div class="progress">
-        <div class="progress-bar" role="progressbar" aria-valuenow="#state#">
+<div class="cmd tooltips cmd-widget cursor #history#" data-type="info" data-subtype="binary" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" style="min-width:200px;">
+	<div class="title #hide_name#">
+		<div class="cmdName">#name_display#</div>
+	</div>
+	<div class="content-sm">
+        <div class="progress" style="width:200px;">
             <span class="textValue" style="align:center;color:black;"></span>
+            <div class="progress-bar" role="progressbar" aria-valuenow="#state#"></div>
         </div>
-    </div>
-    <script>
-        var value = parseFloat('#state#');
-        $('.cmd[data-cmd_id=#id#]').find('.progress-bar').attr('aria-valuenow', value);
-        var pourcentage = value;
-        $('.cmd[data-cmd_id=#id#]').find('.progress-bar').css('width', pourcentage + '%');
-        $('.cmd[data-cmd_id=#id#]').find('.textValue').text(pourcentage + '%');
+	</div>
+	<script>
+	jeedom.cmd.update['#id#'] =function(_options){
+		var cmd = $('.cmd[data-cmd_id=#id#]');
+		cmd.attr('title','Date de valeur : '+_options.valueDate+'<br/>Date de collecte : '+_options.collectDate);
+        $('.cmd[data-cmd_id=#id#] .progress-bar').attr('aria-valuenow', _options.display_value);
+        
+        $('.cmd[data-cmd_id=#id#] .progress-bar').css('width', _options.display_value + '%');
+        $('.cmd[data-cmd_id=#id#] .textValue').text(_options.display_value + '%');
         var progressBarClass = '';
-        if (pourcentage < 100) {
+        if (_options.display_value < 100) {
             progressBarClass = 'progress-bar-danger';
         }
-        if (pourcentage < 75) {
+        if (_options.display_value < 75) {
             progressBarClass = 'progress-bar-warning';
         }
-        if (pourcentage < 50) {
+        if (_options.display_value < 50) {
             progressBarClass = 'progress-bar-info';
         }
-        if (pourcentage < 25) {
+        if (_options.display_value < 25) {
             progressBarClass = 'progress-bar-success';
         }
-        $('.cmd[data-cmd_id=#id#]').find('.progress-bar').addClass(progressBarClass);
-    </script>
+        $('.cmd[data-cmd_id=#id#] .progress-bar').addClass(progressBarClass);
+	}
+	jeedom.cmd.update['#id#']({display_value:'#state#',valueDate:'#valueDate#',collectDate:'#collectDate#',alertLevel:'#alertLevel#'});
+	</script>
 </div>
+

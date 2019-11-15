@@ -1,17 +1,30 @@
-<span class="cmd" data-type="action" data-subtype="other" data-cmd_id="#id#">
-	<a class="btn btn-sm btn-default action cmdName tooltips iconCmd#id#" style="background-color:#ac92ed !important;border-color : transparent !important;">
-	<i class="fa fa-times"></i>
-	</a>	
-</span>
-<script>
-	$(".iconCmd#id#").empty();
-	if ("#state#" == "1") {
-		$(".iconCmd#id#").html($('<i class="fa fa-wifi">'));
-	} else {
-		$(".iconCmd#id#").html($('<i class="fa fa-times">'));
-	}
-	$(".cmd[data-cmd_id=#id#] .action").off();
-	$(".cmd[data-cmd_id=#id#] .action").on("click", function() {
-		jeedom.cmd.execute({id: "#id#"});
-	});
-</script>
+<div class="cmd cmd-widget reportModeHidden" data-type="action" data-subtype="other" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
+	<div class="content-xs">
+		<a class="btn btn-sm btn-default action cmdName tooltips" title="#name#">
+			<span class="iconCmd"></span>
+		</a>
+	</div>
+	<script>
+		jeedom.cmd.update['#id#'] = function(_options){
+			if (_options.display_value == '1' || _options.display_value == 1 || _options.display_value == '99' || _options.display_value == 99 || _options.display_value == 'on') {
+				if (jeedom.cmd.normalizeName('#name#') == 'on') {
+					$('.cmd[data-cmd_id=#id#]').hide();
+				}else{
+					$('.cmd[data-cmd_id=#id#]').show();
+					$('.cmd[data-cmd_id=#id#] .iconCmd').empty().append('<i class="fas fa-wifi"></i>');
+				}
+			} else {
+				if (jeedom.cmd.normalizeName('#name#') == 'off') {
+					$('.cmd[data-cmd_id=#id#]').hide();
+				}else{
+					$('.cmd[data-cmd_id=#id#]').show();
+					$('.cmd[data-cmd_id=#id#] .iconCmd').empty().append('<i class="fas fa-times"></i>');
+				}
+			}
+		}
+		jeedom.cmd.update['#id#']({display_value:'#state#'});
+		$('.cmd[data-cmd_uid=#uid#] .action').off().on('click', function () {
+			jeedom.cmd.execute({id: '#id#'});
+		});
+	</script>
+</div>

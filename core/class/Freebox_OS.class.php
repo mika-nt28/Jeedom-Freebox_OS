@@ -3,16 +3,6 @@
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 include_file('core', 'FreeboxAPI', 'class', 'Freebox_OS');
 class Freebox_OS extends eqLogic {	
-	public static $_widgetPossibility = array('custom' => array(
-	        'visibility' => true,
-	        'displayName' => true,
-	        'displayObjectName' => true,
-	        'optionalParameters' => true,
-	        'background-color' => true,
-	        'text-color' => true,
-	        'border' => true,
-	        'border-radius' => true
-	));
 	public static function deamon_info() {
 		$return = array();
 		$return['log'] = 'Freebox_OS';		
@@ -43,6 +33,9 @@ class Freebox_OS extends eqLogic {
 			return;
 		if ($deamon_info['state'] == 'ok') 
 			return;
+		$FreeboxAPI = new FreeboxAPI();
+		if($FreeboxAPI->open_session()===false)
+			return false;
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){		
 			if($Equipement->getIsEnable())
 				$Equipement->CreateDemon();
@@ -301,64 +294,6 @@ class Freebox_OS extends eqLogic {
 			self::addHomeAdapters();
 		}
     	}
-	public function toHtml($_version = 'mobile') {
-		$replace = $this->preToHtml($_version);
-		if (!is_array($replace))
-			return $replace;
-		$version = jeedom::versionAlias($_version);
-		if ($this->getDisplay('hideOn' . $version) == 1)
-			return '';
-		$replace['#cmd#']='';
-		switch($this->getLogicalId()){
-			case 'System':
-			case 'Reseau':
-				$EquipementsHtml='';
-				foreach ($this->getCmd(null, null, true) as $cmd) {
-					$replaceCmd['#host_type#'] = $cmd->getConfiguration('host_type');
-					$replaceCmd['#IPV4#'] = $cmd->getConfiguration('IPV4');
-					$replaceCmd['#IPV6#'] = $cmd->getConfiguration('IPV6');
-					$EquipementsHtml.=template_replace($replaceCmd, $cmd->toHtml($_version));
-				}
-				$replace['#Equipements#'] = $EquipementsHtml;
-				return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, $this->getLogicalId(), 'Freebox_OS')));
-			case 'Disque':		
-				foreach ($this->getCmd(null, null, true) as $cmd) 
-					 $replace['#cmd#'] .= $cmd->toHtml($_version);
-				return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, $this->getLogicalId(), 'Freebox_OS')));
-			case 'ADSL':
-			case 'AirPlay':
-			case 'Downloads':
-			case 'Phone':
-				foreach ($this->getCmd(null, null, true) as $cmd) {
-					$replace['#'.$cmd->getLogicalId().'#'] = '';
-					if($cmd->getIsVisible())	
-						$masque[]=$cmd->getLogicalId();
-					$replace['#'.$cmd->getLogicalId().'#'] = $cmd->toHtml($_version);
-				}
-				$replace['#masque#']=json_encode($masque);
-				return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $version, $this->getLogicalId(), 'Freebox_OS')));
-			default:
-				$replace['#eqLogic_class#'] = 'eqLogic_layout_default';
-				$cmd_html = '';
-				$br_before = 0;
-				foreach ($this->getCmd(null, null, true) as $cmd) {
-					if (isset($replace['#refresh_id#']) && $cmd->getId() == $replace['#refresh_id#']) {
-						continue;
-					}
-					if ($br_before == 0 && $cmd->getDisplay('forceReturnLineBefore', 0) == 1) {
-						$cmd_html .= '<br/>';
-					}
-					$cmd_html .= $cmd->toHtml($_version, '');
-					$br_before = 0;
-					if ($cmd->getDisplay('forceReturnLineAfter', 0) == 1) {
-						$cmd_html .= '<br/>';
-						$br_before = 1;
-					}
-				}
-				$replace['#cmd#'] = $cmd_html;
-				return $this->postToHtml($_version, template_replace($replace, getTemplate('core', $_version, 'eqLogic')));
-		}
-	}
 	public function preSave() {	
 		switch($this->getLogicalId())	{
 			case 'AirPlay':

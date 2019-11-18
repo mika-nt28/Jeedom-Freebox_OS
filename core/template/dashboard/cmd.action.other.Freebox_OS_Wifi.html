@@ -1,7 +1,6 @@
 <div class="cmd cmd-widget reportModeHidden" data-type="action" data-subtype="other" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" data-eqLogic_id="#eqLogic_id#">
 	<div class="content-xs">
 		<a class="btn btn-sm btn-default action cmdName tooltips" title="#name#">
-			<span class="iconCmd"></span>
 		</a>
 	</div>
 	<script>
@@ -11,14 +10,14 @@
 					$('.cmd[data-cmd_id=#id#]').hide();
 				}else{
 					$('.cmd[data-cmd_id=#id#]').show();
-					$('.cmd[data-cmd_id=#id#] .iconCmd').empty().append('<i class="fas fa-wifi"></i>');
+					$('.cmd[data-cmd_id=#id#] .cmdName').empty().append('<i class="fas fa-wifi"></i>');
 				}
 			} else {
 				if (jeedom.cmd.normalizeName('#name#') == 'off') {
 					$('.cmd[data-cmd_id=#id#]').hide();
 				}else{
 					$('.cmd[data-cmd_id=#id#]').show();
-					$('.cmd[data-cmd_id=#id#] .iconCmd').empty().append('<i class="fas fa-times"></i>');
+					$('.cmd[data-cmd_id=#id#] .cmdName').empty().append('<i class="fas fa-times"></i>');
 				}
 			}
 		}

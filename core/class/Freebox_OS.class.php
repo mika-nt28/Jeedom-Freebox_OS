@@ -12,7 +12,7 @@ class Freebox_OS extends eqLogic {
 			$return['launchable'] = 'nok';
 		$return['state'] = 'ok';
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){			
-			if($Equipement->getIsEnable()){
+			if($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0)
 				$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
 				if(!is_object($cron) || !$cron->running()){
 					$return['state'] = 'nok';
@@ -34,7 +34,7 @@ class Freebox_OS extends eqLogic {
 		if($FreeboxAPI->open_session()===false)
 			return false;
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){		
-			if($Equipement->getIsEnable())
+			if($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0)
 				$Equipement->CreateDemon();
 		}
 	}
@@ -207,7 +207,7 @@ class Freebox_OS extends eqLogic {
 			$Commande->setTemplate('dashboard','Freebox_OS::'.$Template);
 			$Commande->setTemplate('mobile', 'Freebox_OS::'.$Template);
 			$Commande->save();
-} 
+		} 
 		return $Commande;
 	}
 	public static function CreateArchi() {
@@ -573,7 +573,10 @@ class Freebox_OS extends eqLogic {
 						}
 					break;
 				}
-				sleep($Equipement->getConfiguration('waite'));
+				if($Equipement->getConfiguration('waite') == '')
+					sleep(300);
+				else
+					sleep($Equipement->getConfiguration('waite'));
 			}
 			$FreeboxAPI->close_session();
 		}

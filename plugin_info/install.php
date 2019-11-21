@@ -8,10 +8,11 @@ function Freebox_OS_update() {
 	foreach(eqLogic::byLogicalId('FreeboxTv','Freebox_OS',true) as $eqLogic){
 		$eqLogic->remove();
 	}
-	Freebox_OS::CreateArchi();
 	foreach(eqLogic::type('Freebox_OS') as $eqLogic){
-		$eqLogic->setConfiguration('waite',config::byKey('DemonSleep','Freebox_OS'));
-		$eqLogic->save();
+		if($eqLogic->getConfiguration('waite') == ''){
+			$eqLogic->setConfiguration('waite',config::byKey('DemonSleep','Freebox_OS'));
+			$eqLogic->save();
+		}
 	}
 	log::add('Freebox_OS','debug','Fin du script de mise à jour');
 }

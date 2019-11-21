@@ -76,6 +76,7 @@ class Freebox_OS extends eqLogic {
 			$EqLogic->setIsEnable(1);
 			$EqLogic->setIsVisible(0);
 			$EqLogic->setName($Name);
+			$EqLogic->setConfiguration('waite','300');
 			$EqLogic->save();
 		}
 		return $EqLogic;

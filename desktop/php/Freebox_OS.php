@@ -46,7 +46,7 @@
 		<div class="input-group pull-right" style="display:inline-flex">
 			<span class="input-group-btn">
 				<a class="btn btn-default btn-sm eqLogicAction roundedLeft" data-action="configure">
-					<i class="fa fa-cogs"></i>
+					<i class="fas fa-cogs"></i>
 					 {{Configuration avancée}}
 				</a>
 				<a class="btn btn-sm btn-success eqLogicAction" data-action="save">
@@ -62,18 +62,18 @@
 		<ul class="nav nav-tabs" role="tablist">
     			<li role="presentation">
 				<a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay">
-					<i class="fa fa-arrow-circle-left"></i>
+					<i class="fas fa-arrow-circle-left"></i>
 				</a>
 			</li>
     			<li role="presentation" class="active">
 				<a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab">
-				<i class="fa fa-tachometer"></i> 
+				<i class="fas fa-tachometer-alt"></i> 
 					{{Equipement}}
 				</a>
 			</li>
     			<li role="presentation">
 				<a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab">
-					<i class="fa fa-list-alt"></i> 
+					<i class="fas fa-list-alt"></i> 
 					{{Commandes}}
 				</a>
 			</li>
@@ -137,7 +137,7 @@
 						<div class="form-group Equipement">
 							<label class="col-sm-3 control-label" >{{Recherche des équipement}}</label>
 							<div class="col-sm-9">
-								<a class="btn btn-primary eqLogicAction"><i class="fa fa-search"></i> {{Recherche}}</a>
+								<a class="btn btn-primary eqLogicAction"><i class="fas fa-search"></i> {{Recherche}}</a>
 							</div>
 						</div>
 					</fieldset>
@@ -145,7 +145,7 @@
 			</div>
 			<div role="tabpanel" class="tab-pane" id="commandtab">	
 				<a class="btn btn-success btn-sm cmdAction pull-right" data-action="add" style="margin-top:5px;">
-					<i class="fa fa-plus-circle"></i> 
+					<i class="fas fa-plus-circle"></i> 
 					{{Commandes}}
 				</a>
 				<br/><br/>

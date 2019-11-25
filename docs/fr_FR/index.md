@@ -162,4 +162,4 @@ Récurrence de la mise à jour des équipements
 Il est possible de modifier le temps de rafraichissement de chaque équipement. Par défaut, le temps est de 300s.
 Plus le temps est cours, plus il y aura de la charge sur la CPU de la Freebox.
 
-![Temps de rafraichissement](../images/Temps_de_ rafraichissement.jpg.jpg)
+![Temps de rafraichissement](../images/Temps_de_rafraichissement.jpg)

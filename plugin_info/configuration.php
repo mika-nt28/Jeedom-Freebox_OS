@@ -39,9 +39,9 @@ if (!isConnect()) {
 			</div>
 		</div>
 		<div class="form-group">
-			<label class="col-md-2 control-label" >{{L'appairage doit etre lancé après une sauvegarde des parametres pour leurs prises en compte.}}</label>
+			<label class="col-md-2 control-label" >{{L'appairage doit être lancé après une sauvegarde des paramètres pour leurs prises en compte.}}</label>
 			<div class="col-md-3">
-				<a class="btn btn-primary FreeboxAppaire" ><i class="fa fa-rss"></i> {{Appairage}}</a>
+				<a class="btn btn-primary FreeboxAppaire" ><i class="fas fa-rss"></i> {{Appairage}}</a>
 			</div>
 		</div>	
 	</fieldset> 

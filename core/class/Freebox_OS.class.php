@@ -11,6 +11,9 @@ class Freebox_OS extends eqLogic {
 		else
 			$return['launchable'] = 'nok';
 		$return['state'] = 'ok';
+		$FreeboxAPI = new FreeboxAPI();
+		if($FreeboxAPI->open_session()===false)
+			return false;
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){			
 			if($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0){
 				$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));

@@ -6,7 +6,7 @@
 	"author" : "Halbout Michael",
 	"require" : "3.0",
 	"category" : "monitoring",
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile"],
+	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"],
 	"hasOwnDeamon" : true,
 	"hasDependency" : false,
  	"documentation" : "http://mika-nt28.github.io/Jeedom-Freebox_OS/"

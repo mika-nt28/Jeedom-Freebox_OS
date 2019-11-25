@@ -114,7 +114,7 @@ function addCmdToTable(_cmd) {
 	var tr =$('<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">');
   	tr.append($('<td>')
 		.append($('<div>')
-			.append($('<i class="fa fa-minus-circle pull-right cmdAction cursor" data-action="remove">')))
+			.append($('<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove">')))
 		.append($('<div>')
 			.append($('<i class="fa fa-arrows-v pull-left cursor bt_sortable">'))));
 	tr.append($('<td>')
@@ -143,11 +143,11 @@ function addCmdToTable(_cmd) {
 	var parmetre=$('<td>');
 	if (is_numeric(_cmd.id)) {
 		parmetre.append($('<a class="btn btn-default btn-xs cmdAction" data-action="test">')
-			.append($('<i class="fa fa-rss">')
+			.append($('<i class="fas fa-rss">')
 				.text('{{Tester}}')));
 	}
 	parmetre.append($('<a class="btn btn-default btn-xs cmdAction expertModeVisible" data-action="configure">')
-		.append($('<i class="fa fa-cogs">')));
+		.append($('<i class="fas fa-cogs">')));
 	tr.append(parmetre);
 	$('#table_cmd tbody').append(tr);
 	$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');

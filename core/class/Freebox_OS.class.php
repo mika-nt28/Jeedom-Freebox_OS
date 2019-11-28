@@ -6,19 +6,25 @@ class Freebox_OS extends eqLogic {
 	public static function deamon_info() {
 		$return = array();
 		$return['log'] = 'Freebox_OS';		
-		if(trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'))!=''&&config::byKey('FREEBOX_SERVER_APP_TOKEN','Freebox_OS')!=''&&trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'))!='')
+		if(trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'))!=''
+		   && config::byKey('FREEBOX_SERVER_APP_TOKEN','Freebox_OS')!=''
+		   && trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'))!='')
 			$return['launchable'] = 'ok';
 		else
 			$return['launchable'] = 'nok';
 		$return['state'] = 'ok';
-		$FreeboxAPI = new FreeboxAPI();
-		if($FreeboxAPI->open_session()===false)
-			return false;
+		$session_token = cache::byKey('Freebox_OS::SessionToken');
+		if(!is_object($session_token) || $session_token->getValue('') == ''){
+			$return['state'] = 'nok';
+			self::deamon_stop();
+			return $return;
+		}
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){			
 			if($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0){
 				$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
 				if(!is_object($cron) || !$cron->running()){
 					$return['state'] = 'nok';
+					self::deamon_stop();
 					return $return;
 				}
 			}
@@ -26,7 +32,7 @@ class Freebox_OS extends eqLogic {
 		return $return;
 	}
 	public static function deamon_start($_debug = false) {
-		log::remove('Freebox_OS');
+		//log::remove('Freebox_OS');
 		self::deamon_stop();
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] != 'ok') 
@@ -34,8 +40,8 @@ class Freebox_OS extends eqLogic {
 		if ($deamon_info['state'] == 'ok') 
 			return;
 		$FreeboxAPI = new FreeboxAPI();
-		if($FreeboxAPI->open_session()===false)
-			return false;
+		if($FreeboxAPI->getFreeboxOpenSession()===false)
+			return;
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){		
 			if($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0)
 				$Equipement->CreateDemon();

@@ -59,22 +59,22 @@
 	</div>
 	<script>
 	jeedom.cmd.update['#id#'] =function(_options){
-		var cmd = $('.cmd[data-cmd_id=#id#]');
-		cmd.attr('title','Date de valeur : '+_options.valueDate+'<br/>Date de collecte : '+_options.collectDate);
-		$(".cmd[data-cmd_id=#id#] .lan-host-vendor").text(_options.configuration.IPV4);
-		//$(".cmd[data-cmd_id=#id#] .lan-host-vendor").text(_options.configuration.IPV6);
-		if (_options.display_value == '1') {
-			$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-host-1');
-			$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-'+_options.configuration.host_type+'-1');
-		} else {
-			$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-host-0');
-			$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-'+_options.configuration.host_type+'-0');
-		}
-
+		jeedom.cmd.byId({id:'#id#',success:function(configuration){
+			var cmd = $('.cmd[data-cmd_id=#id#]');
+			cmd.attr('title','Date de valeur : '+_options.valueDate+'<br/>Date de collecte : '+_options.collectDate);
+			$(".cmd[data-cmd_id=#id#] .lan-host-vendor").text(configuration.IPV4);
+			//$(".cmd[data-cmd_id=#id#] .lan-host-vendor").text(_options.configuration.IPV6);
+			if (_options.display_value == '1') {
+				$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-host-1');
+				$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-'+configuration.host_type+'-1');
+			} else {
+				$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-host-0');
+				$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-'+configuration.host_type+'-0');
+			}
+		}});
 	}
-	jeedom.cmd.byId({id:'#id#',success:function(config){
-		jeedom.cmd.update['#id#']({display_value:'#state#',valueDate:'#valueDate#',collectDate:'#collectDate#',alertLevel:'#alertLevel#',configuration:config.configuration});
-	}});
+	jeedom.cmd.update['#id#']({display_value:'#state#',valueDate:'#valueDate#',collectDate:'#collectDate#',alertLevel:'#alertLevel#'});
+
 	$(".cmd[data-cmd_id=#id#]").off().on("click", function() {
 		$('#md_modal').dialog({
 			title: "Parametre de l'équipement Reseau",

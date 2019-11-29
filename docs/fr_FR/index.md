@@ -170,6 +170,11 @@ ChangeLog
 Beta
 ----
 
+### 29/11/2019
+
+* Restructuration de la class API
+* Creation d'un cron de rafraichissement du tocken pour avoir qu'une seul session
+
 Stable
 ------
 

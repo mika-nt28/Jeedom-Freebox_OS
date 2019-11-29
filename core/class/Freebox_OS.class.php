@@ -16,7 +16,11 @@ class Freebox_OS extends eqLogic {
 		$session_token = cache::byKey('Freebox_OS::SessionToken');
 		if(!is_object($session_token) || $session_token->getValue('') == ''){
 			$return['state'] = 'nok';
-			self::deamon_stop();
+			return $return;
+		}
+		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+		if(!is_object($cron)){
+			$return['state'] = 'nok';
 			return $return;
 		}
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){			
@@ -24,7 +28,6 @@ class Freebox_OS extends eqLogic {
 				$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
 				if(!is_object($cron) || !$cron->running()){
 					$return['state'] = 'nok';
-					self::deamon_stop();
 					return $return;
 				}
 			}
@@ -32,22 +35,36 @@ class Freebox_OS extends eqLogic {
 		return $return;
 	}
 	public static function deamon_start($_debug = false) {
-		//log::remove('Freebox_OS');
+		log::remove('Freebox_OS');
 		self::deamon_stop();
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] != 'ok') 
 			return;
 		if ($deamon_info['state'] == 'ok') 
 			return;
-		$FreeboxAPI = new FreeboxAPI();
-		if($FreeboxAPI->getFreeboxOpenSession()===false)
-			return;
+		$cron =cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+		if (!is_object($cron)) {
+			$cron = new cron();
+			$cron->setClass('Freebox_OS');
+			$cron->setFunction('RefreshToken');
+			$cron->setEnable(1);
+			$cron->setSchedule('15 * * * *');
+			$cron->setTimeout('1');
+			$cron->save();
+		}
+		$cron->start();
+		$cron->run();
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){		
 			if($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0)
 				$Equipement->CreateDemon();
 		}
 	}
 	public static function deamon_stop() {
+		$cron =cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+		if (is_object($cron)) {
+			$cron->stop();
+			$cron->remove();
+		}
 		foreach(eqLogic::byType('Freebox_OS') as $Equipement){
 			$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
 			if (is_object($cron)) {
@@ -55,8 +72,8 @@ class Freebox_OS extends eqLogic {
 				$cron->remove();
 			}
 		}
-		$cache = cache::byKey('Freebox_OS::SessionToken');
-		$cache->remove();
+		$FreeboxAPI = new FreeboxAPI();
+		$FreeboxAPI->close_session();		
 	}
 	private function CreateDemon() {
 		$cron =cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $this->getId()));
@@ -286,8 +303,6 @@ class Freebox_OS extends eqLogic {
 		$AirPlay->AddCommande('Player actuel AirMedia','ActualAirmedia',"info",'string','Freebox_OS_AirMedia_Recever');
 		$AirPlay->AddCommande('AirMedia Start','airmediastart',"action",'message','Freebox_OS_AirMedia_Start');
 		$AirPlay->AddCommande('AirMedia Stop','airmediastop',"action",'message','Freebox_OS_AirMedia_Start');
-		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_APP_TOKEN'));
-		log::add('Freebox_OS','debug',config::byKey('FREEBOX_SERVER_TRACK_ID'));
 		if(config::byKey('FREEBOX_SERVER_TRACK_ID')!=''){
 			$FreeboxAPI= new FreeboxAPI();
 			$FreeboxAPI->disques();
@@ -308,7 +323,6 @@ class Freebox_OS extends eqLogic {
 				$parametre["enabled"]=$this->getIsEnable();
 				$parametre["password"]=$this->getConfiguration('password');
 				$FreeboxAPI->airmediaConfig($parametre);
-				$FreeboxAPI->close_session();
 			break;
 		}
 		if($this->getConfiguration('waite') == '')
@@ -325,6 +339,12 @@ class Freebox_OS extends eqLogic {
 			}
 		}
 		
+	}
+	public static function RefreshToken() {
+		$FreeboxAPI = new FreeboxAPI();
+		$FreeboxAPI->close_session();	
+		if($FreeboxAPI->getFreeboxOpenSession() === false)
+			self::deamon_stop();
 	}
 	public static function RefreshInformation($_option) {
 		$FreeboxAPI = new FreeboxAPI();
@@ -587,7 +607,6 @@ class Freebox_OS extends eqLogic {
 				else
 					sleep($Equipement->getConfiguration('waite'));
 			}
-			$FreeboxAPI->close_session();
 		}
 	}
 	public static function dependancy_info() {
@@ -727,6 +746,5 @@ class Freebox_OSCmd extends cmd {
 				$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(),$this->getLogicalId(),$parametre);
 			break;
 		}	
-		$FreeboxAPI->close_session();	
 	}
 }

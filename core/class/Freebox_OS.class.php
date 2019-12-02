@@ -572,13 +572,11 @@ class Freebox_OS extends eqLogic {
 						if($results!=false){
 							foreach($results as $result){
 								foreach($result['data'] as $data){
-									if ($Equipement->getIsEnable() == 0) {
-										return false;
-									}
+									if(!$Equipement->getIsEnable())
+										break;
 									$cmd = $Equipement->getCmd('info', $data['ep_id']);
-									if (!is_object($cmd)) {
-										return false;
-									}
+									if (!is_object($cmd))
+										break;
 									switch ($cmd->getSubType()) {
 										case 'numeric':
 											if($cmd->getConfiguration('inverse'))

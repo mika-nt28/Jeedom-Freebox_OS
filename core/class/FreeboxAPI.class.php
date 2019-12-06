@@ -478,7 +478,7 @@ class FreeboxAPI{
 		else
 			return false;
 	}
-	public static function airmediaReceivers() {
+	public function airmediaReceivers() {
 		$return=$this->fetch('/api/v3/airmedia/receivers/');   
 		if($return === false)
 			return false;

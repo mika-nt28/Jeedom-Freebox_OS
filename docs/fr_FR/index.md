@@ -178,6 +178,7 @@ Stable
 
 * Restructuration de la class API
 * Creation d'un cron de rafraichissement du tocken pour avoir qu'une seul session
+* Mise a jours du widget Reseau
 
 ### 27/11/2019
 

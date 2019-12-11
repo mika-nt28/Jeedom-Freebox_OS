@@ -399,7 +399,7 @@ class FreeboxAPI{
 		if($Ping === false)
 			return false;
 		if($Ping['success'])
-			return $Ping['result'];
+			return $Ping;
 		else
 			return false;
 	}

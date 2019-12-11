@@ -172,7 +172,10 @@ Beta
 
 Stable
 ------
+### 11/12/2019
 
+* BugFix déconnexion en cas de reponse fausse
+* Suppression des equipements reseau en cas de reponse invalide
 
 ### 10/12/2019
 

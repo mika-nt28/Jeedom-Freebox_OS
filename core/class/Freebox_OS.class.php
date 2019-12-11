@@ -528,7 +528,10 @@ class Freebox_OS extends eqLogic {
 						foreach($Equipement->getCmd('info') as $Commande){
 							if(is_object($Commande)){
 								$result=$FreeboxAPI->ReseauPing($Commande->getLogicalId());
-								if($result!=false){					
+								if(!$result['success']){
+									if($result['error_code'] == "internal_error")
+										$Commande->remove();
+								}else{
 									if (isset($result['l3connectivities']))	{
 										foreach($result['l3connectivities'] as $Ip){
 											if ($Ip['active']){

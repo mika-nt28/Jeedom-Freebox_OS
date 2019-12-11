@@ -532,8 +532,8 @@ class Freebox_OS extends eqLogic {
 									if($result['error_code'] == "internal_error")
 										$Commande->remove();
 								}else{
-									if (isset($result['l3connectivities']))	{
-										foreach($result['l3connectivities'] as $Ip){
+									if (isset($result['result']['l3connectivities']))	{
+										foreach($result['result']['l3connectivities'] as $Ip){
 											if ($Ip['active']){
 												if($Ip['af']=='ipv4')
 													$Commande->setConfiguration('IPV4',$Ip['addr']);
@@ -542,10 +542,10 @@ class Freebox_OS extends eqLogic {
 											}
 										}
 									}
-									$Commande->setConfiguration('host_type',$result['host_type']);
+									$Commande->setConfiguration('host_type',$result['result']['host_type']);
 									$Commande->save();
-									if (isset($result['active'])) {
-										if ($result['active'] == 'true') {
+									if (isset($result['result']['active'])) {
+										if ($result['result']['active'] == 'true') {
 											$Commande->setOrder($Commande->getOrder() % 1000);
 											$Commande->save();
 											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(),true);

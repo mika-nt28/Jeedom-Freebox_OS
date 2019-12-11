@@ -133,14 +133,6 @@ class FreeboxAPI{
             			log::add('Freebox_OS','error','[FreeboxRequest] ' . json_last_error_msg());
 				return false;
 			}
-			if(!$result['success']){
-				$this->ErrorLoop++;
-				$this->close_session();
-				if($this->ErrorLoop < 5){
-					if($this->fetch($api_url,$params,$method) === false)
-						return false;
-				}
-			}
 			return $result;	
 		} catch (Exception $e) {
 		    log::add('Freebox_OS','error', '[FreeboxRequest]'.$e->getCode());

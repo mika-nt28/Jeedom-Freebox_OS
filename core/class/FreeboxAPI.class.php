@@ -129,10 +129,8 @@ class FreeboxAPI{
 			curl_close($ch);
 			log::add('Freebox_OS','debug','[FreeboxRequest] ' . $content);
 			$result=json_decode($content, true);
-			if($result == null){
-            			log::add('Freebox_OS','error','[FreeboxRequest] ' . json_last_error_msg());
+			if($result == null)
 				return false;
-			}
 			return $result;	
 		} catch (Exception $e) {
 		    log::add('Freebox_OS','error', '[FreeboxRequest]'.$e->getCode());

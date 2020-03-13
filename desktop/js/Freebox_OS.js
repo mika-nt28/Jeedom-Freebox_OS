@@ -151,5 +151,6 @@ function addCmdToTable(_cmd) {
 		.append($('<i class="fas fa-cogs">')));
 	tr.append(parmetre);
 	$('#table_cmd tbody').append(tr);
-	$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');
+	$('#table_cmd tbody tr:last').setValues(_cmd, '.cmdAttr');	
+	jeedom.cmd.changeType($('#table_cmd tbody tr:last'), init(_cmd.subType));
 }

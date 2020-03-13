@@ -122,8 +122,9 @@ function addCmdToTable(_cmd) {
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="id" style="display : none;">'))
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="name" value="' + init(_cmd.name) + '" placeholder="{{Name}}" title="Name">'))));
 	tr.append($('<td>')
-			.append($('<input type="hidden" class="cmdAttr" data-l1key="type" />'))
-			.append($('<input type="hidden" class="cmdAttr" data-l1key="subType" />'))	
+		  .append($('<span class="type" type="' + init(_cmd.type) + '">')
+			.append(jeedom.cmd.availableType()))
+		  .append($('<span class="subType" subType="'+init(_cmd.subType)+'">'))	
 		  .append($('<div class="input-group">')
 			.append($('<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" >')))
 		.append($('<div class="input-group">')

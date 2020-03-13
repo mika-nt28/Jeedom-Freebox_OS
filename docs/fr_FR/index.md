@@ -172,6 +172,10 @@ Beta
 
 Stable
 ------
+### 19/12/2019
+
+* BugFix Syntax Error
+
 ### 11/12/2019
 
 * BugFix déconnexion en cas de reponse fausse

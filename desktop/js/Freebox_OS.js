@@ -2,7 +2,7 @@ $("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder:
 $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event,_options) {
 	var camera=jQuery.parseJSON(_options);
 	bootbox.confirm({
-		message: "{{Une camera freebox a ete détécté ("+camera.name+"), Voulez vous l'ajouter au plugin Camera?}}",
+		message: "{{Une caméra Freebox a été détectée ("+camera.name+")<br>Voulez-vous l’ajouter au Plugin Caméra ?}}",
 		buttons: {
 			confirm: {
 				label: '{{Oui}}',

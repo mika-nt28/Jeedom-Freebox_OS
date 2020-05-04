@@ -90,12 +90,9 @@ function TryAPI(){
 			   return;
 			}else{
 				//console.log("Test de L'API ... :");
-				var messageOut="L'application est validée et peut être utilisée. Vous avez fini la configuration.<br>";
-				messageOut+="Toutefois, il faut activer manuellement une option si vous désirez redémarrer la Freebox depuis Jeedom. Il faut vous rendre sur : mafreebox.free.fr <br>";
-				messageOut+="Et suivre les étapes suivantes : Cliquez sur : <b>Paramètres de la Freebox</b> -> <b>Gestion des accès</b><br>";
-				messageOut+="Onglet : <b>Applications</b> -> Puis cliquez sur la fenêtre d'édition sur la droite (A gauche de la poubelle) au nom de votre application Jeedom<br>";
-				messageOut+="Cochez : <b>Modification des réglages de la Freebox</b> et cliquez sur : <b>OK</b>. Vous pouvez fermer le site.";
-				
+				var messageOut="L’application est validée et peut être utilisée. La configuration est terminée.<br>";
+				messageOut+="Il faut modifier les droits d’accès pour l’application dans l’OS de la Freebox afin d’avoir accès à toute ces fonctionnalités.<br>";
+				messageOut+="Suivre les infos indiquées dans le paragraphe « Appairage » de la documentation du plugin.<br>";
 				$('#div_alert').showAlert({message: messageOut, level: 'success'});
 			}
 		}

@@ -44,15 +44,15 @@ function AskTrackAuthorization(){
 			} else 	{
 				switch(data.result.result.status){
 					case "unknown":
-						$('#div_alert').showAlert({message: "Tu n'as pas validé à temps l'application, merci de re-sauvgarder", level: 'danger'});
+						$('#div_alert').showAlert({message: "l'application p'as pas validé à temps, merci de re-sauvgarder", level: 'danger'});
 						break;
 						
 					case "pending":
-						$('#div_alert').showAlert({message: "Tu n'es toujours pas allé valider l'application sur la Freebox Server", level: 'danger'});
+						$('#div_alert').showAlert({message: "L'application n'as toujours pas été validée sur la Freebox Server", level: 'danger'});
 						break;
 						
 					case "timeout":
-						$('#div_alert').showAlert({message: "Tu n'as pas validé à temps l'application, merci de re-sauvgarder", level: 'danger'});
+						$('#div_alert').showAlert({message: "l'application p'as pas validé à temps, merci de re-sauvgarder", level: 'danger'});
 						break;
 						
 					case "granted":
@@ -61,7 +61,7 @@ function AskTrackAuthorization(){
 						break;
 						
 					case "denied":
-						$('#div_alert').showAlert({message: "Tu as refusé la demande d'autorisation, merci de cliquer sur : ETAPE 1", level: 'danger'});
+						$('#div_alert').showAlert({message: "La demande d'autorisation a été refusée, merci de cliquer sur : Appairage", level: 'danger'});
 						break;
 					default:
 						$('#div_alert').showAlert({message: "REST OK : track_authorization -> Error 4 : Inconnue", level: 'danger'});

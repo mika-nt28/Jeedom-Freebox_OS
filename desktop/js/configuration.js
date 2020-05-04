@@ -18,7 +18,7 @@ $('.FreeboxAppaire').on('click',function(){
 					return;
 				}else{
 					sendToBdd(data.result);		
-					bootbox.confirm('{{Il faut aller valider Jeedom sur la Freebox Server, cliquez sur la flèche OUI }}', function (result) {
+					bootbox.confirm('{{Valider l’application directement sur l’écran de la Freebox avant de cliquer sur Ok}}', function (result) {
 						if (result)
 							AskTrackAuthorization();					
 					});

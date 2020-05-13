@@ -173,33 +173,35 @@ class Freebox_OS extends eqLogic {
 						case "int":
 							foreach(str_split($Commande['ui']['access']) as $access){
 								if($access == "r"){
-									$info = $Tile->AddCommande('info_'. $Commande['label'],$Commande['ep_id'],"info",'numeric');
+									$info = $Tile->AddCommande('info_'. $Commande['label'],$Commande['ep_id'],"info",'numeric','',$Commande['ui']['unit']);
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
+									if ($Commande['name'] == "battery_warning")
+										$Tile->batteryStatus($Commande['value']);
 								}
 								if($access == "w"){
-									$action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action",'slider');
+									$action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action",'slider','',$Commande['ui']['unit']));
 								}
 							}
 						break;
 						case "bool":
 							foreach(str_split($Commande['ui']['access']) as $access){
 								if($access == "r"){
-									$info = $Tile->AddCommande('info_'. $Commande['label'],$Commande['ep_id'],"info",'binary');
+									$info = $Tile->AddCommande('info_'. $Commande['label'],$Commande['ep_id'],"info",'binary','',$Commande['ui']['unit']));
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
 								}
 								if($access == "w"){
-									$action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action",'other');
+									$action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action",'other','',$Commande['ui']['unit']));
 								}
 							}
 						break;
 						case "string":
 							foreach(str_split($Commande['ui']['access']) as $access){
 								if($access == "r"){
-									$info = $Tile->AddCommande('info_'. $Commande['label'],$Commande['ep_id'],"info","string");
+									$info = $Tile->AddCommande('info_'. $Commande['label'],$Commande['ep_id'],"info","string",'',$Commande['ui']['unit']));
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
 								}
 								if($access == "w"){
-									$action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action","message");
+									$action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action","message",'',$Commande['ui']['unit']));
 								}
 							}
 						break;

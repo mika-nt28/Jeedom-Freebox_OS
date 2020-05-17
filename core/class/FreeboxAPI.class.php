@@ -1,5 +1,5 @@
 <?php
-class FreeboxAPI{	
+class FreeboxAPI{
 	private $ErrorLoop = 0;
 	private $serveur;
 	private $app_id;
@@ -31,7 +31,7 @@ class FreeboxAPI{
 				)
 			);
 			$result = $http->exec(30, 2);
-			if (is_json($result)) 
+			if (is_json($result))
 		    		return json_decode($result, true);
 			return $result;
 		} catch (Exception $e) {
@@ -50,7 +50,7 @@ class FreeboxAPI{
 		    	log::add('Freebox_OS','error', '[FreeboxAutorisation]'.$e->getCode());
 		}
 	}
-  
+
 	public function getFreeboxPassword(){
 		try {
 			$http = new com_http($this->serveur . '/api/v3/login/');
@@ -59,7 +59,7 @@ class FreeboxAPI{
 			$json_connect=json_decode($json, true);
 			if ($json_connect['success'])
 				cache::set('Freebox_OS::Challenge', $json_connect['result']['challenge'], 0);
-			else 
+			else
 				return false;
 			return true;
 		} catch (Exception $e) {
@@ -85,7 +85,7 @@ class FreeboxAPI{
 			$json=$http->exec(30, 2);
 			log::add('Freebox_OS','debug', '[FreeboxOpenSession]' .$json);
 			$result=json_decode($json, true);
-			
+
 			if(!$result['success']){
 				$this->ErrorLoop++;
 				$this->close_session();
@@ -107,7 +107,7 @@ class FreeboxAPI{
 			$session_token = cache::byKey('Freebox_OS::SessionToken');
 			while($session_token->getValue('') == ''){
 				sleep(1);
-				$session_token = cache::byKey('Freebox_OS::SessionToken');			
+				$session_token = cache::byKey('Freebox_OS::SessionToken');
 			}
 			log::add('Freebox_OS','debug','[FreeboxRequest] Connexion ' . $method .' sur la l\'adresse '. $this->serveur.$api_url .'('.json_encode($params).')');
 			$ch = curl_init();
@@ -131,7 +131,7 @@ class FreeboxAPI{
 			$result=json_decode($content, true);
 			if($result == null)
 				return false;
-			return $result;	
+			return $result;
 		} catch (Exception $e) {
 		    log::add('Freebox_OS','error', '[FreeboxRequest]'.$e->getCode());
 		}
@@ -157,29 +157,29 @@ class FreeboxAPI{
 		}
 	}
 	public function WakeOnLAN($Mac){
-		
+
 		$return=$this->fetch('/api/v3/lan/wol/pub/',array("mac"=> $Mac,"password"=> ""),"POST");
 		if($return === false)
-			return false;	
+			return false;
 		return $return['success'];
 	}
    	public function Downloads($Etat){
 		$List_DL=$this->fetch('/api/v3/downloads/');
 		if($List_DL === false)
-			return false;	
+			return false;
 		$nbDL=count($List_DL['result']);
 		for($i = 0; $i < $nbDL; ++$i){
 			if ($Etat==0)
 				$Downloads=$this->fetch('/api/v3/downloads/'.$List_DL['result'][$i]['id'],array("status"=>"stopped"),"PUT");
 			if ($Etat==1)
 				$Downloads=$this->fetch('/api/v3/downloads/'.$List_DL['result'][$i]['id'],array("status"=>"downloading"),"PUT");
-		}        
+		}
 		if($Downloads === false)
-			return false;	
+			return false;
 		if($Downloads['success'])
 			return $Downloads['success'];
 		else
-			return false;                                                                                                                                                                                     
+			return false;
 	}
 	public function DownloadStats(){
 		$DownloadStats = $this->fetch('/api/v3/downloads/stats/');
@@ -206,7 +206,7 @@ class FreeboxAPI{
 		}
 		if($PortForwarding === false)
 			return false;
-		if($PortForwarding['success'])	
+		if($PortForwarding['success'])
 			return $PortForwarding['result'];
 		else
 			return false;
@@ -256,9 +256,9 @@ class FreeboxAPI{
 	public function wifiPUT($parametre) {
 		log::add('Freebox_OS','debug','Mise dans l\'état '.$parametre.' du wifi');
 		if ($parametre==1)
-			$return=$this->fetch('/api/v3/wifi/config/',array("enabled" => true),"PUT");	
+			$return=$this->fetch('/api/v3/wifi/config/',array("enabled" => true),"PUT");
 		else
-			$return=$this->fetch('/api/v2/wifi/config/',array("enabled" => false),"PUT");	
+			$return=$this->fetch('/api/v2/wifi/config/',array("enabled" => false),"PUT");
 		if($reponse === false)
 			return false;
 		if($return['success'])
@@ -267,7 +267,7 @@ class FreeboxAPI{
 		}
 	}
 	public function reboot() {
-		$content=$this->fetch('/api/v3/system/reboot/',null,"POST");		
+		$content=$this->fetch('/api/v3/system/reboot/',null,"POST");
 		if($content === false)
 			return false;
 		if($content['success'])
@@ -276,16 +276,16 @@ class FreeboxAPI{
 			return false;
 	}
 	public function ringtone_on() {
-		$content=$this->fetch('/api/v3/phone/dect_page_start/',"","POST");	
+		$content=$this->fetch('/api/v3/phone/dect_page_start/',"","POST");
 		if($content === false)
-			return false;	
+			return false;
 		if($content['success'])
 			return $content;
 		else
 			return false;
 	}
 	public function ringtone_off() {
-		$content=$this->fetch('/api/v3/phone/dect_page_stop/',"","POST");		
+		$content=$this->fetch('/api/v3/phone/dect_page_stop/',"","POST");
 		if($content === false)
 			return false;
 		if($content['success'])
@@ -293,44 +293,44 @@ class FreeboxAPI{
 		else
 			return false;
 	}
-	public function system() {		
-		$systemArray = $this->fetch('/api/v3/system/');	
+	public function system() {
+		$systemArray = $this->fetch('/api/v3/system/');
 		if($systemArray === false)
 			return false;
-		if($systemArray['success']){	
+		if($systemArray['success']){
 			return $systemArray['result'];
 		}
 		else
 			return false;
-	}	
-	public function UpdateSystem() {	
+	}
+	public function UpdateSystem() {
 		try {
 			$System=Freebox_OS::AddEqLogic('Système','System');
 			$Commande=$System->AddCommande('Update','update',"action",'other','Freebox_OS_System');
 			log::add('Freebox_OS','debug','Vérification d\'une mise a jours du serveur');
 			$firmwareOnline=file_get_contents("http://dev.freebox.fr/blog/?cat=5");
-			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline , $parseFreeDev, PREG_PATTERN_ORDER);			
+			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline , $parseFreeDev, PREG_PATTERN_ORDER);
 			if(intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))
 				self::reboot();
 		} catch (Exception $e) {
 		    log::add('Freebox_OS','error', '[FreeboxUpdateSystem]'.$e->getCode());
 		}
 	}
-	public function adslStats(){	
+	public function adslStats(){
 		$adslRateJson = $this->fetch('/api/v3/connection/');
 		if($adslRateJson === false)
 			return false;
-		if($adslRateJson['success']){		
-			$vdslRateJson = $this->fetch('/api/v3/connection/xdsl/');	
+		if($adslRateJson['success']){
+			$vdslRateJson = $this->fetch('/api/v3/connection/xdsl/');
 			if($vdslRateJson === false)
-				return false;			
+				return false;
 			if($vdslRateJson['result']['status']['modulation'] == "vdsl")
 				$adslRateJson['result']['media'] = $vdslRateJson['result']['status']['modulation'];
 
-			$retourFbx = array(	'rate_down' 	=> round($adslRateJson['result']['rate_down']/1024,2), 
-								'rate_up' 		=> round($adslRateJson['result']['rate_up']/1024,2), 
-								'bandwidth_up' 	=> round($adslRateJson['result']['bandwidth_up']/1000000,2), 
-								'bandwidth_down' => round($adslRateJson['result']['bandwidth_down']/1000000,2), 
+			$retourFbx = array(	'rate_down' 	=> round($adslRateJson['result']['rate_down']/1024,2),
+								'rate_up' 		=> round($adslRateJson['result']['rate_up']/1024,2),
+								'bandwidth_up' 	=> round($adslRateJson['result']['bandwidth_up']/1000000,2),
+								'bandwidth_down' => round($adslRateJson['result']['bandwidth_down']/1000000,2),
 								'media'			=> $adslRateJson['result']['media'],
 								'state' 		=> $adslRateJson['result']['state'] );
 			return $retourFbx;
@@ -359,7 +359,7 @@ class FreeboxAPI{
 	public function setTile($nodeId,$endpointId,$parametre) {
 		$return=$this->fetch('/api/v6/home/endpoints/'.$nodeId.'/'.$endpointId.'/',$parametre,"PUT");
 		if($return === false)
-			return false;   	         	
+			return false;
 		if($return['success'])
 			return $return['result'];
 		else
@@ -408,7 +408,7 @@ class FreeboxAPI{
 		$pre_check_con = $this->fetch('/api/v3/call/log/');
 		if($pre_check_con === false)
 			return false;
-		if($pre_check_con['success']){			
+		if($pre_check_con['success']){
 			$timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
 			if(isset($pre_check_con['result'])){
 				$nb_call = count($pre_check_con['result']);
@@ -416,18 +416,18 @@ class FreeboxAPI{
 				$cptAppel_outgoing = 0;
 				$cptAppel_missed = 0;
 				$cptAppel_accepted = 0;
-				for ($k=0; $k<$nb_call; $k++) 
+				for ($k=0; $k<$nb_call; $k++)
 				{
 					$jour = $pre_check_con['result'][$k]['datetime'];
 
 					$time = date('H:i', $pre_check_con['result'][$k]['datetime']);
-					if ($timestampToday <= $jour) 
+					if ($timestampToday <= $jour)
 					{
 						if($pre_check_con['result'][$k]['name']==$pre_check_con['result'][$k]['number'])
 						{
 							$name="N.C.";
 						}
-						else						
+						else
 						{
 							$name=$pre_check_con['result'][$k]['name'];
 						}
@@ -451,7 +451,7 @@ class FreeboxAPI{
 				}
 				$retourFbx = array('missed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing,'list_outgoing' => $listNumber_outgoing );
 			}
-			else	
+			else
 				$retourFbx = array('missed' => 0, 'list_missed' => "", 'accepted' => 0, 'list_accepted' => "", 'outgoing' => 0,'list_outgoing' => "" );
 
 			return $retourFbx;
@@ -460,16 +460,16 @@ class FreeboxAPI{
 			return false;
 	}
 	public function airmediaConfig($parametre) {
-		$return=$this->fetch('/api/v3/airmedia/config/',$parametre,"PUT"); 
+		$return=$this->fetch('/api/v3/airmedia/config/',$parametre,"PUT");
 		if($return === false)
-			return false;  	         	
+			return false;
 		if($return['success'])
 			return $return['result'];
 		else
 			return false;
 	}
 	public function airmediaReceivers() {
-		$return=$this->fetch('/api/v3/airmedia/receivers/');   
+		$return=$this->fetch('/api/v3/airmedia/receivers/');
 		if($return === false)
 			return false;
 
@@ -483,7 +483,7 @@ class FreeboxAPI{
 		if($return === false)
 			return false;
 		if($return['success'])
-			return true;
+            return true;
 		else
 			return false;
 	}

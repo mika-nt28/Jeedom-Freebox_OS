@@ -5,21 +5,21 @@ try {
 	include_file('core', 'authentification', 'php');
 	if (!isConnect('admin')) {
 		throw new Exception(__('401 - Accès non autorisé', __FILE__));
-	}	
+	}
 	$FreeboxAPI= new FreeboxAPI();
-	switch(init('action')){	
+	switch(init('action')){
 		case 'createCamera':
 			$EqLogic = eqLogic::byLogicalId(init('id'), 'camera');
 			if (!is_object($EqLogic)) {
 				$url = explode('@',explode('://',init('url'))[1]);
-				
+
 				$username = explode(':',$url[0])[0];
 				$password = explode(':',$url[0])[1];
-				
+
 				$adresse = explode(':',explode('/',$url[1])[0]);
 				$ip = $adresse[0];
 				$port = $adresse[1];
-				
+
 				$EqLogic = new camera();
 				$EqLogic->setName(init('name'));
 				$EqLogic->setLogicalId(init('id'));
@@ -36,13 +36,13 @@ try {
 				$EqLogic->setconfiguration('cameraStreamAccessUrl',init('url'));
 				$EqLogic->save();
 			}
-			ajax::success(true);		
-		break;	
+			ajax::success(true);
+		break;
 		case 'sendToBdd':
 			config::save('FREEBOX_SERVER_TRACK_ID', init('track_id'),'Freebox_OS');
 			config::save('FREEBOX_SERVER_APP_TOKEN', init('app_token'),'Freebox_OS');
 			ajax::success(true);
-		break;		
+		break;
 		case 'connect':
 			ajax::success($FreeboxAPI->track_id());
 		break;
@@ -108,10 +108,10 @@ try {
 			Freebox_OS::addTiles();
 			ajax::success(true);
 		break;
-	}	
+	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	/*     * *********Catch exeption*************** */
-} 
+}
 catch (Exception $e) {
 	ajax::error(displayExeption($e), $e->getCode());
 }

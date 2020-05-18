@@ -1,18 +1,18 @@
 <?php
-class AirMedia{	
+class AirMedia{
 	public function airmediaConfig() {
 			$parametre["enabled"]=$this->getIsEnable();
 			$parametre["password"]=$this->getConfiguration('password');
-	        	$return=self::fetch('/api/v3/airmedia/config/',$parametre,"PUT");   
-	         	
+	        	$return=self::fetch('/api/v3/airmedia/config/',$parametre,"PUT");
+
 			if($return['success'])
 	                	return $return['result'];
 	                else
 	                        return false;
 	}
 	public static function airmediaReceivers() {
-	        	$return=self::fetch('/api/v3/airmedia/receivers/');   
-	         	
+	        	$return=self::fetch('/api/v3/airmedia/receivers/');
+
 			if($return['success'])
 	                	return $return['result'];
 	                else
@@ -28,9 +28,9 @@ class AirMedia{
 	        	$parametre["password"]=$this->getConfiguration('password');
 	        	$return=self::fetch('/api/v3/airmedia/receivers/'.($receiver).'/',$parametre,'POST');
 			if($return['success'])
-	                	return true;
-	                else
-	                        return false;
+                return true;
+            else
+                return false;
 		}
 		else
 		       return false;

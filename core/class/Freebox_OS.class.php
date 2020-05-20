@@ -2,10 +2,10 @@
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 include_file('core', 'FreeboxAPI', 'class', 'Freebox_OS');
-class Freebox_OS extends eqLogic {	
+class Freebox_OS extends eqLogic {
 	public static function deamon_info() {
 		$return = array();
-		$return['log'] = 'Freebox_OS';		
+		$return['log'] = 'Freebox_OS';
 		if(trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'))!=''
 		   && config::byKey('FREEBOX_SERVER_APP_TOKEN','Freebox_OS')!=''
 		   && trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'))!='')
@@ -23,7 +23,7 @@ class Freebox_OS extends eqLogic {
 			$return['state'] = 'nok';
 			return $return;
 		}
-		foreach(eqLogic::byType('Freebox_OS') as $Equipement){			
+		foreach(eqLogic::byType('Freebox_OS') as $Equipement){
 			if($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0){
 				$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
 				if(!is_object($cron) || !$cron->running()){
@@ -38,9 +38,9 @@ class Freebox_OS extends eqLogic {
 		log::remove('Freebox_OS');
 		self::deamon_stop();
 		$deamon_info = self::deamon_info();
-		if ($deamon_info['launchable'] != 'ok') 
+		if ($deamon_info['launchable'] != 'ok')
 			return;
-		if ($deamon_info['state'] == 'ok') 
+		if ($deamon_info['state'] == 'ok')
 			return;
 		$cron =cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
 		if (!is_object($cron)) {
@@ -54,7 +54,7 @@ class Freebox_OS extends eqLogic {
 		}
 		$cron->start();
 		$cron->run();
-		foreach(eqLogic::byType('Freebox_OS') as $Equipement){		
+		foreach(eqLogic::byType('Freebox_OS') as $Equipement){
 			if($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0)
 				$Equipement->CreateDemon();
 		}
@@ -73,7 +73,7 @@ class Freebox_OS extends eqLogic {
 			}
 		}
 		$FreeboxAPI = new FreeboxAPI();
-		$FreeboxAPI->close_session();		
+		$FreeboxAPI->close_session();
 	}
 	private function CreateDemon() {
 		$cron =cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $this->getId()));
@@ -129,7 +129,7 @@ class Freebox_OS extends eqLogic {
 					$Commande->setConfiguration('doNotRepeatEvent', 1);
 					$Commande->event($Equipement['active']);
 				}
-				$Commande->save();	
+				$Commande->save();
 			}
 		}
 	}
@@ -235,7 +235,7 @@ class Freebox_OS extends eqLogic {
 			$Commande->setTemplate('dashboard','Freebox_OS::'.$Template);
 			$Commande->setTemplate('mobile', 'Freebox_OS::'.$Template);
 			$Commande->save();
-		} 
+		}
 		return $Commande;
 	}
 	public static function CreateArchi() {
@@ -276,7 +276,7 @@ class Freebox_OS extends eqLogic {
 		$System->AddCommande('serial','serial',"info",'string','Freebox_OS_System');
 		$cmdPF=$System->AddCommande('Redirection de ports','port_forwarding',"action",'message','Freebox_OS_System');
 		$cmdPF->setIsVisible(0);
-		$cmdPF->save(); 
+		$cmdPF->save();
 		$Phone=self::AddEqLogic('Téléphone','Phone');
 		$Phone->AddCommande('Nombre Appels Manqués','nbAppelsManquee',"info",'numeric','Freebox_OS_Phone');
 		$Phone->AddCommande('Nombre Appels Reçus','nbAppelRecus',"info",'numeric','Freebox_OS_Phone');
@@ -287,15 +287,15 @@ class Freebox_OS extends eqLogic {
 		$Phone->AddCommande('Faire sonner les téléphones DECT','sonnerieDectOn',"action",'other','Freebox_OS_Phone');
 		$Phone->AddCommande('Arrêter les sonneries des téléphones DECT','sonnerieDectOff',"action",'other','Freebox_OS_Phone');
 		$Downloads=self::AddEqLogic('Téléchargements','Downloads');
-		$Downloads->AddCommande('Nombre de tâche(s)','nb_tasks',"info",'string','Freebox_OS_Downloads');  
+		$Downloads->AddCommande('Nombre de tâche(s)','nb_tasks',"info",'string','Freebox_OS_Downloads');
 		$Downloads->AddCommande('Nombre de tâche(s) active','nb_tasks_active',"info",'string','Freebox_OS_Downloads');
 		$Downloads->AddCommande('Nombre de tâche(s) en extraction','nb_tasks_extracting',"info",'string','Freebox_OS_Downloads');
 		$Downloads->AddCommande('Nombre de tâche(s) en réparation','nb_tasks_repairing',"info",'string','Freebox_OS_Downloads');
 		$Downloads->AddCommande('Nombre de tâche(s) en vérification','nb_tasks_checking',"info",'string','Freebox_OS_Downloads');
 		$Downloads->AddCommande('Nombre de tâche(s) en attente','nb_tasks_queued',"info",'string','Freebox_OS_Downloads');
 		$Downloads->AddCommande('Nombre de tâche(s) en erreur','nb_tasks_error',"info",'string','Freebox_OS_Downloads');
-       		$Downloads->AddCommande('Nombre de tâche(s) stoppée(s)','nb_tasks_stopped',"info",'string','Freebox_OS_Downloads');
-        	$Downloads->AddCommande('Nombre de tâche(s) terminée(s)','nb_tasks_done',"info",'string','Freebox_OS_Downloads');
+        $Downloads->AddCommande('Nombre de tâche(s) stoppée(s)','nb_tasks_stopped',"info",'string','Freebox_OS_Downloads');
+        $Downloads->AddCommande('Nombre de tâche(s) terminée(s)','nb_tasks_done',"info",'string','Freebox_OS_Downloads');
 		$Downloads->AddCommande('Téléchargement en cours','nb_tasks_downloading',"info",'string','Freebox_OS_Downloads');
 		$Downloads->AddCommande('Vitesse réception','rx_rate',"info",'string','Freebox_OS_Downloads','Mo/s');
 		$Downloads->AddCommande('Vitesse émission','tx_rate',"info",'string','Freebox_OS_Downloads','Mo/s');
@@ -318,7 +318,7 @@ class Freebox_OS extends eqLogic {
 			self::addHomeAdapters();
 		}
     	}
-	public function preSave() {	
+	public function preSave() {
 		switch($this->getLogicalId())	{
 			case 'AirPlay':
 				$FreeboxAPI = new FreeboxAPI();
@@ -330,27 +330,27 @@ class Freebox_OS extends eqLogic {
 		if($this->getConfiguration('waite') == '')
 			$this->setConfiguration('waite',300);
 	}
-	public function postSave() {		
+	public function postSave() {
 		if($this->getIsEnable())
-			$this->CreateDemon(); 
-		else{	
+			$this->CreateDemon();
+		else{
 			$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $this->getId()));
 			if (is_object($cron)) {
 				$cron->stop();
 				$cron->remove();
 			}
 		}
-		
+
 	}
 	public static function RefreshToken() {
 		$FreeboxAPI = new FreeboxAPI();
-		$FreeboxAPI->close_session();	
+		$FreeboxAPI->close_session();
 		if($FreeboxAPI->getFreeboxOpenSession() === false)
 			self::deamon_stop();
 	}
 	public static function RefreshInformation($_option) {
 		$FreeboxAPI = new FreeboxAPI();
-		$Equipement = eqlogic::byId($_option['Freebox_id']); 
+		$Equipement = eqlogic::byId($_option['Freebox_id']);
 		if (is_object($Equipement) && $Equipement->getIsEnable()) {
 			while(true){
 				switch ($Equipement->getLogicalId()){
@@ -388,7 +388,7 @@ class Freebox_OS extends eqLogic {
 					case 'Downloads':
 						$result = $FreeboxAPI->DownloadStats();
 						if($result!=false){
-							foreach($Equipement->getCmd('info') as $Commande){									
+							foreach($Equipement->getCmd('info') as $Commande){
 								if(is_object($Commande)){
 									switch ($Commande->getLogicalId()){
 										case "nb_tasks":
@@ -430,10 +430,10 @@ class Freebox_OS extends eqLogic {
 										break;
 										case "nb_tasks_error":
 											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(),$result['nb_tasks_error']);
-										break;    
+										break;
 										case "nb_tasks_checking":
 											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(),$result['nb_tasks_checking']);
-										break;    
+										break;
 									}
 								}
 							}
@@ -484,22 +484,22 @@ class Freebox_OS extends eqLogic {
 									case "wifiStatut":
 										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(),$result);
 									break;
-								}		
+								}
 							}
 						}
 					break;
-					case 'Disque':						
+					case 'Disque':
 						foreach($Equipement->getCmd('info') as $Commande){
 							if(is_object($Commande)){
 								$result = $FreeboxAPI->getdisque($Commande->getLogicalId());
-								if($result!=false)				
+								if($result!=false)
 									$Equipement->checkAndUpdateCmd($Commande->getLogicalId(),$result);
 							}
 						}
 					break;
 					case 'Phone':
 						$result = $FreeboxAPI->nb_appel_absence();
-						if($result!=false){								
+						if($result!=false){
 							foreach($Equipement->getCmd('info') as $Commande){
 								if(is_object($Commande)){
 									switch ($Commande->getLogicalId()) {
@@ -526,7 +526,7 @@ class Freebox_OS extends eqLogic {
 							}
 						}
 					break;
-					case'Reseau':			
+					case'Reseau':
 						foreach($Equipement->getCmd('info') as $Commande){
 							if(is_object($Commande)){
 								$result=$FreeboxAPI->ReseauPing($Commande->getLogicalId());
@@ -645,10 +645,10 @@ class Freebox_OSCmd extends cmd {
 					switch ($this->getLogicalId()){
                                                 case "stop_dl":
                                                         $FreeboxAPI->Downloads(0);
-	                                                break;  
+	                                                break;
                                                 case "start_dl":
                                                         $FreeboxAPI->Downloads(1);
-                                                        break;  
+                                                        break;
 					}
 				}
 			break;
@@ -665,7 +665,7 @@ class Freebox_OSCmd extends cmd {
 							$FreeboxAPI->UpdateSystem();
 							break;
 						case "wifiOnOff":
-							if($result==true) 
+							if($result==true)
 								$FreeboxAPI->wifiPUT(0);
 							else
 								$FreeboxAPI->wifiPUT(1);
@@ -683,7 +683,7 @@ class Freebox_OSCmd extends cmd {
 			case 'Phone':
 				$result = $FreeboxAPI->nb_appel_absence();
 				if($result!=false){
-					switch ($this->getLogicalId()) 
+					switch ($this->getLogicalId())
 					{
 						case "sonnerieDectOn":
 							$FreeboxAPI->ringtone_on();
@@ -697,7 +697,7 @@ class Freebox_OSCmd extends cmd {
 			case'AirPlay':
 				$receivers=$this->getEqLogic()->getCmd(null,"ActualAirmedia");
 				if(!is_object($receivers) ||$receivers->execCmd() == "" || $_options['titre'] ==null){
-	        			log::add('Freebox_OS','debug','[AirPlay] Impossible d\'envoyer la demande les parametre sont incomplet equipement'.$receivers->execCmd().' type:'.$_options['titre']);
+	        			log::add('Freebox_OS','debug','[AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement'.$receivers->execCmd().' type:'.$_options['titre']);
 					break;
 				}
 				$Parameter["media_type"] = $_options['titre'];
@@ -721,8 +721,8 @@ class Freebox_OSCmd extends cmd {
 						if($this->getConfiguration('inverse'))
 							$parametre['value'] = ($this->getConfiguration('maxValue') - $this->getConfiguration('minValue')) - $_options['slider'];
 						else
-							$parametre['value'] = (int)$_options['slider'];
-						$parametre['value_type'] = 'int';
+                            $parametre['value'] = (int)$_options['slider'];
+                        $parametre['value_type'] = 'int';
 					break;
 					case 'color':
 						$parametre['value'] = $_options['color'];
@@ -739,7 +739,7 @@ class Freebox_OSCmd extends cmd {
 					default:
 						$parametre['value'] = true;
 						$Listener=cmd::byId(str_replace('#','',$this->getValue()));
-						if(is_object($Listener)) 
+						if(is_object($Listener))
 							$parametre['value'] = $Listener->execCmd();
 						if($this->getConfiguration('inverse'))
 							$parametre['value'] = !$parametre['value'];
@@ -748,6 +748,6 @@ class Freebox_OSCmd extends cmd {
 				}
 				$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(),$this->getLogicalId(),$parametre);
 			break;
-		}	
+		}
 	}
 }

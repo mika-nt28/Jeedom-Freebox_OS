@@ -8,49 +8,37 @@ $("#table_cmd").sortable({
 });
 $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _options) {
     var camera = jQuery.parseJSON(_options);
-    bootbox.confirm({
-        message: "{{Une caméra Freebox a été détectée (" + camera.name + ")<br>Voulez-vous l’ajouter au Plugin Caméra ?}}",
-        buttons: {
-            confirm: {
-                label: '{{Oui}}',
-                className: 'btn-success'
-            },
-            cancel: {
-                label: '{{Non}}',
-                className: 'btn-danger'
-            }
-        },
-        callback: function (result) {
-            if (result) {
-                $.ajax({
-                    type: 'POST',
-                    url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
-                    data: {
-                        action: 'createCamera',
-                        name: camera.name,
-                        id: camera.id,
-                        url: camera.url
-                    },
-                    dataType: 'json',
-                    global: true,
-                    error: function (request, status, error) {},
-                    success: function (data) {
-                        if (data.state != 'ok') {
-                            $('#div_alert').showAlert({
-                                message: data.result,
-                                level: 'danger'
-                            });
-                            return;
-                        }
+    bootbox.confirm("{{Une caméra Freebox a été détectée (<b>" + camera.name + "</b>)<br>Voulez-vous l’ajouter au Plugin Caméra ?}}", function (result) {
+        if (result) {
+            $.ajax({
+                type: 'POST',
+                url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+                data: {
+                    action: 'createCamera',
+                    name: camera.name,
+                    id: camera.id,
+                    url: camera.url
+                },
+                dataType: 'json',
+                global: true,
+                error: function (request, status, error) {},
+                success: function (data) {
+                    if (data.state != 'ok') {
                         $('#div_alert').showAlert({
-                            message: "{{Camera ajouté avec sucess}}",
-                            level: 'success'
+                            message: data.result,
+                            level: 'danger'
                         });
+                        return;
                     }
-                });
-            }
+                    $('#div_alert').showAlert({
+                        message: "{{La caméra (<b>" + camera.name + "</b>) a été ajoutée avec succès}}",
+                        level: 'success'
+                    });
+                }
+            });
         }
     });
+
 });
 $('.MaFreebox').on('click', function () {
     $('#md_modal').dialog({
@@ -61,6 +49,10 @@ $('.MaFreebox').on('click', function () {
     $('#md_modal').load('index.php?v=d&modal=MaFreebox&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
 });
 $('.eqLogicAction[data-action=tile]').on('click', function () {
+    $('#div_alert').showAlert({
+        message: '{{Recherche des <b>Tiles</b>}}',
+        level: 'warning'
+    });
     $.ajax({
         type: 'POST',
         async: true,
@@ -70,11 +62,21 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
         },
         dataType: 'json',
         global: false,
-        error: function (request, status, error) {},
+        error: function (request, status, error) {
+            $('#div_alert').showAlert({
+                message: '{{Erreur recherche des <b>Tiles</b>}}',
+                level: 'danger'
+            });
+        },
         success: function (data) {
+            $('#div_alert').showAlert({
+                message: '{{Opération réalisée avec succès, penser à rafraichir la page}}',
+                level: 'success'
+            });
             //location.reload();
         }
     });
+
 });
 $('.Equipement').on('click', function () {
     $.ajax({
@@ -136,11 +138,15 @@ function addCmdToTable(_cmd) {
     tr += '<span class="subType" subType="' + init(_cmd.subType) + ' "  disabled></span>';
     tr += '</td>';
     tr += '<td>';
-    tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;display:inline-block;margin-right:5px;">';
+    if (_cmd.subType == "numeric") {
+        tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;display:inline-block;margin-right:5px;">';
+    }
     tr += '</td>';
     tr += '<td>';
     tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';
-    tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
+    if (_cmd.subType == "numeric" || _cmd.subType == "binary") {
+        tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
+    }
     tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span> ';
     tr += '</td>';
 

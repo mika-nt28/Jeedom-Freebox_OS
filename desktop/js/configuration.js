@@ -18,7 +18,7 @@ $('.FreeboxAppaire').on('click',function(){
 					return;
 				}else{
 					sendToBdd(data.result);		
-					bootbox.confirm('{{Il faut aller valider Jeedom sur la Freebox Server, cliquez sur la flèche OUI }}', function (result) {
+					bootbox.confirm('{{Valider l’application directement sur l’écran de la Freebox avant de cliquer sur Ok}}', function (result) {
 						if (result)
 							AskTrackAuthorization();					
 					});
@@ -44,15 +44,15 @@ function AskTrackAuthorization(){
 			} else 	{
 				switch(data.result.result.status){
 					case "unknown":
-						$('#div_alert').showAlert({message: "Tu n'as pas validé à temps l'application, merci de re-sauvgarder", level: 'danger'});
+						$('#div_alert').showAlert({message: "l'application p'as pas validé à temps, merci de re-sauvgarder", level: 'danger'});
 						break;
 						
 					case "pending":
-						$('#div_alert').showAlert({message: "Tu n'es toujours pas allé valider l'application sur la Freebox Server", level: 'danger'});
+						$('#div_alert').showAlert({message: "L'application n'as toujours pas été validée sur la Freebox Server", level: 'danger'});
 						break;
 						
 					case "timeout":
-						$('#div_alert').showAlert({message: "Tu n'as pas validé à temps l'application, merci de re-sauvgarder", level: 'danger'});
+						$('#div_alert').showAlert({message: "l'application p'as pas validé à temps, merci de re-sauvgarder", level: 'danger'});
 						break;
 						
 					case "granted":
@@ -61,7 +61,7 @@ function AskTrackAuthorization(){
 						break;
 						
 					case "denied":
-						$('#div_alert').showAlert({message: "Tu as refusé la demande d'autorisation, merci de cliquer sur : ETAPE 1", level: 'danger'});
+						$('#div_alert').showAlert({message: "La demande d'autorisation a été refusée, merci de cliquer sur : Appairage", level: 'danger'});
 						break;
 					default:
 						$('#div_alert').showAlert({message: "REST OK : track_authorization -> Error 4 : Inconnue", level: 'danger'});
@@ -90,12 +90,9 @@ function TryAPI(){
 			   return;
 			}else{
 				//console.log("Test de L'API ... :");
-				var messageOut="L'application est validée et peut être utilisée. Vous avez fini la configuration.<br>";
-				messageOut+="Toutefois, il faut activer manuellement une option si vous désirez redémarrer la Freebox depuis Jeedom. Il faut vous rendre sur : mafreebox.free.fr <br>";
-				messageOut+="Et suivre les étapes suivantes : Cliquez sur : <b>Paramètres de la Freebox</b> -> <b>Gestion des accès</b><br>";
-				messageOut+="Onglet : <b>Applications</b> -> Puis cliquez sur la fenêtre d'édition sur la droite (A gauche de la poubelle) au nom de votre application Jeedom<br>";
-				messageOut+="Cochez : <b>Modification des réglages de la Freebox</b> et cliquez sur : <b>OK</b>. Vous pouvez fermer le site.";
-				
+				var messageOut="L’application est validée et peut être utilisée. La configuration est terminée.<br>";
+				messageOut+="Il faut modifier les droits d’accès pour l’application dans l’OS de la Freebox afin d’avoir accès à toute ces fonctionnalités.<br>";
+				messageOut+="Suivre les infos indiquées dans le paragraphe « Appairage » de la documentation du plugin.<br>";
 				$('#div_alert').showAlert({message: messageOut, level: 'success'});
 			}
 		}

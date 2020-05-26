@@ -21,5 +21,9 @@ function Freebox_OS_remove() {
     if (is_object($cron)) {
         $cron->remove();
     }
+    $cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation');
+    if (is_object($cron)) {
+        $cron->remove();
+    }
 }
 ?>

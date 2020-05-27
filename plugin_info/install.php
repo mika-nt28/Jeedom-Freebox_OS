@@ -17,5 +17,9 @@ function Freebox_OS_update() {
 	log::add('Freebox_OS','debug','Fin du script de mise à jour');
 }
 function Freebox_OS_remove() {
+	while(is_object($cron=cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
+		$cron->remove();
+	if(is_object($cron=cron::byClassAndFunction('Freebox_OS', 'RefreshToken')))
+		$cron->remove();
 }
 ?>

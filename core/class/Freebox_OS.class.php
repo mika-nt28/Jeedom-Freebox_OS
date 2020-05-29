@@ -3,9 +3,9 @@
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
 include_file('core', 'FreeboxAPI', 'class', 'Freebox_OS');
 class Freebox_OS extends eqLogic {
-	public static function deamon_info() {
-		$return = array();
-		$return['log'] = 'Freebox_OS';
+    public static function deamon_info() {
+        $return = array();
+        $return['log'] = 'Freebox_OS';
 		if(trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'))!=''
 		   && config::byKey('FREEBOX_SERVER_APP_TOKEN','Freebox_OS')!=''
 		   && trim(config::byKey('FREEBOX_SERVER_APP_ID','Freebox_OS'))!='')
@@ -164,16 +164,38 @@ class Freebox_OS extends eqLogic {
 						event::add('Freebox_OS::camera', json_encode($parameter));
 						continue;
 					}
-          				if(!is_object($Tile))
-              					continue;
+                    if(!is_object($Tile))
+                        continue;
+                    log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : '.$Equipement['label'] .' (Node ID '.$Equipement['node_id'] .')');
+                    log::add('Freebox_OS', 'debug', '│ label : ' .$Commande['label'] .' -- name : '.$Commande['name']);
+                    log::add('Freebox_OS', 'debug', '│ type  : ' .$Equipement['type'] .' -- action : ' .$Equipement['action']);
+                    log::add('Freebox_OS', 'debug', '│ Index : ' .$Commande['ep_id'] .' -- Value Type : ' .$Commande['value_type'] .' -- Access : '.$Commande['ui']['access']);
+                    log::add('Freebox_OS', 'debug', '│ valeur actuelle: '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
+
 					switch($Commande['value_type']){
+
 						case "void":
-							$action = $Tile->AddCommande($Commande['label'],$Commande['ep_id'],"action",'other');
+                            $generic_type ='';
+                            if($Commande['name'] == 'up'){
+                                $generic_type ='FLAP_UP';
+                            } else if ($Commande['name'] == 'stop'){
+                                $generic_type ='FLAP_STOP';
+                            } else if ($Commande['name'] == 'down'){
+                                $generic_type ='FLAP_DOWN';
+                            }
+                            log::add('Freebox_OS', 'debug', '│ type de générique : ' .$generic_type);
+
+							$action = $Tile->AddCommande($Commande['label'],$Commande['ep_id'],"action",'other','','',$generic_type);
 						break;
 						case "int":
 							foreach(str_split($Commande['ui']['access']) as $access){
+                                $label_sup ='';
+                                if ($Commande['name'] != "battery_warning"){
+                                    $label_sup ='info_';
+								}
+
 								if($access == "r"){
-									$info = $Tile->AddCommande('info_'. $Commande['label'],$Commande['ep_id'],"info",'numeric','',$Commande['ui']['unit']);
+									$info = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"info",'numeric','',$Commande['ui']['unit']);
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
 									if ($Commande['name'] == "battery_warning")
 										$Tile->batteryStatus($Commande['value']);
@@ -185,8 +207,21 @@ class Freebox_OS extends eqLogic {
 						break;
 						case "bool":
 							foreach(str_split($Commande['ui']['access']) as $access){
-								if($access == "r"){
-									$info = $Tile->AddCommande('info_'. $Commande['label'],$Commande['ep_id'],"info",'binary','',$Commande['ui']['unit']);
+                                if($access == "r"){
+                                    $generic_type ='';
+                                    $label_sup ='info_';
+                                    if($Equipement['action'] == "store"){
+                                        $generic_type ='FLAP_STATE';
+                                        $label_sup ='';
+                                    } else if($Equipement['type'] == "alarm_sensor" && $Commande['name'] =='cover'){
+                                        $generic_type ='SABOTAGE';
+                                        $label_sup ='';
+                                    } else if($Equipement['type'] == "alarm_sensor" && $Commande['name'] =='trigger'){
+                                        $generic_type ='OPENING';
+                                        $label_sup ='';
+                                    }
+                                    log::add('Freebox_OS', 'debug', '│ type de générique : ' .$generic_type);
+									$info = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"info",'binary','',$Commande['ui']['unit'],$generic_type);
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
 								}
 								if($access == "w"){
@@ -206,6 +241,7 @@ class Freebox_OS extends eqLogic {
 							}
 						break;
 					}
+                    log::add('Freebox_OS', 'debug', '└─────────');
 					if(is_object($info) && is_object($action)){
 						$action->setValue($info->getId());
 						$action->save();
@@ -214,30 +250,32 @@ class Freebox_OS extends eqLogic {
 			}
 		}
 	}
-	public function AddCommande($Name,$_logicalId,$Type="info", $SubType='binary', $Template='default', $unite='') {
+
+    public function AddCommande($Name,$_logicalId,$Type="info", $SubType='binary', $Template='default', $unite='', $generic_type='') {
 		$Commande = $this->getCmd($Type,$_logicalId);
-		if (!is_object($Commande)){
-			$VerifName=$Name;
-			$Commande = new Freebox_OSCmd();
-			$Commande->setId(null);
-			$Commande->setLogicalId($_logicalId);
-			$Commande->setEqLogic_id($this->getId());
-			$count=0;
-			while (is_object(cmd::byEqLogicIdCmdName($this->getId(),$VerifName)))
-			{
-				$count++;
-				$VerifName=$Name.'('.$count.')';
-			}
-			$Commande->setName($VerifName);
-			$Commande->setUnite($unite);
-			$Commande->setType($Type);
-			$Commande->setSubType($SubType);
-			$Commande->setTemplate('dashboard','Freebox_OS::'.$Template);
-			$Commande->setTemplate('mobile', 'Freebox_OS::'.$Template);
-			$Commande->save();
-		}
-		return $Commande;
-	}
+        if (!is_object($Commande)){
+            $VerifName=$Name;
+            $Commande = new Freebox_OSCmd();
+            $Commande->setId(null);
+            $Commande->setLogicalId($_logicalId);
+            $Commande->setEqLogic_id($this->getId());
+            $count=0;
+            while (is_object(cmd::byEqLogicIdCmdName($this->getId(),$VerifName)))
+            {
+                $count++;
+                $VerifName=$Name.'('.$count.')';
+            }
+            $Commande->setName($VerifName);
+            $Commande->setUnite($unite);
+            $Commande->setType($Type);
+            $Commande->setSubType($SubType);
+            $Commande->setDisplay('generic_type',$generic_type);
+            $Commande->setTemplate('dashboard','Freebox_OS::'.$Template);
+            $Commande->setTemplate('mobile', 'Freebox_OS::'.$Template);
+            $Commande->save();
+        }
+        return $Commande;
+    }
 	public static function CreateArchi() {
 		self::AddEqLogic('Home Adapters','HomeAdapters');
 		self::AddEqLogic('Réseau','Reseau');

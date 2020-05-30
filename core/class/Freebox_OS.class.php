@@ -148,6 +148,7 @@ class Freebox_OS extends eqLogic {
         $FreeboxAPI= new FreeboxAPI();
         foreach($FreeboxAPI->getTiles() as $Equipement){
             if($Equipement['type'] != 'camera'){
+                $Equipement['label'] = preg_replace('/\'+/',' ',$Equipement['label']); // Suppression '
                 if(isset($Equipement['label']))
                     $Tile=self::AddEqLogic($Equipement['label'],$Equipement['node_id']);
                 else
@@ -173,10 +174,12 @@ class Freebox_OS extends eqLogic {
                     log::add('Freebox_OS', 'debug', '│ type  : ' .$Equipement['type'] .' -- action : ' .$Equipement['action']);
                     log::add('Freebox_OS', 'debug', '│ Index : ' .$Commande['ep_id'] .' -- Value Type : ' .$Commande['value_type'] .' -- Access : '.$Commande['ui']['access']);
                     log::add('Freebox_OS', 'debug', '│ valeur actuelle: '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
+                    $IsVisible = 1;
+                    $generic_type ='';
+                    $label_sup ='';
 
                     switch($Commande['value_type']){
                         case "void":
-                            $generic_type ='';
                             if($Commande['name'] == 'up'){
                                 $generic_type ='FLAP_UP';
                             } else if ($Commande['name'] == 'stop'){
@@ -189,53 +192,65 @@ class Freebox_OS extends eqLogic {
                             break;
                         case "int":
                             foreach(str_split($Commande['ui']['access']) as $access){
-                                $label_sup ='';
-                                if ($Commande['name'] != "battery_warning"){
-                                    $label_sup ='info_';
+                                if ($Commande['name'] == "battery_warning"){
+                                    $generic_type ='BATTERY';
+                                    $IsVisible = 0;
                                 }
+                                log::add('Freebox_OS', 'debug', '│ type de générique : ' .$generic_type);
                                 if($access == "r"){
-                                    $info = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"info",'numeric','',$Commande['ui']['unit']);
+                                    if ($Commande['ui']['access'] == "rw"){
+                                        $label_sup ='Etat ';
+                                    }
+                                    $info = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],'info','numeric','',$Commande['ui']['unit'],$generic_type,$IsVisible);
                                     $Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
                                     if ($Commande['name'] == "battery_warning")
                                         $Tile->batteryStatus($Commande['value']);
+                                    $label_sup ='';
                                 }
                                 if($access == "w"){
-                                    $action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action",'slider','',$Commande['ui']['unit']);
+                                    $action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action",'slider','',$Commande['ui']['unit']);
                                 }
                             }
                             break;
                         case "bool":
                             foreach(str_split($Commande['ui']['access']) as $access){
                                 if($access == "r"){
-                                    $generic_type ='';
-                                    $label_sup ='info_';
                                     if($Equipement['action'] == "store"){
                                         $generic_type ='FLAP_STATE';
-                                        $label_sup ='';
                                     } else if($Equipement['type'] == "alarm_sensor" && $Commande['name'] =='cover'){
                                         $generic_type ='SABOTAGE';
-                                        $label_sup ='';
                                     } else if($Equipement['type'] == "alarm_sensor" && $Commande['name'] =='trigger'){
                                         $generic_type ='OPENING';
-                                        $label_sup ='';
+                                    } else if ($Commande['ui']['access'] == "rw"){
+                                        $label_sup ='Etat ';
                                     }
                                     log::add('Freebox_OS', 'debug', '│ type de générique : ' .$generic_type);
                                     $info = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"info",'binary','',$Commande['ui']['unit'],$generic_type);
                                     $Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
+                                    $label_sup ='';
                                 }
                                 if($access == "w"){
-                                    $action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action",'other','',$Commande['ui']['unit']);
+                                    $action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action",'other','',$Commande['ui']['unit']);
                                 }
                             }
                             break;
                         case "string":
                             foreach(str_split($Commande['ui']['access']) as $access){
+                                if ($Commande['name'] == "pin") {
+                                    $IsVisible = 0;
+                                } else {
+                                    $IsVisible = 1;
+                                }
                                 if($access == "r"){
-                                    $info = $Tile->AddCommande($Commande['label'],$Commande['ep_id'],"info","string",'',$Commande['ui']['unit']);
+                                    if ($Commande['ui']['access'] == "rw"){
+                                        $label_sup ='Etat ';
+                                    }
+                                    $info = $Tile->AddCommande($label_sup.$Commande['label'],$Commande['ep_id'],"info","string",'',$Commande['ui']['unit'],$generic_type,$IsVisible);
                                     $Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
+                                    $label_sup ='';
                                 }
                                 if($access == "w"){
-                                    $action = $Tile->AddCommande('action_'. $Commande['label'],$Commande['ep_id'],"action","message",'',$Commande['ui']['unit']);
+                                    $action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action","message",'',$Commande['ui']['unit'],$generic_type,$IsVisible);
                                 }
                             }
                             break;
@@ -249,7 +264,7 @@ class Freebox_OS extends eqLogic {
             }
         }
     }
-    public function AddCommande($Name,$_logicalId,$Type="info", $SubType='binary', $Template='default', $unite='', $generic_type='') {
+    public function AddCommande($Name,$_logicalId,$Type="info", $SubType='binary', $Template='default', $unite='', $generic_type='', $IsVisible=1) {
         $Commande = $this->getCmd($Type,$_logicalId);
         if (!is_object($Commande)){
             $VerifName=$Name;
@@ -266,6 +281,7 @@ class Freebox_OS extends eqLogic {
             $Commande->setName($VerifName);
             $Commande->setUnite($unite);
             $Commande->setType($Type);
+            $Commande->setIsVisible($IsVisible);
             $Commande->setSubType($SubType);
             $Commande->setDisplay('generic_type',$generic_type);
             if ($Template !='default') {

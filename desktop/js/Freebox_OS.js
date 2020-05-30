@@ -96,13 +96,22 @@ $('.Equipement').on('click', function () {
 });
 
 function addCmdToTable(_cmd) {
+    if (init(_cmd.logicalId) == 'refresh') {
+        return;
+    }
     var inverse = $('<span>');
     switch ($('.eqLogicAttr[data-l1key=logicalId]').val()) {
         case 'Home Adapters':
             $('.Equipement').show();
+            $('.Add_Equipement').hide();
+            break;
+        case 'HomeAdapters':
+            $('.Equipement').show();
+            $('.Add_Equipement').hide();
             break;
         case 'Reseau':
             $('.Equipement').show();
+            $('.Add_Equipement').show();
             break;
         case 'Disque':
             $('.Equipement').show();
@@ -117,6 +126,7 @@ function addCmdToTable(_cmd) {
             break;
         default:
             $('.Equipement').hide();
+            $('.Add_Equipement').hide();
             inverse.append('{{Inverser}}');
             inverse.append($('<input type="checkbox" class="cmdAttr" data-size="mini" data-label-text="{{Inverser}}" data-l1key="configuration" data-l2key="inverse"/>'));
             break;

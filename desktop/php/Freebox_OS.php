@@ -13,7 +13,7 @@
             <div class="cursor eqLogicAction logoPrimary" data-action="tile">
                 <i class="fas fa-search"></i>
                 <br>
-                <span>{{Rechercher les tile}}</span>
+                <span>{{Rechercher les Tiles}}</span>
             </div>
             <div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
                 <i class="fas fa-wrench"></i>

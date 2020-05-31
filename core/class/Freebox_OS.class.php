@@ -196,19 +196,37 @@ class Freebox_OS extends eqLogic {
                                     $generic_type ='BATTERY';
                                     $IsVisible = 0;
                                 }
-                                log::add('Freebox_OS', 'debug', '│ type de générique : ' .$generic_type);
+
                                 if($access == "r"){
                                     if ($Commande['ui']['access'] == "rw"){
                                         $label_sup ='Etat ';
                                     }
+                                    if ($Commande['name'] =="luminosity" or ($Commande['name'] =="v" && $Equipement['action'] =="color_picker")) {
+                                        $IsVisible = 0;
+                                        $generic_type ='LIGHT_STATE';
+                                    } else if ($Commande['name'] =="hs" && $Equipement['action'] =="color_picker") {
+                                        $IsVisible = 0;
+                                        $generic_type ='LIGHT_COLOR';
+                                    }
+                                    log::add('Freebox_OS', 'debug', '│ type de générique : ' .$generic_type);
                                     $info = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],'info','numeric','',$Commande['ui']['unit'],$generic_type,$IsVisible);
                                     $Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
                                     if ($Commande['name'] == "battery_warning")
                                         $Tile->batteryStatus($Commande['value']);
                                     $label_sup ='';
+                                    $IsVisible = 1;
+                                    $generic_type ='';
                                 }
                                 if($access == "w"){
-                                    $action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action",'slider','',$Commande['ui']['unit']);
+                                    if ($Commande['name'] =="luminosity" or ($Commande['name'] =="v" && $Equipement['action'] =="color_picker")) {
+                                        $generic_type ='LIGHT_SLIDER';
+                                    } else if ($Commande['name'] =="hs" && $Equipement['action'] =="color_picker") {
+                                        $generic_type ='LIGHT_SET_COLOR';
+                                    } else {
+                                        $generic_type ='';
+                                    }
+                                    log::add('Freebox_OS', 'debug', '│ type de générique : ' .$generic_type);
+                                    $action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action",'slider','',$Commande['ui']['unit'],$generic_type,$IsVisible);
                                 }
                             }
                             break;
@@ -228,9 +246,11 @@ class Freebox_OS extends eqLogic {
                                     $info = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"info",'binary','',$Commande['ui']['unit'],$generic_type);
                                     $Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
                                     $label_sup ='';
+                                    $generic_type ='';
                                 }
                                 if($access == "w"){
-                                    $action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action",'other','',$Commande['ui']['unit']);
+                                    log::add('Freebox_OS', 'debug', '│ type de générique : ' .$generic_type);
+                                    $action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action",'other','',$Commande['ui']['unit'],$generic_type);
                                 }
                             }
                             break;

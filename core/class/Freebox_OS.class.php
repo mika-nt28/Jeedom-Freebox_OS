@@ -305,12 +305,13 @@ class Freebox_OS extends eqLogic {
             $Commande->setSubType($SubType);
             $Commande->setDisplay('generic_type',$generic_type);
             if ($Template !='default') {
-                $Commande->setTemplate('dashboard','Freebox_OS::'.$Template);
+		    $Commande->setTemplate('dashboard','Freebox_OS::'.$Template);
+		    $Commande->setTemplate('mobile', 'Freebox_OS::'.$Template);
             } else {
                 $Commande->setTemplate('dashboard','default');
                 $Commande->setTemplate('mobile','default');
             }
-            $Commande->setTemplate('mobile', 'Freebox_OS::'.$Template);
+            
             $Commande->save();
         }
         $refresh = $this->getCmd(null, 'refresh');

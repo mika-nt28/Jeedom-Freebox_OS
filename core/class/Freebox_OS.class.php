@@ -168,8 +168,9 @@ class Freebox_OS extends eqLogic {
 					$info = null;
 					$action = null;
 					$generic_type = null;
-                    $label_sup = null;
+					$label_sup = null;
 					$infoCmd = null;
+					$IsVisible = 1;
 					if ($Equipement['type'] == 'camera' && method_exists('camera','getUrl')) {
 						$parameter['name']=$Commande['label'];
 						$parameter['id']=$Commande['ep_id'];
@@ -184,7 +185,7 @@ class Freebox_OS extends eqLogic {
 					log::add(__CLASS__, 'debug', '│ label : ' .$Commande['label'] .' -- name : '.$Commande['name']);
 					log::add(__CLASS__, 'debug', '│ type  : ' .$Equipement['type'] .' -- action : ' .$Equipement['action']);
 					log::add(__CLASS__, 'debug', '│ Index : ' .$Commande['ep_id'] .' -- Value Type : ' .$Commande['value_type'] .' -- Access : '.$Commande['ui']['access']);
-                    log::add(__CLASS__, 'debug', '│ valeur actuelle: '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
+                    log::add(__CLASS__, 'debug', '│ valeur actuelle : '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
 
 					switch ($Commande['value_type']) {
 						case "void":
@@ -194,46 +195,39 @@ class Freebox_OS extends eqLogic {
 								$generic_type ='FLAP_STOP';
 							} elseif ($Commande['name'] == 'down') {
 								$generic_type ='FLAP_DOWN';
+							} else {
+								$generic_type = null;
 							}
-
-							$action = $Tile->AddCommande($Commande['label'],$Commande['ep_id'],"action",'other','',1,$generic_type);
+							$action = $Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'action','other','',$Commande['ui']['unit'],$generic_type,1,'','');
 							break;
                         case "int":
 							foreach (str_split($Commande['ui']['access']) as $access) {
-								if ($Commande['name'] == "battery_warning") {
-									$generic_type ='BATTERY';
-									$IsVisible = 0;
-								}
 								if ($access == "r") {
 									if ($Commande['ui']['access'] == "rw") {
 										$label_sup ='Etat ';
 									}
-									if ($Commande['name'] =="luminosity" or ($Commande['name'] =="v" && $Equipement['action'] =="color_picker")) {
-										$IsVisible = 0;
-										$generic_type ='LIGHT_STATE';
-									} elseif ($Commande['name'] =="hs" && $Equipement['action'] =="color_picker") {
-										$IsVisible = 0;
-										$generic_type ='LIGHT_COLOR';
-									}
-									$info = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],'info','numeric','',$Commande['ui']['unit'],$generic_type,$IsVisible);
-									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
-									if ($Commande['name'] == "battery_warning") {
+									if ($Commande['name'] =="luminosity" && $Equipement['action'] !="color_picker") {
+										$infoCmd = $Tile->AddCommandTiles($label_sup .$Commande['label'],$Commande['ep_id'],'info','numeric','',$Commande['ui']['unit'], 'LIGHT_STATE',0,'',$Commande['ep_id'],'light');
+										$Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'action','slider','',$Commande['ui']['unit'],'LIGHT_SLIDER', 1, $infoCmd,$Commande['ep_id'],'light');
+
+									} elseif ($Commande['name'] !="luminosity" && $Equipement['action'] =="color_picker") {
+										$infoCmd = $Tile->AddCommandTiles($label_sup .$Commande['label'],$Commande['ep_id'],'info','numeric','',$Commande['ui']['unit'], 'LIGHT_COLOR',0,'',$Commande['ep_id'],'light');
+										$Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'action','slider','',$Commande['ui']['unit'],'LIGHT_SET_COLOR',1, $infoCmd,$Commande['ep_id'],'light');
+
+									} elseif ($Commande['name'] =="battery_warning" ) {
+										$Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'info', 'numeric','',$Commande['ui']['unit'],'BATTERY',1,'','');
 										$Tile->batteryStatus($Commande['value']);
+
+									} else {
+										$info = $Tile->AddCommandTiles($label_sup. $Commande['label'],$Commande['ep_id'],'info','numeric','',$Commande['ui']['unit'],$generic_type,$IsVisible,'','');
 									}
 									$label_sup ='';
-									$IsVisible = 1;
-									$generic_type ='';
+									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
 								}
 								if ($access == "w") {
-									if ($Commande['name'] =="luminosity" or ($Commande['name'] =="v" && $Equipement['action'] =="color_picker") ) {
-										$generic_type ='LIGHT_SLIDER';
-									} elseif ($Commande['name'] =="hs" && $Equipement['action'] =="color_picker") {
-										$generic_type ='LIGHT_SET_COLOR';
-									} else {
-										$generic_type ='';
+									if ($Commande['name'] !="luminosity" && $Equipement['action'] !="color_picker") {
+										$action = $Tile->AddCommandTiles($label_sup. $Commande['label'],$Commande['ep_id'],'action','slider','',$Commande['ui']['unit'],$generic_type,$IsVisible,'','');
 									}
-
-									$action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action",'slider','',$Commande['ui']['unit'],$generic_type,$IsVisible);
 								}
 							}
 							break;
@@ -248,11 +242,11 @@ class Freebox_OS extends eqLogic {
 										$generic_type ='OPENING';
 									}
 									if ($Commande['label']=='Enclenché') {
-										$infoCmd = $Tile->AddCommandTiles('Etat', $Commande['ep_id'], 'info', 'binary', '', $Commande['ui']['unit'], 'LIGHT_STATE', 0,'',$Commande['ep_id'],'light');
-										$Tile->AddCommandTiles('On', 'PB_On', 'action', 'other', '', $Commande['ui']['unit'], 'LIGHT_ON', 1, $infoCmd,$Commande['ep_id'],'light');
-										$Tile->AddCommandTiles('Off', 'PB_Off', 'action', 'other', '', $Commande['ui']['unit'], 'LIGHT_OFF', 1, $infoCmd,$Commande['ep_id'],'light');
+										$infoCmd = $Tile->AddCommandTiles('Etat', $Commande['ep_id'],'info','binary','',$Commande['ui']['unit'],'LIGHT_STATE', 0,'',$Commande['ep_id'],'light');
+										$Tile->AddCommandTiles('On','PB_On','action','other','',$Commande['ui']['unit'],'LIGHT_ON',1,$infoCmd,$Commande['ep_id'],'light');
+										$Tile->AddCommandTiles('Off','PB_Off','action','other','',$Commande['ui']['unit'],'LIGHT_OFF',1,$infoCmd,$Commande['ep_id'],'light');
 									} else {
-										$infoCmd = $Tile->AddCommandTiles($Commande['label'], $Commande['ep_id'], 'info', 'binary', '', $Commande['ui']['unit'], $generic_type, 1);
+										$infoCmd = $Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'info','binary','',$Commande['ui']['unit'],$generic_type,1,'','');
 									}
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
 									$label_sup ='';
@@ -260,7 +254,7 @@ class Freebox_OS extends eqLogic {
 								}
 								if ($access == "w") {
 									if ($Commande['label']!='Enclenché') {
-										$action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action",'other','',$Commande['ui']['unit'],$generic_type);
+										$action = $Tile->AddCommandTiles($label_sup. $Commande['label'],$Commande['ep_id'],'action','other','',$Commande['ui']['unit'],$generic_type,$IsVisible,'','');
 									}
 								}
 							}
@@ -276,12 +270,12 @@ class Freebox_OS extends eqLogic {
 									if ($Commande['ui']['access'] == "rw") {
 										$label_sup ='Etat ';
 									}
-									$info = $Tile->AddCommande($label_sup.$Commande['label'],$Commande['ep_id'],"info","string",'',$Commande['ui']['unit'],$generic_type,$IsVisible);
+									$info = $Tile->AddCommandTiles($label_sup. $Commande['label'],$Commande['ep_id'],'info','string','',$Commande['ui']['unit'],$generic_type,$IsVisible,'','');
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
 									$label_sup ='';
 								}
 								if ($access == "w") {
-									$action = $Tile->AddCommande($label_sup. $Commande['label'],$Commande['ep_id'],"action","message",'',$Commande['ui']['unit'],$generic_type,$IsVisible);
+									$action = $Tile->AddCommandTiles($label_sup. $Commande['label'],$Commande['ep_id'],'action','message','',$Commande['ui']['unit'],$generic_type,$IsVisible,'','');
 								}
 							}
 							break;
@@ -295,15 +289,21 @@ class Freebox_OS extends eqLogic {
 			}
 		}
 	}
-	public function AddCommandTiles($Name, $_logicalId, $Type="info", $SubType='binary', $Template='default', $unite=null, $generic_type=null, $IsVisible=1, $linkedInfoCmd=null,$linkedlogicalId='NO_LINK',$Templatecore='default') {
+	public function AddCommandTiles($Name, $_logicalId, $Type='info', $SubType='binary', $Template='default', $unite=null, $generic_type=null, $IsVisible=1, $linkedInfoCmd=null,$linkedlogicalId='NO_LINK',$Templatecore='default') {
 		log::add(__CLASS__, 'debug', '│ Type : ' .$Type .' -- LogicalID : '.$_logicalId.' -- Type de générique : '.$generic_type);
 
 		$Commande= $this->getCmd($Type, $_logicalId);
 		if (!is_object($Commande)){
+			$VerifName=$Name;
 			$Commande = new cmd();
 			$Commande->setLogicalId($_logicalId);
 			$Commande->setEqLogic_id($this->getId());
-			$Commande->setName($Name);
+			$count=0;
+			while (is_object(cmd::byEqLogicIdCmdName($this->getId(),$VerifName)) ) {
+				$count++;
+				$VerifName=$Name.'('.$count.')';
+			}
+			$Commande->setName($VerifName);
 
 			$Commande->setType($Type);
 			$Commande->setSubType($SubType);
@@ -332,6 +332,18 @@ class Freebox_OS extends eqLogic {
 				$Commande->setValue($linkedInfoCmd->getId());
 			}
 			$Commande->save();
+		}
+
+		$refresh = $this->getCmd(null, 'refresh');
+		if (!is_object($refresh)) {
+			$refresh = new Freebox_OSCmd();
+			$refresh->setLogicalId('refresh');
+			$refresh->setIsVisible(1);
+			$refresh->setName(__('Rafraichir', __FILE__));
+			$refresh->setType('action');
+			$refresh->setSubType('other');
+			$refresh->setEqLogic_id($this->getId());
+			$refresh->save();
 		}
 		return $Commande;
 	}
@@ -748,7 +760,6 @@ class Freebox_OS extends eqLogic {
 											$_value = $data['value'];
 											break;
 										case 'binary':
-											log::add(__CLASS__, 'debug', '│ TEST : ' );
 											if ($cmd->getConfiguration('inverse') ) {
 												$_value = !$data['value'];
 											} else {

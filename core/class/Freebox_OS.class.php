@@ -289,7 +289,7 @@ class Freebox_OS extends eqLogic {
 			}
 		}
 	}
-	public function AddCommandTiles($Name, $_logicalId, $Type='info', $SubType='binary', $Template='default', $unite=null, $generic_type=null, $IsVisible=1, $linkedInfoCmd=null,$linkedlogicalId='NO_LINK',$Templatecore='default') {
+	public function AddCommandTiles($Name, $_logicalId, $Type='info',$SubType='binary',$Template='default',$unite=null,$generic_type=null,$IsVisible=1, $linkedInfoCmd=null,$linkedlogicalId='NO_LINK',$Templatecore='default') {
 		log::add(__CLASS__, 'debug', '│ Type : ' .$Type .' -- LogicalID : '.$_logicalId.' -- Type de générique : '.$generic_type);
 
 		$Commande= $this->getCmd($Type, $_logicalId);
@@ -347,7 +347,7 @@ class Freebox_OS extends eqLogic {
 		}
 		return $Commande;
 	}
-	public function AddCommande($Name,$_logicalId,$Type="info", $SubType='binary', $Template='default', $unite='', $generic_type='', $IsVisible=1) {
+	public function AddCommande($Name,$_logicalId,$Type='info',$SubType='binary',$Template='default',$unite=null,$generic_type=null,$IsVisible=1) {
 		log::add(__CLASS__, 'debug', '│ Type : ' .$Type .' -- LogicalID : '.$_logicalId.' -- Type de générique : '.$generic_type);
 
 		$Commande = $this->getCmd($Type,$_logicalId);
@@ -916,7 +916,7 @@ class Freebox_OSCmd extends cmd {
 					default:
 						$parametre['value_type'] = 'bool';
 
-						if($this->getConfiguration('logicalId')>=0 || $this->getLogicalId() =='PB_On' || $this->getLogicalId() =='PB_Off') {
+						if($this->getConfiguration('logicalId')>=0 &&( $this->getLogicalId() =='PB_On' || $this->getLogicalId() =='PB_Off')) {
 							$logicalId = $this->getConfiguration('logicalId');
 							if($this->getLogicalId() =='PB_On') {
 								$parametre['value'] = true;

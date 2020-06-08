@@ -259,7 +259,7 @@ class FreeboxAPI{
 			$return=$this->fetch('/api/v5/wifi/config/',array("enabled" => true),"PUT");
 		else
 			$return=$this->fetch('/api/v5/wifi/config/',array("enabled" => false),"PUT");
-		if($reponse === false)
+		if($return === false)
 			return false;
 		if($return['success'])
 		{
@@ -311,7 +311,7 @@ class FreeboxAPI{
 			$firmwareOnline=file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline , $parseFreeDev, PREG_PATTERN_ORDER);
 			if(intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))
-				self::reboot();
+				$this->reboot();
 		} catch (Exception $e) {
 		    log::add('Freebox_OS','error', '[FreeboxUpdateSystem]'.$e->getCode());
 		}

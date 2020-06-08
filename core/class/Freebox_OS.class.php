@@ -289,7 +289,7 @@ class Freebox_OS extends eqLogic {
 			}
 		}
 	}
-	public function AddCommandTiles($Name, $_logicalId, $Type="info", $SubType='binary', $Template='default', $unite=null, $generic_type=null, $IsVisible=1, $linkedInfoCmd=null,$linkedlogicalId='NO_LINK',$Templatecore='default') {
+	public function AddCommandTiles($Name, $_logicalId, $Type='info', $SubType='binary', $Template='default', $unite=null, $generic_type=null, $IsVisible=1, $linkedInfoCmd=null,$linkedlogicalId='NO_LINK',$Templatecore='default') {
 		log::add(__CLASS__, 'debug', '│ Type : ' .$Type .' -- LogicalID : '.$_logicalId.' -- Type de générique : '.$generic_type);
 
 		$Commande= $this->getCmd($Type, $_logicalId);

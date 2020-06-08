@@ -185,7 +185,7 @@ class Freebox_OS extends eqLogic {
 					log::add(__CLASS__, 'debug', '│ label : ' .$Commande['label'] .' -- name : '.$Commande['name']);
 					log::add(__CLASS__, 'debug', '│ type  : ' .$Equipement['type'] .' -- action : ' .$Equipement['action']);
 					log::add(__CLASS__, 'debug', '│ Index : ' .$Commande['ep_id'] .' -- Value Type : ' .$Commande['value_type'] .' -- Access : '.$Commande['ui']['access']);
-                    log::add(__CLASS__, 'debug', '│ valeur actuelle : '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
+					log::add(__CLASS__, 'debug', '│ valeur actuelle : '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
 
 					switch ($Commande['value_type']) {
 						case "void":
@@ -917,6 +917,7 @@ class Freebox_OSCmd extends cmd {
 						$parametre['value_type'] = 'bool';
 
 						if($this->getConfiguration('logicalId')>=0 &&( $this->getLogicalId() =='PB_On' || $this->getLogicalId() =='PB_Off')) {
+							log::add('Freebox_OS', 'debug','Parametrage spécifique BP ON/OFF ' .$logicalId);
 							$logicalId = $this->getConfiguration('logicalId');
 							if($this->getLogicalId() =='PB_On') {
 								$parametre['value'] = true;
@@ -927,8 +928,6 @@ class Freebox_OSCmd extends cmd {
 							break;
 						} else {
 							$logicalId = $this->getLogicalId();
-							log::add('Freebox_OS', 'debug','Parametrage spécifique BP ON/OFF ' .$logicalId);
-
 							$parametre['value'] = true;
 							$Listener=cmd::byId(str_replace('#','',$this->getValue()));
 

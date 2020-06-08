@@ -3,7 +3,7 @@
 	"name" : "Freebox OS",
 	"description" : "Plugin pour commander la Freebox OS",
 	"licence" : "AGPL",
-	"author" : "Halbout Michael",
+	"author" : "Halbout Michael | JAG",
 	"require" : "3.0",
 	"category" : "monitoring",
 	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"],

@@ -185,7 +185,7 @@ class Freebox_OS extends eqLogic {
 					log::add(__CLASS__, 'debug', '│ label : ' .$Commande['label'] .' -- name : '.$Commande['name']);
 					log::add(__CLASS__, 'debug', '│ type  : ' .$Equipement['type'] .' -- action : ' .$Equipement['action']);
 					log::add(__CLASS__, 'debug', '│ Index : ' .$Commande['ep_id'] .' -- Value Type : ' .$Commande['value_type'] .' -- Access : '.$Commande['ui']['access']);
-                    log::add(__CLASS__, 'debug', '│ valeur actuelle : '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
+					log::add(__CLASS__, 'debug', '│ valeur actuelle : '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
 
 					switch ($Commande['value_type']) {
 						case "void":

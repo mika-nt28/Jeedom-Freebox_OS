@@ -168,8 +168,9 @@ class Freebox_OS extends eqLogic {
 					$info = null;
 					$action = null;
 					$generic_type = null;
-                    $label_sup = null;
+					$label_sup = null;
 					$infoCmd = null;
+					$IsVisible = 1;
 					if ($Equipement['type'] == 'camera' && method_exists('camera','getUrl')) {
 						$parameter['name']=$Commande['label'];
 						$parameter['id']=$Commande['ep_id'];

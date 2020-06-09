@@ -809,7 +809,7 @@ class Freebox_OSCmd extends cmd {
 		return true;
 	}
 	public function execute($_options = array()){
-		log::add('Freebox_OS','debug','┌───────── Connexion sur la freebox pour mise à jour de : '.$this->getName());
+		log::add('Freebox_OS','debug','>───────── Connexion sur la freebox pour mise à jour de : '.$this->getName());
 		$FreeboxAPI= new FreeboxAPI();
 		switch ($this->getEqLogic()->getLogicalId()){
 			case 'ADSL':
@@ -946,6 +946,5 @@ class Freebox_OSCmd extends cmd {
 				$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(),$logicalId,$parametre);
                 break;
 		}
-		log::add('Freebox_OS','debug','└─────────');
 	}
 }

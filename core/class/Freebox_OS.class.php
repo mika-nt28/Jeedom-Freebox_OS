@@ -179,13 +179,13 @@ class Freebox_OS extends eqLogic {
 						continue;
 					}
 					if (!is_object($Tile)) continue;
-					log::add(__CLASS__, 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : '.$Equipement['label'] .' (Node ID '.$Equipement['node_id'] .')');
+					log::add(__CLASS__,'debug','┌───────── Commande trouvée pour l\'équipement FREEBOX : '.$Equipement['label'] .' (Node ID '.$Equipement['node_id'] .')');
 					$Commande['label'] = preg_replace('/É+/','E',$Commande['label']);// Suppression É
 					$Commande['label'] = preg_replace('/\'+/',' ',$Commande['label']);// Suppression '
-					log::add(__CLASS__, 'debug', '│ label : ' .$Commande['label'] .' -- name : '.$Commande['name']);
-					log::add(__CLASS__, 'debug', '│ type  : ' .$Equipement['type'] .' -- action : ' .$Equipement['action']);
-					log::add(__CLASS__, 'debug', '│ Index : ' .$Commande['ep_id'] .' -- Value Type : ' .$Commande['value_type'] .' -- Access : '.$Commande['ui']['access']);
-					log::add(__CLASS__, 'debug', '│ valeur actuelle : '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
+					log::add(__CLASS__,'debug','│ label : ' .$Commande['label'] .' -- name : '.$Commande['name']);
+					log::add(__CLASS__,'debug','│ type  : ' .$Equipement['type'] .' -- action : ' .$Equipement['action']);
+					log::add(__CLASS__,'debug','│ Index : ' .$Commande['ep_id'] .' -- Value Type : ' .$Commande['value_type'] .' -- Access : '.$Commande['ui']['access']);
+					log::add(__CLASS__,'debug','│ valeur actuelle : '.$Commande['value'] .' -- Unité : ' .$Commande['ui']['unit']);
 
 					switch ($Commande['value_type']) {
 						case "void":
@@ -216,13 +216,15 @@ class Freebox_OS extends eqLogic {
 
 									} elseif ($Commande['name'] =="battery_warning" ) {
 										$Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'info', 'numeric','',$Commande['ui']['unit'],'BATTERY',1,'','');
-										$Tile->batteryStatus($Commande['value']);
 
 									} else {
 										$info = $Tile->AddCommandTiles($label_sup. $Commande['label'],$Commande['ep_id'],'info','numeric','',$Commande['ui']['unit'],$generic_type,$IsVisible,'','');
 									}
 									$label_sup ='';
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
+									if ($Commande['name'] =="battery_warning" ) {
+										$Tile->batteryStatus($Commande['value']);
+									}
 								}
 								if ($access == "w") {
 									if ($Commande['name'] !="luminosity" && $Equipement['action'] !="color_picker") {
@@ -284,7 +286,7 @@ class Freebox_OS extends eqLogic {
 						$action->setValue($info->getId());
 						$action->save();
 					}
-					log::add(__CLASS__, 'debug', '└─────────');
+					log::add(__CLASS__,'debug','└─────────');
 				}
 			}
 		}
@@ -807,7 +809,7 @@ class Freebox_OSCmd extends cmd {
 		return true;
 	}
 	public function execute($_options = array()){
-		log::add('Freebox_OS','debug','Connexion sur la freebox pour '.$this->getName());
+		log::add('Freebox_OS','debug','┌───────── Connexion sur la freebox pour mise à jour de : '.$this->getName());
 		$FreeboxAPI= new FreeboxAPI();
 		switch ($this->getEqLogic()->getLogicalId()){
 			case 'ADSL':
@@ -872,7 +874,7 @@ class Freebox_OSCmd extends cmd {
 			case'AirPlay':
 				$receivers=$this->getEqLogic()->getCmd(null,"ActualAirmedia");
 				if(!is_object($receivers) ||$receivers->execCmd() == "" || $_options['titre'] ==null){
-					log::add('Freebox_OS','debug','[AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement'.$receivers->execCmd().' type:'.$_options['titre']);
+					log::add('│ Freebox_OS','debug','[AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement'.$receivers->execCmd().' type:'.$_options['titre']);
 					break;
 				}
 				$Parameter["media_type"] = $_options['titre'];
@@ -880,7 +882,7 @@ class Freebox_OSCmd extends cmd {
 				$Parameter["password"]=$this->getConfiguration('password');
 				switch($this->getLogicalId()){
 					case "airmediastart":
-						log::add('Freebox_OS','debug','[AirPlay] AirMedia Start : '.$Parameter["media"]);
+						log::add('│ Freebox_OS','debug','[AirPlay] AirMedia Start : '.$Parameter["media"]);
 						$Parameter["action"] = "start";
 						$return = $FreeboxAPI->AirMediaAction($receivers->execCmd(),$Parameter);
 						break;
@@ -917,7 +919,7 @@ class Freebox_OSCmd extends cmd {
 						$parametre['value_type'] = 'bool';
 
 						if($this->getConfiguration('logicalId')>=0 &&( $this->getLogicalId() =='PB_On' || $this->getLogicalId() =='PB_Off')) {
-							log::add('Freebox_OS', 'debug','Parametrage spécifique BP ON/OFF ' .$logicalId);
+							log::add('│ Freebox_OS', 'debug','Parametrage spécifique BP ON/OFF ' .$logicalId);
 							$logicalId = $this->getConfiguration('logicalId');
 							if($this->getLogicalId() =='PB_On') {
 								$parametre['value'] = true;
@@ -944,5 +946,6 @@ class Freebox_OSCmd extends cmd {
 				$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(),$logicalId,$parametre);
                 break;
 		}
+		log::add('Freebox_OS','debug','└─────────');
 	}
 }

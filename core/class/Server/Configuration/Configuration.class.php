@@ -78,7 +78,8 @@ class FreeboxAPI {
 			$serveur=trim(config::byKey('FREEBOX_SERVER_IP','Freebox_OS'));
 			$cache = cache::byKey('Freebox_OS::SessionToken');
 			$session_token = $cache->getValue('');
-			log::add('Freebox_OS','debug','Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
+			log::add('Freebox_OS','debug','┌───────── Update');
+			log::add('Freebox_OS','debug','│Connexion ' . $method .' sur la l\'adresse '. $serveur.$api_url .'('.json_encode($params).')');
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $serveur.$api_url);
 			curl_setopt($ch, CURLOPT_HEADER, false);
@@ -97,22 +98,23 @@ class FreeboxAPI {
 			$content = curl_exec($ch);
 			curl_close($ch);
 			$result=json_decode($content, true);
-			log::add('Freebox_OS','debug', $content);
+			log::add('Freebox_OS','debug','│ ' $content);
 			if(!$result['success']){
-				log::add('Freebox_OS','debug','success KO');
+				log::add('Freebox_OS','debug','│ success KO');
 				if(isset($result["error_code"])){
-					log::add('Freebox_OS','debug','error_code exists');
+					log::add('Freebox_OS','debug','│ error_code exists');
 					if($result["error_code"]=="auth_required") {
-						log::add('Freebox_OS','debug','auth_required');
+						log::add('Freebox_OS','debug','│ auth_required');
 						self::deamon_stop();
-						log::add('Freebox_OS','debug','deamon stoped');
+						log::add('Freebox_OS','debug','│ deamon stoped');
 					}
 				}
 			}
 			return $result;
 		} catch (Exception $e) {
-			log::add('Freebox_OS','error', $e->getCode());
+			log::add('Freebox_OS','│ error', $e->getCode());
 		}
+		log::add('Freebox_OS','debug','└─────────');
 	}
 	public static function close_session() {
 		try {
@@ -194,23 +196,26 @@ class FreeboxAPI {
 				$value=0;
 				if($data_json['result']['enabled'])
 					$value=1;
-				log::add('Freebox_OS','debug','L\'état du wifi est '.$value);
+				log::add('Freebox_OS','debug','┌───────── Wifi');
+				log::add('Freebox_OS','debug','| L\'état du wifi est '.$value);
+				log::add('Freebox_OS','debug','└─────────');
 				return $value;
 			}
 			else
 				return false;
 	}
 	public function wifiPUT($parametre) {
-			log::add('Freebox_OS','debug','Mise dans l\'état '.$parametre.' du wifi');
-			if ($parametre==1)
-				$return=self::fetch('/api/v3/wifi/config/',array("enabled" => true),"PUT");
-			else
-				$return=self::fetch('/api/v2/wifi/config/',array("enabled" => false),"PUT");
-
-			if($return['success'])
-			{
+		log::add('Freebox_OS','debug','┌───────── Wifi');
+		log::add('Freebox_OS','debug','| Mise dans l\'état '.$parametre.' du wifi');
+		if ($parametre==1) {
+			$return=self::fetch('/api/v3/wifi/config/',array("enabled" => true),"PUT");
+		} else {
+			$return=self::fetch('/api/v3/wifi/config/',array("enabled" => false),"PUT");
+			if($return['success']) {
 				return $return['result']['enabled'];
 			}
+		}
+		log::add('Freebox_OS','debug','└─────────');
 	}
 	public static function reboot() {
 			$content=self::fetch('/api/v3/system/reboot/',null,"POST");

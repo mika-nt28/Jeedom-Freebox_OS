@@ -109,7 +109,8 @@ class FreeboxAPI{
 				sleep(1);
 				$session_token = cache::byKey('Freebox_OS::SessionToken');
 			}
-			log::add('Freebox_OS','debug','[FreeboxRequest] Connexion ' . $method .' sur la l\'adresse '. $this->serveur.$api_url .'('.json_encode($params).')');
+			log::add('Freebox_OS','debug','┌───────── Début de Mise à jour');
+			log::add('Freebox_OS','debug','│ [FreeboxRequest] Connexion ' . $method .' sur la l\'adresse '. $this->serveur.$api_url .'('.json_encode($params).')');
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $this->serveur.$api_url);
 			curl_setopt($ch, CURLOPT_HEADER, false);
@@ -127,13 +128,14 @@ class FreeboxAPI{
 			curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: ".$session_token->getValue('')));
 			$content = curl_exec($ch);
 			curl_close($ch);
-			log::add('Freebox_OS','debug','[FreeboxRequest] ' . $content);
+			log::add('Freebox_OS','debug','│ [FreeboxRequest] ' . $content);
 			$result=json_decode($content, true);
-			if($result == null)
-				return false;
+			if($result == null) return false;
+			log::add('Freebox_OS','debug','└─────────');
 			return $result;
 		} catch (Exception $e) {
-		    log::add('Freebox_OS','error', '[FreeboxRequest]'.$e->getCode());
+		    log::add('Freebox_OS','error','│ [FreeboxRequest]'.$e->getCode());
+			log::add('Freebox_OS','debug','└─────────');
 		}
     	}
 	public function close_session(){
@@ -247,14 +249,18 @@ class FreeboxAPI{
 			$value=0;
 			if($data_json['result']['enabled'])
 				$value=1;
-			log::add('Freebox_OS','debug','L\'état du wifi est '.$value);
+			log::add('Freebox_OS','debug','┌───────── Etat Wifi');
+			log::add('Freebox_OS','debug','| L\'état du wifi est '.$value);
+			log::add('Freebox_OS','debug','└─────────');
 			return $value;
 		}
 		else
 			return false;
 	}
 	public function wifiPUT($parametre) {
-		log::add('Freebox_OS','debug','Mise dans l\'état '.$parametre.' du wifi');
+		log::add('Freebox_OS','debug','┌───────── Mise à jour du Wifi');
+		log::add('Freebox_OS','debug','│ L\'état est : '.$parametre.' du wifi');
+		log::add('Freebox_OS','debug','└─────────');
 		if ($parametre==1)
 			$return=$this->fetch('/api/v5/wifi/config/',array("enabled" => true),"PUT");
 		else

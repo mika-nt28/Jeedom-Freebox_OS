@@ -222,8 +222,8 @@ class Freebox_OS extends eqLogic {
 									}
 									$label_sup ='';
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
-									if ($Commande['name'] =="battery_warning" ) {
-										$Tile->batteryStatus($Commande['value']);
+									if ($Commande['name'] =="battery_warning") {
+										//$Tile->batteryStatus($Commande['value']);
 									}
 								}
 								if ($access == "w") {

@@ -805,9 +805,9 @@ class Freebox_OS extends eqLogic {
 	}
 }
 class Freebox_OSCmd extends cmd {
-	public function dontRemoveCmd(){
-		return true;
-	}
+	//public function dontRemoveCmd(){
+	//	return true;
+	//}
 	public function execute($_options = array()){
 		log::add('Freebox_OS','debug','>───────── Connexion sur la freebox pour mise à jour de : '.$this->getName());
 		$FreeboxAPI= new FreeboxAPI();

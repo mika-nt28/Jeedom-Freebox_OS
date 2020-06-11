@@ -165,5 +165,4 @@ if (!isConnect('admin')) {
     	"lan_ip":"192.168.0.100",
     	"ip_proto":"tcp"
     }*/
-
 </script>

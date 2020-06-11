@@ -215,7 +215,7 @@ class Freebox_OS extends eqLogic {
 										$Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'action','slider','',$Commande['ui']['unit'],'LIGHT_SET_COLOR',1, $infoCmd,$Commande['ep_id'],'light');
 
 									} elseif ($Commande['name'] =="battery_warning" ) {
-										$Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'info', 'numeric','',$Commande['ui']['unit'],'BATTERY',1,'','');
+										$Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'info', 'numeric','',$Commande['ui']['unit'],'BATTERY',0,'','');
 
 									} else {
 										$info = $Tile->AddCommandTiles($label_sup. $Commande['label'],$Commande['ep_id'],'info','numeric','',$Commande['ui']['unit'],$generic_type,$IsVisible,'','');
@@ -238,21 +238,35 @@ class Freebox_OS extends eqLogic {
 								if ($access == "r") {
 									if ($Equipement['action'] == "store") {
 										$generic_type ='FLAP_STATE';
+										$Templatecore='';
 									} elseif ($Equipement['type'] == "alarm_sensor" && $Commande['name'] =='cover') {
 										$generic_type ='SABOTAGE';
-									} elseif ($Equipement['type'] == "alarm_sensor" && $Commande['name'] =='trigger') {
+										$Templatecore='alert';
+										$invertBinary = 1;
+									} elseif ($Equipement['type'] == "alarm_sensor" && $Commande['name'] =='trigger' && $Commande['label'] !='Détection') {
 										$generic_type ='OPENING';
+										$Templatecore='door';
+									} elseif ($Equipement['type'] == "alarm_sensor" && $Commande['name'] =='trigger' && $Commande['label'] =='Détection') {
+										$generic_type ='PRESENCE';
+										$Templatecore='presence';
+										$invertBinary = 0;
+									} else {
+										$generic_type =null;
+										$Templatecore=null;
+										$invertBinary = 0;
 									}
 									if ($Commande['label']=='Enclenché') {
-										$infoCmd = $Tile->AddCommandTiles('Etat', $Commande['ep_id'],'info','binary','',$Commande['ui']['unit'],'LIGHT_STATE', 0,'',$Commande['ep_id'],'light');
-										$Tile->AddCommandTiles('On','PB_On','action','other','',$Commande['ui']['unit'],'LIGHT_ON',1,$infoCmd,$Commande['ep_id'],'light');
-										$Tile->AddCommandTiles('Off','PB_Off','action','other','',$Commande['ui']['unit'],'LIGHT_OFF',1,$infoCmd,$Commande['ep_id'],'light');
+										$infoCmd = $Tile->AddCommandTiles('Etat', $Commande['ep_id'],'info','binary','',$Commande['ui']['unit'],'LIGHT_STATE',0,'',$Commande['ep_id'],'light');
+										$Tile->AddCommandTiles('On','PB_On','action','other','',$Commande['ui']['unit'],'LIGHT_ON',1,$infoCmd,$Commande['ep_id'],'light',$invertBinary);
+										$Tile->AddCommandTiles('Off','PB_Off','action','other','',$Commande['ui']['unit'],'LIGHT_OFF',1,$infoCmd,$Commande['ep_id'],'light',$invertBinary);
 									} else {
-										$infoCmd = $Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'info','binary','',$Commande['ui']['unit'],$generic_type,1,'','');
+										$infoCmd = $Tile->AddCommandTiles($Commande['label'],$Commande['ep_id'],'info','binary','',$Commande['ui']['unit'],$generic_type,1,'','',$Templatecore,$invertBinary);
 									}
 									$Tile->checkAndUpdateCmd($Commande['ep_id'],$Commande['value']);
-									$label_sup ='';
-									$generic_type ='';
+									$label_sup =null;
+									$generic_type =null;
+									$Templatecore=null;
+									$invertBinary=null;
 								}
 								if ($access == "w") {
 									if ($Commande['label']!='Enclenché') {
@@ -291,8 +305,8 @@ class Freebox_OS extends eqLogic {
 			}
 		}
 	}
-	public function AddCommandTiles($Name, $_logicalId, $Type='info',$SubType='binary',$Template='default',$unite=null,$generic_type=null,$IsVisible=1, $linkedInfoCmd=null,$linkedlogicalId='NO_LINK',$Templatecore='default') {
-		log::add(__CLASS__, 'debug', '│ Type : ' .$Type .' -- LogicalID : '.$_logicalId.' -- Type de générique : '.$generic_type);
+	public function AddCommandTiles($Name, $_logicalId, $Type='info',$SubType='binary',$Template='default',$unite=null,$generic_type=null,$IsVisible=1, $linkedInfoCmd=null,$linkedlogicalId='NO_LINK',$Templatecore='default',$invertBinary =null) {
+		log::add(__CLASS__, 'debug', '│ Type : ' .$Type .' -- LogicalID : '.$_logicalId.' -- Type de générique : '.$generic_type .' -- Inverser : '.$invertBinary);
 
 		$Commande= $this->getCmd($Type, $_logicalId);
 		if (!is_object($Commande)){
@@ -323,6 +337,10 @@ class Freebox_OS extends eqLogic {
 			if ($Templatecore !='default') {
 				$Commande->setTemplate('dashboard','core::'.$Templatecore);
 				$Commande->setTemplate('mobile','core::'.$Templatecore);
+			}
+
+			if ($invertBinary !=null) {
+				$Commande->setdisplay('invertBinary',1);
 			}
 
 			if ($linkedlogicalId >= 0 && $Type=="action" ) {

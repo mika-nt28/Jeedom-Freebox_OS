@@ -910,7 +910,7 @@ class Freebox_OSCmd extends cmd
 			case 'AirPlay':
 				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
 				if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
-					log::add('│ Freebox_OS', 'debug', '[AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
+					log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
 					break;
 				}
 				$Parameter["media_type"] = $_options['titre'];
@@ -918,7 +918,7 @@ class Freebox_OSCmd extends cmd
 				$Parameter["password"] = $this->getConfiguration('password');
 				switch ($this->getLogicalId()) {
 					case "airmediastart":
-						log::add('│ Freebox_OS', 'debug', '[AirPlay] AirMedia Start : ' . $Parameter["media"]);
+						log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
 						$Parameter["action"] = "start";
 						$return = $FreeboxAPI->AirMediaAction($receivers->execCmd(), $Parameter);
 						break;
@@ -955,7 +955,7 @@ class Freebox_OSCmd extends cmd
 						$parametre['value_type'] = 'bool';
 
 						if ($this->getConfiguration('logicalId') >= 0 && ($this->getLogicalId() == 'PB_On' || $this->getLogicalId() == 'PB_Off')) {
-							log::add('│ Freebox_OS', 'debug', 'Parametrage spécifique BP ON/OFF ' . $logicalId);
+							log::add('Freebox_OS', 'debug', '│ Parametrage spécifique BP ON/OFF ' . $logicalId);
 							$logicalId = $this->getConfiguration('logicalId');
 							if ($this->getLogicalId() == 'PB_On') {
 								$parametre['value'] = true;

@@ -346,19 +346,17 @@ class Freebox_OS extends eqLogic
 				$Commande->setTemplate('dashboard', 'core::' . $Templatecore);
 				$Commande->setTemplate('mobile', 'core::' . $Templatecore);
 			}
-
 			if ($invertBinary != null) {
 				$Commande->setdisplay('invertBinary', 1);
 			}
-
 			if ($linkedlogicalId >= 0 && $Type == "action") {
 				log::add(__CLASS__, 'debug', '│ Type : ' . $Type);
 				$Commande->setconfiguration('logicalId', $linkedlogicalId);
 			}
-
 			if (is_object($linkedInfoCmd) && $Type == 'action') {
 				$Commande->setValue($linkedInfoCmd->getId());
 			}
+
 			$Commande->save();
 		}
 
@@ -375,14 +373,13 @@ class Freebox_OS extends eqLogic
 		}
 		return $Commande;
 	}
-	public function AddCommande($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = 'default', $unite = null, $generic_type = null, $IsVisible = 1)
+	public function AddCommande($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = 'default', $unite = null, $generic_type = null, $IsVisible = 1, $linkedInfoCmd = null, $linkedlogicalId = 'NO_LINK', $Templatecore = 'default', $invertBinary = null)
 	{
-		log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Type de générique : ' . $generic_type);
+		log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary);
 
 		$Commande = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Commande)) {
 			$VerifName = $Name;
-
 			$Commande = new Freebox_OSCmd();
 			$Commande->setId(null);
 			$Commande->setLogicalId($_logicalId);
@@ -406,10 +403,22 @@ class Freebox_OS extends eqLogic
 			if ($Template != 'default') {
 				$Commande->setTemplate('dashboard', 'Freebox_OS::' . $Template);
 				$Commande->setTemplate('mobile', 'Freebox_OS::' . $Template);
-			} else {
-				$Commande->setTemplate('dashboard', 'default');
-				$Commande->setTemplate('mobile', 'default');
 			}
+			if ($Templatecore != 'default') {
+				$Commande->setTemplate('dashboard', 'core::' . $Templatecore);
+				$Commande->setTemplate('mobile', 'core::' . $Templatecore);
+			}
+			if ($invertBinary != null) {
+				$Commande->setdisplay('invertBinary', 1);
+			}
+			if ($linkedlogicalId >= 0 && $Type == "action") {
+				log::add(__CLASS__, 'debug', '│ Type : ' . $Type);
+				$Commande->setconfiguration('logicalId', $linkedlogicalId);
+			}
+			if (is_object($linkedInfoCmd) && $Type == 'action') {
+				$Commande->setValue($linkedInfoCmd->getId());
+			}
+
 			$Commande->save();
 		}
 
@@ -495,7 +504,7 @@ class Freebox_OS extends eqLogic
 		$Downloads->AddCommande('Start DL', 'start_dl', "action", 'other', 'Freebox_OS_Downloads');
 		$Downloads->AddCommande('Stop DL', 'stop_dl', "action", 'other', 'Freebox_OS_Downloads');
 		// AirPlay
-		$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay');
+		$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay', 'multimedia');
 		$AirPlay->AddCommande('Player actuel AirMedia', 'ActualAirmedia', "info", 'string', 'Freebox_OS_AirMedia_Recever');
 		$AirPlay->AddCommande('AirMedia Start', 'airmediastart', "action", 'message', 'Freebox_OS_AirMedia_Start');
 		$AirPlay->AddCommande('AirMedia Stop', 'airmediastop', "action", 'message', 'Freebox_OS_AirMedia_Start');

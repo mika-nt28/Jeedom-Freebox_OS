@@ -48,6 +48,39 @@ $('.MaFreebox').on('click', function () {
 	});
 	$('#md_modal').load('index.php?v=d&modal=MaFreebox&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
 });
+
+$('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
+	$('#div_alert').showAlert({
+		message: '{{Recherche des <b>Equipements standards</b>}}',
+		level: 'warning'
+	});
+	$.ajax({
+		type: 'POST',
+		async: true,
+		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		data: {
+			action: 'SearchArchi'
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			$('#div_alert').showAlert({
+				message: '{{Erreur recherche des <b>Equipements standards</b>}}',
+				level: 'danger'
+			});
+		},
+		success: function (data) {
+			$('#div_alert').showAlert({
+				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				level: 'success'
+
+			});
+			window.location.reload();
+		}
+	});
+
+});
+
 $('.eqLogicAction[data-action=tile]').on('click', function () {
 	$('#div_alert').showAlert({
 		message: '{{Recherche des <b>Tiles</b>}}',

@@ -6,17 +6,17 @@ try {
 	if (!isConnect('admin')) {
 		throw new Exception(__('401 - Accès non autorisé', __FILE__));
 	}
-	$FreeboxAPI= new FreeboxAPI();
-	switch(init('action')){
+	$FreeboxAPI = new FreeboxAPI();
+	switch (init('action')) {
 		case 'createCamera':
 			$EqLogic = eqLogic::byLogicalId(init('id'), 'camera');
 			if (!is_object($EqLogic)) {
-				$url = explode('@',explode('://',init('url'))[1]);
+				$url = explode('@', explode('://', init('url'))[1]);
 
-				$username = explode(':',$url[0])[0];
-				$password = explode(':',$url[0])[1];
+				$username = explode(':', $url[0])[0];
+				$password = explode(':', $url[0])[1];
 
-				$adresse = explode(':',explode('/',$url[1])[0]);
+				$adresse = explode(':', explode('/', $url[1])[0]);
 				$ip = $adresse[0];
 				$port = $adresse[1];
 
@@ -27,91 +27,95 @@ try {
 				$EqLogic->setEqType_name('camera');
 				$EqLogic->setIsEnable(1);
 				$EqLogic->setIsVisible(0);
-				$EqLogic->setconfiguration("protocole","http");
-				$EqLogic->setconfiguration("ip",$ip);
-				$EqLogic->setconfiguration("port",$port);
-				$EqLogic->setconfiguration("username",$username);
-				$EqLogic->setconfiguration("password",$password);
-				$EqLogic->setconfiguration("urlStream","img/snapshot.cgi?size=4&quality=1");
-				$EqLogic->setconfiguration('cameraStreamAccessUrl',init('url'));
+				$EqLogic->setconfiguration("protocole", "http");
+				$EqLogic->setconfiguration("ip", $ip);
+				$EqLogic->setconfiguration("port", $port);
+				$EqLogic->setconfiguration("username", $username);
+				$EqLogic->setconfiguration("password", $password);
+				$EqLogic->setconfiguration("urlStream", "img/snapshot.cgi?size=4&quality=1");
+				$EqLogic->setconfiguration('cameraStreamAccessUrl', init('url'));
 				$EqLogic->save();
 			}
 			ajax::success(true);
-		break;
+			break;
 		case 'sendToBdd':
-			config::save('FREEBOX_SERVER_TRACK_ID', init('track_id'),'Freebox_OS');
-			config::save('FREEBOX_SERVER_APP_TOKEN', init('app_token'),'Freebox_OS');
+			config::save('FREEBOX_SERVER_TRACK_ID', init('track_id'), 'Freebox_OS');
+			config::save('FREEBOX_SERVER_APP_TOKEN', init('app_token'), 'Freebox_OS');
 			ajax::success(true);
-		break;
+			break;
 		case 'connect':
 			ajax::success($FreeboxAPI->track_id());
-		break;
+			break;
 		case 'ask_track_authorization':
 			ajax::success($FreeboxAPI->ask_track_authorization());
-		break;
+			break;
 		case 'SearchHomeAdapters':
 			Freebox_OS::addHomeAdapters();
 			ajax::success(true);
-		break;
+			break;
 		case 'SearchReseau':
 			Freebox_OS::addReseau();
 			ajax::success(true);
-		break;
+			break;
 		case 'SearchDisque':
 			ajax::success($FreeboxAPI->disques());
-		break;
+			break;
 		case 'AddPortForwarding':
-			$PortForwarding=array(
-			"enabled"		=> 	init('enabled'),
-			"comment"		=> 	init('comment'),
-			"lan_port"		=> 	init('lan_port'),
-			"wan_port_end"	=> 	init('wan_port_end'),
-			"wan_port_start"=> 	init('wan_port_start'),
-			"lan_ip" 		=>	init('lan_ip'),
-			"ip_proto" 		=> 	init('ip_proto'),
-			"src_ip"		=> 	init('src_ip'));
+			$PortForwarding = array(
+				"enabled"		=> 	init('enabled'),
+				"comment"		=> 	init('comment'),
+				"lan_port"		=> 	init('lan_port'),
+				"wan_port_end"	=> 	init('wan_port_end'),
+				"wan_port_start" => 	init('wan_port_start'),
+				"lan_ip" 		=>	init('lan_ip'),
+				"ip_proto" 		=> 	init('ip_proto'),
+				"src_ip"		=> 	init('src_ip')
+			);
 			ajax::success();
-		break;
+			break;
 		case 'PortForwarding':
 			ajax::success();
-		break;
+			break;
 		case 'WakeOnLAN':
-			$Commande=cmd::byId(init('id'));
-			if(is_object($Commande)){
-				$Mac=str_replace ('ether-','',$Commande->getLogicalId());
+			$Commande = cmd::byId(init('id'));
+			if (is_object($Commande)) {
+				$Mac = str_replace('ether-', '', $Commande->getLogicalId());
 				ajax::success($FreeboxAPI->WakeOnLAN($Mac));
 			}
 			ajax::success(false);
-		break;
+			break;
 		case 'sendCmdPlayer':
-			$Player=eqLogic::byId(init('id'));
-			if(is_object($Player)){
-				$Cmd=$Player->getCmd('action',init('cmd'));
-				if(is_object($Cmd))
+			$Player = eqLogic::byId(init('id'));
+			if (is_object($Player)) {
+				$Cmd = $Player->getCmd('action', init('cmd'));
+				if (is_object($Cmd))
 					ajax::success($Cmd->execute());
 			}
 			ajax::success(false);
-		break;
+			break;
 		case 'getAirMediaRecivers':
 			ajax::success($FreeboxAPI->airmediaReceivers());
-		break;
+			break;
 		case 'setAirMediaReciver':
-			$cmd=cmd::byId(init('id'));
-			if(is_object($cmd)){
+			$cmd = cmd::byId(init('id'));
+			if (is_object($cmd)) {
 				$cmd->setCollectDate('');
 				$cmd->event(init('value'));
 				ajax::success(true);
 			}
 			ajax::success(false);
-		break;
+			break;
 		case 'SearchTile':
 			Freebox_OS::addTiles();
 			ajax::success(true);
-		break;
+			break;
+		case 'SearchArchi':
+			Freebox_OS::CreateArchi();
+			ajax::success(true);
+			break;
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	/*     * *********Catch exeption*************** */
-}
-catch (Exception $e) {
+} catch (Exception $e) {
 	ajax::error(displayExeption($e), $e->getCode());
 }

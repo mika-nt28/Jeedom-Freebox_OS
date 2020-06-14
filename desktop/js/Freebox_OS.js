@@ -189,9 +189,9 @@ function addCmdToTable(_cmd) {
 	tr += '<span class="subType" subType="' + init(_cmd.subType) + ' "  disabled></span>';
 	tr += '</td>';
 	tr += '<td>';
-	if (_cmd.subType == "numeric") {
-		tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;display:inline-block;margin-right:5px;">';
-	}
+	//if (_cmd.subType == "numeric" || _cmd.subType == "other") {
+	tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;display:inline-block;margin-right:5px;">';
+	//}
 	tr += '</td>';
 	tr += '<td>';
 	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';

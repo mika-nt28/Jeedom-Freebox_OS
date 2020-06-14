@@ -408,21 +408,17 @@ class Freebox_OS extends eqLogic
 		$System->AddCommand('temp cpub', 'temp_cpub', "info", 'string', 'Freebox_OS_System', '°C');
 		$System->AddCommand('temp cpum', 'temp_cpum', "info", 'string', 'Freebox_OS_System', '°C');
 		$System->AddCommand('serial', 'serial', "info", 'string', 'Freebox_OS_System');
-		$cmdPF = $System->AddCommand('Redirection de ports', 'port_forwarding', "action", 'message', 'Freebox_OS_System');
-		$cmdPF->setIsVisible(0);
+		$cmdPF = $System->AddCommand('Redirection de ports', 'port_forwarding', "action", 'message', 'Freebox_OS_System', '', '', 0, '', '', '', '', '');
 		$cmdPF->save();
 		// Wifi
-		$StatusWifi = $System->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', 'Freebox_OS_Wifi');
-		$StatusWifi->setIsVisible(0);
+		$StatusWifi = $System->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', '');
 		$StatusWifi->save();
 		$ActiveWifi = $System->AddCommand('Active/Désactive le wifi', 'wifiOnOff', "action", 'other', 'Freebox_OS_Wifi');
 		$ActiveWifi->setValue($StatusWifi->getId());
 		$ActiveWifi->save();
-		$WifiOn = $System->AddCommand('Wifi On', 'wifiOn', "action", 'other', 'Freebox_OS_Wifi');
-		$WifiOn->setIsVisible(0);
+		$WifiOn = $System->AddCommand('Wifi On', 'wifiOn', "action", 'other', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', 'fas fa-signal');
 		$WifiOn->save();
-		$WifiOff = $System->AddCommand('Wifi Off', 'wifiOff', "action", 'other', 'Freebox_OS_Wifi');
-		$WifiOff->setIsVisible(0);
+		$WifiOff = $System->AddCommand('Wifi Off', 'wifiOff', "action", 'other', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', 'fas fa-power-off');
 		$WifiOff->save();
 		//Phone
 		$Phone = self::AddEqLogic('Téléphone', 'Phone');

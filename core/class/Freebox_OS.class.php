@@ -121,25 +121,25 @@ class Freebox_OS extends eqLogic
 		$Reseau = self::AddEqLogic('Réseau', 'Reseau');
 		foreach ($FreeboxAPI->getReseau() as $Equipement) {
 			if ($Equipement['primary_name'] != '') {
-				$Commande = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], "info", 'binary', 'Freebox_OS_Reseau');
-				$Commande->setConfiguration('host_type', $Equipement['host_type']);
+				$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], "info", 'binary', 'Freebox_OS_Reseau');
+				$Command->setConfiguration('host_type', $Equipement['host_type']);
 				if (isset($Equipement['l3connectivities'])) {
 					foreach ($Equipement['l3connectivities'] as $Ip) {
 						if ($Ip['active']) {
 							if ($Ip['af'] == 'ipv4') {
-								$Commande->setConfiguration('IPV4', $Ip['addr']);
+								$Command->setConfiguration('IPV4', $Ip['addr']);
 							} else {
-								$Commande->setConfiguration('IPV6', $Ip['addr']);
+								$Command->setConfiguration('IPV6', $Ip['addr']);
 							}
 						}
 					}
 				}
-				if ($Commande->execCmd() != $Equipement['active']) {
-					$Commande->setCollectDate(date('Y-m-d H:i:s'));
-					$Commande->setConfiguration('doNotRepeatEvent', 1);
-					$Commande->event($Equipement['active']);
+				if ($Command->execCmd() != $Equipement['active']) {
+					$Command->setCollectDate(date('Y-m-d H:i:s'));
+					$Command->setConfiguration('doNotRepeatEvent', 1);
+					$Command->event($Equipement['active']);
 				}
-				$Commande->save();
+				$Command->save();
 			}
 		}
 	}
@@ -173,8 +173,8 @@ class Freebox_OS extends eqLogic
 					$Tile = self::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category);
 				}
 			}
-			foreach ($Equipement['data'] as $Commande) {
-				if ($Commande['label'] != '') {
+			foreach ($Equipement['data'] as $Command) {
+				if ($Command['label'] != '') {
 					$info = null;
 					$action = null;
 					$generic_type = null;
@@ -183,82 +183,82 @@ class Freebox_OS extends eqLogic
 					$IsVisible = 1;
 					$icon = null;
 					if ($Equipement['type'] == 'camera' && method_exists('camera', 'getUrl')) {
-						$parameter['name'] = $Commande['label'];
-						$parameter['id'] = $Commande['ep_id'];
-						$parameter['url'] = $Commande['value'];
+						$parameter['name'] = $Command['label'];
+						$parameter['id'] = $Command['ep_id'];
+						$parameter['url'] = $Command['value'];
 						event::add('Freebox_OS::camera', json_encode($parameter));
 						continue;
 					}
 					if (!is_object($Tile)) continue;
 					log::add(__CLASS__, 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
-					$Commande['label'] = preg_replace('/É+/', 'E', $Commande['label']); // Suppression É
-					$Commande['label'] = preg_replace('/\'+/', ' ', $Commande['label']); // Suppression '
-					log::add(__CLASS__, 'debug', '│ label : ' . $Commande['label'] . ' -- name : ' . $Commande['name']);
+					$Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
+					$Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
+					log::add(__CLASS__, 'debug', '│ label : ' . $Command['label'] . ' -- name : ' . $Command['name']);
 					log::add(__CLASS__, 'debug', '│ type  : ' . $Equipement['type'] . ' -- action : ' . $Equipement['action']);
-					log::add(__CLASS__, 'debug', '│ Index : ' . $Commande['ep_id'] . ' -- Value Type : ' . $Commande['value_type'] . ' -- Access : ' . $Commande['ui']['access']);
-					log::add(__CLASS__, 'debug', '│ valeur actuelle : ' . $Commande['value'] . ' -- Unité : ' . $Commande['ui']['unit']);
+					log::add(__CLASS__, 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
+					log::add(__CLASS__, 'debug', '│ valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit']);
 
-					switch ($Commande['value_type']) {
+					switch ($Command['value_type']) {
 						case "void":
-							if ($Commande['name'] == 'up') {
+							if ($Command['name'] == 'up') {
 								$generic_type = 'FLAP_UP';
 								$icon = 'fas fa-arrow-up';
-							} elseif ($Commande['name'] == 'stop') {
+							} elseif ($Command['name'] == 'stop') {
 								$generic_type = 'FLAP_STOP';
-								$icon = 'fa fa-stop';
-							} elseif ($Commande['name'] == 'down') {
+								$icon = 'fas fa-stop';
+							} elseif ($Command['name'] == 'down') {
 								$generic_type = 'FLAP_DOWN';
 								$icon = 'fas fa-arrow-down';
 							} else {
 								$generic_type = null;
 								$icon = null;
 							}
-							$action = $Tile->AddCommand($Commande['label'], $Commande['ep_id'], 'action', 'other', '', $Commande['ui']['unit'], $generic_type, 1, '', '', '', '', $icon);
+							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, 1, '', '', '', '', $icon);
 							break;
 						case "int":
-							foreach (str_split($Commande['ui']['access']) as $access) {
+							foreach (str_split($Command['ui']['access']) as $access) {
 								if ($access == "r") {
-									if ($Commande['ui']['access'] == "rw") {
+									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									if ($Commande['name'] == "luminosity" && $Equipement['action'] != "color_picker") {
-										$infoCmd = $Tile->AddCommand($label_sup . $Commande['label'], $Commande['ep_id'], 'info', 'numeric', '', $Commande['ui']['unit'], 'LIGHT_STATE', 0, '', $Commande['ep_id'], 'light');
-										$Tile->AddCommand($Commande['label'], $Commande['ep_id'], 'action', 'slider', '', $Commande['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Commande['ep_id'], 'light');
-									} elseif ($Commande['name'] != "luminosity" && $Equipement['action'] == "color_picker") {
-										$infoCmd = $Tile->AddCommand($label_sup . $Commande['label'], $Commande['ep_id'], 'info', 'numeric', '', $Commande['ui']['unit'], 'LIGHT_COLOR', 0, '', $Commande['ep_id'], 'light');
-										$Tile->AddCommand($Commande['label'], $Commande['ep_id'], 'action', 'slider', '', $Commande['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Commande['ep_id'], 'light');
-									} elseif ($Commande['name'] == "battery_warning") {
-										$Tile->AddCommand($Commande['label'], $Commande['ep_id'], 'info', 'numeric', '', $Commande['ui']['unit'], 'BATTERY', 0, '', '');
+									if ($Command['name'] == "luminosity" && $Equipement['action'] != "color_picker") {
+										$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id'], 'light');
+										$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', '', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], 'light');
+									} elseif ($Command['name'] != "luminosity" && $Equipement['action'] == "color_picker") {
+										$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], 'LIGHT_COLOR', 0, '', $Command['ep_id'], 'light');
+										$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', '', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id'], 'light');
+									} elseif ($Command['name'] == "battery_warning") {
+										$Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], 'BATTERY', 0, '', '');
 									} else {
-										$info = $Tile->AddCommand($label_sup . $Commande['label'], $Commande['ep_id'], 'info', 'numeric', '', $Commande['ui']['unit'], $generic_type, $IsVisible, '', '');
+										$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
 									}
 									$label_sup = '';
-									$Tile->checkAndUpdateCmd($Commande['ep_id'], $Commande['value']);
-									if ($Commande['name'] == "battery_warning") {
-										//$Tile->batteryStatus($Commande['value']);
+									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
+									if ($Command['name'] == "battery_warning") {
+										//$Tile->batteryStatus($Command['value']);
 									}
 								}
 								if ($access == "w") {
-									if ($Commande['name'] != "luminosity" && $Equipement['action'] != "color_picker") {
-										$action = $Tile->AddCommand($label_sup . $Commande['label'], $Commande['ep_id'], 'action', 'slider', '', $Commande['ui']['unit'], $generic_type, $IsVisible, '', '');
+									if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker") {
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
 									}
 								}
 							}
 							break;
 						case "bool":
-							foreach (str_split($Commande['ui']['access']) as $access) {
+							foreach (str_split($Command['ui']['access']) as $access) {
 								if ($access == "r") {
 									if ($Equipement['action'] == "store") {
 										$generic_type = 'FLAP_STATE';
 										$Templatecore = '';
-									} elseif ($Equipement['type'] == "alarm_sensor" && $Commande['name'] == 'cover') {
+									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'cover') {
 										$generic_type = 'SABOTAGE';
 										$Templatecore = 'alert';
 										$invertBinary = 1;
-									} elseif ($Equipement['type'] == "alarm_sensor" && $Commande['name'] == 'trigger' && $Commande['label'] != 'Détection') {
+									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] != 'Détection') {
 										$generic_type = 'OPENING';
 										$Templatecore = 'door';
-									} elseif ($Equipement['type'] == "alarm_sensor" && $Commande['name'] == 'trigger' && $Commande['label'] == 'Détection') {
+									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] == 'Détection') {
 										$generic_type = 'PRESENCE';
 										$Templatecore = 'presence';
 										$invertBinary = 0;
@@ -267,43 +267,43 @@ class Freebox_OS extends eqLogic
 										$Templatecore = null;
 										$invertBinary = 0;
 									}
-									if ($Commande['label'] == 'Enclenché') {
-										$infoCmd = $Tile->AddCommand('Etat', $Commande['ep_id'], 'info', 'binary', '', $Commande['ui']['unit'], 'LIGHT_STATE', 0, '', $Commande['ep_id'], 'light');
-										$Tile->AddCommand('On', 'PB_On', 'action', 'other', '', $Commande['ui']['unit'], 'LIGHT_ON', 1, $infoCmd, $Commande['ep_id'], 'light', $invertBinary);
-										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', '', $Commande['ui']['unit'], 'LIGHT_OFF', 1, $infoCmd, $Commande['ep_id'], 'light', $invertBinary);
+									if ($Command['label'] == 'Enclenché') {
+										$infoCmd = $Tile->AddCommand('Etat', $Command['ep_id'], 'info', 'binary', '', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id'], 'light');
+										$Tile->AddCommand('On', 'PB_On', 'action', 'other', '', $Command['ui']['unit'], 'LIGHT_ON', 1, $infoCmd, $Command['ep_id'], 'light', $invertBinary);
+										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', '', $Command['ui']['unit'], 'LIGHT_OFF', 1, $infoCmd, $Command['ep_id'], 'light', $invertBinary);
 									} else {
-										$infoCmd = $Tile->AddCommand($Commande['label'], $Commande['ep_id'], 'info', 'binary', '', $Commande['ui']['unit'], $generic_type, 1, '', '', $Templatecore, $invertBinary);
+										$infoCmd = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'binary', '', $Command['ui']['unit'], $generic_type, 1, '', '', $Templatecore, $invertBinary);
 									}
-									$Tile->checkAndUpdateCmd($Commande['ep_id'], $Commande['value']);
+									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									$label_sup = null;
 									$generic_type = null;
 									$Templatecore = null;
 									$invertBinary = null;
 								}
 								if ($access == "w") {
-									if ($Commande['label'] != 'Enclenché') {
-										$action = $Tile->AddCommand($label_sup . $Commande['label'], $Commande['ep_id'], 'action', 'other', '', $Commande['ui']['unit'], $generic_type, $IsVisible, '', '');
+									if ($Command['label'] != 'Enclenché') {
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
 									}
 								}
 							}
 							break;
 						case "string":
-							foreach (str_split($Commande['ui']['access']) as $access) {
-								if ($Commande['name'] == "pin") {
+							foreach (str_split($Command['ui']['access']) as $access) {
+								if ($Command['name'] == "pin") {
 									$IsVisible = 0;
 								} else {
 									$IsVisible = 1;
 								}
 								if ($access == "r") {
-									if ($Commande['ui']['access'] == "rw") {
+									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									$info = $Tile->AddCommand($label_sup . $Commande['label'], $Commande['ep_id'], 'info', 'string', '', $Commande['ui']['unit'], $generic_type, $IsVisible, '', '');
-									$Tile->checkAndUpdateCmd($Commande['ep_id'], $Commande['value']);
+									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
+									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									$label_sup = '';
 								}
 								if ($access == "w") {
-									$action = $Tile->AddCommand($label_sup . $Commande['label'], $Commande['ep_id'], 'action', 'message', '', $Commande['ui']['unit'], $generic_type, $IsVisible, '', '');
+									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
 								}
 							}
 							break;
@@ -322,51 +322,51 @@ class Freebox_OS extends eqLogic
 	{
 		log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon);
 
-		$Commande = $this->getCmd($Type, $_logicalId);
-		if (!is_object($Commande)) {
+		$Command = $this->getCmd($Type, $_logicalId);
+		if (!is_object($Command)) {
 			$VerifName = $Name;
-			$Commande = new Freebox_OSCmd();
-			$Commande->setId(null);
-			$Commande->setLogicalId($_logicalId);
-			$Commande->setEqLogic_id($this->getId());
+			$Command = new Freebox_OSCmd();
+			$Command->setId(null);
+			$Command->setLogicalId($_logicalId);
+			$Command->setEqLogic_id($this->getId());
 			$count = 0;
 			while (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
 				$count++;
 				$VerifName = $Name . '(' . $count . ')';
 			}
-			$Commande->setName($VerifName);
+			$Command->setName($VerifName);
 
-			$Commande->setType($Type);
-			$Commande->setSubType($SubType);
-			$Commande->setGeneric_type($generic_type);
+			$Command->setType($Type);
+			$Command->setSubType($SubType);
+			$Command->setGeneric_type($generic_type);
 
-			$Commande->setIsVisible($IsVisible);
-			$Commande->setIsHistorized(0);
+			$Command->setIsVisible($IsVisible);
+			$Command->setIsHistorized(0);
 
-			$Commande->setUnite($unite);
+			$Command->setUnite($unite);
 
 			if ($Template != 'default') {
-				$Commande->setTemplate('dashboard', 'Freebox_OS::' . $Template);
-				$Commande->setTemplate('mobile', 'Freebox_OS::' . $Template);
+				$Command->setTemplate('dashboard', 'Freebox_OS::' . $Template);
+				$Command->setTemplate('mobile', 'Freebox_OS::' . $Template);
 			}
 			if ($Templatecore != 'default') {
-				$Commande->setTemplate('dashboard', 'core::' . $Templatecore);
-				$Commande->setTemplate('mobile', 'core::' . $Templatecore);
+				$Command->setTemplate('dashboard', 'core::' . $Templatecore);
+				$Command->setTemplate('mobile', 'core::' . $Templatecore);
 			}
 			if ($invertBinary != null) {
-				$Commande->setdisplay('invertBinary', 1);
+				$Command->setdisplay('invertBinary', 1);
 			}
 			if ($icon != null) {
-				$Commande->setdisplay('icon', '<i class="' . $icon . '"></i>');
+				$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');
 			}
 			if ($linkedlogicalId >= 0 && $Type == "action") {
-				$Commande->setconfiguration('logicalId', $linkedlogicalId);
+				$Command->setconfiguration('logicalId', $linkedlogicalId);
 			}
 			if (is_object($linkedInfoCmd) && $Type == 'action') {
-				$Commande->setValue($linkedInfoCmd->getId());
+				$Command->setValue($linkedInfoCmd->getId());
 			}
 
-			$Commande->save();
+			$Command->save();
 		}
 
 		$refresh = $this->getCmd(null, 'refresh');
@@ -380,7 +380,7 @@ class Freebox_OS extends eqLogic
 			$refresh->setEqLogic_id($this->getId());
 			$refresh->save();
 		}
-		return $Commande;
+		return $Command;
 	}
 	public static function CreateArchi()
 	{
@@ -388,6 +388,7 @@ class Freebox_OS extends eqLogic
 		self::AddEqLogic('Réseau', 'Reseau');
 		self::AddEqLogic('Disque Dur', 'Disque');
 		// ADSL
+		log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : ADSL');
 		$ADSL = self::AddEqLogic('ADSL', 'ADSL');
 		$ADSL->AddCommand('Freebox rate down', 'rate_down', "info", 'numeric', '', 'Ko/s');
 		$ADSL->AddCommand('Freebox rate up', 'rate_up', "info", 'numeric', '', 'Ko/s');
@@ -395,32 +396,35 @@ class Freebox_OS extends eqLogic
 		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', "info", 'numeric', '', 'Mb/s');
 		$ADSL->AddCommand('Freebox media', 'media', "info", 'string');
 		$ADSL->AddCommand('Freebox state', 'state', "info", 'string');
+		log::add(__CLASS__, 'debug', '└─────────');
 		// System
+		log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Système');
 		$System = self::AddEqLogic('Système', 'System');
 		$System->AddCommand('Update', 'update', "action", 'other', 'Freebox_OS_System');
 		$System->AddCommand('Reboot', 'reboot', "action", 'other', 'Freebox_OS_System');
 		$System->AddCommand('Freebox firmware version', 'firmware_version', "info", 'string', 'Freebox_OS_System');
 		$System->AddCommand('Mac', 'mac', "info", 'string', 'Freebox_OS_System');
-		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', "info", 'string', 'Freebox_OS_System', 'tr/min');
-		$System->AddCommand('temp sw', 'temp_sw', "info", 'string', 'Freebox_OS_System', '°C');
 		$System->AddCommand('Allumée depuis', 'uptime', "info", 'string', 'Freebox_OS_System');
 		$System->AddCommand('board name', 'board_name', "info", 'string', 'Freebox_OS_System');
-		$System->AddCommand('temp cpub', 'temp_cpub', "info", 'string', 'Freebox_OS_System', '°C');
-		$System->AddCommand('temp cpum', 'temp_cpum', "info", 'string', 'Freebox_OS_System', '°C');
 		$System->AddCommand('serial', 'serial', "info", 'string', 'Freebox_OS_System');
+		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', "info", 'numeric', 'Freebox_OS_System', 'tr/min');
+		$System->AddCommand('temp cpub', 'temp_cpub', "info", 'numeric', 'Freebox_OS_System', '°C');
+		$System->AddCommand('temp cpum', 'temp_cpum', "info", 'numeric', 'Freebox_OS_System', '°C');
+		$System->AddCommand('temp sw', 'temp_sw', "info", 'numeric', 'Freebox_OS_System', '°C');
 		$cmdPF = $System->AddCommand('Redirection de ports', 'port_forwarding', "action", 'message', 'Freebox_OS_System', '', '', 0, '', '', '', '', '');
 		$cmdPF->save();
-		// Wifi
-		$StatusWifi = $System->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', '');
-		$StatusWifi->save();
-		$ActiveWifi = $System->AddCommand('Active/Désactive le wifi', 'wifiOnOff', "action", 'other', 'Freebox_OS_Wifi');
-		$ActiveWifi->setValue($StatusWifi->getId());
-		$ActiveWifi->save();
-		$WifiOn = $System->AddCommand('Wifi On', 'wifiOn', "action", 'other', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', 'fas fa-signal');
-		$WifiOn->save();
-		$WifiOff = $System->AddCommand('Wifi Off', 'wifiOff', "action", 'other', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', 'fas fa-power-off');
-		$WifiOff->save();
+		log::add(__CLASS__, 'debug', '└─────────');
+		//Wifi
+		log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Wifi');
+		$Wifi = self::AddEqLogic('Wifi', 'Wifi');
+		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', '');
+		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', "action", 'other', 'Freebox_OS_Wifi', '', '', 1, $StatusWifi, $StatusWifi);
+		$Wifi->AddCommand('Wifi On', 'wifiOn', "action", 'other', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', 'fas fa-signal');
+		$Wifi->AddCommand('Wifi Off', 'wifiOff', "action", 'other', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', 'jeedom2-fdp1-signal0');
+		log::add(__CLASS__, 'debug', '└─────────');
+		//Downloads
 		//Phone
+		log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Téléphone');
 		$Phone = self::AddEqLogic('Téléphone', 'Phone');
 		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', "info", 'numeric', 'Freebox_OS_Phone');
 		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', "info", 'numeric', 'Freebox_OS_Phone');
@@ -430,27 +434,32 @@ class Freebox_OS extends eqLogic
 		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', "info", 'string', 'Freebox_OS_Phone');
 		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', "action", 'other', 'Freebox_OS_Phone');
 		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', "action", 'other', 'Freebox_OS_Phone');
+		log::add(__CLASS__, 'debug', '└─────────');
 		//Downloads
+		log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Téléchargements');
 		$Downloads = self::AddEqLogic('Téléchargements', 'Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', "info", 'string', 'Freebox_OS_Downloads');
-		$Downloads->AddCommand('Vitesse réception', 'rx_rate', "info", 'string', 'Freebox_OS_Downloads', 'Mo/s');
-		$Downloads->AddCommand('Vitesse émission', 'tx_rate', "info", 'string', 'Freebox_OS_Downloads', 'Mo/s');
+		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', "info", 'numeric', 'Freebox_OS_Downloads');
+		$Downloads->AddCommand('Vitesse réception', 'rx_rate', "info", 'numeric', 'Freebox_OS_Downloads', 'Mo/s');
+		$Downloads->AddCommand('Vitesse émission', 'tx_rate', "info", 'numeric', 'Freebox_OS_Downloads', 'Mo/s');
 		$Downloads->AddCommand('Start DL', 'start_dl', "action", 'other', 'Freebox_OS_Downloads');
 		$Downloads->AddCommand('Stop DL', 'stop_dl', "action", 'other', 'Freebox_OS_Downloads');
+		log::add(__CLASS__, 'debug', '└─────────');
 		// AirPlay
+		log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : AirPlay');
 		$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay', 'multimedia');
 		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', "info", 'string', 'Freebox_OS_AirMedia_Recever');
 		$AirPlay->AddCommand('Start', 'airmediastart', "action", 'message', 'Freebox_OS_AirMedia_Start', '', '', 1, '', '', '', '', 'fas fa-play');
 		$AirPlay->AddCommand('Stop', 'airmediastop', "action", 'message', 'Freebox_OS_AirMedia_Start', '', '', 1, '', '', '', '', 'fas fa-stop');
+		log::add(__CLASS__, 'debug', '└─────────');
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 			$FreeboxAPI = new FreeboxAPI();
 			$FreeboxAPI->disques();
@@ -508,26 +517,26 @@ class Freebox_OS extends eqLogic
 					case 'ADSL':
 						$result = $FreeboxAPI->adslStats();
 						if ($result != false) {
-							foreach ($Equipement->getCmd('info') as $Commande) {
-								if (is_object($Commande)) {
-									switch ($Commande->getLogicalId()) {
+							foreach ($Equipement->getCmd('info') as $Command) {
+								if (is_object($Command)) {
+									switch ($Command->getLogicalId()) {
 										case "rate_down":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['rate_down']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rate_down']);
 											break;
 										case "rate_up":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['rate_up']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rate_up']);
 											break;
 										case "bandwidth_up":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['bandwidth_up']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_up']);
 											break;
 										case "bandwidth_down":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['bandwidth_down']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_down']);
 											break;
 										case "media":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['media']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['media']);
 											break;
 										case "state":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['state']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
 											break;
 									}
 								}
@@ -537,51 +546,51 @@ class Freebox_OS extends eqLogic
 					case 'Downloads':
 						$result = $FreeboxAPI->DownloadStats();
 						if ($result != false) {
-							foreach ($Equipement->getCmd('info') as $Commande) {
-								if (is_object($Commande)) {
-									switch ($Commande->getLogicalId()) {
+							foreach ($Equipement->getCmd('info') as $Command) {
+								if (is_object($Command)) {
+									switch ($Command->getLogicalId()) {
 										case "nb_tasks":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
 											break;
 										case "nb_tasks_downloading":
 											$return = $result[''];
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_downloading']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_downloading']);
 											break;
 										case "nb_tasks_done":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_done']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_done']);
 											break;
 										case "rx_rate":
 											$result = $result['rx_rate'];
 											if (function_exists('bcdiv'))
 												$result = bcdiv($result, 1048576, 2);
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 											break;
 										case "tx_rate":
 											$result = $result['tx_rate'];
 											if (function_exists('bcdiv'))
 												$result = bcdiv($result, 1048576, 2);
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 											break;
 										case "nb_tasks_active":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_active']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_active']);
 											break;
 										case "nb_tasks_stopped":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_stopped']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_stopped']);
 											break;
 										case "nb_tasks_queued":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_queued']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_queued']);
 											break;
 										case "nb_tasks_repairing":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_repairing']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_repairing']);
 											break;
 										case "nb_tasks_extracting":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_extracting']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_extracting']);
 											break;
 										case "nb_tasks_error":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_error']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_error']);
 											break;
 										case "nb_tasks_checking":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['nb_tasks_checking']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_checking']);
 											break;
 									}
 								}
@@ -589,22 +598,22 @@ class Freebox_OS extends eqLogic
 						}
 						break;
 					case 'System':
-						foreach ($Equipement->getCmd('info') as $Commande) {
-							if (is_object($Commande)) {
-								if ($Commande->getLogicalId() == "wifiStatut") {
+						foreach ($Equipement->getCmd('info') as $Command) {
+							if (is_object($Command)) {
+								if ($Command->getLogicalId() == "wifiStatut") {
 									$result = $FreeboxAPI->wifi();
 								} else {
 									$result = $FreeboxAPI->system();
 								}
-								switch ($Commande->getLogicalId()) {
+								switch ($Command->getLogicalId()) {
 									case "mac":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['mac']);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
 										break;
 									case "fan_rpm":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['fan_rpm']);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['fan_rpm']);
 										break;
 									case "temp_sw":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['temp_sw']);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_sw']);
 										break;
 									case "uptime":
 										$result = $result['uptime'];
@@ -614,36 +623,36 @@ class Freebox_OS extends eqLogic
 										$result = str_replace(' minutes ', 'min ', $result);
 										$result = str_replace(' secondes', 's', $result);
 										$result = str_replace(' seconde', 's', $result);
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 										break;
 									case "board_name":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['board_name']);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
 										break;
 									case "temp_cpub":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['temp_cpub']);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpub']);
 										break;
 									case "temp_cpum":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['temp_cpum']);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpum']);
 										break;
 									case "serial":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['serial']);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);
 										break;
 									case "firmware_version":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['firmware_version']);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
 										break;
 									case "wifiStatut":
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 										break;
 								}
 							}
 						}
 						break;
 					case 'Disque':
-						foreach ($Equipement->getCmd('info') as $Commande) {
-							if (is_object($Commande)) {
-								$result = $FreeboxAPI->getdisque($Commande->getLogicalId());
+						foreach ($Equipement->getCmd('info') as $Command) {
+							if (is_object($Command)) {
+								$result = $FreeboxAPI->getdisque($Command->getLogicalId());
 								if ($result != false) {
-									$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result);
+									$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 								}
 							}
 						}
@@ -651,26 +660,26 @@ class Freebox_OS extends eqLogic
 					case 'Phone':
 						$result = $FreeboxAPI->nb_appel_absence();
 						if ($result != false) {
-							foreach ($Equipement->getCmd('info') as $Commande) {
-								if (is_object($Commande)) {
-									switch ($Commande->getLogicalId()) {
+							foreach ($Equipement->getCmd('info') as $Command) {
+								if (is_object($Command)) {
+									switch ($Command->getLogicalId()) {
 										case "nbAppelsManquee":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['missed']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['missed']);
 											break;
 										case "nbAppelRecus":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['accepted']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['accepted']);
 											break;
 										case "nbAppelPasse":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['outgoing']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['outgoing']);
 											break;
 										case "listAppelsManquee":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['list_missed']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_missed']);
 											break;
 										case "listAppelsRecus":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['list_accepted']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_accepted']);
 											break;
 										case "listAppelsPasse":
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['list_outgoing']);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_outgoing']);
 											break;
 									}
 								}
@@ -678,49 +687,49 @@ class Freebox_OS extends eqLogic
 						}
 						break;
 					case 'Reseau':
-						foreach ($Equipement->getCmd('info') as $Commande) {
-							if (is_object($Commande)) {
-								$result = $FreeboxAPI->ReseauPing($Commande->getLogicalId());
+						foreach ($Equipement->getCmd('info') as $Command) {
+							if (is_object($Command)) {
+								$result = $FreeboxAPI->ReseauPing($Command->getLogicalId());
 								if (!$result['success']) {
 									if ($result['error_code'] == "internal_error") {
-										$Commande->remove();
+										$Command->remove();
 									}
 								} else {
 									if (isset($result['result']['l3connectivities'])) {
 										foreach ($result['result']['l3connectivities'] as $Ip) {
 											if ($Ip['active']) {
 												if ($Ip['af'] == 'ipv4') {
-													$Commande->setConfiguration('IPV4', $Ip['addr']);
+													$Command->setConfiguration('IPV4', $Ip['addr']);
 												} else {
-													$Commande->setConfiguration('IPV6', $Ip['addr']);
+													$Command->setConfiguration('IPV6', $Ip['addr']);
 												}
 											}
 										}
 									}
-									$Commande->setConfiguration('host_type', $result['result']['host_type']);
-									$Commande->save();
+									$Command->setConfiguration('host_type', $result['result']['host_type']);
+									$Command->save();
 									if (isset($result['result']['active'])) {
 										if ($result['result']['active'] == 'true') {
-											$Commande->setOrder($Commande->getOrder() % 1000);
-											$Commande->save();
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), true);
+											$Command->setOrder($Command->getOrder() % 1000);
+											$Command->save();
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), true);
 										} else {
-											$Commande->setOrder($Commande->getOrder() % 1000 + 1000);
-											$Commande->save();
-											$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), false);
+											$Command->setOrder($Command->getOrder() % 1000 + 1000);
+											$Command->save();
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), false);
 										}
 									} else {
-										$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), false);
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), false);
 									}
 								}
 							}
 						}
 						break;
 					case 'HomeAdapters':
-						foreach ($Equipement->getCmd('info') as $Commande) {
-							$result = $FreeboxAPI->getHomeAdapterStatus($Commande->getLogicalId());
+						foreach ($Equipement->getCmd('info') as $Command) {
+							$result = $FreeboxAPI->getHomeAdapterStatus($Command->getLogicalId());
 							if ($result != false) {
-								$Equipement->checkAndUpdateCmd($Commande->getLogicalId(), $result['status']);
+								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']);
 							}
 						}
 						break;
@@ -816,11 +825,7 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			case 'System':
-				if ($this->getLogicalId() == "wifiStatut" || $this->getLogicalId() == "wifiOnOff" || $this->getLogicalId() == 'wifiOn' || $this->getLogicalId() == 'wifiOff') {
-					$result = $FreeboxAPI->wifi();
-				} else {
-					$result = $FreeboxAPI->system();
-				}
+				$result = $FreeboxAPI->system();
 				switch ($this->getLogicalId()) {
 					case "reboot":
 						$FreeboxAPI->reboot();
@@ -828,6 +833,11 @@ class Freebox_OSCmd extends cmd
 					case "update":
 						$FreeboxAPI->UpdateSystem();
 						break;
+				}
+				break;
+			case 'Wifi':
+				$result = $FreeboxAPI->wifi();
+				switch ($this->getLogicalId()) {
 					case "wifiOnOff":
 						if ($result == true) {
 							$FreeboxAPI->wifiPUT(0);
@@ -840,9 +850,6 @@ class Freebox_OSCmd extends cmd
 						break;
 					case 'wifiOff':
 						$FreeboxAPI->wifiPUT(0);
-						break;
-					case 'port_forwarding':
-						$FreeboxAPI->PortForwarding($_options['message']);
 						break;
 				}
 				break;

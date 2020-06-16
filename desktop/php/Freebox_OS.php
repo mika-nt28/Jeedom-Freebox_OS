@@ -1,10 +1,10 @@
 <?php
-	if (!isConnect('admin')) {
-		throw new Exception('{{401 - Accès non autorisé}}');
-	}
-	$plugin = plugin::byId('Freebox_OS');
-	sendVarToJS('eqType', $plugin->getId());
-	$eqLogics = eqLogic::byType($plugin->getId());
+if (!isConnect('admin')) {
+    throw new Exception('{{401 - Accès non autorisé}}');
+}
+$plugin = plugin::byId('Freebox_OS');
+sendVarToJS('eqType', $plugin->getId());
+$eqLogics = eqLogic::byType($plugin->getId());
 ?>
 <div class="row row-overflow">
     <div class="col-xs-12 eqLogicThumbnailDisplay">
@@ -15,13 +15,24 @@
                 <br>
                 <span>{{Rechercher les Tiles}}</span>
             </div>
+            <?php
+            if (log::getLogLevel('Freebox_OS') <= 200) :
+            ?>
+                <div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
+                    <i class="fas fa-plus-circle"></i>
+                    <br />
+                    <span>{{Rechercher les équipements standard}}</span>
+                </div>
+            <?php
+            endif;
+            ?>
             <div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
                 <i class="fas fa-wrench"></i>
                 <br>
                 <span>{{Configuration}}</span>
             </div>
             <div class="cursor MaFreebox logoSecondary">
-                <i class="fas fa-wrench"></i>
+                <i class="fas fa-sitemap"></i>
                 <br>
                 <span>{{Paramètre de la Freebox}}</span>
             </div>
@@ -30,69 +41,71 @@
         <legend><i class="fas fa-table"></i> {{Mes equipements}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php
-			foreach ($eqLogics as $eqLogic) {
-				switch ($eqLogic->getLogicalId()){
-					case 'AirPlay':
-					case 'ADSL':
-					case 'Downloads':
-					case 'System':
-					case 'Disque':
-					case 'Phone':
-					case'Reseau':
-						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
-						echo '<br>';
-						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-						echo '</div>';
-					break;
-				}
-			}
-		?>
+            foreach ($eqLogics as $eqLogic) {
+                switch ($eqLogic->getLogicalId()) {
+                    case 'AirPlay':
+                    case 'ADSL':
+                    case 'Downloads':
+                    case 'System':
+                    case 'Disque':
+                    case 'Phone':
+                    case 'Wifi':
+                    case 'Reseau':
+                        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+                        echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+                        echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
+                        echo '<br>';
+                        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+                        echo '</div>';
+                        break;
+                }
+            }
+            ?>
         </div>
 
         <legend><i class="fas fa-table"></i> {{Home}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php
-			foreach ($eqLogics as $eqLogic) {
-				switch ($eqLogic->getLogicalId()){
-					case'HomeAdapters':
-						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
-						echo '<br>';
-						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-						echo '</div>';
-					break;
-				}
-			}
-		?>
+            foreach ($eqLogics as $eqLogic) {
+                switch ($eqLogic->getLogicalId()) {
+                    case 'HomeAdapters':
+                        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+                        echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+                        echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
+                        echo '<br>';
+                        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+                        echo '</div>';
+                        break;
+                }
+            }
+            ?>
         </div>
         <legend><i class="fas fa-table"></i> {{Tiles}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php
-			foreach ($eqLogics as $eqLogic) {
-				switch ($eqLogic->getLogicalId()){
-					case 'AirPlay':
-					case 'ADSL':
-					case 'Downloads':
-					case 'System':
-					case 'Disque':
-					case 'Phone':
-					case'Reseau':
-					case'HomeAdapters':
-					break;
-					default:
-						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						echo '<div class="eqLogicDisplayCard cursor '.$opacity.'" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
-						echo '<br>';
-						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-						echo '</div>';
-					break;
-				}
-			}
-		?>
+            foreach ($eqLogics as $eqLogic) {
+                switch ($eqLogic->getLogicalId()) {
+                    case 'AirPlay':
+                    case 'ADSL':
+                    case 'Downloads':
+                    case 'System':
+                    case 'Disque':
+                    case 'Phone':
+                    case 'Wifi':
+                    case 'Reseau':
+                    case 'HomeAdapters':
+                        break;
+                    default:
+                        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+                        echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+                        echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
+                        echo '<br>';
+                        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+                        echo '</div>';
+                        break;
+                }
+            }
+            ?>
         </div>
     </div>
 
@@ -140,9 +153,9 @@
                                 <select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
                                     <option value="">{{Aucun}}</option>
                                     <?php
-										foreach (jeeObject::all() as $object)
-											echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-									?>
+                                    foreach (jeeObject::all() as $object)
+                                        echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                                    ?>
                                 </select>
                             </div>
                         </div>
@@ -150,12 +163,12 @@
                             <label class="col-sm-2 control-label">{{Catégorie}}</label>
                             <div class="col-sm-9">
                                 <?php
-									foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
-										echo '<label class="checkbox-inline">';
-										echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
-										echo '</label>';
-									}
-								?>
+                                foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
+                                    echo '<label class="checkbox-inline">';
+                                    echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
+                                    echo '</label>';
+                                }
+                                ?>
                             </div>
                         </div>
                         <div class="form-group">
@@ -208,6 +221,6 @@
     </div>
 </div>
 <?php
-    include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
-    include_file('core', 'plugin.template', 'js');
+include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
+include_file('core', 'plugin.template', 'js');
 ?>

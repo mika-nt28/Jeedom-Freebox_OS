@@ -196,13 +196,13 @@ class FreeboxAPI
 	}
 	public function wifi()
 	{
-		$data_json = self::fetch('/api/v3/wifi/config/');
+		$data_json = self::fetch('/api/v5/wifi/config/');
 
 		if ($data_json['success']) {
 			$value = 0;
 			if ($data_json['result']['enabled'])
 				$value = 1;
-			log::add('Freebox_OS', 'debug', '┌───────── Wifi');
+			log::add('Freebox_OS', 'debug', '┌───────── Etat Actuel du Wifi');
 			log::add('Freebox_OS', 'debug', '| L\'état du wifi est ' . $value);
 			log::add('Freebox_OS', 'debug', '└─────────');
 			return $value;
@@ -214,9 +214,9 @@ class FreeboxAPI
 		log::add('Freebox_OS', 'debug', '┌───────── Wifi');
 		log::add('Freebox_OS', 'debug', '| Mise dans l\'état ' . $parametre . ' du wifi');
 		if ($parametre == 1) {
-			$return = self::fetch('/api/v3/wifi/config/', array("enabled" => true), "PUT");
+			$return = self::fetch('/api/v5/wifi/config/', array("enabled" => true), "PUT");
 		} else {
-			$return = self::fetch('/api/v3/wifi/config/', array("enabled" => false), "PUT");
+			$return = self::fetch('/api/v5/wifi/config/', array("enabled" => false), "PUT");
 			if ($return['success']) {
 				return $return['result']['enabled'];
 			}

@@ -187,42 +187,14 @@ class FreeboxAPI
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 				$Disque = self::AddEqLogic('Disque Dur', 'Disque');
-				$commande = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], "info", 'numeric', 'Freebox_OS_Disque', '%');
+				$commande = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], "info", 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%');
 				$commande->setCollectDate(date('Y-m-d H:i:s'));
 				$commande->setConfiguration('doNotRepeatEvent', 1);
 				$commande->event($value);
 			}
 		}
 	}
-	public function wifi()
-	{
-		$data_json = self::fetch('/api/v5/wifi/config/');
 
-		if ($data_json['success']) {
-			$value = 0;
-			if ($data_json['result']['enabled'])
-				$value = 1;
-			log::add('Freebox_OS', 'debug', '┌───────── Etat Actuel du Wifi');
-			log::add('Freebox_OS', 'debug', '| L\'état du wifi est ' . $value);
-			log::add('Freebox_OS', 'debug', '└─────────');
-			return $value;
-		} else
-			return false;
-	}
-	public function wifiPUT($parametre)
-	{
-		log::add('Freebox_OS', 'debug', '┌───────── Wifi');
-		log::add('Freebox_OS', 'debug', '| Mise dans l\'état ' . $parametre . ' du wifi');
-		if ($parametre == 1) {
-			$return = self::fetch('/api/v5/wifi/config/', array("enabled" => true), "PUT");
-		} else {
-			$return = self::fetch('/api/v5/wifi/config/', array("enabled" => false), "PUT");
-			if ($return['success']) {
-				return $return['result']['enabled'];
-			}
-		}
-		log::add('Freebox_OS', 'debug', '└─────────');
-	}
 	public static function reboot()
 	{
 		$content = self::fetch('/api/v3/system/reboot/', null, "POST");
@@ -263,7 +235,7 @@ class FreeboxAPI
 	{
 		try {
 			$System = self::AddEqLogic('Système', 'System');
-			$Commande = self::AddCommand($System, 'Update', 'update', "action", 'other', 'Freebox_OS_System');
+			$Commande = self::AddCommand($System, 'Update', 'update', "action", 'other', '');
 			log::add('Freebox_OS', 'debug', 'Vérification d\'une mise a jours du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);

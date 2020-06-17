@@ -417,10 +417,10 @@ class Freebox_OS extends eqLogic
 		//Wifi
 		log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Wifi');
 		$Wifi = self::AddEqLogic('Wifi', 'Wifi');
-		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', '');
-		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', "action", 'other', 'Freebox_OS_Wifi', '', '', 1, $StatusWifi, $StatusWifi);
-		$Wifi->AddCommand('Wifi On', 'wifiOn', "action", 'other', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', 'fas fa-signal');
-		$Wifi->AddCommand('Wifi Off', 'wifiOff', "action", 'other', 'Freebox_OS_Wifi', '', '', 0, '', '', '', '', 'jeedom2-fdp1-signal0');
+		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', 'Freebox_OS_Wifi', '', '', 1, '', '', '', '', '');
+		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', "action", 'other', '', '', '', 0, $StatusWifi, $StatusWifi);
+		$Wifi->AddCommand('Wifi On', 'wifiOn', "action", 'other', '', '', '', 0, $StatusWifi, $StatusWifi, '', '', 'fas fa-wifi');
+		$Wifi->AddCommand('Wifi Off', 'wifiOff', "action", 'other', '', '', '', 0, $StatusWifi, $StatusWifi, '', '', 'fas fa-times');
 		log::add(__CLASS__, 'debug', '└─────────');
 		//Downloads
 		//Phone
@@ -497,6 +497,17 @@ class Freebox_OS extends eqLogic
 				$cron->stop();
 				$cron->remove();
 			}
+		}
+		$refresh = $this->getCmd(null, 'refresh');
+		if (!is_object($refresh)) {
+			$refresh = new Freebox_OSCmd();
+			$refresh->setLogicalId('refresh');
+			$refresh->setIsVisible(1);
+			$refresh->setName(__('Rafraichir', __FILE__));
+			$refresh->setType('action');
+			$refresh->setSubType('other');
+			$refresh->setEqLogic_id($this->getId());
+			$refresh->save();
 		}
 	}
 	public static function RefreshToken()

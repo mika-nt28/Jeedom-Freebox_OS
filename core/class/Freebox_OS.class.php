@@ -600,11 +600,7 @@ class Freebox_OS extends eqLogic
 					case 'System':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
-								if ($Command->getLogicalId() == "wifiStatut") {
-									$result = $FreeboxAPI->wifi();
-								} else {
-									$result = $FreeboxAPI->system();
-								}
+								$result = $FreeboxAPI->system();
 								switch ($Command->getLogicalId()) {
 									case "mac":
 										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
@@ -640,6 +636,15 @@ class Freebox_OS extends eqLogic
 									case "firmware_version":
 										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
 										break;
+								}
+							}
+						}
+						break;
+					case 'Wifi':
+						foreach ($Equipement->getCmd('info') as $Command) {
+							if (is_object($Command)) {
+								$result = $FreeboxAPI->wifi();
+								switch ($Command->getLogicalId()) {
 									case "wifiStatut":
 										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 										break;

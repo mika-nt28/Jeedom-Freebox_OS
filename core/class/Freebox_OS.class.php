@@ -210,7 +210,7 @@
 						log::add(__CLASS__, 'debug', '│ label : ' . $Command['label'] . ' -- name : ' . $Command['name']);
 						log::add(__CLASS__, 'debug', '│ type  : ' . $Equipement['type'] . ' -- action : ' . $Equipement['action']);
 						log::add(__CLASS__, 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
-						log::add(__CLASS__, 'debug', '│ valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit']);
+						log::add(__CLASS__, 'debug', '│ valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit'] . ' -- Range : ' . $Command['ui']['range']);
 
 						switch ($Command['value_type']) {
 							case "void":
@@ -235,12 +235,14 @@
 										if ($Command['ui']['access'] == "rw") {
 											$label_sup = 'Etat ';
 										}
-										if ($Command['name'] == "luminosity" && $Equipement['action'] != "color_picker") {
+										if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id']);
-											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id']);
-										} elseif ($Command['name'] != "luminosity" && $Equipement['action'] == "color_picker") {
+											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', '0', '255');
+										} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', 0, '', $Command['ep_id']);
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id']);
+										} elseif ($Equipement['action'] == "store_slider") {
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, '', $Command['ep_id'], '', '', '', '0', '100');
 										} elseif ($Command['name'] == "battery_warning") {
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], 'BATTERY', 0, '', '');
 										} else {
@@ -317,7 +319,7 @@
 										$label_sup = '';
 									}
 									if ($access == "w") {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '', '', '', '', '', '');
 									}
 								}
 								break;
@@ -332,9 +334,9 @@
 			}
 		}
 
-		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $linkedInfoCmd = null, $linkedlogicalId = 'NO_LINK',  $invertBinary = null, $icon = null, $forceLineB = null)
+		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $linkedInfoCmd = null, $linkedlogicalId = 'NO_LINK',  $invertBinary = null, $icon = null, $forceLineB = null, $valuemin = 'default', $valuemax = 'default')
 		{
-			log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Retour Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon);
+			log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Retour Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
 			$Command = $this->getCmd($Type, $_logicalId);
 			if (!is_object($Command)) {
@@ -374,6 +376,12 @@
 				}
 				if ($linkedlogicalId >= 0 && $Type == "action") {
 					$Command->setconfiguration('logicalId', $linkedlogicalId);
+				}
+				if ($valuemin != 'default') {
+					$Command->setconfiguration('minValue', $valuemin);
+				}
+				if ($valuemax != 'default') {
+					$Command->setconfiguration('maxValue', $valuemax);
 				}
 				if (is_object($linkedInfoCmd) && $Type == 'action') {
 					$Command->setValue($linkedInfoCmd->getId());

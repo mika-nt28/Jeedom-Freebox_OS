@@ -192,7 +192,7 @@ function addCmdToTable(_cmd) {
 	if (init(_cmd.subType) == 'numeric' || init(_cmd.subType) == 'slider') {
 		tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 90px;display : inline-block;"> ';
 		tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width : 90px;display : inline-block;"> ';
-		tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" style="width : 90px; display:inline" placeholder="{{Unité}}" title="{{Unité}}"></td>';
+		tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="{{Unité}}" title="{{Unité}}" style="width : 90px; display:inline-block"></td>';
 	}
 	tr += '</td>';
 	tr += '<td>';

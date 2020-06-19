@@ -283,7 +283,7 @@
 											$Templatecore = null;
 											$invertBinary = 0;
 										}
-										if ($Command['label'] == 'Enclenché') {
+										if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Command['action'] == 'toggle')) {
 											$infoCmd = $Tile->AddCommand('Etat', $Command['ep_id'], 'info', 'binary', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id']);
 											$Tile->AddCommand('On', 'PB_On', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_ON', 1, $infoCmd, $Command['ep_id'], $invertBinary);
 											$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_OFF', 1, $infoCmd, $Command['ep_id'], $invertBinary);
@@ -297,7 +297,7 @@
 										$invertBinary = null;
 									}
 									if ($access == "w") {
-										if ($Command['label'] != 'Enclenché') {
+										if ($Command['label'] != 'Enclenché' && ($Command['name'] != 'switch' && $Command['action'] != 'toggle')) {
 											$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
 										}
 									}

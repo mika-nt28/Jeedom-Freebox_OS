@@ -22,9 +22,9 @@ function Freebox_OS_update()
 	$eqLogics = eqLogic::byType('Freebox_OS');
 	foreach ($eqLogics as $eqLogic) {
 		UpdateLogicId($eqLogic, 'wifiStatut', $Wificmd); // Amélioration 20200616
-		UpdateLogicId($eqLogic, 'wifiOff', $Wificmd, ''); // Amélioration 20200616
-		UpdateLogicId($eqLogic, 'wifiOn', $Wificmd, ''); // Amélioration 20200616
-		UpdateLogicId($eqLogic, 'wifiOnOff', $Wificmd, ''); // Amélioration 20200616
+		UpdateLogicId($eqLogic, 'wifiOff', $Wificmd, '', 'wifiStatut'); // Amélioration 20200616
+		UpdateLogicId($eqLogic, 'wifiOn', $Wificmd, '', 'wifiStatut'); // Amélioration 20200616
+		UpdateLogicId($eqLogic, 'wifiOnOff', $Wificmd, '', 'wifiStatut'); // Amélioration 20200616
 		UpdateLogicId($eqLogic, 'fan_rpm', '', 'numeric'); // Correction sous Type 20200616
 		UpdateLogicId($eqLogic, 'temp_cpub', '', 'numeric'); // Correction sous Type 20200616
 		UpdateLogicId($eqLogic, 'temp_cpum', '', 'numeric'); // Correction sous Type 20200616
@@ -63,7 +63,7 @@ function Freebox_OS_remove()
 		$cron->remove();
 }
 
-function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
+function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $linkedlogicalId = null)
 {
 	//  Fonction update commande (Changement equipement, changement sous type)
 	$cmd = $eqLogic->getCmd(null, $from);
@@ -74,15 +74,9 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
 		if ($SubType != null) {
 			$cmd->setSubType($SubType);
 		}
-		$cmd->save();
-	}
-}
-function LinkedlogicalIdId($eqLogic, $from, $linkedlogicalId)
-{
-	//  Fonction pour lier les commandes
-	$cmd = $eqLogic->getCmd(null, $from);
-	if (is_object($cmd)) {
-		$Cmd->setconfiguration('logicalId', $linkedlogicalId);
+		if ($linkedlogicalId != null) {
+			$cmd->getCmd($linkedlogicalId, 'logicalId')->getId();
+		}
 		$cmd->save();
 	}
 }

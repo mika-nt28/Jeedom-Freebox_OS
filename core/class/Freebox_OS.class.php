@@ -208,7 +208,7 @@
 						$Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
 						$Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
 						log::add(__CLASS__, 'debug', '│ label : ' . $Command['label'] . ' -- name : ' . $Command['name']);
-						log::add(__CLASS__, 'debug', '│ type  : ' . $Equipement['type'] . ' -- action : ' . $Equipement['action']);
+						log::add(__CLASS__, 'debug', '│ type (eq) : ' . $Equipement['type'] . ' -- action (eq): ' . $Equipement['action']);
 						log::add(__CLASS__, 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
 						log::add(__CLASS__, 'debug', '│ valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit'] . ' -- Range : ' . $Command['ui']['range']);
 
@@ -283,7 +283,7 @@
 											$Templatecore = null;
 											$invertBinary = 0;
 										}
-										if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Command['action'] == 'toggle')) {
+										if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
 											$infoCmd = $Tile->AddCommand('Etat', $Command['ep_id'], 'info', 'binary', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id']);
 											$Tile->AddCommand('On', 'PB_On', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_ON', 1, $infoCmd, $Command['ep_id'], $invertBinary);
 											$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_OFF', 1, $infoCmd, $Command['ep_id'], $invertBinary);
@@ -297,7 +297,7 @@
 										$invertBinary = null;
 									}
 									if ($access == "w") {
-										if ($Command['label'] != 'Enclenché' && ($Command['name'] != 'switch' && $Command['action'] != 'toggle')) {
+										if ($Command['label'] != 'Enclenché' && ($Command['name'] != 'switch' && $Equipement['action'] != 'toggle')) {
 											$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
 										}
 									}

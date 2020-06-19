@@ -208,7 +208,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                             <th style="width: 10px;"> </th>
                             <th style="width: 650px;">{{Nom}}</th>
                             <th style="width: 110px;">{{Sous-Type}}</th>
-                            <th style="width: 350px;">{{Unité}}</th>
+                            <th style="width: 350px;">{{Min/Max - Unité}}</th>
                             <th>{{Paramètres}}</th>
                             <th style="width: 250px;">{{Options}}</th>
 

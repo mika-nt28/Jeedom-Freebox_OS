@@ -74,9 +74,9 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $linkedlogi
 		if ($SubType != null) {
 			$cmd->setSubType($SubType);
 		}
-		if ($linkedlogicalId != null) {
-			$cmd->getCmd($linkedlogicalId, 'logicalId')->getId();
-		}
+		//if ($linkedlogicalId != null) {
+		//	$cmd->getCmd($linkedlogicalId, 'logicalId')->getId();
+		//}
 		$cmd->save();
 	}
 }

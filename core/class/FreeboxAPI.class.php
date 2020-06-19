@@ -235,7 +235,7 @@ class FreeboxAPI
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque');
-				$commande = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], "info", 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%');
+				$commande = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%');
 				$commande->event($value);
 			}
 		}

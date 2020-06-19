@@ -429,17 +429,17 @@
 			log::add(__CLASS__, 'debug', '└─────────');
 			//Wifi
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Wifi');
-			if (jeedom::version() >= '4.0') {
+			if (version_compare(jeedom::version(), "4", "<")) {
+				log::add(__CLASS__, 'debug', '│ Application des Widgets pour le core V3 ');
+				$TemplateWifi = 'Freebox_OS::Freebox_OS_Wifi';
+				$iconeWfiOn = 'fas fa-wifi';
+				$iconeWfiOff = 'fas fa-times';
+			} else {
 				log::add(__CLASS__, 'debug', '│ Application des Widgets pour le core V4');
 				$TemplateWifiStatut = 'Freebox_OS::Wifi';
 				$TemplateWifi = '';
 				$iconeWfiOn = 'fas fa-wifi icon_green';
 				$iconeWfiOff = 'fas fa-times icon_red';
-			} else {
-				log::add(__CLASS__, 'debug', '│ Application des Widgets pour le core V3 ');
-				$TemplateWifi = 'Freebox_OS::Freebox_OS_Wifi';
-				$iconeWfiOn = 'fas fa-wifi';
-				$iconeWfiOff = 'fas fa-times';
 			};
 			$Wifi = self::AddEqLogic('Wifi', 'Wifi');
 			$StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1);

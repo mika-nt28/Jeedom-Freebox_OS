@@ -208,9 +208,9 @@
 						$Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
 						$Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
 						log::add(__CLASS__, 'debug', '│ label : ' . $Command['label'] . ' -- name : ' . $Command['name']);
-						log::add(__CLASS__, 'debug', '│ type  : ' . $Equipement['type'] . ' -- action : ' . $Equipement['action']);
+						log::add(__CLASS__, 'debug', '│ type (eq) : ' . $Equipement['type'] . ' -- action (eq): ' . $Equipement['action']);
 						log::add(__CLASS__, 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
-						log::add(__CLASS__, 'debug', '│ valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit']);
+						log::add(__CLASS__, 'debug', '│ valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit'] . ' -- Range : ' . $Command['ui']['range']);
 
 						switch ($Command['value_type']) {
 							case "void":
@@ -235,12 +235,14 @@
 										if ($Command['ui']['access'] == "rw") {
 											$label_sup = 'Etat ';
 										}
-										if ($Command['name'] == "luminosity" && $Equipement['action'] != "color_picker") {
+										if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id']);
-											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id']);
-										} elseif ($Command['name'] != "luminosity" && $Equipement['action'] == "color_picker") {
+											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', '0', '255');
+										} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', 0, '', $Command['ep_id']);
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id']);
+										} elseif ($Equipement['action'] == "store_slider") {
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, '', $Command['ep_id'], '', '', '', '0', '100');
 										} elseif ($Command['name'] == "battery_warning") {
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], 'BATTERY', 0, '', '');
 										} else {
@@ -281,7 +283,7 @@
 											$Templatecore = null;
 											$invertBinary = 0;
 										}
-										if ($Command['label'] == 'Enclenché') {
+										if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
 											$infoCmd = $Tile->AddCommand('Etat', $Command['ep_id'], 'info', 'binary', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id']);
 											$Tile->AddCommand('On', 'PB_On', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_ON', 1, $infoCmd, $Command['ep_id'], $invertBinary);
 											$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_OFF', 1, $infoCmd, $Command['ep_id'], $invertBinary);
@@ -295,7 +297,7 @@
 										$invertBinary = null;
 									}
 									if ($access == "w") {
-										if ($Command['label'] != 'Enclenché') {
+										if ($Command['label'] != 'Enclenché' && ($Command['name'] != 'switch' && $Equipement['action'] != 'toggle')) {
 											$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
 										}
 									}
@@ -317,7 +319,7 @@
 										$label_sup = '';
 									}
 									if ($access == "w") {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '');
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '', '', '', '', '', '');
 									}
 								}
 								break;
@@ -332,9 +334,9 @@
 			}
 		}
 
-		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $linkedInfoCmd = null, $linkedlogicalId = 'NO_LINK',  $invertBinary = null, $icon = null, $forceLineB = null)
+		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $linkedInfoCmd = null, $linkedlogicalId = 'NO_LINK',  $invertBinary = null, $icon = null, $forceLineB = null, $valuemin = 'default', $valuemax = 'default')
 		{
-			log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Retour Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon);
+			log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Retour Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
 			$Command = $this->getCmd($Type, $_logicalId);
 			if (!is_object($Command)) {
@@ -374,6 +376,12 @@
 				}
 				if ($linkedlogicalId >= 0 && $Type == "action") {
 					$Command->setconfiguration('logicalId', $linkedlogicalId);
+				}
+				if ($valuemin != 'default') {
+					$Command->setconfiguration('minValue', $valuemin);
+				}
+				if ($valuemax != 'default') {
+					$Command->setconfiguration('maxValue', $valuemax);
 				}
 				if (is_object($linkedInfoCmd) && $Type == 'action') {
 					$Command->setValue($linkedInfoCmd->getId());
@@ -429,17 +437,17 @@
 			log::add(__CLASS__, 'debug', '└─────────');
 			//Wifi
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Wifi');
-			if (jeedom::version() >= '4.0') {
+			if (version_compare(jeedom::version(), "4", "<")) {
+				log::add(__CLASS__, 'debug', '│ Application des Widgets pour le core V3 ');
+				$TemplateWifi = 'Freebox_OS::Freebox_OS_Wifi';
+				$iconeWfiOn = 'fas fa-wifi';
+				$iconeWfiOff = 'fas fa-times';
+			} else {
 				log::add(__CLASS__, 'debug', '│ Application des Widgets pour le core V4');
 				$TemplateWifiStatut = 'Freebox_OS::Wifi';
 				$TemplateWifi = '';
 				$iconeWfiOn = 'fas fa-wifi icon_green';
 				$iconeWfiOff = 'fas fa-times icon_red';
-			} else {
-				log::add(__CLASS__, 'debug', '│ Application des Widgets pour le core V3 ');
-				$TemplateWifi = 'Freebox_OS::Freebox_OS_Wifi';
-				$iconeWfiOn = 'fas fa-wifi';
-				$iconeWfiOff = 'fas fa-times';
 			};
 			$Wifi = self::AddEqLogic('Wifi', 'Wifi');
 			$StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1);

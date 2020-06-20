@@ -236,7 +236,7 @@
 											$label_sup = 'Etat ';
 										}
 										if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id']);
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id'], '', '', '', '0', '255');
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', '0', '255');
 										} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', 0, '', $Command['ep_id']);
@@ -334,9 +334,9 @@
 			}
 		}
 
-		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $linkedInfoCmd = null, $linkedlogicalId = 'NO_LINK',  $invertBinary = null, $icon = null, $forceLineB = null, $valuemin = 'default', $valuemax = 'default')
+		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'NO_LINK', $link_logicalId = 'NO_LINK',  $invertBinary = null, $icon = null, $forceLineB = 'default', $valuemin = 'default', $valuemax = 'default', $link_IA = 'NO_LINK')
 		{
-			log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Retour Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
+			log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
 			$Command = $this->getCmd($Type, $_logicalId);
 			if (!is_object($Command)) {
@@ -365,7 +365,7 @@
 					$Command->setTemplate('dashboard', $Template);
 					$Command->setTemplate('mobile', $Template);
 				}
-				if ($forceLineB != null) {
+				if ($forceLineB != 'default') {
 					$Command->setdisplay('forceReturnLineBefore', 1);
 				}
 				if ($invertBinary != null) {
@@ -374,21 +374,27 @@
 				if ($icon != null) {
 					$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');
 				}
-				if ($linkedlogicalId >= 0 && $Type == "action") {
-					$Command->setconfiguration('logicalId', $linkedlogicalId);
+				if ($link_logicalId >= 0 && $Type == 'action') {
+					$Command->setconfiguration('logicalId', $link_logicalId);
 				}
-				if ($valuemin != 'default') {
-					$Command->setconfiguration('minValue', $valuemin);
+				if (is_object($link_I) && $Type == 'action') {
+					$Command->setValue($link_I->getId());
 				}
-				if ($valuemax != 'default') {
-					$Command->setconfiguration('maxValue', $valuemax);
-				}
-				if (is_object($linkedInfoCmd) && $Type == 'action') {
-					$Command->setValue($linkedInfoCmd->getId());
-				}
-
 				$Command->save();
 			}
+			if ($valuemin != 'default') {
+				$Command->setconfiguration('minValue', $valuemin);
+			}
+			if ($valuemax != 'default') {
+				$Command->setconfiguration('maxValue', $valuemax);
+			}
+			if ($link_IA != 'NO_LINK' && $Type == 'action') {
+				$Command->setValue($link_IA);
+			}
+			if ($link_logicalId != 'NO_LINK' && $Type == 'action') {
+				$Command->setconfiguration('logicalId', $link_logicalId);
+			}
+			$Command->save();
 
 			$refresh = $this->getCmd(null, 'refresh');
 			if (!is_object($refresh)) {
@@ -450,10 +456,11 @@
 				$iconeWfiOff = 'fas fa-times icon_red';
 			};
 			$Wifi = self::AddEqLogic('Wifi', 'Wifi');
-			$StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1);
-			$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', "action", 'other', $TemplateWifi, '', '', 0, $StatusWifi, $StatusWifi);
-			$Wifi->AddCommand('Wifi On', 'wifiOn', "action", 'other', $TemplateWifi, '', '', 0, $StatusWifi, $StatusWifi, '', $iconeWfiOn);
-			$Wifi->AddCommand('Wifi Off', 'wifiOff', "action", 'other', $TemplateWifi, '', '', 0, $StatusWifi, $StatusWifi, '', $iconeWfiOff);
+			$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1, '', '');
+			$link_IA = $StatusWifi->getId();
+			$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOn, '', '', '', $link_IA);
+			$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOff, '', '', '', $link_IA);
+			$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', '', '', '', '', $link_IA);
 
 			log::add(__CLASS__, 'debug', '└─────────');
 			//Downloads

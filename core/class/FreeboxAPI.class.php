@@ -235,7 +235,7 @@ class FreeboxAPI
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque');
-				$commande = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%');
+				$commande = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
 				$commande->event($value);
 			}
 		}
@@ -283,7 +283,7 @@ class FreeboxAPI
 			return $return['result']['enabled'];
 		}
 	}
-	public function reboot()
+	public static function reboot()
 	{
 		$content = $this->fetch('/api/v3/system/reboot/', null, "POST");
 		if ($content === false)
@@ -293,7 +293,7 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function ringtone_on()
+	public static function ringtone_on()
 	{
 		$content = $this->fetch('/api/v3/phone/dect_page_start/', "", "POST");
 		if ($content === false)
@@ -303,7 +303,7 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function ringtone_off()
+	public static function ringtone_off()
 	{
 		$content = $this->fetch('/api/v3/phone/dect_page_stop/', "", "POST");
 		if ($content === false)
@@ -327,7 +327,7 @@ class FreeboxAPI
 	{
 		try {
 			$System = Freebox_OS::AddEqLogic('Système', 'System');
-			$Commande = $System->AddCommand('Update', 'update', "action", 'other', '');
+			$Commande = $System->AddCommand('Update', 'update', 'action', 'other', '', '', '', 0, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
 			log::add('Freebox_OS', 'debug', 'Vérification d\'une mise a jours du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);

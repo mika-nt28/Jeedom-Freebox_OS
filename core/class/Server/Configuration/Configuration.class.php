@@ -195,33 +195,6 @@ class FreeboxAPI
 		}
 	}
 
-	public static function reboot()
-	{
-		$content = self::fetch('/api/v3/system/reboot/', null, "POST");
-
-		if ($content['success'])
-			return $content;
-		else
-			return false;
-	}
-	public function ringtone_on()
-	{
-		$content = self::fetch('/api/v3/phone/dect_page_start/', "", "POST");
-
-		if ($content['success'])
-			return $content;
-		else
-			return false;
-	}
-	public function ringtone_off()
-	{
-		$content = self::fetch('/api/v3/phone/dect_page_stop/', "", "POST");
-
-		if ($content['success'])
-			return $content;
-		else
-			return false;
-	}
 	public function system()
 	{
 		$systemArray = self::fetch('/api/v3/system/');

@@ -207,27 +207,31 @@
 						log::add(__CLASS__, 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
 						$Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
 						$Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
-						log::add(__CLASS__, 'debug', '│ label : ' . $Command['label'] . ' -- name : ' . $Command['name']);
-						log::add(__CLASS__, 'debug', '│ type (eq) : ' . $Equipement['type'] . ' -- action (eq): ' . $Equipement['action']);
+						log::add(__CLASS__, 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
+						log::add(__CLASS__, 'debug', '│ Type (eq) : ' . $Equipement['type'] . ' -- Action (eq): ' . $Equipement['action']);
 						log::add(__CLASS__, 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
-						log::add(__CLASS__, 'debug', '│ valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit'] . ' -- Range : ' . $Command['ui']['range']);
-
+						log::add(__CLASS__, 'debug', '│ Valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit']);
+						log::add(__CLASS__, 'debug', '│ Range : ' . $Command['ui']['range'][0] . '-' . $Command['ui']['range'][1] . '-' . $Command['ui']['range'][2] . '-' . $Command['ui']['range'][3] . $Command['ui']['range'][4] . '-' . $Command['ui']['range'][5] . '-' . $Command['ui']['range'][6] . ' -- Range color : ' . $Command['ui']['icon_color_range'][0] . '-' . $Command['ui']['icon_color_range'][1]);
 						switch ($Command['value_type']) {
 							case "void":
 								if ($Command['name'] == 'up') {
 									$generic_type = 'FLAP_UP';
 									$icon = 'fas fa-arrow-up';
+									$order = 2;
 								} elseif ($Command['name'] == 'stop') {
 									$generic_type = 'FLAP_STOP';
 									$icon = 'fas fa-stop';
+									$order = 3;
 								} elseif ($Command['name'] == 'down') {
 									$generic_type = 'FLAP_DOWN';
 									$icon = 'fas fa-arrow-down';
+									$order = 4;
 								} else {
 									$generic_type = null;
 									$icon = null;
+									$order = null;
 								}
-								$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, 1, '', '', '', $icon, '', 'default', 'default', '', '', '');
+								$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, 1, $infoCmd, '', '', $icon, '', 'default', 'default', '', $order, '');
 								break;
 							case "int":
 								foreach (str_split($Command['ui']['access']) as $access) {
@@ -240,7 +244,7 @@
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', "0", '255', '', '', '');
 										} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', 0, '', $Command['ep_id'], '', '', '', 'default', 'default', '', '', '');
-											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id']);
+											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id'], '', '', '', 'default', 'default', '', '', '');
 										} elseif ($Equipement['action'] == "store_slider") {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, '', $Command['ep_id'], '', '', '', "0", '100', '', '', '');
 										} elseif ($Command['name'] == "battery_warning") {
@@ -334,7 +338,7 @@
 			}
 		}
 
-		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = null, $icon = null, $forceLineB = 'default', $valuemin, $valuemax = 'default', $link_IA = 'NO_LINK', $_order = 'default', $IsHistorized = 0)
+		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = null, $icon = null, $forceLineB = 'default', $valuemin, $valuemax = 'default', $link_IA = 'NO_LINK', $_order = 'default', $IsHistorized = 0, $forceIcone_widget = false)
 		{
 			log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
@@ -398,6 +402,18 @@
 			if ($link_logicalId != 'default' && $Type == 'action') {
 				$Command->setconfiguration('logicalId', $link_logicalId);
 			}
+			if ($forceIcone_widget == true) {
+				if ($icon != null) {
+					$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');
+				}
+				if ($Template != null) {
+					$Command->setTemplate('dashboard', $Template);
+					$Command->setTemplate('mobile', $Template);
+				}
+				if ($forceLineB != 'default') {
+					$Command->setdisplay('forceReturnLineBefore', 1);
+				}
+			}
 			$Command->save();
 
 			$refresh = $this->getCmd(null, 'refresh');
@@ -448,37 +464,50 @@
 			//Wifi
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Wifi');
 			if (version_compare(jeedom::version(), "4", "<")) {
-				log::add(__CLASS__, 'debug', '│ Application des Widgets pour le core V3 ');
+				log::add(__CLASS__, 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 				$TemplateWifi = 'Freebox_OS::Freebox_OS_Wifi';
 				$iconeWfiOn = 'fas fa-wifi';
 				$iconeWfiOff = 'fas fa-times';
+				$updateiconeWifi = false;
 			} else {
-				log::add(__CLASS__, 'debug', '│ Application des Widgets pour le core V4');
+				log::add(__CLASS__, 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 				$TemplateWifiStatut = 'Freebox_OS::Wifi';
 				$TemplateWifi = '';
 				$iconeWfiOn = 'fas fa-wifi icon_green';
 				$iconeWfiOff = 'fas fa-times icon_red';
+				$updateiconeWifi = true; // Temporaire le temps de la migration JAG 20200621
 			};
 			$Wifi = self::AddEqLogic('Wifi', 'Wifi');
-			$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1, 'default', 'default', '', 1, '');
+			$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1, 'default', 'default', '', 1, '', $updateiconeWifi);
 			$link_IA = $StatusWifi->getId();
-			$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOn, '', 'default', 'default', $link_IA, 2, '');
-			$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOff, '', 'default', 'default', $link_IA, 3, '');
-			$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', '', '', 'default', 'default', $link_IA, 4, '');
+			$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOn, '', 'default', 'default', $link_IA, 2, '', $updateiconeWifi);
+			$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOff, '', 'default', 'default', $link_IA, 3, '', $updateiconeWifi);
+			$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', '', '', 'default', 'default', $link_IA, 4, '', $updateiconeWifi);
 
 			log::add(__CLASS__, 'debug', '└─────────');
 			//Downloads
 			//Phone
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Téléphone');
+			if (version_compare(jeedom::version(), "4", "<")) {
+				log::add(__CLASS__, 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+				$iconeDectOn = 'jeedom-bell';
+				$iconeDectOff = 'jeedom-no-bell';
+				$updateiconePhone = false;
+			} else {
+				log::add(__CLASS__, 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+				$iconeDectOn = 'jeedom-bell icon_red';
+				$iconeDectOff = 'jeedom-no-bell icon_green';
+				$updateiconePhone = true; // Temporaire le temps de la migration JAG 20200621
+			};
 			$Phone = self::AddEqLogic('Téléphone', 'Phone');
-			$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 'default', '');
-			$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 'default', '');
-			$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 'default', '');
-			$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 'default', '');
-			$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 'default', '');
-			$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', '', '', 'default', 'default', '', 'default', '');
-			$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
-			$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+			$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 1, '', $updateiconePhone);
+			$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 2, '', $updateiconePhone);
+			$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 3, '', $updateiconePhone);
+			$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', 1, 'default', 'default', '', 6, '', $updateiconePhone);
+			$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 7, '', $updateiconePhone);
+			$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', '', '', 'default', 'default', '', 8, '', $updateiconePhone);
+			$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', $iconeDectOn, 1, 'default', 'default', '', 4, '', $updateiconePhone);
+			$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', $iconeDectOff, 0, 'default', 'default', '', 5, '', $updateiconePhone);
 			log::add(__CLASS__, 'debug', '└─────────');
 			//Downloads
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Téléchargements');

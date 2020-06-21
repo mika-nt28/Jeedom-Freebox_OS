@@ -21,8 +21,8 @@ function Freebox_OS_update()
 		}
 		if ($WifiEX != 1) {
 			$Wifi = Freebox_OS::AddEqLogic('Wifi', 'Wifi');
-			$Wificmd = $Wifi->getId();
-			log::add('Freebox_OS', 'debug', '│ Etape 2/5 : Création Equipement WIFI -- ID N° : ' . $Wificmd);
+			$link_IA = $Wifi->getId();
+			log::add('Freebox_OS', 'debug', '│ Etape 2/5 : Création Equipement WIFI -- ID N° : ' . $link_IA);
 		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/5 : Update nouveautés + corrections commandes');
@@ -30,10 +30,10 @@ function Freebox_OS_update()
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			if ($WifiEX != 1) {
-				UpdateLogicId($eqLogic, 'wifiStatut', $Wificmd); // Amélioration 20200616
-				UpdateLogicId($eqLogic, 'wifiOff', $Wificmd); // Amélioration 20200616
-				UpdateLogicId($eqLogic, 'wifiOn', $Wificmd); // Amélioration 20200616
-				UpdateLogicId($eqLogic, 'wifiOnOff', $Wificmd); // Amélioration 20200616
+				UpdateLogicId($eqLogic, 'wifiStatut', $link_IA); // Amélioration 20200616
+				UpdateLogicId($eqLogic, 'wifiOff', $link_IA); // Amélioration 20200616
+				UpdateLogicId($eqLogic, 'wifiOn', $link_IA); // Amélioration 20200616
+				UpdateLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200616
 			}
 			UpdateLogicId($eqLogic, 'fan_rpm', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'temp_cpub', '', 'numeric'); // Correction sous Type 20200616

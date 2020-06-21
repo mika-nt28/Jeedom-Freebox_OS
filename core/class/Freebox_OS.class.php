@@ -236,13 +236,13 @@
 											$label_sup = 'Etat ';
 										}
 										if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id'], '', '', '', '0', '255', '', '', '');
-											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', '0', '255', '', '', '');
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id'], '', '', '', "0", '255', '', '', '');
+											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', "0", '255', '', '', '');
 										} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', 0, '', $Command['ep_id'], '', '', '', 'default', 'default', '', '', '');
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id']);
 										} elseif ($Equipement['action'] == "store_slider") {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, '', $Command['ep_id'], '', '', '', '0', '100', '', '', '');
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, '', $Command['ep_id'], '', '', '', "0", '100', '', '', '');
 										} elseif ($Command['name'] == "battery_warning") {
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], 'BATTERY', 0, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
 										} else {
@@ -384,7 +384,6 @@
 			}
 			if ($valuemin != 'default') {
 				$Command->setconfiguration('minValue', $valuemin);
-				log::add(__CLASS__, 'debug', '          >───────── Mini : ' . $valuemin);
 			}
 
 			if ($valuemax != 'default') {
@@ -439,10 +438,10 @@
 			$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
 			$System->AddCommand('board name', 'board_name', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
 			$System->AddCommand('serial', 'serial', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', '', 'tr/min', '', 1, 'default', 'default', 0, '', 0, 0, 5000, '', '', '');
-			$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, 0, 90, '', '', '');
-			$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, 0, 90, '', '', '');
-			$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, 0, 90, '', '', '');
+			$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', '', 'tr/min', '', 1, 'default', 'default', 0, '', 0, "0", 5000, '', '', '');
+			$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, '', '', '');
+			$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, '', '', '');
+			$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, '', '', '');
 			$cmdPF = $System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', '', '', '', 0, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
 			$cmdPF->save();
 			log::add(__CLASS__, 'debug', '└─────────');

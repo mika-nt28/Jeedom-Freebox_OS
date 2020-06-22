@@ -218,20 +218,24 @@
 									$generic_type = 'FLAP_UP';
 									$icon = 'fas fa-arrow-up';
 									$order = 2;
+									$Link_I = '0';
 								} elseif ($Command['name'] == 'stop') {
 									$generic_type = 'FLAP_STOP';
 									$icon = 'fas fa-stop';
 									$order = 3;
+									$Link_I = '0';
 								} elseif ($Command['name'] == 'down') {
 									$generic_type = 'FLAP_DOWN';
 									$icon = 'fas fa-arrow-down';
 									$order = 4;
+									$Link_I = '0';
 								} else {
 									$generic_type = null;
 									$icon = null;
 									$order = null;
+									$Link_I = 'default';
 								}
-								$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, 1, $infoCmd, '', '', $icon, '', 'default', 'default', '', $order, '');
+								$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, 1, $$Link_I, $Link_I, '', $icon, '', 'default', 'default', $Link_I, $order, '');
 								break;
 							case "int":
 								foreach (str_split($Command['ui']['access']) as $access) {
@@ -240,10 +244,10 @@
 											$label_sup = 'Etat ';
 										}
 										if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id'], '', '', '', "0", '255', '', '', '');
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', '0', '', $Command['ep_id'], '', '', '', "0", '255', '', '', '');
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', "0", '255', '', '', '');
 										} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', 0, '', $Command['ep_id'], '', '', '', 'default', 'default', '', '', '');
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', '0', '', $Command['ep_id'], '', '', '', 'default', 'default', '', '', '');
 											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id'], '', '', '', 'default', 'default', '', '', '');
 										} elseif ($Equipement['action'] == "store_slider") {
 											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, '', $Command['ep_id'], '', '', '', "0", '100', '', '', '');
@@ -338,9 +342,9 @@
 			}
 		}
 
-		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = null, $icon = null, $forceLineB = 'default', $valuemin, $valuemax = 'default', $link_IA = 'NO_LINK', $_order = 'default', $IsHistorized = 0, $forceIcone_widget = false)
+		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = null, $icon = null, $forceLineB = 'default', $valuemin, $valuemax = 'default', $link_IA = 'default', $_order = 'default', $IsHistorized = '0', $forceIcone_widget = false)
 		{
-			log::add(__CLASS__, 'debug', '│ Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
+			log::add(__CLASS__, 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
 			$Command = $this->getCmd($Type, $_logicalId);
 			if (!is_object($Command)) {
@@ -358,19 +362,25 @@
 
 				$Command->setType($Type);
 				$Command->setSubType($SubType);
-				$Command->setGeneric_type($generic_type);
-
-				$Command->setIsVisible($IsVisible);
-				$Command->setIsHistorized($IsHistorized);
-
-				$Command->setUnite($unite);
 
 				if ($Template != null) {
 					$Command->setTemplate('dashboard', $Template);
 					$Command->setTemplate('mobile', $Template);
 				}
-				if ($forceLineB != 'default') {
-					$Command->setdisplay('forceReturnLineBefore', 1);
+				if ($unite != null && $SubType == 'numeric') {
+					$Command->setUnite($unite);
+				}
+				if ($generic_type != null) {
+					$Command->setGeneric_type($generic_type);
+				}
+
+				$Command->setIsVisible($IsVisible);
+
+				if (is_object($link_I) && $Type == 'action') {
+					$Command->setValue($link_I->getId());
+				}
+				if ($link_logicalId != 'default' && $Type == 'action') {
+					$Command->setconfiguration('logicalId', $link_logicalId);
 				}
 				if ($invertBinary != null && $SubType == 'binary') {
 					$Command->setdisplay('invertBinary', 1);
@@ -378,29 +388,28 @@
 				if ($icon != null) {
 					$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');
 				}
-				if ($link_logicalId != 'default' && $Type == 'action') {
-					$Command->setconfiguration('logicalId', $link_logicalId);
+				if ($forceLineB != 'default') {
+					$Command->setdisplay('forceReturnLineBefore', 1);
 				}
-				if (is_object($link_I) && $Type == 'action') {
-					$Command->setValue($link_I->getId());
-				}
+
+				$Command->setIsHistorized($IsHistorized);
+
 				$Command->save();
+			}
+			if ($link_logicalId != 'default' && $Type == 'action') {
+				$Command->setconfiguration('logicalId', $link_logicalId);
 			}
 			if ($valuemin != 'default') {
 				$Command->setconfiguration('minValue', $valuemin);
 			}
-
 			if ($valuemax != 'default') {
 				$Command->setconfiguration('maxValue', $valuemax);
 			}
-			if ($_order != 'default') {
-				$Command->setOrder($_order);;
-			}
-			if ($link_IA != 'NO_LINK' && $Type == 'action') {
+			if ($link_IA  != 'default' && $Type == 'action') {
 				$Command->setValue($link_IA);
 			}
-			if ($link_logicalId != 'default' && $Type == 'action') {
-				$Command->setconfiguration('logicalId', $link_logicalId);
+			if ($_order != 'default') {
+				$Command->setOrder($_order);;
 			}
 			if ($forceIcone_widget == true) {
 				if ($icon != null) {
@@ -437,28 +446,28 @@
 			// ADSL
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : ADSL');
 			$ADSL = self::AddEqLogic('ADSL', 'ADSL');
-			$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', '', 'Ko/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', '', 'Ko/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', '', 'Mb/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', '', 'Mb/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
+			$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', '', 'Ko/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 1, '0', '');
+			$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', '', 'Ko/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 2, '0', '');
+			$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', '', 'Mb/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 3, '0', '');
+			$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', '', 'Mb/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 4, '0', '');
+			$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 5, '0', '');
+			$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 6, '0', '');
 			log::add(__CLASS__, 'debug', '└─────────');
 			// System
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Système');
 			$System = self::AddEqLogic('Système', 'System');
-			$System->AddCommand('Update', 'update', 'action', 'other', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$System->AddCommand('Reboot', 'reboot', 'action', 'other', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$System->AddCommand('Mac', 'mac', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$System->AddCommand('board name', 'board_name', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$System->AddCommand('serial', 'serial', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', '', '', '');
-			$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', '', 'tr/min', '', 1, 'default', 'default', 0, '', 0, "0", 5000, '', '', '');
-			$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, '', '', '');
-			$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, '', '', '');
-			$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, '', '', '');
-			$cmdPF = $System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', '', '', '', 0, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+			$System->AddCommand('Update', 'update', 'action', 'other', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 1, '0', '');
+			$System->AddCommand('Reboot', 'reboot', 'action', 'other', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 2, '0', '');
+			$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 3, '0', '');
+			$System->AddCommand('Mac', 'mac', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 4, '0', '');
+			$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 5, '0', '');
+			$System->AddCommand('board name', 'board_name', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 6, '0', '');
+			$System->AddCommand('serial', 'serial', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 7, '0', '');
+			$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', '', 'tr/min', '', 1, 'default', 'default', 0, '', 0, "0", 5000, 'default', 8, '0', '');
+			$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, 'default', 9, '0', '');
+			$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, 'default', 10, '0', '');
+			$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, '', 'default', 11, '0', '');
+			$cmdPF = $System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', '', '', '', 0, 'default', 'default', '', '', '', 'default', 'default', 'default', 12, '0', '');
 			$cmdPF->save();
 			log::add(__CLASS__, 'debug', '└─────────');
 			//Wifi
@@ -478,11 +487,11 @@
 				$updateiconeWifi = true; // Temporaire le temps de la migration JAG 20200621
 			};
 			$Wifi = self::AddEqLogic('Wifi', 'Wifi');
-			$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1, 'default', 'default', '', 1, '', $updateiconeWifi);
+			$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1, 'default', 'default', '', 1, '0', $updateiconeWifi);
 			$link_IA = $StatusWifi->getId();
-			$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOn, '', 'default', 'default', $link_IA, 2, '', $updateiconeWifi);
-			$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOff, '', 'default', 'default', $link_IA, 3, '', $updateiconeWifi);
-			$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', '', '', 'default', 'default', $link_IA, 4, '', $updateiconeWifi);
+			$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOn, '', 'default', 'default', $link_IA, 2, '0', $updateiconeWifi);
+			$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOff, '', 'default', 'default', $link_IA, 3, '0', $updateiconeWifi);
+			$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', '', '', 'default', 'default', $link_IA, 4, '0', $updateiconeWifi);
 
 			log::add(__CLASS__, 'debug', '└─────────');
 			//Downloads
@@ -500,39 +509,39 @@
 				$updateiconePhone = true; // Temporaire le temps de la migration JAG 20200621
 			};
 			$Phone = self::AddEqLogic('Téléphone', 'Phone');
-			$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 1, '', $updateiconePhone);
-			$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 2, '', $updateiconePhone);
-			$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 3, '', $updateiconePhone);
-			$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', 1, 'default', 'default', '', 6, '', $updateiconePhone);
-			$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', 7, '', $updateiconePhone);
-			$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', '', '', 'default', 'default', '', 8, '', $updateiconePhone);
-			$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', $iconeDectOn, 1, 'default', 'default', '', 4, '', $updateiconePhone);
-			$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', $iconeDectOff, 0, 'default', 'default', '', 5, '', $updateiconePhone);
+			$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', 1, '0', $updateiconePhone);
+			$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', 2, '0', $updateiconePhone);
+			$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', 3, '0', $updateiconePhone);
+			$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', 1, 'default', 'default', 'default', 6, '0', $updateiconePhone);
+			$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', 7, '0', $updateiconePhone);
+			$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', '', '', 'default', 'default', 'default', 8, '0', $updateiconePhone);
+			$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
+			$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
 			log::add(__CLASS__, 'debug', '└─────────');
 			//Downloads
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Téléchargements');
 			$Downloads = self::AddEqLogic('Téléchargements', 'Downloads');
-			$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', '');
-			$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', 'Freebox_OS::Freebox_OS::Freebox_OS_Downloads', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', '');
-			$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', '');
-			$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '');
-			$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '');
-			$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '');
-			$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Downloads', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '');
-			$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '');
-			$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', 'Freebox_OS::Freebox_OS_Downloads', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '');
+			$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', 'Freebox_OS::Freebox_OS::Freebox_OS_Downloads', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', '', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', '', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
 			log::add(__CLASS__, 'debug', '└─────────');
 			// AirPlay
 			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : AirPlay');
 			$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay', 'multimedia');
-			$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '', 1, '');
-			$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', '', '', 1, 'default', 'default', '', 'fas fa-play', '', 'default', 'default', '', 2, '');
-			$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', '', '', 1, 'default', 'default', '', 'fas fa-stop', '', 'default', 'default', '', 3, '');
+			$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', 1, '0', '');
+			$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', '', '', 1, 'default', 'default', '', 'fas fa-play', '', 'default', 'default', 'default', 2, '0', '');
+			$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', '', '', 1, 'default', 'default', '', 'fas fa-stop', '', 'default', 'default', 'default', 3, '0', '');
 			log::add(__CLASS__, 'debug', '└─────────');
 			if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 				$FreeboxAPI = new FreeboxAPI();

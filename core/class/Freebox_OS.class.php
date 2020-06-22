@@ -523,7 +523,7 @@
 			$Downloads = self::AddEqLogic('Téléchargements', 'Downloads');
 			$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
 			$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', 'Freebox_OS::Freebox_OS::Freebox_OS_Downloads', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', '', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
 			$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
 			$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
 			$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');

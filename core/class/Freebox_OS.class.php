@@ -135,7 +135,7 @@
 			$Reseau = self::AddEqLogic('Réseau', 'Reseau');
 			foreach ($FreeboxAPI->getReseau() as $Equipement) {
 				if ($Equipement['primary_name'] != '') {
-					$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+					$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '');
 					$Command->setConfiguration('host_type', $Equipement['host_type']);
 					if (isset($Equipement['l3connectivities'])) {
 						foreach ($Equipement['l3connectivities'] as $Ip) {
@@ -163,7 +163,7 @@
 			$HomeAdapters = self::AddEqLogic('Home Adapters', 'HomeAdapters');
 			foreach ($FreeboxAPI->getHomeAdapters() as $Equipement) {
 				if ($Equipement['label'] != '') {
-					$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+					$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '');
 					$HomeAdapters->checkAndUpdateCmd($Equipement['id'], $Equipement['status']);
 				}
 			}
@@ -244,17 +244,17 @@
 											$label_sup = 'Etat ';
 										}
 										if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', '0', '', $Command['ep_id'], '', '', '', "0", '255', '', '', '');
-											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', "0", '255', '', '', '');
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', '0', '', $Command['ep_id'], '', '', '', "0", '255', 'default', '', '');
+											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $infoCmd, $Command['ep_id'], '', '', '', "0", '255', 'default', '', '');
 										} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', '0', '', $Command['ep_id'], '', '', '', 'default', 'default', '', '', '');
-											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id'], '', '', '', 'default', 'default', '', '', '');
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_COLOR', '0', '', $Command['ep_id'], '', '', '', 'default', 'default', 'default', '', '');
+											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id'], '', '', '', 'default', 'default', 'default', '', '');
 										} elseif ($Equipement['action'] == "store_slider") {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, '', $Command['ep_id'], '', '', '', "0", '100', '', '', '');
+											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, '', $Command['ep_id'], '', '', '', "0", '100', 'default', '', '');
 										} elseif ($Command['name'] == "battery_warning") {
-											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], 'BATTERY', 0, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+											$Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], 'BATTERY', 0, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '');
 										} else {
-											$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+											$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', '', $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '');
 										}
 										$label_sup = '';
 										$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
@@ -264,7 +264,7 @@
 									}
 									if ($access == "w") {
 										if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker") {
-											$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '', '', '', '', 'default', 'default', '', '', '');
+											$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', '', $Command['ui']['unit'], $generic_type, $IsVisible, '', '', '', '', '', 'default', 'default', 'default', '', '');
 										}
 									}
 								}
@@ -292,11 +292,11 @@
 											$invertBinary = 0;
 										}
 										if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
-											$infoCmd = $Tile->AddCommand('Etat', $Command['ep_id'], 'info', 'binary', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id'], 'default', '', '', 'default', 'default', '', '', '');
-											$Tile->AddCommand('On', 'PB_On', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_ON', 1, $infoCmd, $Command['ep_id'], $invertBinary, '', '', 'default', 'default', '', '', '');
-											$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_OFF', 1, $infoCmd, $Command['ep_id'], $invertBinary, '', '', 'default', 'default', '', '', '');
+											$infoCmd = $Tile->AddCommand('Etat', $Command['ep_id'], 'info', 'binary', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, '', $Command['ep_id'], 'default', '', '', 'default', 'default', 'default', '', '');
+											$Tile->AddCommand('On', 'PB_On', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_ON', 1, $infoCmd, $Command['ep_id'], $invertBinary, '', '', 'default', 'default', 'default', '', '');
+											$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_OFF', 1, $infoCmd, $Command['ep_id'], $invertBinary, '', '', 'default', 'default', 'default', '', '');
 										} else {
-											$infoCmd = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, 1, '', '', $invertBinary, '', '', 'default', 'default', '', '', '');
+											$infoCmd = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, 1, '', '', $invertBinary, '', '', 'default', 'default', 'default', '', '');
 										}
 										$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 										$label_sup = null;
@@ -306,7 +306,7 @@
 									}
 									if ($access == "w") {
 										if ($Command['label'] != 'Enclenché' && ($Command['name'] != 'switch' && $Equipement['action'] != 'toggle')) {
-											$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+											$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', '', $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '');
 										}
 									}
 								}
@@ -322,12 +322,12 @@
 										if ($Command['ui']['access'] == "rw") {
 											$label_sup = 'Etat ';
 										}
-										$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', '', $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+										$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', '', $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '');
 										$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 										$label_sup = '';
 									}
 									if ($access == "w") {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', '', $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', '', '', '', 'default', 'default', '', '', '');
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', '', $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '');
 									}
 								}
 								break;
@@ -487,7 +487,7 @@
 				$updateiconeWifi = true; // Temporaire le temps de la migration JAG 20200621
 			};
 			$Wifi = self::AddEqLogic('Wifi', 'Wifi');
-			$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1, 'default', 'default', '', 1, '0', $updateiconeWifi);
+			$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, '', '', 1, '', '', '', '', 1, 'default', 'default', 'default', 1, '0', $updateiconeWifi);
 			$link_IA = $StatusWifi->getId();
 			$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOn, '', 'default', 'default', $link_IA, 2, '0', $updateiconeWifi);
 			$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOff, '', 'default', 'default', $link_IA, 3, '0', $updateiconeWifi);
@@ -522,19 +522,19 @@
 			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');
 			$Downloads = self::AddEqLogic('Téléchargements', 'Downloads');
 			$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', 'Freebox_OS::Freebox_OS::Freebox_OS_Downloads', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', '', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', '', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
-			$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', 'Freebox_OS::Freebox_OS::Freebox_OS_Downloads', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', '', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', '', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '0', '');
+			$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '', '0', '');
 			log::add('Freebox_OS', 'debug', '└─────────');
 			// AirPlay
 			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : AirPlay');

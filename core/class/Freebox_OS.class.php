@@ -204,14 +204,14 @@
 							continue;
 						}
 						if (!is_object($Tile)) continue;
-						log::add(__CLASS__, 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
+						log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
 						$Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
 						$Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
-						log::add(__CLASS__, 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
-						log::add(__CLASS__, 'debug', '│ Type (eq) : ' . $Equipement['type'] . ' -- Action (eq): ' . $Equipement['action']);
-						log::add(__CLASS__, 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
-						log::add(__CLASS__, 'debug', '│ Valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit']);
-						log::add(__CLASS__, 'debug', '│ Range : ' . $Command['ui']['range'][0] . '-' . $Command['ui']['range'][1] . '-' . $Command['ui']['range'][2] . '-' . $Command['ui']['range'][3] . $Command['ui']['range'][4] . '-' . $Command['ui']['range'][5] . '-' . $Command['ui']['range'][6] . ' -- Range color : ' . $Command['ui']['icon_color_range'][0] . '-' . $Command['ui']['icon_color_range'][1]);
+						log::add('Freebox_OS', 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
+						log::add('Freebox_OS', 'debug', '│ Type (eq) : ' . $Equipement['type'] . ' -- Action (eq): ' . $Equipement['action']);
+						log::add('Freebox_OS', 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
+						log::add('Freebox_OS', 'debug', '│ Valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit']);
+						log::add('Freebox_OS', 'debug', '│ Range : ' . $Command['ui']['range'][0] . '-' . $Command['ui']['range'][1] . '-' . $Command['ui']['range'][2] . '-' . $Command['ui']['range'][3] . $Command['ui']['range'][4] . '-' . $Command['ui']['range'][5] . '-' . $Command['ui']['range'][6] . ' -- Range color : ' . $Command['ui']['icon_color_range'][0] . '-' . $Command['ui']['icon_color_range'][1]);
 						switch ($Command['value_type']) {
 							case "void":
 								if ($Command['name'] == 'up') {
@@ -336,7 +336,7 @@
 							$action->setValue($info->getId());
 							$action->save();
 						}
-						log::add(__CLASS__, 'debug', '└─────────');
+						log::add('Freebox_OS', 'debug', '└─────────');
 					}
 				}
 			}
@@ -344,7 +344,7 @@
 
 		public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = null, $icon = null, $forceLineB = 'default', $valuemin, $valuemax = 'default', $link_IA = 'default', $_order = 'default', $IsHistorized = '0', $forceIcone_widget = false)
 		{
-			log::add(__CLASS__, 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
+			log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
 			$Command = $this->getCmd($Type, $_logicalId);
 			if (!is_object($Command)) {
@@ -444,7 +444,7 @@
 			self::AddEqLogic('Réseau', 'Reseau');
 			self::AddEqLogic('Disque Dur', 'Disque');
 			// ADSL
-			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : ADSL');
+			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ADSL');
 			$ADSL = self::AddEqLogic('ADSL', 'ADSL');
 			$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', '', 'Ko/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 1, '0', '');
 			$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', '', 'Ko/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 2, '0', '');
@@ -452,9 +452,9 @@
 			$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', '', 'Mb/s', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 4, '0', '');
 			$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 5, '0', '');
 			$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 6, '0', '');
-			log::add(__CLASS__, 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '└─────────');
 			// System
-			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Système');
+			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
 			$System = self::AddEqLogic('Système', 'System');
 			$System->AddCommand('Update', 'update', 'action', 'other', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 1, '0', '');
 			$System->AddCommand('Reboot', 'reboot', 'action', 'other', '', '', '', 1, 'default', 'default', 0, '', 0, 'default', 'default', 'default', 2, '0', '');
@@ -469,17 +469,17 @@
 			$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', '', '°C', '', 1, 'default', 'default', 0, '', 0, "0", 90, '', 'default', 11, '0', '');
 			$cmdPF = $System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', '', '', '', 0, 'default', 'default', '', '', '', 'default', 'default', 'default', 12, '0', '');
 			$cmdPF->save();
-			log::add(__CLASS__, 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '└─────────');
 			//Wifi
-			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Wifi');
+			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Wifi');
 			if (version_compare(jeedom::version(), "4", "<")) {
-				log::add(__CLASS__, 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 				$TemplateWifi = 'Freebox_OS::Freebox_OS_Wifi';
 				$iconeWfiOn = 'fas fa-wifi';
 				$iconeWfiOff = 'fas fa-times';
 				$updateiconeWifi = false;
 			} else {
-				log::add(__CLASS__, 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 				$TemplateWifiStatut = 'Freebox_OS::Wifi';
 				$TemplateWifi = '';
 				$iconeWfiOn = 'fas fa-wifi icon_green';
@@ -493,17 +493,17 @@
 			$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', $iconeWfiOff, '', 'default', 'default', $link_IA, 3, '0', $updateiconeWifi);
 			$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', $TemplateWifi, '', '', 0, $link_IA, 'wifiStatut', '', '', '', 'default', 'default', $link_IA, 4, '0', $updateiconeWifi);
 
-			log::add(__CLASS__, 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '└─────────');
 			//Downloads
 			//Phone
-			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Téléphone');
+			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléphone');
 			if (version_compare(jeedom::version(), "4", "<")) {
-				log::add(__CLASS__, 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 				$iconeDectOn = 'jeedom-bell';
 				$iconeDectOff = 'jeedom-no-bell';
 				$updateiconePhone = false;
 			} else {
-				log::add(__CLASS__, 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 				$iconeDectOn = 'jeedom-bell icon_red';
 				$iconeDectOff = 'jeedom-no-bell icon_green';
 				$updateiconePhone = true; // Temporaire le temps de la migration JAG 20200621
@@ -517,9 +517,9 @@
 			$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', '', '', 'default', 'default', 'default', 8, '0', $updateiconePhone);
 			$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '', 1, 'default', 'default', '', $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
 			$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', '', '',  1, 'default', 'default', '', $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
-			log::add(__CLASS__, 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '└─────────');
 			//Downloads
-			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : Téléchargements');
+			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');
 			$Downloads = self::AddEqLogic('Téléchargements', 'Downloads');
 			$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', '', '0', '');
 			$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', '', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', '0', '');
@@ -535,14 +535,14 @@
 			$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', '', 'Mo/s', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
 			$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
 			$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', '', '', '', 1, 'default', 'default', '', '', '', 'default', 'default', 'default', '0', '');
-			log::add(__CLASS__, 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '└─────────');
 			// AirPlay
-			log::add(__CLASS__, 'debug', '┌───────── Ajout des commandes : AirPlay');
+			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : AirPlay');
 			$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay', 'multimedia');
 			$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', '', '', 1, 'default', 'default', '', '', 0, 'default', 'default', 'default', 1, '0', '');
 			$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', '', '', 1, 'default', 'default', '', 'fas fa-play', '', 'default', 'default', 'default', 2, '0', '');
 			$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', '', '', 1, 'default', 'default', '', 'fas fa-stop', '', 'default', 'default', 'default', 3, '0', '');
-			log::add(__CLASS__, 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '└─────────');
 			if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 				$FreeboxAPI = new FreeboxAPI();
 				$FreeboxAPI->disques();

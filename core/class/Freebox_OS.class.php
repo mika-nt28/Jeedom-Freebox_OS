@@ -540,10 +540,19 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// AirPlay
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : AirPlay');
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$iconeAirPlayOn = 'fas fa-play';
+			$iconeAirPlayOff = 'fas fa-stop';
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$iconeAirPlayOn = 'fas fa-play icon_gren';
+			$iconeAirPlayOff = 'fas fa-stop icon_red';
+		};
 		$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay', 'multimedia');
 		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', false);
-		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, 'fas fa-play', 0, 'default', 'default', 'default', 2, '0', false);
-		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, 'fas fa-stop', 0, 'default', 'default', 'default', 3, '0', false);
+		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 'default', 2, '0', false);
+		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 'default', 3, '0', false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 			$FreeboxAPI = new FreeboxAPI();

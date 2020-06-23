@@ -515,20 +515,26 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$iconeDectOn = 'jeedom-bell';
 			$iconeDectOff = 'jeedom-no-bell';
+			$iconeManquee = 'icon techno-phone1';
+			$iconeRecus = 'icon techno-phone3';
+			$iconePasses = 'ficon techno-phone2';
 			$updateiconePhone = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$iconeDectOn = 'jeedom-bell icon_red';
 			$iconeDectOff = 'jeedom-no-bell icon_green';
+			$iconeManquee = 'icon techno-phone1 icon_red';
+			$iconeRecus = 'icon techno-phone3 icon_blue';
+			$iconePasses = 'icon techno-phone2 icon_green';
 			$updateiconePhone = true; // Temporaire le temps de la migration JAG 20200621
 		};
 		$Phone = self::AddEqLogic('Téléphone', 'Phone');
-		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconePhone);
-		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconePhone);
-		$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, null, 1, 'default', 'default', 'default', 6, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 8, '0', $updateiconePhone);
+		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default', 'default', 1, '0', $updateiconePhone);
+		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 'default', 2, '0', $updateiconePhone);
+		$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default', 'default', 3, '0', $updateiconePhone);
+		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default', 'default', 6, '0', $updateiconePhone);
+		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 'default', 7, '0', $updateiconePhone);
+		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default', 'default', 8, '0', $updateiconePhone);
 		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
 		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
 		log::add('Freebox_OS', 'debug', '└─────────');

@@ -458,19 +458,30 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// System
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$iconeUpdate = 'fas fa-download';
+			$iconeReboot = 'fas fa-sync';
+			$updateiconeSystem = false;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$iconeUpdate = 'fas fa-download icon_blue';
+			$iconeReboot = 'fas fa-sync icon_red';
+			$updateiconeSystem = true; // Temporaire le temps de la migration JAG 20200621
+		};
 		$System = self::AddEqLogic('Système', 'System');
-		$System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', false);
-		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', false);
-		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', false);
-		$System->AddCommand('Mac', 'mac', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', false);
-		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', false);
-		$System->AddCommand('board name', 'board_name', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', false);
-		$System->AddCommand('serial', 'serial', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', false);
-		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', null, 'tr/min', null, 1, 'default', 'default', 0, '', 0, "0", 5000, 'default', 8, '0', false);
-		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 9, '0', false);
-		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 10, '0', false);
-		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 11, '0', false);
-		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 'default', 'default', 'default', 12, '0', false);
+		$System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default', 'default', 1, '0', $updateiconeSystem);
+		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  null, null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
+		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeSystem);
+		$System->AddCommand('Mac', 'mac', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
+		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
+		$System->AddCommand('board name', 'board_name', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeSystem);
+		$System->AddCommand('serial', 'serial', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', $updateiconeSystem);
+		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', null, 'tr/min', null, 1, 'default', 'default', 0, '', 0, "0", 5000, 'default', 8, '0', $updateiconeSystem);
+		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 9, '0', $updateiconeSystem);
+		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 10, '0', $updateiconeSystem);
+		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 11, '0', $updateiconeSystem);
+		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 12, '0', $updateiconeSystem);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Wifi

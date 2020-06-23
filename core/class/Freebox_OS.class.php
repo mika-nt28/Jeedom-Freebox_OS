@@ -171,6 +171,7 @@ class Freebox_OS extends eqLogic
 	public static function addTiles()
 	{
 		$FreeboxAPI = new FreeboxAPI();
+		self::AddEqLogic('Home Adapters', 'HomeAdapters'); // Fonction déplacer sur Tiles
 		foreach ($FreeboxAPI->getTiles() as $Equipement) {
 			if ($Equipement['type'] != 'camera') {
 				if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {
@@ -442,7 +443,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function CreateArchi()
 	{
-		self::AddEqLogic('Home Adapters', 'HomeAdapters');
+		//self::AddEqLogic('Home Adapters', 'HomeAdapters'); // Fonction déplacer sur Tiles
 		self::AddEqLogic('Réseau', 'Reseau');
 		self::AddEqLogic('Disque Dur', 'Disque');
 		// ADSL

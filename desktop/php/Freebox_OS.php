@@ -10,22 +10,18 @@ $eqLogics = eqLogic::byType($plugin->getId());
     <div class="col-xs-12 eqLogicThumbnailDisplay">
         <legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
         <div class="eqLogicThumbnailContainer">
+
+            <div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
+                <i class="fas fa-bullseye"></i>
+                <br />
+                <span>{{Scan}}<br />{{équipements standard}}</span>
+            </div>
+
             <div class="cursor eqLogicAction logoPrimary" data-action="tile">
                 <i class="fas fa-search"></i>
                 <br>
-                <span>{{Rechercher les Tiles}}</span>
+                <span>{{Scan}}<br />{{Tiles}}</span>
             </div>
-            <?php
-            if (log::getLogLevel('Freebox_OS') <= 200) :
-            ?>
-                <div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
-                    <i class="fas fa-plus-circle"></i>
-                    <br />
-                    <span>{{Rechercher les équipements standard}}</span>
-                </div>
-            <?php
-            endif;
-            ?>
             <div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
                 <i class="fas fa-wrench"></i>
                 <br>
@@ -63,24 +59,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
             ?>
         </div>
 
-        <legend><i class="fas fa-table"></i> {{Home}}</legend>
-        <div class="eqLogicThumbnailContainer">
-            <?php
-            foreach ($eqLogics as $eqLogic) {
-                switch ($eqLogic->getLogicalId()) {
-                    case 'HomeAdapters':
-                        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-                        echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-                        echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
-                        echo '<br>';
-                        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-                        echo '</div>';
-                        break;
-                }
-            }
-            ?>
-        </div>
-        <legend><i class="fas fa-table"></i> {{Tiles}}</legend>
+        <legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php
             foreach ($eqLogics as $eqLogic) {
@@ -93,7 +72,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Phone':
                     case 'Wifi':
                     case 'Reseau':
-                    case 'HomeAdapters':
                         break;
                     default:
                         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';

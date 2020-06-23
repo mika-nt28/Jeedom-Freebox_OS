@@ -99,7 +99,7 @@ function TryAPI() {
 		type: "POST",
 		url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
 		data: {
-			action: "SearchReseau",
+			//action: "SearchReseau",
 		},
 		dataType: 'json',
 		error: function (request, status, error) {

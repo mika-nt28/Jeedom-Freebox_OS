@@ -411,8 +411,8 @@ class Freebox_OS extends eqLogic
 		if ($link_IA  != 'default' && $Type == 'action') {
 			$Command->setValue($link_IA);
 		}
-		if ($_order != 'default') {
-			$Command->setOrder($_order);;
+		if ($_order != null) {
+			$Command->setOrder($_order);
 		}
 		if ($forceIcone_widget == true) {
 			if ($icon != null) {
@@ -467,9 +467,9 @@ class Freebox_OS extends eqLogic
 		$System->AddCommand('board name', 'board_name', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', false);
 		$System->AddCommand('serial', 'serial', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', false);
 		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', null, 'tr/min', null, 1, 'default', 'default', 0, '', 0, "0", 5000, 'default', 8, '0', false);
-		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 90, 'default', 9, '0', false);
-		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 90, 'default', 10, '0', false);
-		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 90, 'default', 11, '0', false);
+		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 9, '0', false);
+		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 10, '0', false);
+		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', 11, '0', false);
 		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 'default', 'default', 'default', 12, '0', false);
 
 		log::add('Freebox_OS', 'debug', '└─────────');

@@ -31,8 +31,8 @@ class FreeboxAPI
 	public function ask_track_authorization()
 	{
 		try {
-			$serveur		= trim(config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'));
-			$track_id 		= config::byKey('FREEBOX_SERVER_TRACK_ID', 'Freebox_OS');
+			$serveur = trim(config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'));
+			$track_id = config::byKey('FREEBOX_SERVER_TRACK_ID', 'Freebox_OS');
 			$http = new com_http($serveur . '/api/v3/login/authorize/' . $track_id);
 			$result = $http->exec(30, 2);
 			if (is_json($result)) {
@@ -238,7 +238,7 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	public function freeboxPlayerPing()
+	/*public function freeboxPlayerPing()
 	{
 		self::open_session();
 		$listEquipement = self::fetch('/api/v3/lan/browser/pub/');
@@ -269,7 +269,7 @@ class FreeboxAPI
 			}
 		}
 		return true;
-	}
+	}*/
 	public function ReseauPing($id = '')
 	{
 		$Ping = self::fetch('/api/v3/lan/browser/pub/' . $id);
@@ -326,7 +326,7 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	public function send_cmd_fbxtv($key)
+	/*public function send_cmd_fbxtv($key)
 	{
 		try {
 			$serveur = trim($this->getConfiguration('FREEBOX_TV_IP'));
@@ -337,7 +337,7 @@ class FreeboxAPI
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', $e->getCode());
 		}
-	}
+	}*/
 	public function airmediaConfig()
 	{
 		$parametre["enabled"] = $this->getIsEnable();

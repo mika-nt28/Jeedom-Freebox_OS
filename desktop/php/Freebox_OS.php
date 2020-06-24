@@ -33,7 +33,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 <span>{{Paramètre de la Freebox}}</span>
             </div>
         </div>
-        <input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
+        <div class="input-group" style="margin:5px;">
+            <input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
+            <div class="input-group-btn">
+                <a id="bt_resetSearch" class="btn" style="width:30px"><i class="fas fa-times"></i> </a>
+            </div>
+        </div>
         <legend><i class="fas fa-table"></i> {{Mes equipements}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php

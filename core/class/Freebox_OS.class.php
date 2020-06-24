@@ -609,7 +609,7 @@ class Freebox_OS extends eqLogic
 			self::addTiles();
 			self::addHomeAdapters();
 		}
-		self::addReseau();
+		//self::addReseau();
 	}
 	public function preSave()
 	{

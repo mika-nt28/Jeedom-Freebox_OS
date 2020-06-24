@@ -449,13 +449,20 @@ class Freebox_OS extends eqLogic
 		self::AddEqLogic('Disque Dur', 'Disque', 2);
 		// ADSL
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ADSL');
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$updateiconeADSL = false;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$updateiconeADSL = true; // Temporaire le temps de la migration JAG 20200621
+		};
 		$ADSL = self::AddEqLogic('ADSL', 'ADSL', 'default', 3);
-		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', null, 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', false);
-		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', null, 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', false);
-		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', null, 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', false);
-		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', null, 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', false);
-		$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', false);
-		$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', false);
+		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', 'core::badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', 'core::badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', 'core::badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', 'core::badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeADSL);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// System
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
@@ -475,17 +482,17 @@ class Freebox_OS extends eqLogic
 			$updateiconeSystem = true; // Temporaire le temps de la migration JAG 20200621
 		};
 		$System = self::AddEqLogic('Système', 'System', 'default', 4);
-		$System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default', 'default', 1, '0', $updateiconeSystem);
-		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  null, null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
-		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeSystem);
-		$System->AddCommand('Mac', 'mac', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
-		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
-		$System->AddCommand('board name', 'board_name', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeSystem);
-		$System->AddCommand('serial', 'serial', 'info', 'string',  null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', $updateiconeSystem);
-		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', null, 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000, 'default', 8, '0', $updateiconeSystem);
-		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 9, '0', $updateiconeSystem);
-		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 10, '0', $updateiconeSystem);
-		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', null, '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 11, '0', $updateiconeSystem);
+		$System->AddCommand('Update', 'update', 'action', 'other', 'core::line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default', 'default', 1, '0', $updateiconeSystem);
+		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  'core::line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
+		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeSystem);
+		$System->AddCommand('Mac', 'mac', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
+		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
+		$System->AddCommand('board name', 'board_name', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeSystem);
+		$System->AddCommand('serial', 'serial', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', $updateiconeSystem);
+		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', 'core::line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000, 'default', 8, '0', $updateiconeSystem);
+		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', 'core::line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 9, '0', $updateiconeSystem);
+		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', 'core::line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 10, '0', $updateiconeSystem);
+		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', 'core::line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 11, '0', $updateiconeSystem);
 		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 12, '0', $updateiconeSystem);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
@@ -506,7 +513,7 @@ class Freebox_OS extends eqLogic
 			$updateiconeWifi = true; // Temporaire le temps de la migration JAG 20200621
 		};
 		$Wifi = self::AddEqLogic('Wifi', 'Wifi', 'default', 5);
-		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 1, '', '', '', '', 1, 'default', 'default', 'default', 1, '0', $updateiconeWifi);
+		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 1, '', '', '', '', 0, 'default', 'default', 'default', 1, '0', $updateiconeWifi);
 		$link_IA = $StatusWifi->getId();
 		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifi, null, null, 0, $link_IA, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', $link_IA, 2, '0', $updateiconeWifi);
 		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, null, null, 0, $link_IA, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', $link_IA, 3, '0', $updateiconeWifi);

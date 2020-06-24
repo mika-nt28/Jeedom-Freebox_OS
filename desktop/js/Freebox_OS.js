@@ -6,6 +6,10 @@ $("#table_cmd").sortable({
 	tolerance: "intersect",
 	forcePlaceholderSize: true
 });
+$('#bt_resetSearch').off('click').on('click', function () {
+	$('#in_searchEqlogic').val('')
+	$('#in_searchEqlogic').keyup();
+})
 $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _options) {
 	var camera = jQuery.parseJSON(_options);
 	bootbox.confirm("{{Une caméra Freebox a été détectée (<b>" + camera.name + "</b>)<br>Voulez-vous l’ajouter au Plugin Caméra ?}}", function (result) {

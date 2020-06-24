@@ -31,8 +31,8 @@ class FreeboxAPI
 	public function ask_track_authorization()
 	{
 		try {
-			$serveur		= trim(config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'));
-			$track_id 		= config::byKey('FREEBOX_SERVER_TRACK_ID', 'Freebox_OS');
+			$serveur = trim(config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'));
+			$track_id = config::byKey('FREEBOX_SERVER_TRACK_ID', 'Freebox_OS');
 			$http = new com_http($serveur . '/api/v3/login/authorize/' . $track_id);
 			$result = $http->exec(30, 2);
 			if (is_json($result)) {
@@ -176,7 +176,7 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function disques($logicalId = '')
+	/*	public function disques($logicalId = '')  // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
 	{
 		$reponse = self::fetch('/api/v3/storage/disk/');
 		if ($reponse['success']) {
@@ -185,15 +185,15 @@ class FreeboxAPI
 				$total_bytes = $Disques['partitions'][0]['total_bytes'];
 				$used_bytes = $Disques['partitions'][0]['used_bytes'];
 				$value = round($used_bytes / $total_bytes * 100, 2);
-				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
 				$Disque = self::AddEqLogic('Disque Dur', 'Disque');
-				$commande = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				$commande = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
 				$commande->setCollectDate(date('Y-m-d H:i:s'));
 				$commande->setConfiguration('doNotRepeatEvent', 1);
 				$commande->event($value);
 			}
 		}
-	}
+	}*/
 
 	public function system()
 	{
@@ -238,7 +238,7 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	public function freeboxPlayerPing()
+	/*public function freeboxPlayerPing()
 	{
 		self::open_session();
 		$listEquipement = self::fetch('/api/v3/lan/browser/pub/');
@@ -269,7 +269,7 @@ class FreeboxAPI
 			}
 		}
 		return true;
-	}
+	}*/
 	public function ReseauPing($id = '')
 	{
 		$Ping = self::fetch('/api/v3/lan/browser/pub/' . $id);
@@ -326,7 +326,7 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	public function send_cmd_fbxtv($key)
+	/*public function send_cmd_fbxtv($key)
 	{
 		try {
 			$serveur = trim($this->getConfiguration('FREEBOX_TV_IP'));
@@ -337,7 +337,7 @@ class FreeboxAPI
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', $e->getCode());
 		}
-	}
+	}*/
 	public function airmediaConfig()
 	{
 		$parametre["enabled"] = $this->getIsEnable();

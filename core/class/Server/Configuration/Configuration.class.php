@@ -176,7 +176,7 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function disques($logicalId = '')
+	/*	public function disques($logicalId = '')  // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
 	{
 		$reponse = self::fetch('/api/v3/storage/disk/');
 		if ($reponse['success']) {
@@ -185,15 +185,15 @@ class FreeboxAPI
 				$total_bytes = $Disques['partitions'][0]['total_bytes'];
 				$used_bytes = $Disques['partitions'][0]['used_bytes'];
 				$value = round($used_bytes / $total_bytes * 100, 2);
-				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
 				$Disque = self::AddEqLogic('Disque Dur', 'Disque');
-				$commande = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				$commande = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
 				$commande->setCollectDate(date('Y-m-d H:i:s'));
 				$commande->setConfiguration('doNotRepeatEvent', 1);
 				$commande->event($value);
 			}
 		}
-	}
+	}*/
 
 	public function system()
 	{

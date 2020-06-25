@@ -34,8 +34,9 @@ class FreeboxAPI
 				)
 			);
 			$result = $http->exec(30, 2);
-			if (is_json($result))
+			if (is_json($result)) {
 				return json_decode($result, true);
+			}
 			return $result;
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', '[FreeboxTrackId]' . $e->getCode());
@@ -147,8 +148,9 @@ class FreeboxAPI
 	{
 		try {
 			$Challenge = cache::byKey('Freebox_OS::Challenge');
-			if (is_object($Challenge))
+			if (is_object($Challenge)) {
 				$Challenge->remove();
+			}
 			$session_token = cache::byKey('Freebox_OS::SessionToken');
 			if (!is_object($session_token) || $session_token->getValue('') == '')
 				return;
@@ -265,8 +267,9 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'debug', '| L\'état du wifi est ' . $value);
 			log::add('Freebox_OS', 'debug', '└─────────');
 			return $value;
-		} else
+		} else {
 			return false;
+		}
 	}
 	public function wifiPUT($parametre)
 	{
@@ -277,24 +280,29 @@ class FreeboxAPI
 			$return = $this->fetch('/api/v5/wifi/config/', array("enabled" => true), "PUT");
 		else
 			$return = $this->fetch('/api/v5/wifi/config/', array("enabled" => false), "PUT");
-		if ($return === false)
+		if ($return === false) {
 			return false;
+		}
 		if ($return['success']) {
 			return $return['result']['enabled'];
 		}
 	}
 	public static function reboot()
 	{
-		$content = $this->fetch('/api/v3/system/reboot/', null, "POST");
+		log::add('Freebox_OS', 'debug', '┌───────── Reboot Freebox');
+		$content  = $this->fetch('/api/v6/system/reboot/', null, "POST");
 		if ($content === false)
 			return false;
-		if ($content['success'])
+		if ($content['success']) {
 			return $content;
-		else
+		} else {
 			return false;
+		}
+		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 	public static function ringtone_on()
 	{
+		log::add('Freebox_OS', 'debug', '┌───────── Test Téléphone');
 		$content = $this->fetch('/api/v3/phone/dect_page_start/', "", "POST");
 		if ($content === false)
 			return false;
@@ -302,9 +310,11 @@ class FreeboxAPI
 			return $content;
 		else
 			return false;
+		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 	public static function ringtone_off()
 	{
+		log::add('Freebox_OS', 'debug', '┌───────── Test Téléphone');
 		$content = $this->fetch('/api/v3/phone/dect_page_stop/', "", "POST");
 		if ($content === false)
 			return false;
@@ -312,6 +322,7 @@ class FreeboxAPI
 			return $content;
 		else
 			return false;
+		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 	public function system()
 	{
@@ -328,7 +339,7 @@ class FreeboxAPI
 		try {
 			$System = Freebox_OS::AddEqLogic('Système', 'System');
 			$Commande = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, '0', false);
-			log::add('Freebox_OS', 'debug', 'Vérification d\'une mise a jours du serveur');
+			log::add('Freebox_OS', 'debug', '| Vérification d\'une mise a jours du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
 			if (intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))

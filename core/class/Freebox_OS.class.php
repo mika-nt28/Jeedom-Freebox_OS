@@ -96,7 +96,7 @@ class Freebox_OS extends eqLogic
 		$cron->run();
 		return $cron;
 	}
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $_Object_id = null)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $_Object_id = null, $tiles = false, $eq_type = null, $eq_action = ' ')
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		if (!is_object($EqLogic)) {
@@ -113,6 +113,11 @@ class Freebox_OS extends eqLogic
 			$EqLogic->setConfiguration('waite', '300');
 			$EqLogic->save();
 		}
+		if ($tiles == true) {
+			$EqLogic->setConfiguration('type', $eq_type);
+			$EqLogic->setConfiguration('action', $eq_action);
+		}
+		$EqLogic->save();
 		return $EqLogic;
 	}
 	public static function templateWidget()
@@ -182,11 +187,12 @@ class Freebox_OS extends eqLogic
 				} else {
 					$category = null;
 				}
+
 				$Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
 				if (isset($Equipement['label'])) {
-					$Tile = self::AddEqLogic($Equipement['label'], $Equipement['node_id'], $category);
+					$Tile = self::AddEqLogic($Equipement['label'], $Equipement['node_id'], $category, '', true, $Equipement['type'], $Equipement['action']);
 				} else {
-					$Tile = self::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category);
+					$Tile = self::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category, '', true, $Equipement['type'], $Equipement['action']);
 				}
 			}
 			foreach ($Equipement['data'] as $Command) {
@@ -470,15 +476,15 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$iconeUpdate = 'fas fa-download';
 			$iconeReboot = 'fas fa-sync';
-			$iconetemp = 'jeedom-thermometre-celcius';
-			$iconefan = 'jeedom-ventilo';
+			$iconetemp = 'fas fa-thermometer-half';
+			$iconefan = 'fas fa-fan';
 			$updateiconeSystem = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$iconeUpdate = 'fas fa-download icon_blue';
 			$iconeReboot = 'fas fa-sync icon_red';
-			$iconetemp = 'jeedom-thermometre-celcius';
-			$iconefan = 'jeedom-ventilo';
+			$iconetemp = 'fas fa-thermometer-half icon_blue';
+			$iconefan = 'fas fa-fan icon_blue';
 			$updateiconeSystem = true; // Temporaire le temps de la migration JAG 20200621
 		};
 		$System = self::AddEqLogic('Système', 'System', 'default', 4);
@@ -547,8 +553,8 @@ class Freebox_OS extends eqLogic
 		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default', 'default', 6, '0', $updateiconePhone);
 		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 'default', 7, '0', $updateiconePhone);
 		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default', 'default', 8, '0', $updateiconePhone);
-		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
-		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
+		//$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
+		//$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Downloads
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');

@@ -89,3 +89,12 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
 		$cmd->save();
 	}
 }
+function removeLogicId($eqLogic, $from)
+{
+	//  suppression fonction
+	$cmd = $eqLogic->getCmd(null, $from);
+	if (is_object($cmd)) {
+		$cmd->remove();
+		$cmd->save();
+	}
+}

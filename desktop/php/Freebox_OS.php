@@ -167,8 +167,25 @@ $eqLogics = eqLogic::byType($plugin->getId());
                                 </label>
                             </div>
                         </div>
+                    </fieldset>
+                </form>
+                <form class="form-horizontal col-sm-2">
+                    <fieldset>
+                        <div class="form-group">
+                            <img src="<?php echo $plugin->getPathImgIcon(); ?>" style="width:120px;" />
+                        </div>
+                    </fieldset>
+                </form>
+                <br />
+
+                <hr>
+                <legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
+                <form class="form-horizontal col-sm-10">
+                    <fieldset>
                         <div class="form-group ">
-                            <label class="col-sm-2 control-label">{{Temps de rafraichissement (s)}}</label>
+                            <label class="col-sm-2 control-label">{{Temps de rafraichissement}}
+                                <sup><i class="fas fa-question-circle" title="{{(s) Temps de rafraichissement}}"></i></sup>
+                            </label>
                             <div class="col-sm-3">
                                 <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="waite" placeholder="{{Temps de rafraichissement (s)}}" />
                             </div>
@@ -179,6 +196,23 @@ $eqLogics = eqLogic::byType($plugin->getId());
                                 <a class="btn btn-primary eqLogicAction"><i class="fas fa-search"></i> {{Recherche}}</a>
                             </div>
                         </div>
+                        <div class="form-group Equipement_tiles">
+                            <label class="col-sm-2 control-label">{{Type équipement}}
+                                <sup><i class="fas fa-question-circle" title="{{Type équipement Freebox.}}"></i></sup>
+                            </label>
+                            <div class="col-sm-3">
+                                <span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="type"></span>
+                            </div>
+                        </div>
+                        <div class="form-group Equipement_tiles">
+                            <label class="col-sm-2 control-label">{{Type d'actions}}
+                                <sup><i class="fas fa-question-circle" title="{{Type action Freebox.}}"></i></sup>
+                            </label>
+                            <div class="col-sm-3">
+                                <span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="action"></span>
+                            </div>
+                        </div>
+
                     </fieldset>
                 </form>
             </div>

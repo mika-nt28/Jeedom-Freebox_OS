@@ -126,6 +126,21 @@ class Freebox_OS extends eqLogic
 		$return = array('info' => array('string' => array()));
 		$return['info']['binary']['Wifi'] = array(
 			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fas fa-wifi\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-times\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
+		$return = array('info' => array('string' => array()));
+		$return['action']['other']['Wifi'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fas fa-wifi\'></i>',
+			),
 			'replace' => array(
 				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
 				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-times\'></i>',
@@ -429,6 +444,8 @@ class Freebox_OS extends eqLogic
 				$Command->setTemplate('dashboard', $Template);
 				$Command->setTemplate('mobile', $Template);
 			}
+			$Command->setIsVisible($IsVisible);
+
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
 			}
@@ -506,27 +523,27 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Wifi');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-			$TemplateWifi = 'Freebox_OS::Freebox_OS_Wifi';
+			$TemplateWifiStatut = 'Freebox_OS::Freebox_OS_Wifi';
+			$TemplateWifiOnOFF = 'Freebox_OS::Freebox_OS::Wifi';
 			$iconeWfiOn = 'fas fa-wifi';
 			$iconeWfiOff = 'fas fa-times';
 			$updateiconeWifi = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$TemplateWifiStatut = 'Freebox_OS::Wifi';
-			$TemplateWifi = '';
+			$TemplateWifiOnOFF = 'Freebox_OS::Wifi';
 			$iconeWfiOn = 'fas fa-wifi icon_green';
 			$iconeWfiOff = 'fas fa-times icon_red';
 			$updateiconeWifi = true; // Temporaire le temps de la migration JAG 20200621
 		};
 		$Wifi = self::AddEqLogic('Wifi', 'Wifi', 'default', 5);
-		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 1, '', '', '', '', 0, 'default', 'default', 'default', 1, '0', $updateiconeWifi);
+		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 0, '', '', '', '', 0, 'default', 'default', 'default', 1, '0', $updateiconeWifi);
 		$link_IA = $StatusWifi->getId();
-		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifi, null, null, 0, $link_IA, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', $link_IA, 3, '0', $updateiconeWifi);
-		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifi, null, null, 0, $link_IA, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', $link_IA, 4, '0', $updateiconeWifi);
-		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', $TemplateWifi, null, null, 0, $link_IA, 'wifiStatut', 0, null, 0, 'default', 'default', $link_IA, 2, '0', $updateiconeWifi);
+		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $link_IA, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', $link_IA, 3, '0', $updateiconeWifi);
+		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $link_IA, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', $link_IA, 4, '0', $updateiconeWifi);
+		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', null, null, null, 0, $link_IA, 'wifiStatut', 0, null, 0, 'default', 'default', $link_IA, 2, '0', $updateiconeWifi);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
-		//Downloads
 		//Phone
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléphone');
 		if (version_compare(jeedom::version(), "4", "<")) {
@@ -553,8 +570,8 @@ class Freebox_OS extends eqLogic
 		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default', 'default', 6, '0', $updateiconePhone);
 		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 'default', 7, '0', $updateiconePhone);
 		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default', 'default', 8, '0', $updateiconePhone);
-		//$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
-		//$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
+		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
+		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Downloads
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');
@@ -615,7 +632,6 @@ class Freebox_OS extends eqLogic
 			self::addTiles();
 			self::addHomeAdapters();
 		}
-		//self::addReseau();
 	}
 	public function preSave()
 	{

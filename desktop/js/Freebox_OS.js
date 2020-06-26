@@ -151,36 +151,43 @@ function addCmdToTable(_cmd) {
 			break;
 		case 'Reseau':
 			$('.Equipement').show();
-			$('.Add_Equipement').show();
+			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
 		case 'Disque':
 			$('.Equipement').show();
+			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			var inverse = $('<span>');
 			break;
 		case 'System':
 			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
 		case 'Wifi':
 			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
 		case 'ADSL':
 			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
 		case 'AirPlay':
 			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
 		case 'Downloads':
 			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
 		case 'Phone':
 			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
 		default:

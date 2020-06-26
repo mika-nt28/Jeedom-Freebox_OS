@@ -187,10 +187,10 @@ class FreeboxAPI
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
 				$Disque = self::AddEqLogic('Disque Dur', 'Disque');
-				$commande = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
-				$commande->setCollectDate(date('Y-m-d H:i:s'));
-				$commande->setConfiguration('doNotRepeatEvent', 1);
-				$commande->event($value);
+				$command = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
+				$command->setCollectDate(date('Y-m-d H:i:s'));
+				$command->setConfiguration('doNotRepeatEvent', 1);
+				$command->event($value);
 			}
 		}
 	}*/
@@ -208,11 +208,11 @@ class FreeboxAPI
 	{
 		try {
 			$System = self::AddEqLogic('Système', 'System');
-			$Commande = self::AddCommand($System, 'Update', 'update', "action", 'other', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+			$Command = self::AddCommand($System, 'Update', 'update', "action", 'other', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
 			log::add('Freebox_OS', 'debug', 'Vérification d\'une mise a jours du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
-			if (intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))
+			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
 				self::reboot();
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', $e->getCode());
@@ -247,24 +247,24 @@ class FreeboxAPI
 			$Reseau = Freebox_OS::AddEqLogic('Réseau', 'Reseau');
 			foreach ($listEquipement['result'] as $Equipement) {
 				if ($Equipement['primary_name'] != '') {
-					$Commande = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
-					$Commande->setConfiguration('host_type', $Equipement['host_type']);
+					$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+					$Command->setConfiguration('host_type', $Equipement['host_type']);
 					if (isset($Equipement['l3connectivities'])) {
 						foreach ($Equipement['l3connectivities'] as $Ip) {
 							if ($Ip['active']) {
 								if ($Ip['af'] == 'ipv4')
-									$Commande->setConfiguration('IPV4', $Ip['addr']);
+									$Command->setConfiguration('IPV4', $Ip['addr']);
 								else
-									$Commande->setConfiguration('IPV6', $Ip['addr']);
+									$Command->setConfiguration('IPV6', $Ip['addr']);
 							}
 						}
+										}
+					if ($Command->execCmd() != $Equipement['active']) {
+						$Command->setCollectDate(date('Y-m-d H:i:s'));
+						$Command->setConfiguration('doNotRepeatEvent', 1);
+						$Command->event($Equipement['active']);
 					}
-					if ($Commande->execCmd() != $Equipement['active']) {
-						$Commande->setCollectDate(date('Y-m-d H:i:s'));
-						$Commande->setConfiguration('doNotRepeatEvent', 1);
-						$Commande->event($Equipement['active']);
-					}
-					$Commande->save();
+					$Command->save();
 				}
 			}
 		}

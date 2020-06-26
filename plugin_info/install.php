@@ -9,7 +9,7 @@ function Freebox_OS_update()
 	try {
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
-		log::add('Freebox_OS', 'debug', '│ Etape 1/5 : Suppression FreeboxTv');
+		log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Suppression FreeboxTv');
 		foreach (eqLogic::byLogicalId('FreeboxTv', 'Freebox_OS', true) as $eqLogic) {
 			$eqLogic->remove();
 			log::add('Freebox_OS', 'debug', '│ Etape 1 : OK pour la suppression');
@@ -17,15 +17,15 @@ function Freebox_OS_update()
 		$WifiEX = 0;
 		foreach (eqLogic::byLogicalId('Wifi', 'Freebox_OS', true) as $eqLogic) {
 			$WifiEX = 1;
-			log::add('Freebox_OS', 'debug', '│ Etape 2/5 : Migration Wifi déjà faite (' . $WifiEX . ')');
+			log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Migration Wifi déjà faite (' . $WifiEX . ')');
 		}
 		if ($WifiEX != 1) {
 			$Wifi = Freebox_OS::AddEqLogic('Wifi', 'Wifi');
 			$link_IA = $Wifi->getId();
-			log::add('Freebox_OS', 'debug', '│ Etape 2/5 : Création Equipement WIFI -- ID N° : ' . $link_IA);
+			log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Création Equipement WIFI -- ID N° : ' . $link_IA);
 		}
 
-		log::add('Freebox_OS', 'debug', '│ Etape 3/5 : Update nouveautés + corrections commandes');
+		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Update nouveautés + corrections commandes');
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
@@ -52,14 +52,15 @@ function Freebox_OS_update()
 			UpdateLogicId($eqLogic, 'rx_rate', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'tx_rate', '', 'numeric'); // Correction sous Type 20200616
 		}
-		log::add('Freebox_OS', 'debug', '│ Etape 4/5 : Sauvegarde de l\'ensemble des équipements');
+		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Sauvegarde de l\'ensemble des équipements');
 		/*$eqs = eqLogic::byType('Freebox_OS');
 		foreach ($eqs as $eq) {
 			$eq->save();
 		}*/
-		log::add('Freebox_OS', 'debug', '│ Etape 5/5 : Mise à jour de l\'ensemble des composants Freebox Hors Tiles');
-		Freebox_OS::CreateArchi(); //relance Update composant Freebox
+		//log::add('Freebox_OS', 'debug', '│ Etape 5/5 : Mise à jour de l\'ensemble des composants Freebox Hors Tiles');
+		//Freebox_OS::CreateArchi(); //relance Update composant Freebox
 		/*resave eqLogics for new cmd: */
+		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oublier pas de lancer les deux Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {
 		$e = print_r($e, 1);
 		log::add('Freebox_OS', 'error', 'Freebox_OS update ERROR : ' . $e);

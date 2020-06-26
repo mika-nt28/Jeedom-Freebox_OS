@@ -168,7 +168,6 @@ class FreeboxAPI
 	}
 	public function WakeOnLAN($Mac)
 	{
-
 		$return = $this->fetch('/api/v3/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
 		if ($return === false)
 			return false;
@@ -195,7 +194,7 @@ class FreeboxAPI
 	}
 	public function DownloadStats()
 	{
-		$DownloadStats = $this->fetch('/api/v3/downloads/stats/');
+		$DownloadStats = $this->fetch('/api/v5/downloads/stats/');
 		if ($DownloadStats === false)
 			return false;
 		if ($DownloadStats['success'])
@@ -265,9 +264,7 @@ class FreeboxAPI
 			$value = 0;
 			if ($data_json['result']['enabled'])
 				$value = 1;
-			log::add('Freebox_OS', 'debug', '┌───────── Etat Wifi');
-			log::add('Freebox_OS', 'debug', '│ Etat : ' . $value);
-			log::add('Freebox_OS', 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '>───────── Etat Wifi :' . $value);
 			return $value;
 		} else {
 			return false;
@@ -275,9 +272,7 @@ class FreeboxAPI
 	}
 	public function wifiPUT($parametre)
 	{
-		log::add('Freebox_OS', 'debug', '┌───────── Mise à jour du Wifi');
-		log::add('Freebox_OS', 'debug', '│ Etat : ' . $parametre . ' du wifi');
-		log::add('Freebox_OS', 'debug', '└─────────');
+		log::add('Freebox_OS', 'debug', '>───────── Mise à jour du Wifi : ' . $parametre);
 		if ($parametre == 1)
 			$return = $this->fetch('/api/v5/wifi/config/', array("enabled" => true), "PUT");
 		else
@@ -492,7 +487,7 @@ class FreeboxAPI
 	}
 	public function airmediaConfig($parametre)
 	{
-		$return = $this->fetch('/api/v3/airmedia/config/', $parametre, "PUT");
+		$return = $this->fetch('/api/v5/airmedia/config/', $parametre, "PUT");
 		if ($return === false)
 			return false;
 		if ($return['success'])

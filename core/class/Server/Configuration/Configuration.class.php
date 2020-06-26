@@ -131,11 +131,11 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', $e->getCode());
 		}
 	}
-	public function WakeOnLAN($Mac)
+	/*public function WakeOnLAN($Mac) // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
 	{
 		$return = self::fetch('/api/v3/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
 		return $return['success'];
-	}
+	}*/
 	public function Downloads($Etat)
 	{
 		$List_DL = self::fetch('/api/v3/downloads/');
@@ -151,14 +151,14 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function DownloadStats()
+	/*public function DownloadStats() // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
 	{
 		$DownloadStats = self::fetch('/api/v3/downloads/stats/');
 		if ($DownloadStats['success'])
 			return $DownloadStats['result'];
 		else
 			return false;
-	}
+	}*/
 	public function PortForwarding($Port)
 	{
 		$PortForwarding = self::fetch('/api/v3/fw/redir/');
@@ -204,7 +204,7 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	public function UpdateSystem()
+	/*public function UpdateSystem() // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
 	{
 		try {
 			$System = self::AddEqLogic('Système', 'System');
@@ -217,8 +217,8 @@ class FreeboxAPI
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', $e->getCode());
 		}
-	}
-	public function adslStats()
+	}*/
+	/*public function adslStats() // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
 	{
 		$adslRateJson = self::fetch('/api/v3/connection/');
 		if ($adslRateJson['success']) {
@@ -237,7 +237,7 @@ class FreeboxAPI
 			return $retourFbx;
 		} else
 			return false;
-	}
+	}*/
 	/*public function freeboxPlayerPing()
 	{
 		self::open_session();
@@ -338,7 +338,7 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', $e->getCode());
 		}
 	}*/
-	public function airmediaConfig()
+	/*public function airmediaConfig()
 	{
 		$parametre["enabled"] = $this->getIsEnable();
 		$parametre["password"] = $this->getConfiguration('password');
@@ -348,8 +348,8 @@ class FreeboxAPI
 			return $return['result'];
 		else
 			return false;
-	}
-	public static function airmediaReceivers()
+	}*/
+	/*public static function airmediaReceivers()
 	{
 		$return = self::fetch('/api/v3/airmedia/receivers/');
 
@@ -357,8 +357,8 @@ class FreeboxAPI
 			return $return['result'];
 		else
 			return false;
-	}
-	public function AirMediaAction($receiver, $action, $media_type, $media = null)
+	}*/
+	/*public function AirMediaAction($receiver, $action, $media_type, $media = null)
 	{
 		if ($receiver != "" && $media_type != null) {
 			log::add('Freebox_OS', 'debug', 'AirMedia Start Video: ' . $media);
@@ -374,5 +374,5 @@ class FreeboxAPI
 				return false;
 		} else
 			return false;
-	}
+	}*/
 }

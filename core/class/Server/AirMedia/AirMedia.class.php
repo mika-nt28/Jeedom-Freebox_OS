@@ -1,7 +1,7 @@
 <?php
 class AirMedia
 {
-	public function airmediaConfig()
+	/*public function airmediaConfig()
 	{
 		$parametre["enabled"] = $this->getIsEnable();
 		$parametre["password"] = $this->getConfiguration('password');
@@ -39,5 +39,5 @@ class AirMedia
 				return false;
 		} else
 			return false;
-	}
+	}*/
 }

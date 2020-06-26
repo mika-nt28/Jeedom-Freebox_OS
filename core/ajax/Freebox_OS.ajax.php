@@ -77,9 +77,9 @@ try {
 			ajax::success();
 			break;
 		case 'WakeOnLAN':
-			$Commande = cmd::byId(init('id'));
-			if (is_object($Commande)) {
-				$Mac = str_replace('ether-', '', $Commande->getLogicalId());
+			$Command = cmd::byId(init('id'));
+			if (is_object($Command)) {
+				$Mac = str_replace('ether-', '', $Command->getLogicalId());
 				ajax::success($FreeboxAPI->WakeOnLAN($Mac));
 			}
 			ajax::success(false);

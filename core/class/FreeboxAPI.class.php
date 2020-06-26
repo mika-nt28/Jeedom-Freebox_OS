@@ -168,7 +168,6 @@ class FreeboxAPI
 	}
 	public function WakeOnLAN($Mac)
 	{
-
 		$return = $this->fetch('/api/v3/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
 		if ($return === false)
 			return false;
@@ -195,7 +194,7 @@ class FreeboxAPI
 	}
 	public function DownloadStats()
 	{
-		$DownloadStats = $this->fetch('/api/v3/downloads/stats/');
+		$DownloadStats = $this->fetch('/api/v5/downloads/stats/');
 		if ($DownloadStats === false)
 			return false;
 		if ($DownloadStats['success'])
@@ -235,10 +234,12 @@ class FreeboxAPI
 				$total_bytes = $Disques['partitions'][0]['total_bytes'];
 				$used_bytes = $Disques['partitions'][0]['used_bytes'];
 				$value = round($used_bytes / $total_bytes * 100, 2);
-				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
+				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
+				log::add('Freebox_OS', 'debug', '│ Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque');
-				$commande = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, '0', 100, 'default', null, '0', false);
-				$commande->event($value);
+				$command = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, '0', 100, 'default', null, '0', false);
+				$command->event($value);
+				log::add('Freebox_OS', 'debug', '└─────────');
 			}
 		}
 	}
@@ -263,9 +264,7 @@ class FreeboxAPI
 			$value = 0;
 			if ($data_json['result']['enabled'])
 				$value = 1;
-			log::add('Freebox_OS', 'debug', '┌───────── Etat Wifi');
-			log::add('Freebox_OS', 'debug', '| L\'état du wifi est ' . $value);
-			log::add('Freebox_OS', 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '>───────── Etat Wifi :' . $value);
 			return $value;
 		} else {
 			return false;
@@ -273,9 +272,7 @@ class FreeboxAPI
 	}
 	public function wifiPUT($parametre)
 	{
-		log::add('Freebox_OS', 'debug', '┌───────── Mise à jour du Wifi');
-		log::add('Freebox_OS', 'debug', '│ L\'état est : ' . $parametre . ' du wifi');
-		log::add('Freebox_OS', 'debug', '└─────────');
+		log::add('Freebox_OS', 'debug', '>───────── Mise à jour du Wifi : ' . $parametre);
 		if ($parametre == 1)
 			$return = $this->fetch('/api/v5/wifi/config/', array("enabled" => true), "PUT");
 		else
@@ -287,9 +284,9 @@ class FreeboxAPI
 			return $return['result']['enabled'];
 		}
 	}
-	public static function reboot()
+	public function reboot()
 	{
-		log::add('Freebox_OS', 'debug', '┌───────── Reboot Freebox');
+		log::add('Freebox_OS', 'debug', '>───────── Reboot Freebox');
 		$content  = $this->fetch('/api/v6/system/reboot/', null, "POST");
 		if ($content === false)
 			return false;
@@ -298,11 +295,10 @@ class FreeboxAPI
 		} else {
 			return false;
 		}
-		log::add('Freebox_OS', 'debug', '└─────────');
 	}
-	public static function ringtone_on()
+	public function ringtone_on()
 	{
-		log::add('Freebox_OS', 'debug', '┌───────── Test Téléphone');
+		log::add('Freebox_OS', 'debug', '>───────── Ringtone ON');
 		$content = $this->fetch('/api/v3/phone/dect_page_start/', "", "POST");
 		if ($content === false)
 			return false;
@@ -310,11 +306,10 @@ class FreeboxAPI
 			return $content;
 		else
 			return false;
-		log::add('Freebox_OS', 'debug', '└─────────');
 	}
-	public static function ringtone_off()
+	public function ringtone_off()
 	{
-		log::add('Freebox_OS', 'debug', '┌───────── Test Téléphone');
+		log::add('Freebox_OS', 'debug', '>───────── Ringtone OFF');
 		$content = $this->fetch('/api/v3/phone/dect_page_stop/', "", "POST");
 		if ($content === false)
 			return false;
@@ -322,7 +317,6 @@ class FreeboxAPI
 			return $content;
 		else
 			return false;
-		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 	public function system()
 	{
@@ -338,11 +332,11 @@ class FreeboxAPI
 	{
 		try {
 			$System = Freebox_OS::AddEqLogic('Système', 'System');
-			$Commande = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, '0', false);
-			log::add('Freebox_OS', 'debug', '| Vérification d\'une mise a jours du serveur');
+			$Command = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, '0', false);
+			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise a jours du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
-			if (intval($Commande->execCmd()) < intval($parseFreeDev[1][0]))
+			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
 				$this->reboot();
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', '[FreeboxUpdateSystem]' . $e->getCode());
@@ -493,7 +487,7 @@ class FreeboxAPI
 	}
 	public function airmediaConfig($parametre)
 	{
-		$return = $this->fetch('/api/v3/airmedia/config/', $parametre, "PUT");
+		$return = $this->fetch('/api/v5/airmedia/config/', $parametre, "PUT");
 		if ($return === false)
 			return false;
 		if ($return['success'])

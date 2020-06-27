@@ -198,7 +198,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                         </div>
                         <div class="form-group Equipement_tiles">
                             <label class="col-sm-2 control-label">{{Type équipement}}
-                                <sup><i class="fas fa-question-circle" title="{{Type équipement Freebox.}}"></i></sup>
+                                <sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
                             </label>
                             <div class="col-sm-3">
                                 <span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="type"></span>
@@ -206,13 +206,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
                         </div>
                         <div class="form-group Equipement_tiles">
                             <label class="col-sm-2 control-label">{{Type d'actions}}
-                                <sup><i class="fas fa-question-circle" title="{{Type action Freebox.}}"></i></sup>
+                                <sup><i class="fas fa-question-circle" title="{{Type action Freebox}}"></i></sup>
                             </label>
                             <div class="col-sm-3">
                                 <span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="action"></span>
                             </div>
                         </div>
-
                     </fieldset>
                 </form>
             </div>

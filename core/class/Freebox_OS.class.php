@@ -290,8 +290,14 @@ class Freebox_OS extends eqLogic
 									$label_sup = '';
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									if ($Command['name'] == "battery_warning") {
-										if ($Equipement['type'] == 'alarm_control' || $Command['value_type'] != null) {
+										if ($Equipement['type'] == 'alarm_control') {
 											$Tile->batteryStatus($Command['value']);
+										} elseif ($Command['value'] != '' || $Command['value'] != null) {
+											log::add('Freebox_OS', 'debug', '│ Valeur Batterie : ' . $Command['value']);
+											$Tile->batteryStatus($Command['value']);
+										} else {
+											log::add('Freebox_OS', 'debug', '│ Valeur de Batterie  Nulle : ' . $Command['value']);
+											log::add('Freebox_OS', 'debug', '│ PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
 										}
 									}
 								}

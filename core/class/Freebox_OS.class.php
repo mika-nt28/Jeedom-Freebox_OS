@@ -122,7 +122,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function templateWidget()
 	{
-		// Template pour le wifi
+		// Template pour le wifi info
 		$return = array('info' => array('string' => array()));
 		$return['info']['binary']['Wifi'] = array(
 			'template' => 'tmplicon',
@@ -135,6 +135,7 @@ class Freebox_OS extends eqLogic
 				'#_time_widget_#' => '1'
 			)
 		);
+		// Template pour le wifi action
 		$return = array('info' => array('string' => array()));
 		$return['action']['other']['Wifi'] = array(
 			'template' => 'tmplicon',
@@ -145,6 +146,22 @@ class Freebox_OS extends eqLogic
 				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
 				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-times\'></i>',
 				'#_time_widget_#' => '1'
+			)
+		);
+		// Template pour l'état de l'alarme'
+		$return = array('info' => array('string' => array()));
+		$return['info']['string']['Alarme Freebox'] = array(
+			'template' => 'tmplmultistate',
+			'replace' => array('#_time_widget_#' => '1'),
+			'test' => array(
+				array('operation' => "#value# == 'idle'", 'state_light' => '<i class=\'icon_green icon fas fa-unlock\'></i>'),
+				array('operation' => "#value# == 'alarm2_armed'", 'state_light' => '<i class=\'icon_red icon fas fa-lock\'></i>'),
+				array('operation' => "#value# == 'alarm1_armed'", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
+				array('operation' => "#value# == 'alarm_1_arming'", 'state_light' => '<i class=\'icon_orange icon fas fa-lock\'></i>'),
+				array('operation' => "#value# == 'alarm_2_arming'", 'state_light' => '<i class=\'icon_orange icon fas fa-lock\'></i>'),
+				array('operation' => "#value# == 'alarm1_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
+				array('operation' => "#value# == 'alarm2_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
+				array('operation' => "#value# == 'alert'", 'state_light' => '<i class=\'icon_red icon jeedom-alerte2\'></i>')
 			)
 		);
 		return $return;
@@ -193,6 +210,7 @@ class Freebox_OS extends eqLogic
 	{
 		$FreeboxAPI = new FreeboxAPI();
 		self::AddEqLogic('Home Adapters', 'HomeAdapters'); // Fonction déplacer sur Tiles
+		//$_logicalId_OLD = null;
 		foreach ($FreeboxAPI->getTiles() as $Equipement) {
 			if ($Equipement['type'] != 'camera') {
 				if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {
@@ -229,13 +247,18 @@ class Freebox_OS extends eqLogic
 						continue;
 					}
 					if (!is_object($Tile)) continue;
+					//	if ($Equipement['node_id'] == $_logicalId_OLD) {
+					//log::add('Freebox_OS', 'debug', '┌───────── ');
+					//	} else {
 					log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
+					//		$_logicalId_OLD = $Equipement['node_id'];
+					//	}
 					$Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
 					$Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
 					log::add('Freebox_OS', 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
 					log::add('Freebox_OS', 'debug', '│ Type (eq) : ' . $Equipement['type'] . ' -- Action (eq): ' . $Equipement['action']);
 					log::add('Freebox_OS', 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
-					log::add('Freebox_OS', 'debug', '│ Valeur actuelle : ' . $Command['value'] . ' -- Unité : ' . $Command['ui']['unit']);
+					log::add('Freebox_OS', 'debug', '│ Valeur actuelle : ' . $Command['value'] . ' ' . $Command['ui']['unit']);
 					log::add('Freebox_OS', 'debug', '│ Range : ' . $Command['ui']['range'][0] . '-' . $Command['ui']['range'][1] . '-' . $Command['ui']['range'][2] . '-' . $Command['ui']['range'][3] . $Command['ui']['range'][4] . '-' . $Command['ui']['range'][5] . '-' . $Command['ui']['range'][6] . ' -- Range color : ' . $Command['ui']['icon_color_range'][0] . '-' . $Command['ui']['icon_color_range'][1]);
 					switch ($Command['value_type']) {
 						case "void":
@@ -284,7 +307,15 @@ class Freebox_OS extends eqLogic
 									$label_sup = '';
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									if ($Command['name'] == "battery_warning") {
-										//$Tile->batteryStatus($Command['value']);
+										if ($Equipement['type'] == 'alarm_control') {
+											$Tile->batteryStatus($Command['value']);
+										} elseif ($Command['value'] != '' || $Command['value'] != null) {
+											log::add('Freebox_OS', 'debug', '│ Valeur Batterie : ' . $Command['value']);
+											$Tile->batteryStatus($Command['value']);
+										} else {
+											log::add('Freebox_OS', 'debug', '│ Valeur de Batterie  Nulle : ' . $Command['value']);
+											log::add('Freebox_OS', 'debug', '│ PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
+										}
 									}
 								}
 								if ($access == "w") {
@@ -353,11 +384,16 @@ class Freebox_OS extends eqLogic
 								} else {
 									$IsVisible = 1;
 								}
+								if ($Command['name'] == "state" && $Equipement['type'] == 'alarm_control') {
+									$Templatecore = 'Freebox_OS::Alarme Freebox';
+								} else {
+									$Templatecore = null;
+								}
 								if ($access == "r") {
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									$label_sup = '';
 								}

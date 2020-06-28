@@ -193,6 +193,7 @@ class Freebox_OS extends eqLogic
 	{
 		$FreeboxAPI = new FreeboxAPI();
 		self::AddEqLogic('Home Adapters', 'HomeAdapters'); // Fonction déplacer sur Tiles
+		//$_logicalId_OLD = null;
 		foreach ($FreeboxAPI->getTiles() as $Equipement) {
 			if ($Equipement['type'] != 'camera') {
 				if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {
@@ -229,7 +230,12 @@ class Freebox_OS extends eqLogic
 						continue;
 					}
 					if (!is_object($Tile)) continue;
+					//	if ($Equipement['node_id'] == $_logicalId_OLD) {
+					//log::add('Freebox_OS', 'debug', '┌───────── ');
+					//	} else {
 					log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
+					//		$_logicalId_OLD = $Equipement['node_id'];
+					//	}
 					$Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
 					$Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
 					log::add('Freebox_OS', 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
@@ -284,7 +290,9 @@ class Freebox_OS extends eqLogic
 									$label_sup = '';
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									if ($Command['name'] == "battery_warning") {
-										//$Tile->batteryStatus($Command['value']);
+										if ($Equipement['type'] == 'alarm_control' || $Command['value_type'] != null) {
+											$Tile->batteryStatus($Command['value']);
+										}
 									}
 								}
 								if ($access == "w") {

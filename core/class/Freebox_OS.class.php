@@ -122,21 +122,8 @@ class Freebox_OS extends eqLogic
 	}
 	public static function templateWidget()
 	{
-		// Template pour le wifi info
-		$return = array('info' => array('string' => array()));
-		$return['info']['binary']['Wifi'] = array(
-			'template' => 'tmplicon',
-			'display' => array(
-				'#icon#' => '<i class=\'icon_blue icon fas fa-wifi\'></i>',
-			),
-			'replace' => array(
-				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
-				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-times\'></i>',
-				'#_time_widget_#' => '1'
-			)
-		);
 		// Template pour le wifi action
-		$return = array('info' => array('string' => array()));
+		$return = array('action' => array('other' => array()));
 		$return['action']['other']['Wifi'] = array(
 			'template' => 'tmplicon',
 			'display' => array(
@@ -148,15 +135,30 @@ class Freebox_OS extends eqLogic
 				'#_time_widget_#' => '1'
 			)
 		);
+
+		// Template pour le wifi info
+		//$return = array('info' => array('binary' => array()));
+		$return['info']['binary']['Wifi'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fas fa-wifi\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-times\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
+
 		// Template pour l'état de l'alarme'
-		$return = array('info' => array('string' => array()));
+		//$return = array('info' => array('string' => array()));
 		$return['info']['string']['Alarme Freebox'] = array(
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),
 			'test' => array(
 				array('operation' => "#value# == 'idle'", 'state_light' => '<i class=\'icon_green icon fas fa-unlock\'></i>'),
-				array('operation' => "#value# == 'alarm2_armed'", 'state_light' => '<i class=\'icon_red icon fas fa-lock\'></i>'),
-				array('operation' => "#value# == 'alarm1_armed'", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
+				array('operation' => "#value# == 'alarm2_armed'", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
+				array('operation' => "#value# == 'alarm1_armed'", 'state_light' => '<i class=\'icon_red icon fas fa-lock\'></i>'),
 				array('operation' => "#value# == 'alarm_1_arming'", 'state_light' => '<i class=\'icon_orange icon fas fa-lock\'></i>'),
 				array('operation' => "#value# == 'alarm_2_arming'", 'state_light' => '<i class=\'icon_orange icon fas fa-lock\'></i>'),
 				array('operation' => "#value# == 'alarm1_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
@@ -262,6 +264,11 @@ class Freebox_OS extends eqLogic
 					log::add('Freebox_OS', 'debug', '│ Range : ' . $Command['ui']['range'][0] . '-' . $Command['ui']['range'][1] . '-' . $Command['ui']['range'][2] . '-' . $Command['ui']['range'][3] . $Command['ui']['range'][4] . '-' . $Command['ui']['range'][5] . '-' . $Command['ui']['range'][6] . ' -- Range color : ' . $Command['ui']['icon_color_range'][0] . '-' . $Command['ui']['icon_color_range'][1]);
 					switch ($Command['value_type']) {
 						case "void":
+							$generic_type = null;
+							$icon = null;
+							$order = null;
+							$Link_I_store = 'default';
+							$IsVisible = 1;
 							if ($Command['name'] == 'up') {
 								$generic_type = 'FLAP_UP';
 								$icon = 'fas fa-arrow-up';
@@ -274,38 +281,75 @@ class Freebox_OS extends eqLogic
 								$generic_type = 'FLAP_DOWN';
 								$icon = 'fas fa-arrow-down';
 								$order = 4;
-							} else {
-								$generic_type = null;
-								$icon = null;
-								$order = null;
-								$Link_I_store = 'default';
+							} elseif ($Command['name'] == 'alarm1') {
+								$icon = 'icon fas fa-lock icon_red';
+								$order = 6;
+							} elseif ($Command['name'] == 'alarm2') {
+								$icon = 'icon nature-night2 icon_red';
+								$order = 7;
+							} elseif ($Command['name'] == 'off') {
+								$icon = 'icon fas fa-unlock icon_green';
+								$order = 8;
+							} elseif ($Command['name'] == 'skip') {
+								$IsVisible = 0;
+								$order = 9;
 							}
-							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, 1, $Link_I_store, $Link_I_store, 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
+							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_store, $Link_I_store, 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
 							break;
 						case "int":
 							foreach (str_split($Command['ui']['access']) as $access) {
+								$generic_type = null;
+								$Templatecore = null;
+								$Templatecore_A = null;
+								$_min = 'default';
+								$_max = 'default';
+								$IsVisible = 1;
+								$IsVisible_I = '0';
+								$name = $Command['label'];
+								$link_logicalId = 'default';
 								if ($access == "r") {
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
+									if ($Equipement['action'] == "store_slider") {
+										$generic_type = 'FLAP_STATE';
+										$Templatecore = 'core::shutter';
+										$_min = '0';
+										$_max = 100;
+									} elseif ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
+										$Templatecore_A = 'core::light';
+										$_min = '0';
+										$_max = 255;
+										$generic_type = 'LIGHT_SET_COLOR';
+										$generic_type_I = 'LIGHT_COLOR';
+										$link_logicalId = $Command['ep_id'];
+									} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+										$Templatecore_A = 'default';
+										$_min = '0';
+										$_max = 255;
+										$generic_type = 'LIGHT_SLIDER';
+										$generic_type_I = 'LIGHT_STATE';
+										$link_logicalId = $Command['ep_id'];
+									} elseif ($Command['name'] == "battery_warning") {
+										$generic_type_I = 'BATTERY';
+										$name = 'Batterie';
+									}
 									if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
 										if ($Equipement['action'] != 'intensity_picker' && $Equipement['action'] != 'color_picker') {
-											$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, 'default', $Command['ep_id'], 0, null, 0, "0", 255, 'default', null, 0, false);
+											$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, 0, false);
 											$Link_I_light = $infoCmd;
 										}
-										$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SLIDER', 1, $Link_I_light, $Command['ep_id'], 0, null, 0, "0", 255, 'default', 2, 0, false);
-									} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
-										$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'default', $Command['ui']['unit'], 'LIGHT_COLOR', 0, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 'default', null, 0, false);
-										$Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'slider', 'core::light', $Command['ui']['unit'], 'LIGHT_SET_COLOR', 1, $infoCmd, $Command['ep_id'], 0, null, 0, 'default', 'default', 'default', null, 0, false);
-									} elseif ($Equipement['action'] == "store_slider") {
-										$infoCmd = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', 'core::shutter', $Command['ui']['unit'], 'FLAP_STATE', 1, 'default', $Command['ep_id'], 0, null, 0, "0", 100, 'default', null, 0, false);
-									} elseif ($Command['name'] == "battery_warning") {
-										$Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'numeric', null, $Command['ui']['unit'], 'BATTERY', 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max, 'default', 2, 0, false);
 									} else {
-										$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'numeric', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, 0, false);
 									}
-									$label_sup = '';
+
+									if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, 'default', null, 0, false);
+									}
+									$label_sup = null;
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
+									//Gestion des batteries
 									if ($Command['name'] == "battery_warning") {
 										if ($Equipement['type'] == 'alarm_control') {
 											$Tile->batteryStatus($Command['value']);
@@ -327,6 +371,15 @@ class Freebox_OS extends eqLogic
 							break;
 						case "bool":
 							foreach (str_split($Command['ui']['access']) as $access) {
+								$IsVisible = 1;
+								$Label = $Command['label'];
+								$link_logicalId = 'default';
+								$order = null;
+								$IsVisible_PB = 0;
+								$Type_command = null;
+								if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
+									$Type_command = 'PB';
+								}
 								if ($access == "r") {
 									if ($Equipement['action'] == "store") {
 										$generic_type = 'FLAP_STATE';
@@ -342,36 +395,42 @@ class Freebox_OS extends eqLogic
 										$generic_type = 'PRESENCE';
 										$Templatecore = 'core::presence';
 										$invertBinary = 0;
+									} elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
+										$generic_type = 'LIGHT_STATE';
+										$Templatecore = 'core::light';
+										$invertBinary = 0;
+										$IsVisible = 0;
+										$Label = 'Etat';
+										$link_logicalId = $Command['ep_id'];
+										$order = 1;
+										$IsVisible_PB = 1;
 									} else {
 										$generic_type = null;
 										$Templatecore = null;
 										$invertBinary = 0;
 									}
-									if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
-										$infoCmd = $Tile->AddCommand('Etat', $Command['ep_id'], 'info', 'binary', 'core::light', $Command['ui']['unit'], 'LIGHT_STATE', 0, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 'default', 1, 0, false);
-										if ($Equipement['type'] == 'light') {
-											$Link_I_light = $infoCmd;
-										} else {
-											$Link_I_light = 'default';
-										}
-										$Tile->AddCommand('On', 'PB_On', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_ON', 1, $Link_I_light, $Command['ep_id'], $invertBinary, null, 1, 'default', 'default', 'default', 3, 0, false);
-										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', 'core::light', $Command['ui']['unit'], 'LIGHT_OFF', 1, $Link_I_light, $Command['ep_id'], $invertBinary, null, 0, 'default', 'default', 'default', 4, 0, false);
-									} else {
-										$infoCmd = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, 1, 'default', 'default', $invertBinary, null, 0, 'default', 'default', 'default', null, 0, false);
-										if ($Equipement['action'] == 'store') {
-											$Link_I_store = $infoCmd;
-										} else {
-											$Link_I_store = 'default';
-										}
-									}
+
+									$infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default', 'default', $order, 0, false);
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
+									if ($Equipement['action'] == 'store') {
+										$Link_I_store = $infoCmd;
+									} elseif ($Equipement['type'] == 'light') {
+										$Link_I_light = $infoCmd;
+									} else {
+										$Link_I_store = 'default';
+									}
+									if ($Type_command == 'PB') {
+										$Tile->AddCommand('On', 'PB_On', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_ON', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 1, 'default', 'default', 'default', 3, 0, false);
+										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_OFF', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 0, 'default', 'default', 'default', 4, 0, false);
+									}
+
 									$label_sup = null;
 									$generic_type = null;
 									$Templatecore = null;
 									$invertBinary = 0;
 								}
 								if ($access == "w") {
-									if ($Command['label'] != 'Enclenché' && ($Command['name'] != 'switch' && $Equipement['action'] != 'toggle')) {
+									if ($Type_command != 'PB') {
 										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
 									}
 								}
@@ -379,26 +438,29 @@ class Freebox_OS extends eqLogic
 							break;
 						case "string":
 							foreach (str_split($Command['ui']['access']) as $access) {
+								$IsVisible = 1;
+								$Templatecore = null;
+								$order = null;
+								$icon = null;
 								if ($Command['name'] == "pin") {
 									$IsVisible = 0;
-								} else {
-									$IsVisible = 1;
 								}
 								if ($Command['name'] == "state" && $Equipement['type'] == 'alarm_control') {
 									$Templatecore = 'Freebox_OS::Alarme Freebox';
-								} else {
-									$Templatecore = null;
+								} elseif ($Command['name'] == "error") {
+									$order = 10;
+									$icon = 'icon fas fa-exclamation-triangle icon_red';
 								}
 								if ($access == "r") {
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
-									$label_sup = '';
 								}
+								$label_sup = null;
 								if ($access == "w") {
-									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
 								}
 							}
 							break;

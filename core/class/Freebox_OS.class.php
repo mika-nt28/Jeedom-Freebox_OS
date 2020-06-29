@@ -618,10 +618,10 @@ class Freebox_OS extends eqLogic
 		$System->AddCommand('Update', 'update', 'action', 'other', 'core::line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default', 'default', 11, '0', $updateiconeSystem);
 		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  'core::line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default', 'default', 12, '0', $updateiconeSystem);
 		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeSystem);
-		$System->AddCommand('Mac', 'mac', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
+		$System->AddCommand('Mac', 'mac', 'info', 'string',  'core::line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
 		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeSystem);
-		$System->AddCommand('board name', 'board_name', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
-		$System->AddCommand('serial', 'serial', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
+		$System->AddCommand('board name', 'board_name', 'info', 'string',  'core::line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
+		$System->AddCommand('serial', 'serial', 'info', 'string',  'core::line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
 		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', 'core::line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000, 'default', 6, '0', $updateiconeSystem);
 		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', 'core::line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 7, '0', $updateiconeSystem);
 		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', 'core::line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 8, '0', $updateiconeSystem);

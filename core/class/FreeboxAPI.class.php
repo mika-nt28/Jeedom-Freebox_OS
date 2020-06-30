@@ -465,15 +465,15 @@ class FreeboxAPI
 
 						if ($pre_check_con['result'][$k]['type'] == 'missed') {
 							$cptAppel_missed++;
-							$listNumber_missed .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s<br>";
+							$listNumber_missed .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s\n";
 						}
 						if ($pre_check_con['result'][$k]['type'] == 'accepted') {
 							$cptAppel_accepted++;
-							$listNumber_accepted .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s<br>";
+							$listNumber_accepted .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s\n";
 						}
 						if ($pre_check_con['result'][$k]['type'] == 'outgoing') {
 							$cptAppel_outgoing++;
-							$listNumber_outgoing .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s<br>";
+							$listNumber_outgoing .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s\n";
 						}
 					}
 				}

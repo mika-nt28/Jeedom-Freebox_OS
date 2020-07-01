@@ -184,7 +184,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     <fieldset>
                         <div class="form-group ">
                             <label class="col-sm-2 control-label">{{Temps de rafraichissement}}
-                                <sup><i class="fas fa-question-circle" title="{{(s) Temps de rafraichissement}}"></i></sup>
+                                <sup><i class="fas fa-question-circle" title="{{(s) Temps de rafraichissement, Cela ne concerne uniquement les commandes de type info}}"></i></sup>
                             </label>
                             <div class="col-sm-3">
                                 <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="waite" placeholder="{{Temps de rafraichissement (s)}}" />

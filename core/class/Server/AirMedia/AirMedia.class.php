@@ -1,6 +1,8 @@
 <?php
-class AirMedia {
-	public function airmediaConfig() {
+class AirMedia
+{
+	/*public function airmediaConfig()
+	{
 		$parametre["enabled"] = $this->getIsEnable();
 		$parametre["password"] = $this->getConfiguration('password');
 		$return = self::fetch('/api/v3/airmedia/config/', $parametre, "PUT");
@@ -11,7 +13,8 @@ class AirMedia {
 			return false;
 	}
 
-	public static function airmediaReceivers() {
+	public static function airmediaReceivers()
+	{
 		$return = self::fetch('/api/v3/airmedia/receivers/');
 
 		if ($return['success'])
@@ -20,7 +23,8 @@ class AirMedia {
 			return false;
 	}
 
-	public function AirMediaAction($receiver, $action, $media_type, $media = null) {
+	public function AirMediaAction($receiver, $action, $media_type, $media = null)
+	{
 		if ($receiver != "" && $media_type != null) {
 			log::add('Freebox_OS', 'debug', 'AirMedia Start Video: ' . $media);
 			$parametre["action"] = $action;
@@ -35,5 +39,5 @@ class AirMedia {
 				return false;
 		} else
 			return false;
-	}
+	}*/
 }

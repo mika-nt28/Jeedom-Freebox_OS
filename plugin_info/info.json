@@ -1,14 +1,17 @@
 {
-	"id" : "Freebox_OS",
-	"name" : "Freebox OS",
-	"description" : "Plugin pour commander la Freebox OS",
-	"licence" : "AGPL",
-	"author" : "Halbout Michael | JAG",
-	"require" : "3.0",
-	"category" : "monitoring",
-	"compatibility" : ["miniplus","smart","rpi","docker","diy","mobile","v4"],
-	"hasOwnDeamon" : true,
-	"hasDependency" : false,
- 	"documentation" : "http://mika-nt28.github.io/Documentations/Freebox_OS/#language#/",
-	"changelog" : "https://mika-nt28.github.io/Documentations/Freebox_OS/#language#/changelog"
+	"id": "Freebox_OS",
+	"name": "Freebox OS",
+	"description": "Plugin pour commander la Freebox OS",
+	"licence": "AGPL",
+	"author": "Halbout Michael | JAG",
+	"require": "3.0",
+	"category": "monitoring",
+	"compatibility": ["miniplus", "smart", "rpi", "docker", "diy", "mobile", "v4"],
+	"hasOwnDeamon": true,
+	"hasDependency": false,
+	"link": {
+		"forum": "https://community.jeedom.com/t/info-plugin-freebox-mise-a-jour-des-composants-de-la-delta-tiles-systeme/30673"
+	},
+	"documentation": "http://mika-nt28.github.io/Documentations/Freebox_OS/#language#/",
+	"changelog": "https://mika-nt28.github.io/Documentations/Freebox_OS/#language#/changelog"
 }

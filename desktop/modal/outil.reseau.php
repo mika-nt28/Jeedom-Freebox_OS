@@ -13,7 +13,7 @@ if (!isConnect('admin')) {
             <div class="tab-pane active" id="WakeOnLAN">
                 <br />
                 <legend>Wake on LAN</legend>
-                <a class="btn btn-success lanEqLogic" data-action="wakeonlan"><i class="fa fa-check-circle"></i> {{Reveiller}}</a>
+                <a class="btn btn-success lanEqLogic" data-action="wakeonlan"><i class="fas fa-check-circle"></i> {{Reveiller}}</a>
             </div>
             <div class="tab-pane" id="PortForwarding">
                 <br />
@@ -35,7 +35,7 @@ if (!isConnect('admin')) {
                     <tbody>
                     </tbody>
                 </table>
-                <a class="btn btn-success lanEqLogic" data-action="portForwarding"><i class="fa fa-check-circle"></i> {{Sauvegarder}}</a>
+                <a class="btn btn-success lanEqLogic" data-action="portForwarding"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a>
             </div>
         </div>
     </fieldset>
@@ -90,7 +90,7 @@ if (!isConnect('admin')) {
             .append($('<input class="redirPort" data-l1key="comment"/>')));
         tr.append($('<td>')
             .append($('<a class="btn btn-xs btn-success redirPort" data-action="save">')
-                .append($('<i class="fa fa-check-circle">'))
+                .append($('<i class="fas fa-check-circle">'))
                 .text('{{Sauvegarder}}')));
         $('#table_cmd tbody').append(tr);
         $('#table_cmd tbody tr:last').setValues(_cmd, '.redirPort');
@@ -165,5 +165,4 @@ if (!isConnect('admin')) {
     	"lan_ip":"192.168.0.100",
     	"ip_proto":"tcp"
     }*/
-
 </script>

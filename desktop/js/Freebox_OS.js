@@ -6,6 +6,10 @@ $("#table_cmd").sortable({
 	tolerance: "intersect",
 	forcePlaceholderSize: true
 });
+$('#bt_resetSearch').off('click').on('click', function () {
+	$('#in_searchEqlogic').val('')
+	$('#in_searchEqlogic').keyup();
+})
 $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _options) {
 	var camera = jQuery.parseJSON(_options);
 	bootbox.confirm("{{Une caméra Freebox a été détectée (<b>" + camera.name + "</b>)<br>Voulez-vous l’ajouter au Plugin Caméra ?}}", function (result) {
@@ -48,6 +52,39 @@ $('.MaFreebox').on('click', function () {
 	});
 	$('#md_modal').load('index.php?v=d&modal=MaFreebox&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
 });
+
+$('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
+	$('#div_alert').showAlert({
+		message: '{{Recherche des <b>Equipements standards</b>}}',
+		level: 'warning'
+	});
+	$.ajax({
+		type: 'POST',
+		async: true,
+		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		data: {
+			action: 'SearchArchi'
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			$('#div_alert').showAlert({
+				message: '{{Erreur recherche des <b>Equipements standards</b>}}',
+				level: 'danger'
+			});
+		},
+		success: function (data) {
+			$('#div_alert').showAlert({
+				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				level: 'success'
+
+			});
+			window.location.reload();
+		}
+	});
+
+});
+
 $('.eqLogicAction[data-action=tile]').on('click', function () {
 	$('#div_alert').showAlert({
 		message: '{{Recherche des <b>Tiles</b>}}',
@@ -104,30 +141,59 @@ function addCmdToTable(_cmd) {
 	switch ($('.eqLogicAttr[data-l1key=logicalId]').val()) {
 		case 'Home Adapters':
 			$('.Equipement').show();
+			$('.Equipement_tiles').hide();
 			$('.Add_Equipement').hide();
 			break;
 		case 'HomeAdapters':
 			$('.Equipement').show();
 			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
 			break;
 		case 'Reseau':
 			$('.Equipement').show();
-			$('.Add_Equipement').show();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
 			break;
 		case 'Disque':
 			$('.Equipement').show();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
 			var inverse = $('<span>');
 			break;
 		case 'System':
+			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
+			break;
+		case 'Wifi':
+			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
+			break;
 		case 'ADSL':
+			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
+			break;
 		case 'AirPlay':
+			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
+			break;
 		case 'Downloads':
+			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
+			break;
 		case 'Phone':
 			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
 			break;
 		default:
 			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').show();
 			break;
 	}
 	if (!isset(_cmd)) {
@@ -141,14 +207,25 @@ function addCmdToTable(_cmd) {
 	tr += '<span class="cmdAttr" data-l1key="id" style="display: none;" ></span>';
 	tr += '</td>';
 	tr += '<td>';
-	tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" style="width : 250px;" placeholder="{{Nom}}"></td>';
+	tr += '<div class="row">';
+	tr += '<div class="col-sm-3">';
+	tr += '<a class="cmdAction btn btn-default btn-sm" data-l1key="chooseIcon"><i class="fas fa-flag"></i> Icône</a>';
+	tr += '<span class="cmdAttr" data-l1key="display" data-l2key="icon" style="margin-left : 10px;"></span>';
+	tr += '</div>';
+	tr += '<div class="col-sm-8">';
+	tr += '<input class="cmdAttr form-control input-sm" data-l1key="name">';
+	tr += '</div>';
+	tr += '</div>';
+	tr += '</td>';
 	tr += '<td>';
 	tr += '<input class="cmdAttr form-control type input-sm" data-l1key="type" value="info" disabled style="margin-bottom : 5px;" />';
 	tr += '<span class="subType" subType="' + init(_cmd.subType) + ' "  disabled></span>';
 	tr += '</td>';
 	tr += '<td>';
-	if (_cmd.subType == "numeric") {
-		tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;display:inline-block;margin-right:5px;">';
+	if (init(_cmd.subType) == 'numeric' || init(_cmd.subType) == 'slider') {
+		tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 90px;display : inline-block;"> ';
+		tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width : 90px;display : inline-block;"> ';
+		tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="{{Unité}}" title="{{Unité}}" style="width : 90px; display:inline-block"></td>';
 	}
 	tr += '</td>';
 	tr += '<td>';

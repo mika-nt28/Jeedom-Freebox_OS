@@ -156,11 +156,11 @@ class Freebox_OS extends eqLogic
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),
 			'test' => array(
-				array('operation' => "#value# == 'idle'", 'state_light' => '<i class=\'icon_green icon fas fa-unlock\'></i>'),
+				array('operation' => "#value# == 'idle'", 'state_light' => '<i class=\'icon_green icon jeedom-lock-ouvert\'></i>'),
 				array('operation' => "#value# == 'alarm2_armed'", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
-				array('operation' => "#value# == 'alarm1_armed'", 'state_light' => '<i class=\'icon_red icon fas fa-lock\'></i>'),
-				array('operation' => "#value# == 'alarm_1_arming'", 'state_light' => '<i class=\'icon_orange icon fas fa-lock\'></i>'),
-				array('operation' => "#value# == 'alarm_2_arming'", 'state_light' => '<i class=\'icon_orange icon fas fa-lock\'></i>'),
+				array('operation' => "#value# == 'alarm1_armed'", 'state_light' => '<i class=\'icon_red icon jeedom-lock-ferme\'></i>'),
+				array('operation' => "#value# == 'alarm_1_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
+				array('operation' => "#value# == 'alarm_2_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
 				array('operation' => "#value# == 'alarm1_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
 				array('operation' => "#value# == 'alarm2_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
 				array('operation' => "#value# == 'alert'", 'state_light' => '<i class=\'icon_red icon jeedom-alerte2\'></i>')
@@ -282,13 +282,13 @@ class Freebox_OS extends eqLogic
 								$icon = 'fas fa-arrow-down';
 								$order = 4;
 							} elseif ($Command['name'] == 'alarm1') {
-								$icon = 'icon fas fa-lock icon_red';
+								$icon = 'icon jeedom-lock-ferme icon_red';
 								$order = 6;
 							} elseif ($Command['name'] == 'alarm2') {
 								$icon = 'icon nature-night2 icon_red';
 								$order = 7;
 							} elseif ($Command['name'] == 'off') {
-								$icon = 'icon fas fa-unlock icon_green';
+								$icon = 'icon jeedom-lock-ouvert icon_green';
 								$order = 8;
 							} elseif ($Command['name'] == 'skip') {
 								$IsVisible = 0;

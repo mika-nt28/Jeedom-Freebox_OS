@@ -138,7 +138,6 @@ class Freebox_OS extends eqLogic
 		);
 
 		// Template pour le wifi info
-		//$return = array('info' => array('binary' => array()));
 		$return['info']['binary']['Wifi'] = array(
 			'template' => 'tmplicon',
 			'display' => array(
@@ -152,7 +151,6 @@ class Freebox_OS extends eqLogic
 		);
 
 		// Template pour l'état de l'alarme'
-		//$return = array('info' => array('string' => array()));
 		$return['info']['string']['Alarme Freebox'] = array(
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),
@@ -225,7 +223,6 @@ class Freebox_OS extends eqLogic
 	{
 		$FreeboxAPI = new FreeboxAPI();
 		self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
-		//$_logicalId_OLD = null;
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$templatecore_V4 = null;
@@ -269,12 +266,7 @@ class Freebox_OS extends eqLogic
 						continue;
 					}
 					if (!is_object($Tile)) continue;
-					//	if ($Equipement['node_id'] == $_logicalId_OLD) {
-					//log::add('Freebox_OS', 'debug', '┌───────── ');
-					//	} else {
 					log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
-					//		$_logicalId_OLD = $Equipement['node_id'];
-					//	}
 					$Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
 					$Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
 					log::add('Freebox_OS', 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
@@ -670,7 +662,7 @@ class Freebox_OS extends eqLogic
 			$TemplateWifiOnOFF = 'Freebox_OS::Wifi';
 			$iconeWfiOn = 'fas fa-wifi icon_green';
 			$iconeWfiOff = 'fas fa-times icon_red';
-			$updateiconeWifi = true; // Temporaire le temps de la migration JAG 20200621
+			$updateiconeWifi = false;
 		};
 		$Wifi = self::AddEqLogic('Wifi', 'Wifi', 'default', false, null, null);
 		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 0, '', '', '', '', 0, 'default', 'default', 'default', 1, '0', $updateiconeWifi);
@@ -1118,9 +1110,9 @@ class Freebox_OS extends eqLogic
 }
 class Freebox_OSCmd extends cmd
 {
-	//public function dontRemoveCmd(){
-	//	return true;
-	//}
+	/*public function dontRemoveCmd(){
+		return true;
+	}*/
 	public function execute($_options = array())
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Connexion sur la freebox pour mise à jour de : ' . $this->getName());

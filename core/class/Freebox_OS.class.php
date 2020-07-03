@@ -96,7 +96,7 @@ class Freebox_OS extends eqLogic
 		$cron->run();
 		return $cron;
 	}
-	public static function AddEqLogic($Name, $_logicalId, $category, $tiles, $eq_type, $eq_action)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		if (!is_object($EqLogic)) {
@@ -201,18 +201,23 @@ class Freebox_OS extends eqLogic
 	public static function addHomeAdapters()
 	{
 		$FreeboxAPI = new FreeboxAPI();
-		$HomeAdapters = self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', null, null);
+		$HomeAdapters = self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
 		foreach ($FreeboxAPI->getHomeAdapters() as $Equipement) {
 			if ($Equipement['label'] != '') {
-				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
-				$HomeAdapters->checkAndUpdateCmd($Equipement['id'], $Equipement['status']);
+				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				if ($Equipement['status'] == 'active') {
+					$HomeAdapters_value = 1;
+				} else {
+					$HomeAdapters_value = 0;
+				}
+				$HomeAdapters->checkAndUpdateCmd($Equipement['id'], $HomeAdapters_value);
 			}
 		}
 	}
 	public static function addTiles()
 	{
 		$FreeboxAPI = new FreeboxAPI();
-		self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', null, null); // Fonction déplacer sur Tiles
+		self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
 		//$_logicalId_OLD = null;
 		foreach ($FreeboxAPI->getTiles() as $Equipement) {
 			if ($Equipement['type'] != 'camera') {
@@ -1015,7 +1020,12 @@ class Freebox_OS extends eqLogic
 						foreach ($Equipement->getCmd('info') as $Command) {
 							$result = $FreeboxAPI->getHomeAdapterStatus($Command->getLogicalId());
 							if ($result != false) {
-								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']);
+								if ($result['status'] == 'active') {
+									$HomeAdapters_value = 1;
+								} else {
+									$HomeAdapters_value = 0;
+								}
+								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $HomeAdapters_value);
 							}
 						}
 						break;

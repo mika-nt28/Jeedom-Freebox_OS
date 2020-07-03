@@ -202,9 +202,16 @@ class Freebox_OS extends eqLogic
 	{
 		$FreeboxAPI = new FreeboxAPI();
 		$HomeAdapters = self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$templatecore_V4 = null;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$templatecore_V4  = 'core::';
+		};
 		foreach ($FreeboxAPI->getHomeAdapters() as $Equipement) {
 			if ($Equipement['label'] != '') {
-				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
 				if ($Equipement['status'] == 'active') {
 					$HomeAdapters_value = 1;
 				} else {
@@ -219,6 +226,13 @@ class Freebox_OS extends eqLogic
 		$FreeboxAPI = new FreeboxAPI();
 		self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
 		//$_logicalId_OLD = null;
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$templatecore_V4 = null;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$templatecore_V4  = 'core::';
+		};
 		foreach ($FreeboxAPI->getTiles() as $Equipement) {
 			if ($Equipement['type'] != 'camera') {
 				if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {
@@ -319,11 +333,11 @@ class Freebox_OS extends eqLogic
 									}
 									if ($Equipement['action'] == "store_slider") {
 										$generic_type = 'FLAP_STATE';
-										$Templatecore = 'core::shutter';
+										$Templatecore = $templatecore_V4 . 'shutter';
 										$_min = '0';
 										$_max = 100;
 									} elseif ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-										$Templatecore_A = 'core::light';
+										$Templatecore_A = $templatecore_V4 . 'light';
 										$_min = '0';
 										$_max = 255;
 										$generic_type = 'LIGHT_SET_COLOR';
@@ -389,21 +403,21 @@ class Freebox_OS extends eqLogic
 								if ($access == "r") {
 									if ($Equipement['action'] == "store") {
 										$generic_type = 'FLAP_STATE';
-										$Templatecore = 'core::shutter';
+										$Templatecore = $templatecore_V4 . 'shutter';
 									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'cover') {
 										$generic_type = 'SABOTAGE';
 										$Templatecore = null;
 										$invertBinary = 1;
 									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] != 'Détection') {
 										$generic_type = 'OPENING';
-										$Templatecore = 'core::door';
+										$Templatecore = $templatecore_V4 . 'door';
 									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] == 'Détection') {
 										$generic_type = 'PRESENCE';
-										$Templatecore = 'core::presence';
+										$Templatecore = $templatecore_V4 . 'presence';
 										$invertBinary = 0;
 									} elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
 										$generic_type = 'LIGHT_STATE';
-										$Templatecore = 'core::light';
+										$Templatecore = $templatecore_V4 . 'light';
 										$invertBinary = 0;
 										$IsVisible = 0;
 										$Label = 'Etat';
@@ -585,6 +599,13 @@ class Freebox_OS extends eqLogic
 	{
 		self::AddEqLogic('Réseau', 'Reseau', 'default', false, null, null);
 		self::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$templatecore_V4 = null;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$templatecore_V4  = 'core::';
+		};
 		// ADSL
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ADSL');
 		if (version_compare(jeedom::version(), "4", "<")) {
@@ -595,12 +616,12 @@ class Freebox_OS extends eqLogic
 			$updateiconeADSL = false;
 		};
 		$ADSL = self::AddEqLogic('ADSL', 'ADSL', 'default', false, null, null);
-		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', 'core::badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', 'core::badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', 'core::badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', 'core::badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeADSL);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// System
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
@@ -620,17 +641,17 @@ class Freebox_OS extends eqLogic
 			$updateiconeSystem = false;
 		};
 		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
-		$System->AddCommand('Update', 'update', 'action', 'other', 'core::line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default', 'default', 11, '0', $updateiconeSystem);
-		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  'core::line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default', 'default', 12, '0', $updateiconeSystem);
-		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeSystem);
-		$System->AddCommand('Mac', 'mac', 'info', 'string',  'core::line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
-		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeSystem);
-		$System->AddCommand('board name', 'board_name', 'info', 'string',  'core::line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
-		$System->AddCommand('serial', 'serial', 'info', 'string',  'core::line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
-		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', 'core::line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000, 'default', 6, '0', $updateiconeSystem);
-		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', 'core::line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 7, '0', $updateiconeSystem);
-		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', 'core::line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 8, '0', $updateiconeSystem);
-		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', 'core::line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 9, '0', $updateiconeSystem);
+		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default', 'default', 11, '0', $updateiconeSystem);
+		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default', 'default', 12, '0', $updateiconeSystem);
+		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeSystem);
+		$System->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
+		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeSystem);
+		$System->AddCommand('board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
+		$System->AddCommand('serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
+		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', $templatecore_V4 . 'line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000, 'default', 6, '0', $updateiconeSystem);
+		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 7, '0', $updateiconeSystem);
+		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 8, '0', $updateiconeSystem);
+		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 9, '0', $updateiconeSystem);
 		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 10, '0', $updateiconeSystem);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
@@ -702,18 +723,18 @@ class Freebox_OS extends eqLogic
 			$updateiconeDownloads = false;
 		};
 		$Downloads = self::AddEqLogic('Téléchargements', 'Downloads', 'multimedia', false, null, null);
-		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 8, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 9, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', 'core::line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 10, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', 'core::badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 11, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', 'core::badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 12, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 8, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 9, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 10, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 11, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 12, '0', $updateiconeDownloads);
 		$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOn, 0, 'default', 'default', 'default', 13, '0', $updateiconeDownloads);
 		$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOff, 0, 'default', 'default', 'default', 14, '0', $updateiconeDownloads);
 		log::add('Freebox_OS', 'debug', '└─────────');

@@ -39,7 +39,7 @@ try {
 				$EqLogic->setconfiguration("urlStream", $URL_snaphot);
 				$URLrtsp = init('url');
 				$URLrtsp = str_replace("http", "rtsp", $URLrtsp);
-				$URLrtsp = $URLrtsp . '/live';
+				$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
 				$URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
 				$URLrtsp = str_replace($username, "#username#", $URLrtsp);
 				$URLrtsp = str_replace($password, "#password#", $URLrtsp);

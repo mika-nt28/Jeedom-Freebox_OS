@@ -196,6 +196,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
                                 <a class="btn btn-primary eqLogicAction"><i class="fas fa-search"></i> {{Recherche}}</a>
                             </div>
                         </div>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{logicalId}}
+                                <sup><i class="fas fa-question-circle" title="{{logicalId Freebox}}"></i></sup>
+                            </label>
+                            <div class="col-sm-3">
+                                <span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="logicalID"></span>
+                            </div>
+                        </div>
                         <div class="form-group Equipement_tiles">
                             <label class="col-sm-2 control-label">{{Type équipement}}
                                 <sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>

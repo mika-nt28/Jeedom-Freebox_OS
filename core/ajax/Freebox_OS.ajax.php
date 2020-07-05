@@ -12,7 +12,7 @@ try {
 			$EqLogic = eqLogic::byLogicalId(init('id'), 'camera');
 			if (!is_object($EqLogic)) {
 				$url = explode('@', explode('://', init('url'))[1]);
-
+				log::add('Freebox_OS', 'debug', '┌───────── Création de la caméra : ' . init('name'));
 				$username = explode(':', $url[0])[0];
 				$password = explode(':', $url[0])[1];
 
@@ -30,11 +30,23 @@ try {
 				$EqLogic->setconfiguration("protocole", "http");
 				$EqLogic->setconfiguration("ip", $ip);
 				$EqLogic->setconfiguration("port", $port);
+				log::add('Freebox_OS', 'debug', '│ IP : ' . $ip . ' - Port : ' . $port);
 				$EqLogic->setconfiguration("username", $username);
 				$EqLogic->setconfiguration("password", $password);
-				$EqLogic->setconfiguration("urlStream", "img/snapshot.cgi?size=4&quality=1");
-				$EqLogic->setconfiguration('cameraStreamAccessUrl', init('url'));
+				$EqLogic->setconfiguration("videoFramerate", 15);
+				$EqLogic->setconfiguration("applyDevice", "Freebox.RocketCam");
+				$URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
+				$EqLogic->setconfiguration("urlStream", $URL_snaphot);
+				$URLrtsp = init('url');
+				$URLrtsp = str_replace("http", "rtsp", $URLrtsp);
+				$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
+				$URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
+				$URLrtsp = str_replace($username, "#username#", $URLrtsp);
+				$URLrtsp = str_replace($password, "#password#", $URLrtsp);
+				log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp . ' - URL de snaphot : ' . $URL_snaphot);
+				$EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
 				$EqLogic->save();
+				log::add('Freebox_OS', 'debug', '└─────────');
 			}
 			ajax::success(true);
 			break;

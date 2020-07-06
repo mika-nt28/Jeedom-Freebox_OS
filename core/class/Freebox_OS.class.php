@@ -165,6 +165,17 @@ class Freebox_OS extends eqLogic
 				array('operation' => "#value# == 'alert'", 'state_light' => '<i class=\'icon_red icon jeedom-alerte2\'></i>')
 			)
 		);
+		// Template pour l'état de l'alarme'
+		$return['info']['numeric']['Télécommande Freebox'] = array(
+			'template' => 'tmplmultistate',
+			'replace' => array('#_time_widget_#' => '1'),
+			'test' => array(
+				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_green icon jeedom-lock-ouvert\'></i>'),
+				array('operation' => "#value# == 2", 'state_light' => '<i class=\'icon_green icon jeedom-lock-ouvert\'></i>'),
+				array('operation' => "#value# == 3", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
+				array('operation' => "#value# == 1", 'state_light' => '<i class=\'icon_red icon jeedom-lock-ferme\'></i>')
+			)
+		);
 		return $return;
 	}
 	public static function addReseau()
@@ -321,6 +332,7 @@ class Freebox_OS extends eqLogic
 								$_max = 'default';
 								$IsVisible = 1;
 								$IsVisible_I = '0';
+								$IsHistorized = '0';
 								$name = $Command['label'];
 								$link_logicalId = 'default';
 								if ($access == "r") {
@@ -346,22 +358,28 @@ class Freebox_OS extends eqLogic
 										$generic_type = 'LIGHT_SLIDER';
 										$generic_type_I = 'LIGHT_STATE';
 										$link_logicalId = $Command['ep_id'];
+									} elseif ($Equipement['type'] == "alarm_remote" && $Command['name'] == 'pushed') {
+										$Templatecore = 'Freebox_OS::Télécommande Freebox';
+										$_min = '0';
+										$_max = $Command['ui']['range'][3];
+										$IsVisible_I = 1;
+										$IsHistorized = 1;
 									} elseif ($Command['name'] == "battery_warning") {
 										$generic_type_I = 'BATTERY';
 										$name = 'Batterie';
 									}
 									if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
 										if ($Equipement['action'] != 'intensity_picker' && $Equipement['action'] != 'color_picker') {
-											$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, 0, false);
+											$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, $IsHistorized, false);
 											$Link_I_light = $infoCmd;
 										}
-										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max, 'default', 2, 0, false);
+										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max, 'default', 2, $IsHistorized, false);
 									} else {
-										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, 0, false);
+										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, $IsHistorized, false);
 									}
 
 									if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
-										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, 'default', null, 0, false);
+										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, 'default', null, $IsHistorized, false);
 									}
 									$label_sup = null;
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
@@ -856,7 +874,7 @@ class Freebox_OS extends eqLogic
 											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
 											break;
 										case "nb_tasks_downloading":
-											$return = $result[''];
+											$result = $result[''];
 											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_downloading']);
 											break;
 										case "nb_tasks_done":
@@ -1056,12 +1074,25 @@ class Freebox_OS extends eqLogic
 
 									if (!is_object($cmd)) break;
 
+									//log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
+									if ($data['name'] == 'pushed') {
+										$nb_pushed = count($data['history']);
+										$nb_pushed_k = $nb_pushed - 1;
+										$_value_history = $data['history'][$nb_pushed_k]['value'];
+										//	log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
+									};
+
+
 									switch ($cmd->getSubType()) {
 										case 'numeric':
 											if ($cmd->getConfiguration('inverse')) {
 												$_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
 											} else {
-												$_value = $data['value'];
+												if ($data['name'] == 'pushed') {
+													$_value = $_value_history;
+												} else {
+													$_value = $data['value'];
+												}
 											}
 											break;
 										case 'string':

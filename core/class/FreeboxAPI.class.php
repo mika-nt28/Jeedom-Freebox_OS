@@ -379,12 +379,15 @@ class FreeboxAPI
 	public function getTile($id = '')
 	{
 		$Status = $this->fetch('/api/v6/home/tileset/' . $id);
+		//log::add('Freebox_OS', 'debug', '>───────── Mise à jour id : ' . $id);
+
 		if ($Status === false)
 			return false;
-		if ($Status['success'])
+		if ($Status['success']) {
 			return $Status['result'];
-		else
+		} else {
 			return false;
+		}
 	}
 	public function setTile($nodeId, $endpointId, $parametre)
 	{
@@ -438,9 +441,9 @@ class FreeboxAPI
 	}
 	public function nb_appel_absence()
 	{
-		$listNumber_missed = '';
-		$listNumber_accepted = '';
-		$listNumber_outgoing = '';
+		$listNumber_missed = null;
+		$listNumber_accepted = null;
+		$listNumber_outgoing = null;
 		$pre_check_con = $this->fetch('/api/v3/call/log/');
 		if ($pre_check_con === false)
 			return false;
@@ -465,15 +468,15 @@ class FreeboxAPI
 
 						if ($pre_check_con['result'][$k]['type'] == 'missed') {
 							$cptAppel_missed++;
-							$listNumber_missed .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s\n";
+							$listNumber_missed .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
 						}
 						if ($pre_check_con['result'][$k]['type'] == 'accepted') {
 							$cptAppel_accepted++;
-							$listNumber_accepted .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s\n";
+							$listNumber_accepted .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
 						}
 						if ($pre_check_con['result'][$k]['type'] == 'outgoing') {
 							$cptAppel_outgoing++;
-							$listNumber_outgoing .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s\n";
+							$listNumber_outgoing .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
 						}
 					}
 				}

@@ -732,9 +732,9 @@ class Freebox_OS extends eqLogic
 			$updateiconeWifi = false;
 		};
 		$Wifi = self::AddEqLogic('Wifi', 'Wifi', 'default', false, null, null);
-		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateiconeWifi, true);
-		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $StatusWifi, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', 3, '0', $updateiconeWifi, false);
-		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $StatusWifi, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', 4, '0', $updateiconeWifi, false);
+		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateiconeWifi, true);
+		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', 3, '0', $updateiconeWifi, false);
+		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', 4, '0', $updateiconeWifi, false);
 		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', null, null, null, 0, $StatusWifi, 'wifiStatut', 0, null, 0, 'default', 'default', 2, '0', $updateiconeWifi, false);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
@@ -1369,8 +1369,8 @@ class Freebox_OSCmd extends cmd
 							}
 
 							break;
-						} else if ($this->getConfiguration('equipement') == 'alarm_control' && ($this->getLogicalId() == 1 || $this->getLogicalId() == 2 || $this->getLogicalId() == 4)) {
-							/*log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique  Activation / Désactivation Alarme : ' . $this->getLogicalId());
+							/*} else if ($this->getConfiguration('equipement') == 'alarm_control' && ($this->getLogicalId() == 1 || $this->getLogicalId() == 2 || $this->getLogicalId() == 4)) {
+							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique  Activation / Désactivation Alarme : ' . $this->getLogicalId());
 							if ($this->getLogicalId() == 1 || $this->getLogicalId() == 2) {
 								$Alarm_actif = 1;
 							} else {

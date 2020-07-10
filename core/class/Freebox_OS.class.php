@@ -568,10 +568,6 @@ class Freebox_OS extends eqLogic
 			if ($unite != null && $SubType == 'numeric') {
 				$Command->setUnite($unite);
 			}
-			if ($generic_type != null) {
-				$Command->setGeneric_type($generic_type);
-			}
-
 			$Command->setIsVisible($IsVisible);
 			$Command->setIsHistorized($IsHistorized);
 
@@ -589,6 +585,9 @@ class Freebox_OS extends eqLogic
 			}
 
 			$Command->save();
+		}
+		if ($generic_type != null) {
+			$Command->setGeneric_type($generic_type);
 		}
 		if ($_home_mode_set != null) { // Compatibilité Homebridge
 			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);

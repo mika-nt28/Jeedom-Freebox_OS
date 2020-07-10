@@ -107,7 +107,7 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', '[FreeboxOpenSession]' . $e->getCode());
 		}
 	}
-	public function fetch($api_url, $params = array(), $method = 'GET')
+	public function fetch($api_url, $params = array(), $method = 'GET', $update_log = false)
 	{
 		try {
 			$session_token = cache::byKey('Freebox_OS::SessionToken');
@@ -115,7 +115,9 @@ class FreeboxAPI
 				sleep(1);
 				$session_token = cache::byKey('Freebox_OS::SessionToken');
 			}
-			log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour');
+			if ($update_log == false) {
+				log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour');
+			};
 			log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] Connexion ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
 			$ch = curl_init();
 			curl_setopt($ch, CURLOPT_URL, $this->serveur . $api_url);
@@ -237,7 +239,7 @@ class FreeboxAPI
 				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
 				log::add('Freebox_OS', 'debug', '│ Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque');
-				$command = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, '0', 100, 'default', null, '0', false);
+				$command = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, '0', 100,  null, '0', false);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
 			}
@@ -332,7 +334,7 @@ class FreeboxAPI
 	{
 		try {
 			$System = Freebox_OS::AddEqLogic('Système', 'System');
-			$Command = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, '0', false);
+			$Command = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  null, '0', false, true);
 			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise a jours du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
@@ -379,8 +381,7 @@ class FreeboxAPI
 	public function getTile($id = '')
 	{
 		$Status = $this->fetch('/api/v6/home/tileset/' . $id);
-		//log::add('Freebox_OS', 'debug', '>───────── Mise à jour id : ' . $id);
-
+		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
 		if ($Status === false)
 			return false;
 		if ($Status['success']) {
@@ -391,7 +392,14 @@ class FreeboxAPI
 	}
 	public function setTile($nodeId, $endpointId, $parametre)
 	{
-		$return = $this->fetch('/api/v6/home/endpoints/' . $nodeId . '/' . $endpointId . '/', $parametre, "PUT");
+
+		if ($endpointId != null) {
+			$endpointId = $endpointId . '/';
+		} elseif ($endpointId != 'refresh') {
+			$endpointId = null;
+		}
+		log::add('Freebox_OS', 'debug', '└───────── Info nodeid : ' . $nodeId . ' -- endpointId : ' . $endpointId);
+		$return = $this->fetch('/api/v6/home/endpoints/' . $nodeId . '/' . $endpointId, $parametre, "PUT");
 		if ($return === false)
 			return false;
 		if ($return['success'])

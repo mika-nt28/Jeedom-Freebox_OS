@@ -319,7 +319,7 @@ class Freebox_OS extends eqLogic
 								$Link_I = $Link_I_ALARM;
 								$_iconname = 1;
 								$order = 6;
-								$_home_mode_set = 'SetModePresent';
+								$_home_mode_set = 'SetModeAbsent';
 								$_home_mode = 'Mode Jour';
 							} elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_SET_MODE';
@@ -589,14 +589,17 @@ class Freebox_OS extends eqLogic
 			if ($_iconname != null) {
 				$Command->setdisplay('showIconAndNamedashboard', 1);
 			}
-			if ($_home_mode_set != null) { // Compatibilité Homebride
-				$Command->setconfiguration($_home_mode_set, $Command->getId() . "|" . $_home_mode);
-				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
-				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Mode : ' . $_home_mode);
-			}
+
 			$Command->save();
 		}
-
+		if ($_home_mode_set != null) { // Compatibilité Homebride
+			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $_home_mode);
+			if ($_home_mode_set = 'SetModeAbsent') {
+				$this->setConfiguration('SetModePresent', "NOT");
+			}
+			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
+			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Mode : ' . $_home_mode);
+		}
 		if ($repeatevent == true && $Type == 'info') {
 			$Command->setconfiguration('repeatEventManagement', 'never');
 			log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);

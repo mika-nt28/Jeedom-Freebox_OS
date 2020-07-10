@@ -594,8 +594,10 @@ class Freebox_OS extends eqLogic
 		}
 		if ($_home_mode_set != null) { // Compatibilité Homebride
 			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $_home_mode);
+			$this->save(true)
 			if ($_home_mode_set = 'SetModeAbsent') {
 				$this->setConfiguration('SetModePresent', "NOT");
+				$this->save(true)
 			}
 			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
 			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Mode : ' . $_home_mode);

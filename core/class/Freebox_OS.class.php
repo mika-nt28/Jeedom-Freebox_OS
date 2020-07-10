@@ -320,7 +320,6 @@ class Freebox_OS extends eqLogic
 								$_iconname = 1;
 								$order = 6;
 								$_home_mode_set = 'SetModeAbsent';
-								$_home_mode = 'Mode Jour';
 							} elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon nature-night2 icon_red';
@@ -328,7 +327,6 @@ class Freebox_OS extends eqLogic
 								$_iconname = 1;
 								$order = 7;
 								$_home_mode_set = 'SetModeNuit';
-								$_home_mode = 'Mode Nuit';
 							} elseif ($Command['name'] == 'off' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_RELEASED';
 								$icon = 'icon jeedom-lock-ouvert icon_green';
@@ -339,7 +337,7 @@ class Freebox_OS extends eqLogic
 								$IsVisible = 0;
 								$order = 9;
 							}
-							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, $Equipement['type'], $_iconname, $_home_mode_set, $_home_mode);
+							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, $Equipement['type'], $_iconname, $_home_mode_set);
 							break;
 						case "int":
 							foreach (str_split($Command['ui']['access']) as $access) {
@@ -542,7 +540,7 @@ class Freebox_OS extends eqLogic
 		}
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_Equipement = null, $_iconname = null, $_home_mode_set = null, $_home_mode = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_Equipement = null, $_iconname = null, $_home_mode_set = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
@@ -592,15 +590,15 @@ class Freebox_OS extends eqLogic
 
 			$Command->save();
 		}
-		if ($_home_mode_set != null) { // Compatibilité Homebride
-			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $_home_mode);
+		if ($_home_mode_set != null) { // Compatibilité Homebridge
+			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
 			$this->save(true);
-			if ($_home_mode_set = 'SetModeAbsent') {
+			if ($_home_mode_set == 'SetModeAbsent') {
 				$this->setConfiguration('SetModePresent', "NOT");
-				$this->save(true);
+			} else {
+				$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
 			}
 			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
-			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Mode : ' . $_home_mode);
 		}
 		if ($repeatevent == true && $Type == 'info') {
 			$Command->setconfiguration('repeatEventManagement', 'never');

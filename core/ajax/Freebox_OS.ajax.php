@@ -34,7 +34,7 @@ try {
 				$EqLogic->setconfiguration("username", $username);
 				$EqLogic->setconfiguration("password", $password);
 				$EqLogic->setconfiguration("videoFramerate", 15);
-				$EqLogic->setconfiguration("applyDevice", "Freebox.RocketCam");
+				$EqLogic->setconfiguration("device", "rocketcam");
 				$URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
 				$EqLogic->setconfiguration("urlStream", $URL_snaphot);
 				$URLrtsp = init('url');

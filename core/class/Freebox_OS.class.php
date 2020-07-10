@@ -158,8 +158,8 @@ class Freebox_OS extends eqLogic
 				array('operation' => "#value# == 'idle'", 'state_light' => '<i class=\'icon_green icon jeedom-lock-ouvert\'></i>'),
 				array('operation' => "#value# == 'alarm2_armed'", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
 				array('operation' => "#value# == 'alarm1_armed'", 'state_light' => '<i class=\'icon_red icon jeedom-lock-ferme\'></i>'),
-				array('operation' => "#value# == 'alarm_1_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
-				array('operation' => "#value# == 'alarm_2_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
+				array('operation' => "#value# == 'alarm1_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
+				array('operation' => "#value# == 'alarm2_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
 				array('operation' => "#value# == 'alarm1_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
 				array('operation' => "#value# == 'alarm2_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
 				array('operation' => "#value# == 'alert'", 'state_light' => '<i class=\'icon_red icon jeedom-alerte2\'></i>')
@@ -185,7 +185,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
 		foreach ($FreeboxAPI->getReseau() as $Equipement) {
 			if ($Equipement['primary_name'] != '') {
-				$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
 				$Command->setConfiguration('host_type', $Equipement['host_type']);
 				if (isset($Equipement['l3connectivities'])) {
 					foreach ($Equipement['l3connectivities'] as $Ip) {
@@ -220,7 +220,7 @@ class Freebox_OS extends eqLogic
 		};
 		foreach ($FreeboxAPI->getHomeAdapters() as $Equipement) {
 			if ($Equipement['label'] != '') {
-				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
 				if ($Equipement['status'] == 'active') {
 					$HomeAdapters_value = 1;
 				} else {
@@ -294,34 +294,52 @@ class Freebox_OS extends eqLogic
 							$generic_type = null;
 							$icon = null;
 							$order = null;
-							$Link_I_store = 'default';
+							$Link_I = 'default';
 							$IsVisible = 1;
+							$_iconname = '0';
+							$_home_mode_set = null;
 							if ($Command['name'] == 'up') {
 								$generic_type = 'FLAP_UP';
 								$icon = 'fas fa-arrow-up';
+								$Link_I = $Link_I_store;
 								$order = 2;
 							} elseif ($Command['name'] == 'stop') {
 								$generic_type = 'FLAP_STOP';
 								$icon = 'fas fa-stop';
+								$Link_I = $Link_I_store;
 								$order = 3;
 							} elseif ($Command['name'] == 'down') {
 								$generic_type = 'FLAP_DOWN';
 								$icon = 'fas fa-arrow-down';
+								$Link_I = $Link_I_store;
 								$order = 4;
-							} elseif ($Command['name'] == 'alarm1') {
+							} elseif ($Command['name'] == 'alarm1' && $Equipement['type'] = 'alarm_control') {
+								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon jeedom-lock-ferme icon_red';
+								$Link_I = $Link_I_ALARM;
+								$_iconname = 1;
 								$order = 6;
-							} elseif ($Command['name'] == 'alarm2') {
+								$_home_mode_set = 'SetModePresent';
+								$_home_mode = 'Mode Jour';
+							} elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
+								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon nature-night2 icon_red';
+								$Link_I = $Link_I_ALARM;
+								$_iconname = 1;
 								$order = 7;
-							} elseif ($Command['name'] == 'off') {
+								$_home_mode_set = 'SetModeNuit';
+								$_home_mode = 'Mode Nuit';
+							} elseif ($Command['name'] == 'off' && $Equipement['type'] = 'alarm_control') {
+								$generic_type = 'ALARM_RELEASED';
 								$icon = 'icon jeedom-lock-ouvert icon_green';
+								$Link_I = $Link_I_ALARM_ENABLE;
+								$_iconname = 1;
 								$order = 8;
 							} elseif ($Command['name'] == 'skip') {
 								$IsVisible = 0;
 								$order = 9;
 							}
-							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_store, $Link_I_store, 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
+							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, $Equipement['type'], $_iconname, $_home_mode_set, $_home_mode);
 							break;
 						case "int":
 							foreach (str_split($Command['ui']['access']) as $access) {
@@ -335,6 +353,8 @@ class Freebox_OS extends eqLogic
 								$IsHistorized = '0';
 								$name = $Command['label'];
 								$link_logicalId = 'default';
+								$icon = null;
+								$generic_type_I = null;
 								if ($access == "r") {
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
@@ -366,20 +386,21 @@ class Freebox_OS extends eqLogic
 										$IsHistorized = 1;
 									} elseif ($Command['name'] == "battery_warning") {
 										$generic_type_I = 'BATTERY';
+										$icon = 'fas fa-battery-full';
 										$name = 'Batterie';
 									}
 									if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
 										if ($Equipement['action'] != 'intensity_picker' && $Equipement['action'] != 'color_picker') {
-											$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, $IsHistorized, false);
+											$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $Equipement['type']);
 											$Link_I_light = $infoCmd;
 										}
-										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max, 'default', 2, $IsHistorized, false);
+										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max,  2, $IsHistorized, false, false);
 									} else {
-										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, $IsHistorized, false);
+										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, $Equipement['type']);
 									}
 
 									if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
-										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, 'default', null, $IsHistorized, false);
+										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, $Equipement['type']);
 									}
 									$label_sup = null;
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
@@ -398,7 +419,7 @@ class Freebox_OS extends eqLogic
 								}
 								if ($access == "w") {
 									if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker") {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', null, 0, false, false, $Equipement['type']);
 									}
 								}
 							}
@@ -444,7 +465,7 @@ class Freebox_OS extends eqLogic
 										$invertBinary = 0;
 									}
 
-									$infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default', 'default', $order, 0, false);
+									$infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default',  $order, 0, false, true, $Equipement['type']);
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									if ($Equipement['action'] == 'store') {
 										$Link_I_store = $infoCmd;
@@ -454,8 +475,8 @@ class Freebox_OS extends eqLogic
 										$Link_I_store = 'default';
 									}
 									if ($Type_command == 'PB') {
-										$Tile->AddCommand('On', 'PB_On', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_ON', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 1, 'default', 'default', 'default', 3, 0, false);
-										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_OFF', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 0, 'default', 'default', 'default', 4, 0, false);
+										$Tile->AddCommand('On', 'PB_On', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_ON', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 1, 'default', 'default', 3, 0, false, false, $Equipement['type']);
+										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_OFF', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 0, 'default', 'default', 4, 0, false, false, $Equipement['type']);
 									}
 
 									$label_sup = null;
@@ -465,7 +486,7 @@ class Freebox_OS extends eqLogic
 								}
 								if ($access == "w") {
 									if ($Type_command != 'PB') {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false, false, $Equipement['type']);
 									}
 								}
 							}
@@ -476,11 +497,14 @@ class Freebox_OS extends eqLogic
 								$Templatecore = null;
 								$order = null;
 								$icon = null;
+								$generic_type = null;
 								if ($Command['name'] == "pin") {
 									$IsVisible = 0;
 								}
 								if ($Command['name'] == "state" && $Equipement['type'] == 'alarm_control') {
 									$Templatecore = 'Freebox_OS::Alarme Freebox';
+									$order = 4;
+									$IsVisible = 0;
 								} elseif ($Command['name'] == "error") {
 									$order = 10;
 									$icon = 'icon fas fa-exclamation-triangle icon_red';
@@ -489,12 +513,21 @@ class Freebox_OS extends eqLogic
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
+									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', $order, 0, false, true, $Equipement['type']);
+									$Link_I_ALARM = $info;
+									if ($Command['name'] == "state" && $Equipement['type'] == 'alarm_control') {
+										log::add('Freebox_OS', 'debug', '│──────────> Ajout commande spécifique pour Homebridge');
+										$ALARM_ENABLE = $Tile->AddCommand('Actif', 'ALARM_enable', 'info', 'binary', 'core::lock', null, 'ALARM_ENABLE_STATE', 1, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 1, 1, false, true, $Equipement['type']);
+										$Link_I_ALARM_ENABLE = $ALARM_ENABLE;
+										$Tile->AddCommand('Statut', 'ALARM_state', 'info', 'binary', 'core::alert', null, 'ALARM_STATE', 1, 'default', $Command['ep_id'], 1, null, 0, 'default', 'default',  2, 1, false, true, $Equipement['type']);
+										$Tile->AddCommand('Mode', 'ALARM_mode', 'info', 'string', null, null, 'ALARM_MODE', 1, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 3, 1, false, true, $Equipement['type']);
+										log::add('Freebox_OS', 'debug', '│──────────> Fin Ajout commande spécifique pour Homebridge');
+									}
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 								}
 								$label_sup = null;
 								if ($access == "w") {
-									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
+									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', $order, 0, false, false, $Equipement['type']);
 								}
 							}
 							break;
@@ -509,7 +542,7 @@ class Freebox_OS extends eqLogic
 		}
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $link_IA = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_Equipement = null, $_iconname = null, $_home_mode_set = null, $_home_mode = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
@@ -542,13 +575,8 @@ class Freebox_OS extends eqLogic
 			}
 
 			$Command->setIsVisible($IsVisible);
+			$Command->setIsHistorized($IsHistorized);
 
-			if (is_object($link_I) && $Type == 'action') {
-				$Command->setValue($link_I->getId());
-			}
-			if ($link_logicalId != 'default' && $Type == 'action') {
-				$Command->setconfiguration('logicalId', $link_logicalId);
-			}
 			if ($invertBinary != null && $SubType == 'binary') {
 				$Command->setdisplay('invertBinary', 1);
 			}
@@ -558,28 +586,42 @@ class Freebox_OS extends eqLogic
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
 			}
-
-			$Command->setIsHistorized($IsHistorized);
-
-			if ($link_logicalId != 'default' && $Type == 'action') {
-				$Command->setconfiguration('logicalId', $link_logicalId);
+			if ($_iconname != null) {
+				$Command->setdisplay('showIconAndNamedashboard', 1);
 			}
-
+			if ($_home_mode_set != null) { // Compatibilité Homebride
+				$Command->setconfiguration($_home_mode_set, $Command->getId() . "|" . $_home_mode);
+				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
+				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Mode : ' . $_home_mode);
+			}
 			$Command->save();
 		}
 
+		if ($repeatevent == true && $Type == 'info') {
+			$Command->setconfiguration('repeatEventManagement', 'never');
+			log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
+		}
 		if ($valuemin != 'default') {
 			$Command->setconfiguration('minValue', $valuemin);
 		}
 		if ($valuemax != 'default') {
 			$Command->setconfiguration('maxValue', $valuemax);
 		}
-		if ($link_IA  != 'default' && $Type == 'action') {
-			$Command->setValue($link_IA);
+		if ($_Equipement != null) {
+			$Command->setconfiguration('equipement', $_Equipement);
+		}
+
+		if (is_object($link_I) && $Type == 'action') {
+			$Command->setValue($link_I->getId());
+		}
+		if ($link_logicalId != 'default' && $Type == 'action') {
+			$Command->setconfiguration('logicalId', $link_logicalId);
 		}
 		if ($_order != null) {
 			$Command->setOrder($_order);
 		}
+
+		// Forçage pour mettre à jour l'affichage // Option en cas de Update Plugin
 		if ($forceIcone_widget == true) {
 			if ($icon != null) {
 				$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');
@@ -630,12 +672,12 @@ class Freebox_OS extends eqLogic
 			$updateiconeADSL = false;
 		};
 		$ADSL = self::AddEqLogic('ADSL', 'ADSL', 'default', false, null, null);
-		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeADSL);
+		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeADSL, true);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// System
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
@@ -655,18 +697,18 @@ class Freebox_OS extends eqLogic
 			$updateiconeSystem = false;
 		};
 		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
-		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default', 'default', 11, '0', $updateiconeSystem);
-		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default', 'default', 12, '0', $updateiconeSystem);
-		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeSystem);
-		$System->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
-		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeSystem);
-		$System->AddCommand('board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
-		$System->AddCommand('serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
-		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', $templatecore_V4 . 'line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000, 'default', 6, '0', $updateiconeSystem);
-		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 7, '0', $updateiconeSystem);
-		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 8, '0', $updateiconeSystem);
-		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 9, '0', $updateiconeSystem);
-		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 10, '0', $updateiconeSystem);
+		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default',  11, '0', $updateiconeSystem, false);
+		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default',  12, '0', $updateiconeSystem, false);
+		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateiconeSystem, true);
+		$System->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeSystem, true);
+		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeSystem, true);
+		$System->AddCommand('board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeSystem, true);
+		$System->AddCommand('serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeSystem, true);
+		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', $templatecore_V4 . 'line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000,  6, '0', $updateiconeSystem, true);
+		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100,  7, '0', $updateiconeSystem, true);
+		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 8, '0', $updateiconeSystem, true);
+		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 9, '0', $updateiconeSystem, true);
+		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeSystem, false);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Wifi
@@ -687,11 +729,10 @@ class Freebox_OS extends eqLogic
 			$updateiconeWifi = false;
 		};
 		$Wifi = self::AddEqLogic('Wifi', 'Wifi', 'default', false, null, null);
-		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 0, '', '', '', '', 0, 'default', 'default', 'default', 1, '0', $updateiconeWifi);
-		$link_IA = $StatusWifi->getId();
-		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $link_IA, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', $link_IA, 3, '0', $updateiconeWifi);
-		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $link_IA, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', $link_IA, 4, '0', $updateiconeWifi);
-		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', null, null, null, 0, $link_IA, 'wifiStatut', 0, null, 0, 'default', 'default', $link_IA, 2, '0', $updateiconeWifi);
+		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateiconeWifi, true);
+		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $StatusWifi, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', 3, '0', $updateiconeWifi, false);
+		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $StatusWifi, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', 4, '0', $updateiconeWifi, false);
+		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', null, null, null, 0, $StatusWifi, 'wifiStatut', 0, null, 0, 'default', 'default', 2, '0', $updateiconeWifi, false);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Phone
@@ -714,14 +755,14 @@ class Freebox_OS extends eqLogic
 			$updateiconePhone = false;
 		};
 		$Phone = self::AddEqLogic('Téléphone', 'Phone', 'default', false, null, null);
-		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default', 'default', 1, '0', $updateiconePhone);
-		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 'default', 2, '0', $updateiconePhone);
-		$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default', 'default', 3, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default', 'default', 6, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 'default', 7, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default', 'default', 8, '0', $updateiconePhone);
-		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
-		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
+		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default',  1, '0', $updateiconePhone, true);
+		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 2, '0', $updateiconePhone, true);
+		$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  3, '0', $updateiconePhone, true);
+		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default',  6, '0', $updateiconePhone, true);
+		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 7, '0', $updateiconePhone, true);
+		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
+		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
+		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Downloads
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');
@@ -737,20 +778,20 @@ class Freebox_OS extends eqLogic
 			$updateiconeDownloads = false;
 		};
 		$Downloads = self::AddEqLogic('Téléchargements', 'Downloads', 'multimedia', false, null, null);
-		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 8, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 9, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 10, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 11, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 12, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOn, 0, 'default', 'default', 'default', 13, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOff, 0, 'default', 'default', 'default', 14, '0', $updateiconeDownloads);
+		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  7, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  8, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  9, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 11, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  12, '0', $updateiconeDownloads, true);
+		$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOn, 0, 'default', 'default',  13, '0', $updateiconeDownloads, false);
+		$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOff, 0, 'default', 'default',  14, '0', $updateiconeDownloads, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// AirPlay
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : AirPlay');
@@ -766,9 +807,9 @@ class Freebox_OS extends eqLogic
 			$updateiconeAirPlay = false;
 		};
 		$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay', 'multimedia', false, null, null);
-		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', false);
-		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 'default', 2, '0', $updateiconeAirPlay);
-		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 'default', 3, '0', $updateiconeAirPlay);
+		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
+		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 2, '0', $updateiconeAirPlay, false);
+		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 3, '0', $updateiconeAirPlay, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 			$FreeboxAPI = new FreeboxAPI();
@@ -1066,6 +1107,8 @@ class Freebox_OS extends eqLogic
 						break;
 					default:
 						$results = $FreeboxAPI->getTile($Equipement->getLogicalId());
+						log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
+
 						if ($results != false) {
 							foreach ($results as $result) {
 								foreach ($result['data'] as $data) {
@@ -1074,12 +1117,12 @@ class Freebox_OS extends eqLogic
 
 									if (!is_object($cmd)) break;
 
-									//log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
+									log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
 									if ($data['name'] == 'pushed') {
 										$nb_pushed = count($data['history']);
 										$nb_pushed_k = $nb_pushed - 1;
 										$_value_history = $data['history'][$nb_pushed_k]['value'];
-										//	log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
+										log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
 									};
 
 
@@ -1096,6 +1139,59 @@ class Freebox_OS extends eqLogic
 											}
 											break;
 										case 'string':
+											if ($data['name'] == 'state' && $data['ep_id'] == 11) {
+												log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique pour Homebridge');
+												$_Alarm_stat_value = '0';
+												$_Alarm_enable_value = '1';
+
+												switch ($data['value']) {
+													case 'alarm1_arming':
+														$_Alarm_mode_value = 'Alarme principale';
+														log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale');
+														break;
+													case 'alarm1_armed':
+														$_Alarm_mode_value = 'Alarme principale';
+														log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale');
+														break;
+													case 'alarm2_arming':
+														$_Alarm_mode_value = 'Alarme secondaire';
+														log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire');
+														break;
+													case 'alarm2_armed':
+														$_Alarm_mode_value = 'Alarme secondaire';
+														log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire');
+														break;
+													case 'alert':
+														$_Alarm_stat_value = '1';
+														log::add('Freebox_OS', 'debug', '│ Alarme');
+														break;
+													case 'alarm1_alert_timer':
+														$_Alarm_stat_value = '1';
+														log::add('Freebox_OS', 'debug', '│ Alarme');
+														break;
+													case 'alarm2_alert_timer':
+														$_Alarm_stat_value = '1';
+														log::add('Freebox_OS', 'debug', '│ Alarme');
+														break;
+													case 'idle':
+														$_Alarm_enable_value = '0';
+														log::add('Freebox_OS', 'debug', '│ Alarme désactivée');
+														break;
+													default:
+														$_Alarm_mode_value = null;
+														log::add('Freebox_OS', 'debug', '│ Aucun Mode');
+														break;
+												}
+
+												$Equipement->checkAndUpdateCmd('ALARM_state', $_Alarm_stat_value);
+												log::add('Freebox_OS', 'debug', '│ Label : ' . 'Statut' . ' -- Id : ' . 'ALARM_state' . ' -- Value : ' . $_Alarm_stat_value);
+												$Equipement->checkAndUpdateCmd('ALARM_enable', $_Alarm_enable_value);
+												log::add('Freebox_OS', 'debug', '│ Label : ' . 'Actif' . ' -- Id : ' . 'ALARM_enable' . ' -- Value : ' . $_Alarm_enable_value);
+												$Equipement->checkAndUpdateCmd('ALARM_mode', $_Alarm_mode_value);
+												log::add('Freebox_OS', 'debug', '│ Label : ' . 'Mode' . ' -- Id : ' . 'ALARM_mode' . ' -- Value : ' . $_Alarm_mode_value);
+												log::add('Freebox_OS', 'debug', '│──────────> Fin Update commande spécifique pour Homebridge');
+											};
+
 											$_value = $data['value'];
 											break;
 										case 'binary':
@@ -1110,6 +1206,7 @@ class Freebox_OS extends eqLogic
 								}
 							}
 						}
+						log::add('Freebox_OS', 'debug', '└─────────');
 						break;
 				}
 				if ($Equipement->getConfiguration('waite') == '') {
@@ -1145,12 +1242,14 @@ class Freebox_OS extends eqLogic
 }
 class Freebox_OSCmd extends cmd
 {
-	/*public function dontRemoveCmd(){
+	public function dontRemoveCmd()
+	{
 		return true;
-	}*/
+	}
 	public function execute($_options = array())
 	{
-		log::add('Freebox_OS', 'debug', '>───────── Connexion sur la freebox pour mise à jour de : ' . $this->getName());
+		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
+		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $this->getName());
 		$FreeboxAPI = new FreeboxAPI();
 		switch ($this->getEqLogic()->getLogicalId()) {
 			case 'ADSL':
@@ -1258,8 +1357,8 @@ class Freebox_OSCmd extends cmd
 						$parametre['value_type'] = 'bool';
 
 						if ($this->getConfiguration('logicalId') >= 0 && ($this->getLogicalId() == 'PB_On' || $this->getLogicalId() == 'PB_Off')) {
-							log::add('Freebox_OS', 'debug', '│ Parametrage spécifique BP ON/OFF ' . $logicalId);
 							$logicalId = $this->getConfiguration('logicalId');
+							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $this->getLogicalId());
 							if ($this->getLogicalId() == 'PB_On') {
 								$parametre['value'] = true;
 							} else {
@@ -1267,6 +1366,16 @@ class Freebox_OSCmd extends cmd
 							}
 
 							break;
+						} else if ($this->getConfiguration('equipement') == 'alarm_control' && ($this->getLogicalId() == 1 || $this->getLogicalId() == 2 || $this->getLogicalId() == 4)) {
+							/*log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique  Activation / Désactivation Alarme : ' . $this->getLogicalId());
+							if ($this->getLogicalId() == 1 || $this->getLogicalId() == 2) {
+								$Alarm_actif = 1;
+							} else {
+								$Alarm_actif = '0';
+							}
+							$logicalId_alarm = $this->getLogicalId('ALARM_enable');
+							$logicalId_alarm->checkAndUpdateCmd($logicalId_alarm, $Alarm_actif);
+							//$command->checkAndUpdateCmd($logicalId_alarm, $Alarm_actif);*/
 						} else {
 							$logicalId = $this->getLogicalId();
 							$parametre['value'] = true;
@@ -1282,6 +1391,7 @@ class Freebox_OSCmd extends cmd
 						break;
 				}
 				$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
+				//	log::add('Freebox_OS', 'debug', '└─────────');
 				break;
 		}
 	}

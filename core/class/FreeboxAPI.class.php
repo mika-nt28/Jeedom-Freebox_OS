@@ -128,7 +128,8 @@ class FreeboxAPI
 				curl_setopt($ch, CURLOPT_POST, true);
 			} elseif ($method == "DELETE") {
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-			} elseif ($method == "PUT") {
+			}
+			elseif ($method == "PUT") {
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
 			}
 			if ($params)
@@ -257,34 +258,104 @@ class FreeboxAPI
 		}
 		return false;
 	}
-	public function wifi()
+	public function universal_get($update = 'wifi')
 	{
-		$data_json = $this->fetch('/api/v5/wifi/config/');
+		switch ($update) {
+			case 'parental':
+				$config = 'v5/parental/config';
+				$config_log = 'Etat du Contrôle Parental';
+				break;
+			case 'planning':
+				$config = 'v5/wifi/planning';
+				$config_log = 'Etat du Planning du Wifi';
+				break;
+			case 'wifi':
+				$config = 'v5/wifi/config';
+				$config_log = 'Etat du Wifi';
+				break;
+		}
+
+		$data_json = $this->fetch('/api/' . $config . '/');
 		if ($data_json === false)
 			return false;
 		if ($data_json['success']) {
 			$value = 0;
-			if ($data_json['result']['enabled'])
-				$value = 1;
-			log::add('Freebox_OS', 'debug', '>───────── Etat Wifi :' . $value);
+			switch ($update) {
+				case 'parental':
+					if ($data_json['result']['default_filter_mode']) {
+						$value = $data_json['result']['default_filter_mode'];
+					}
+					break;
+				case 'planning':
+					if ($data_json['result']['use_planning']) {
+						$value = 1;
+					}
+					break;
+				case 'wifi':
+					if ($data_json['result']['enabled']) {
+						$value = 1;
+					}
+					break;
+			}
+			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
 			return $value;
 		} else {
 			return false;
 		}
 	}
-	public function wifiPUT($parametre)
+	public function universal_put($parametre, $update = 'wifi')
 	{
-		log::add('Freebox_OS', 'debug', '>───────── Mise à jour du Wifi : ' . $parametre);
-		if ($parametre == 1)
-			$return = $this->fetch('/api/v5/wifi/config/', array("enabled" => true), "PUT");
-		else
-			$return = $this->fetch('/api/v5/wifi/config/', array("enabled" => false), "PUT");
+		switch ($update) {
+			case 'wifi':
+				$config = 'v5/wifi/config';
+				$config_commande = 'enabled';
+				$config_log = 'Mise à jour de : Etat du Wifi';
+				break;
+			case 'planning':
+				$config = 'v5/wifi/planning';
+				$config_log = 'Mise à jour : Planning du Wifi';
+				$config_commande = 'use_planning';
+				break;
+			case 'parental':
+				$config = 'v5/parental/config';
+				$config_log = 'Mise à jour du : Contrôle Parental';
+				$config_commande = 'default_filter_mode';
+				break;
+		}
+		if ($parametre === 1) {
+			$parametre = true;
+		} elseif ($parametre === 0) {
+			$parametre = false;
+		}
+		else {
+			//	$parametre;
+		}
+
+		log::add('Freebox_OS', 'debug', '>───────── Mise à jour : ' . $config_log . ' avec la valeur : ' . $parametre);
+		/*if ($parametre == 1) {
+			$return = $this->fetch('/api/' . $config . '/', array($config_commande => true), "PUT");
+		} else {*/
+		$return = $this->fetch('/api/' . $config . '/', array($config_commande => $parametre), "PUT");
+		//}
 		if ($return === false) {
 			return false;
 		}
-		if ($return['success']) {
-			return $return['result']['enabled'];
+		switch ($update) {
+			case 'wifi':
+				return $return['result']['enabled'];
+			case 'planning':
+				return $return['result']['use_planning'];
+			case 'parental':
+				log::add('Freebox_OS', 'debug', '>───────── TEST : ' . $return['result']['default_filter_modeg']);
+				return $return['result']['default_filter_modeg'];
 		}
+		/*if ($return['success']) {
+			if ($update == 'wifi') {
+				return $return['result']['enabled'];
+			} else {
+				return $return['result']['use_planning'];
+			}
+		}*/
 	}
 	public function reboot()
 	{

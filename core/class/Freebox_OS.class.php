@@ -137,19 +137,28 @@ class Freebox_OS extends eqLogic
 			)
 		);
 
-		// Template pour le wifi info
-		$return['info']['binary']['Wifi'] = array(
+		// Template pour le planning action
+		$return['action']['other']['Planning Wifi'] = array(
 			'template' => 'tmplicon',
 			'display' => array(
-				'#icon#' => '<i class=\'icon_blue icon fas fa-wifi\'></i>',
+				'#icon#' => '<i class=\'icon_blue icon fas fa-calendar\'></i>',
 			),
 			'replace' => array(
-				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
-				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-times\'></i>',
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-calendar-alt\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-calendar-times\'></i>',
 				'#_time_widget_#' => '1'
 			)
 		);
-
+		// Template pour l'état ddu contrôle Parental'
+		$return['info']['string']['Parental'] = array(
+			'template' => 'tmplmultistate',
+			'replace' => array('#_time_widget_#' => '1'),
+			'test' => array(
+				array('operation' => "#value# == 'allowed'", 'state_light' => '<i class=\'icon_green icon fas fa-user-check\'></i>'),
+				array('operation' => "#value# == 'denied'", 'state_light' => '<i class=\'icon_red icon fas fa-user-lock\'></i>'),
+				array('operation' => "#value# == 'webonly'", 'state_light' => '<i class=\'icon_orange icon fas fa-user-shield\'></i>')
+			)
+		);
 		// Template pour l'état de l'alarme'
 		$return['info']['string']['Alarme Freebox'] = array(
 			'template' => 'tmplmultistate',
@@ -247,9 +256,11 @@ class Freebox_OS extends eqLogic
 					$category = 'security';
 				} elseif ($Equipement['type'] == 'light') {
 					$category = 'light';
-				} elseif ($Equipement['action'] == 'store' || $Equipement['action'] == 'store_slider') {
+				}
+				elseif ($Equipement['action'] == 'store' || $Equipement['action'] == 'store_slider') {
 					$category = 'opening';
-				} else {
+				}
+				else {
 					$category = 'default';
 				}
 
@@ -308,32 +319,37 @@ class Freebox_OS extends eqLogic
 								$icon = 'fas fa-stop';
 								$Link_I = $Link_I_store;
 								$order = 3;
-							} elseif ($Command['name'] == 'down') {
+							}
+							elseif ($Command['name'] == 'down') {
 								$generic_type = 'FLAP_DOWN';
 								$icon = 'fas fa-arrow-down';
 								$Link_I = $Link_I_store;
 								$order = 4;
-							} elseif ($Command['name'] == 'alarm1' && $Equipement['type'] = 'alarm_control') {
+							}
+							elseif ($Command['name'] == 'alarm1' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon jeedom-lock-ferme icon_red';
 								$Link_I = $Link_I_ALARM;
 								$_iconname = 1;
 								$order = 6;
 								$_home_mode_set = 'SetModeAbsent';
-							} elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
+							}
+							elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon nature-night2 icon_red';
 								$Link_I = $Link_I_ALARM;
 								$_iconname = 1;
 								$order = 7;
 								$_home_mode_set = 'SetModeNuit';
-							} elseif ($Command['name'] == 'off' && $Equipement['type'] = 'alarm_control') {
+							}
+							elseif ($Command['name'] == 'off' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_RELEASED';
 								$icon = 'icon jeedom-lock-ouvert icon_green';
 								$Link_I = $Link_I_ALARM_ENABLE;
 								$_iconname = 1;
 								$order = 8;
-							} elseif ($Command['name'] == 'skip') {
+							}
+							elseif ($Command['name'] == 'skip') {
 								$IsVisible = 0;
 								$order = 9;
 							}
@@ -369,20 +385,23 @@ class Freebox_OS extends eqLogic
 										$generic_type = 'LIGHT_SET_COLOR';
 										$generic_type_I = 'LIGHT_COLOR';
 										$link_logicalId = $Command['ep_id'];
-									} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+									}
+									elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
 										$Templatecore_A = 'default';
 										$_min = '0';
 										$_max = 255;
 										$generic_type = 'LIGHT_SLIDER';
 										$generic_type_I = 'LIGHT_STATE';
 										$link_logicalId = $Command['ep_id'];
-									} elseif ($Equipement['type'] == "alarm_remote" && $Command['name'] == 'pushed') {
+									}
+									elseif ($Equipement['type'] == "alarm_remote" && $Command['name'] == 'pushed') {
 										$Templatecore = 'Freebox_OS::Télécommande Freebox';
 										$_min = '0';
 										$_max = $Command['ui']['range'][3];
 										$IsVisible_I = 1;
 										$IsHistorized = 1;
-									} elseif ($Command['name'] == "battery_warning") {
+									}
+									elseif ($Command['name'] == "battery_warning") {
 										$generic_type_I = 'BATTERY';
 										$icon = 'fas fa-battery-full';
 										$name = 'Batterie';
@@ -409,7 +428,8 @@ class Freebox_OS extends eqLogic
 										} elseif ($Command['value'] != '' || $Command['value'] != null) {
 											log::add('Freebox_OS', 'debug', '│ Valeur Batterie : ' . $Command['value']);
 											$Tile->batteryStatus($Command['value']);
-										} else {
+										}
+										else {
 											log::add('Freebox_OS', 'debug', '│ Valeur de Batterie  Nulle : ' . $Command['value']);
 											log::add('Freebox_OS', 'debug', '│ PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
 										}
@@ -441,14 +461,17 @@ class Freebox_OS extends eqLogic
 										$generic_type = 'SABOTAGE';
 										$Templatecore = null;
 										$invertBinary = 1;
-									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] != 'Détection') {
+									}
+									elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] != 'Détection') {
 										$generic_type = 'OPENING';
 										$Templatecore = $templatecore_V4 . 'door';
-									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] == 'Détection') {
+									}
+									elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] == 'Détection') {
 										$generic_type = 'PRESENCE';
 										$Templatecore = $templatecore_V4 . 'presence';
 										$invertBinary = 0;
-									} elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
+									}
+									elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
 										$generic_type = 'LIGHT_STATE';
 										$Templatecore = $templatecore_V4 . 'light';
 										$invertBinary = 0;
@@ -457,7 +480,8 @@ class Freebox_OS extends eqLogic
 										$link_logicalId = $Command['ep_id'];
 										$order = 1;
 										$IsVisible_PB = 1;
-									} else {
+									}
+									else {
 										$generic_type = null;
 										$Templatecore = null;
 										$invertBinary = 0;
@@ -469,7 +493,8 @@ class Freebox_OS extends eqLogic
 										$Link_I_store = $infoCmd;
 									} elseif ($Equipement['type'] == 'light') {
 										$Link_I_light = $infoCmd;
-									} else {
+									}
+									else {
 										$Link_I_store = 'default';
 									}
 									if ($Type_command == 'PB') {
@@ -713,29 +738,56 @@ class Freebox_OS extends eqLogic
 		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeSystem, false);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
+		//Contrôle Parental
+		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			//$Templateparent = 'Freebox_OS::Freebox_OS::Parental';
+			$iconeparent_allowed = 'fas fa-user-check';
+			$iconeparent_denied = 'fas fa-user-lock';
+			$iconeparent_webonly = 'fas fa-user-shield';
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$Templateparent = 'Freebox_OS::Parental';
+			$iconeparent_allowed = 'fas fa-user-check icon_green';
+			$iconeparent_denied = 'fas fa-user-lock icon_red';
+			$iconeparent_webonly = 'fas fa-user-shield icon_orange';
+		};
+		$parental = self::AddEqLogic('contrôle Parental', 'Parental', 'default', false, null, null);
+		$StatusParental = $parental->AddCommand('Etat Contrôle parental', 'parentalStatus', "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'Parental', true);
+		$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'Parental', true);
+		$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'Parental', true);
+		$parental->AddCommand('Web Uniquement', 'webonly', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_webonly, 0, 'default', 'default', 4, '0', false, false, 'Parental', true);
+		log::add('Freebox_OS', 'debug', '└─────────');
 		//Wifi
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Wifi');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-			$TemplateWifiStatut = 'Freebox_OS::Freebox_OS_Wifi';
 			$TemplateWifiOnOFF = 'Freebox_OS::Freebox_OS::Wifi';
-			$iconeWfiOn = 'fas fa-wifi';
-			$iconeWfiOff = 'fas fa-times';
+			$iconeWifiOn = 'fas fa-wifi';
+			$iconeWifiOff = 'fas fa-times';
+			$iconeWifiPlanningOn = 'fas fa-calendar-alt';
+			$iconeWifiPlanningOff = 'fas fa-calendar-times';
 			$updateiconeWifi = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-			$TemplateWifiStatut = 'Freebox_OS::Wifi';
 			$TemplateWifiOnOFF = 'Freebox_OS::Wifi';
-			$iconeWfiOn = 'fas fa-wifi icon_green';
-			$iconeWfiOff = 'fas fa-times icon_red';
+			$TemplateWifiPlanningOnOFF = 'Freebox_OS::Planning Wifi';
+			$iconeWifiOn = 'fas fa-wifi icon_green';
+			$iconeWifiOff = 'fas fa-times icon_red';
+			$iconeWifiPlanningOn = 'fas fa-calendar-alt icon_green';
+			$iconeWifiPlanningOff = 'fas fa-calendar-times icon_red';
 			$updateiconeWifi = false;
 		};
 		$Wifi = self::AddEqLogic('Wifi', 'Wifi', 'default', false, null, null);
-		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateiconeWifi, true);
-		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', 3, '0', $updateiconeWifi, false);
-		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', 4, '0', $updateiconeWifi, false);
-		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', null, null, null, 0, $StatusWifi, 'wifiStatut', 0, null, 0, 'default', 'default', 2, '0', $updateiconeWifi, false);
-
+		$StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateiconeWifi, true);
+		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconeWifiOn, 0, 'default', 'default', 4, '0', $updateiconeWifi, false);
+		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconeWifiOff, 0, 'default', 'default', 5, '0', $updateiconeWifi, false);
+		//$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', null, null, null, 0, $StatusWifi, 'wifiStatut', 0, null, 0, 'default', 'default', 3, '0', $updateiconeWifi, false);
+		// Planification Wifi
+		$PlanningWifi = $Wifi->AddCommand('Etat Planning', 'wifiPlanning', "info", 'binary', null, null, null, 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateiconeWifi, true);
+		$Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOn, 0, 'default', 'default', 6, '0', $updateiconeWifi, false);
+		$Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOff, 0, 'default', 'default', 7, '0', $updateiconeWifi, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Phone
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléphone');
@@ -816,7 +868,9 @@ class Freebox_OS extends eqLogic
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 			$FreeboxAPI = new FreeboxAPI();
 			$FreeboxAPI->disques();
-			$FreeboxAPI->wifi();
+			$FreeboxAPI->universal_get();
+			$FreeboxAPI->universal_get('planning');
+			$FreeboxAPI->universal_get('parental');
 			$FreeboxAPI->system();
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
@@ -1007,9 +1061,25 @@ class Freebox_OS extends eqLogic
 					case 'Wifi':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
-								$result = $FreeboxAPI->wifi();
 								switch ($Command->getLogicalId()) {
 									case "wifiStatut":
+										$result = $FreeboxAPI->universal_get();
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+										break;
+									case "wifiPlanning":
+										$result = $FreeboxAPI->universal_get('planning');
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+										break;
+								}
+							}
+						}
+						break;
+					case 'Parental':
+						foreach ($Equipement->getCmd('info') as $Command) {
+							if (is_object($Command)) {
+								switch ($Command->getLogicalId()) {
+									case "parentalStatus":
+										$result = $FreeboxAPI->universal_get('parental');
 										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 										break;
 								}
@@ -1281,20 +1351,46 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			case 'Wifi':
-				$result = $FreeboxAPI->wifi();
 				switch ($this->getLogicalId()) {
 					case "wifiOnOff":
+						$result = $FreeboxAPI->universal_get();
 						if ($result == true) {
-							$FreeboxAPI->wifiPUT(0);
+							$FreeboxAPI->universal_put(0);
 						} else {
-							$FreeboxAPI->wifiPUT(1);
+							$FreeboxAPI->universal_put(1);
 						}
 						break;
 					case 'wifiOn':
-						$FreeboxAPI->wifiPUT(1);
+						$result = $FreeboxAPI->universal_get();
+						$FreeboxAPI->universal_put(1);
 						break;
 					case 'wifiOff':
-						$FreeboxAPI->wifiPUT(0);
+						$result = $FreeboxAPI->universal_get();
+						$FreeboxAPI->universal_put(0);
+						break;
+					case 'wifiPlanningOn':
+						$result = $FreeboxAPI->universal_get('planning');
+						$FreeboxAPI->universal_put(1, 'planning');
+						break;
+					case 'wifiPlanningOff':
+						$result = $FreeboxAPI->universal_get('planning');
+						$FreeboxAPI->universal_put(0, 'planning');
+						break;
+				}
+				break;
+			case 'Parental':
+				$result = $FreeboxAPI->universal_get('parental');
+				switch ($this->getLogicalId()) {
+					case 'allowed ':
+						$FreeboxAPI->universal_put('allowed', 'parental');
+						break;
+					case 'webonly':
+						//$result = $FreeboxAPI->universal_get('webonly','parental');
+						log::add('Freebox_OS', 'debug', '>───────── Mise à jour : webonly');
+						$FreeboxAPI->universal_put('webonly', 'parental');
+						break;
+					case 'denied':
+						$FreeboxAPI->universal_put('denied', 'parental');
 						break;
 				}
 				break;
@@ -1368,16 +1464,6 @@ class Freebox_OSCmd extends cmd
 							}
 
 							break;
-							/*} else if ($this->getConfiguration('equipement') == 'alarm_control' && ($this->getLogicalId() == 1 || $this->getLogicalId() == 2 || $this->getLogicalId() == 4)) {
-							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique  Activation / Désactivation Alarme : ' . $this->getLogicalId());
-							if ($this->getLogicalId() == 1 || $this->getLogicalId() == 2) {
-								$Alarm_actif = 1;
-							} else {
-								$Alarm_actif = '0';
-							}
-							$logicalId_alarm = $this->getLogicalId('ALARM_enable');
-							$logicalId_alarm->checkAndUpdateCmd($logicalId_alarm, $Alarm_actif);
-							//$command->checkAndUpdateCmd($logicalId_alarm, $Alarm_actif);*/
 						} else {
 							$logicalId = $this->getLogicalId();
 							$parametre['value'] = true;

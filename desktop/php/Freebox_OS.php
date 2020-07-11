@@ -51,6 +51,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Disque':
                     case 'Phone':
                     case 'Wifi':
+                    case 'Parental':
                     case 'Reseau':
                         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
                         echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
@@ -76,6 +77,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Disque':
                     case 'Phone':
                     case 'Wifi':
+                    case 'Parental':
                     case 'Reseau':
                         break;
                     default:

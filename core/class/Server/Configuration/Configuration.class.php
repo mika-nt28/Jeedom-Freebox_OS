@@ -131,11 +131,7 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', $e->getCode());
 		}
 	}
-	/*public function WakeOnLAN($Mac) // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
-	{
-		$return = self::fetch('/api/v3/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
-		return $return['success'];
-	}*/
+
 	public function Downloads($Etat)
 	{
 		$List_DL = self::fetch('/api/v3/downloads/');
@@ -151,14 +147,7 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	/*public function DownloadStats() // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
-	{
-		$DownloadStats = self::fetch('/api/v3/downloads/stats/');
-		if ($DownloadStats['success'])
-			return $DownloadStats['result'];
-		else
-			return false;
-	}*/
+
 	public function PortForwarding($Port)
 	{
 		$PortForwarding = self::fetch('/api/v3/fw/redir/');
@@ -176,23 +165,7 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	/*	public function disques($logicalId = '')  // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
-	{
-		$reponse = self::fetch('/api/v3/storage/disk/');
-		if ($reponse['success']) {
-			$value = 0;
-			foreach ($reponse['result'] as $Disques) {
-				$total_bytes = $Disques['partitions'][0]['total_bytes'];
-				$used_bytes = $Disques['partitions'][0]['used_bytes'];
-				$value = round($used_bytes / $total_bytes * 100, 2);
-				log::add('Freebox_OS', 'debug', 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
-				$Disque = self::AddEqLogic('Disque Dur', 'Disque');
-				$command = self::AddCommand($Disque, 'Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, "0", 100, 'default', null, 0, false);
-				$command->setCollectDate(date('Y-m-d H:i:s'));
-				$command->setConfiguration('doNotRepeatEvent', 1);
-				$command->event($value);
-			}
-		}
+
 	}*/
 
 	public function system()
@@ -204,72 +177,7 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	/*public function UpdateSystem() // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
-	{
-		try {
-			$System = self::AddEqLogic('Système', 'System');
-			$Command = self::AddCommand($System, 'Update', 'update', "action", 'other', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
-			log::add('Freebox_OS', 'debug', 'Vérification d\'une mise a jours du serveur');
-			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
-			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
-			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
-				self::reboot();
-		} catch (Exception $e) {
-			log::add('Freebox_OS', 'error', $e->getCode());
-		}
-	}*/
-	/*public function adslStats() // Voir si on peut supprimer cette fonction de ce fichier => FreeboxAPI
-	{
-		$adslRateJson = self::fetch('/api/v3/connection/');
-		if ($adslRateJson['success']) {
-			$vdslRateJson = self::fetch('/api/v3/connection/xdsl/');
-			if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
-				$adslRateJson['result']['media'] = $vdslRateJson['result']['status']['modulation'];
 
-			$retourFbx = array(
-				'rate_down' 	=> round($adslRateJson['result']['rate_down'] / 1024, 2),
-				'rate_up' 		=> round($adslRateJson['result']['rate_up'] / 1024, 2),
-				'bandwidth_up' 	=> round($adslRateJson['result']['bandwidth_up'] / 1000000, 2),
-				'bandwidth_down' => round($adslRateJson['result']['bandwidth_down'] / 1000000, 2),
-				'media'			=> $adslRateJson['result']['media'],
-				'state' 		=> $adslRateJson['result']['state']
-			);
-			return $retourFbx;
-		} else
-			return false;
-	}*/
-	/*public function freeboxPlayerPing()
-	{
-		self::open_session();
-		$listEquipement = self::fetch('/api/v3/lan/browser/pub/');
-		self::close_session();
-		if ($listEquipement['success']) {
-			$Reseau = Freebox_OS::AddEqLogic('Réseau', 'Reseau');
-			foreach ($listEquipement['result'] as $Equipement) {
-				if ($Equipement['primary_name'] != '') {
-					$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
-					$Command->setConfiguration('host_type', $Equipement['host_type']);
-					if (isset($Equipement['l3connectivities'])) {
-						foreach ($Equipement['l3connectivities'] as $Ip) {
-							if ($Ip['active']) {
-								if ($Ip['af'] == 'ipv4')
-									$Command->setConfiguration('IPV4', $Ip['addr']);
-								else
-									$Command->setConfiguration('IPV6', $Ip['addr']);
-							}
-						}
-										}
-					if ($Command->execCmd() != $Equipement['active']) {
-						$Command->setCollectDate(date('Y-m-d H:i:s'));
-						$Command->setConfiguration('doNotRepeatEvent', 1);
-						$Command->event($Equipement['active']);
-					}
-					$Command->save();
-				}
-			}
-		}
-		return true;
-	}*/
 	public function ReseauPing($id = '')
 	{
 		$Ping = self::fetch('/api/v3/lan/browser/pub/' . $id);
@@ -326,53 +234,5 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	/*public function send_cmd_fbxtv($key)
-	{
-		try {
-			$serveur = trim($this->getConfiguration('FREEBOX_TV_IP'));
-			$tv_code = trim($this->getConfiguration('FREEBOX_TV_CODE'));
-			$http = new com_http($serveur . '/pub/remote_control?code=' . $tv_code . '&key=' . $key);
-			$result = $http->exec(2, 2);
-			return $result;
-		} catch (Exception $e) {
-			log::add('Freebox_OS', 'error', $e->getCode());
-		}
-	}*/
-	/*public function airmediaConfig()
-	{
-		$parametre["enabled"] = $this->getIsEnable();
-		$parametre["password"] = $this->getConfiguration('password');
-		$return = self::fetch('/api/v3/airmedia/config/', $parametre, "PUT");
-
-		if ($return['success'])
-			return $return['result'];
-		else
-			return false;
-	}*/
-	/*public static function airmediaReceivers()
-	{
-		$return = self::fetch('/api/v3/airmedia/receivers/');
-
-		if ($return['success'])
-			return $return['result'];
-		else
-			return false;
-	}*/
-	/*public function AirMediaAction($receiver, $action, $media_type, $media = null)
-	{
-		if ($receiver != "" && $media_type != null) {
-			log::add('Freebox_OS', 'debug', 'AirMedia Start Video: ' . $media);
-			$parametre["action"] = $action;
-			$parametre["media_type"] = $media_type;
-			if ($media != null)
-				$parametre["media"] = $media;
-			$parametre["password"] = $this->getConfiguration('password');
-			$return = self::fetch('/api/v3/airmedia/receivers/' . ($receiver) . '/', $parametre, 'POST');
-			if ($return['success'])
-				return true;
-			else
-				return false;
-		} else
-			return false;
-	}*/
+	
 }

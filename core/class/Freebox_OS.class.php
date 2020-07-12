@@ -153,7 +153,7 @@ class Freebox_OS extends eqLogic
 		$return['action']['other']['4G'] = array(
 			'template' => 'tmplicon',
 			'display' => array(
-				'#icon#' => '<i class=\'icon_blue icon fas fa-calendar\'></i>',
+				'#icon#' => '<i class=\'icon_blue icon fas fa-broadcast-tower\'></i>',
 			),
 			'replace' => array(
 				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-broadcast-tower\'></i>',

@@ -141,11 +141,23 @@ class Freebox_OS extends eqLogic
 		$return['action']['other']['Planning Wifi'] = array(
 			'template' => 'tmplicon',
 			'display' => array(
-				'#icon#' => '<i class=\'icon_blue icon fas fa-calendar\'></i>',
+				'#icon#' => '<i class=\'icon_blue icon fas fa-calendar-alt\'></i>',
 			),
 			'replace' => array(
 				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-calendar-alt\'></i>',
 				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-calendar-times\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
+		// Template pour le 4G action
+		$return['action']['other']['4G'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fas fa-calendar\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-broadcast-tower\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-broadcast-tower\'></i>',
 				'#_time_widget_#' => '1'
 			)
 		);
@@ -710,18 +722,24 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$Template4G = null;
 			$iconeUpdate = 'fas fa-download';
 			$iconeReboot = 'fas fa-sync';
 			$iconetemp = 'fas fa-thermometer-half';
 			$iconefan = 'fas fa-fan';
+			$icone4Gon = 'fas fa-broadcast-tower';
+			$icone4Goff = 'fas fa-broadcast-tower';
 			$updateiconeSystem = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$Template4G = 'Freebox_OS::4G';
 			$iconeUpdate = 'fas fa-download icon_blue';
 			$iconeReboot = 'fas fa-sync icon_red';
 			$iconetemp = 'fas fa-thermometer-half icon_blue';
 			$iconefan = 'fas fa-fan icon_blue';
 			$updateiconeSystem = false;
+			$icone4Gon = 'fas fa-broadcast-tower icon_green';
+			$icone4Goff = 'fas fa-broadcast-tower icon_red';
 		};
 		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
 		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default',  11, '0', $updateiconeSystem, false);
@@ -736,13 +754,17 @@ class Freebox_OS extends eqLogic
 		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 8, '0', $updateiconeSystem, true);
 		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 9, '0', $updateiconeSystem, true);
 		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeSystem, false);
+		// Début ajout 4G
+		$_4G = $System->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 13, '0', false, 'never', 'System', true);
+		$System->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icone4Gon, 1, 'default', 'default', 14, '0', false, false, 'System', true);
+		$System->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icone4Goff, 0, 'default', 'default', 15, '0', false, false, 'System', true);
 
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Contrôle Parental
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-			//$Templateparent = 'Freebox_OS::Freebox_OS::Parental';
+			$Templateparent = null;
 			$iconeparent_allowed = 'fas fa-user-check';
 			$iconeparent_denied = 'fas fa-user-lock';
 			$iconeparent_webonly = 'fas fa-user-shield';
@@ -872,6 +894,7 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->universal_get('planning');
 			$FreeboxAPI->universal_get('parental');
 			$FreeboxAPI->system();
+			$FreeboxAPI->universal_get('4G');
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
 			$FreeboxAPI->DownloadStats();
@@ -1018,7 +1041,11 @@ class Freebox_OS extends eqLogic
 					case 'System':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
-								$result = $FreeboxAPI->system();
+								if ($Command->getLogicalId() == "4GStatut") {
+									$result = $FreeboxAPI->universal_get('4G');
+								} else {
+									$result = $FreeboxAPI->system();
+								}
 								switch ($Command->getLogicalId()) {
 									case "mac":
 										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
@@ -1053,6 +1080,9 @@ class Freebox_OS extends eqLogic
 										break;
 									case "firmware_version":
 										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
+										break;
+									case "4GStatut":
+										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 										break;
 								}
 							}
@@ -1340,13 +1370,21 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			case 'System':
-				$result = $FreeboxAPI->system();
 				switch ($this->getLogicalId()) {
 					case "reboot":
 						$FreeboxAPI->reboot();
 						break;
 					case "update":
 						$FreeboxAPI->UpdateSystem();
+						break;
+					case '4GOn':
+						$result = $FreeboxAPI->universal_get('4G');
+						$FreeboxAPI->universal_put(1, '4G');
+						break;
+					case '4GOff':
+						$result = $FreeboxAPI->universal_get('4G');
+						log::add('Freebox_OS', 'debug', '┌───────── 4F ');
+						$FreeboxAPI->universal_put(0, '4G');
 						break;
 				}
 				break;

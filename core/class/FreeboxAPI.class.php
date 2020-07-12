@@ -273,6 +273,10 @@ class FreeboxAPI
 				$config = 'v5/wifi/config';
 				$config_log = 'Etat du Wifi';
 				break;
+			case '4G':
+				$config = 'v5/connection/lte/config';
+				$config_log = 'Etat 4G';
+				break;
 		}
 
 		$data_json = $this->fetch('/api/' . $config . '/');
@@ -292,6 +296,11 @@ class FreeboxAPI
 					}
 					break;
 				case 'wifi':
+					if ($data_json['result']['enabled']) {
+						$value = 1;
+					}
+					break;
+				case '4G':
 					if ($data_json['result']['enabled']) {
 						$value = 1;
 					}
@@ -321,6 +330,11 @@ class FreeboxAPI
 				$config_log = 'Mise à jour du : Contrôle Parental';
 				$config_commande = 'default_filter_mode';
 				break;
+			case '4G':
+				$config = 'v5/connection/lte/config';
+				$config_log = 'Mise à jour du : Activation 4G';
+				$config_commande = 'enabled';
+				break;
 		}
 		if ($parametre === 1) {
 			$parametre = true;
@@ -332,11 +346,9 @@ class FreeboxAPI
 		}
 
 		log::add('Freebox_OS', 'debug', '>───────── Mise à jour : ' . $config_log . ' avec la valeur : ' . $parametre);
-		/*if ($parametre == 1) {
-			$return = $this->fetch('/api/' . $config . '/', array($config_commande => true), "PUT");
-		} else {*/
+
 		$return = $this->fetch('/api/' . $config . '/', array($config_commande => $parametre), "PUT");
-		//}
+
 		if ($return === false) {
 			return false;
 		}
@@ -346,16 +358,10 @@ class FreeboxAPI
 			case 'planning':
 				return $return['result']['use_planning'];
 			case 'parental':
-				log::add('Freebox_OS', 'debug', '>───────── TEST : ' . $return['result']['default_filter_modeg']);
 				return $return['result']['default_filter_modeg'];
-		}
-		/*if ($return['success']) {
-			if ($update == 'wifi') {
+			case '4G':
 				return $return['result']['enabled'];
-			} else {
-				return $return['result']['use_planning'];
-			}
-		}*/
+		}
 	}
 	public function reboot()
 	{

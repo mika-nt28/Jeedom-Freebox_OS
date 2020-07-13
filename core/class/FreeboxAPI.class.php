@@ -239,7 +239,7 @@ class FreeboxAPI
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
 				log::add('Freebox_OS', 'debug', '│ Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
-				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque');
+				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
 				$command = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, '0', 100,  null, '0', false);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
@@ -410,7 +410,7 @@ class FreeboxAPI
 	public function UpdateSystem()
 	{
 		try {
-			$System = Freebox_OS::AddEqLogic('Système', 'System');
+			$System = Freebox_OS::AddEqLogic('Système', 'System', 'default', false, null, null);
 			$Command = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  null, '0', false, true);
 			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise a jours du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");

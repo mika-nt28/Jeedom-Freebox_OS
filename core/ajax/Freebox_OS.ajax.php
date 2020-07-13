@@ -69,7 +69,7 @@ try {
 			Freebox_OS::addReseau();
 			ajax::success(true);
 			break;
-		case 'SearchDisque':
+		case 'Searchdisques':
 			ajax::success($FreeboxAPI->disques());
 			break;
 		case 'AddPortForwarding':

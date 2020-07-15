@@ -176,7 +176,7 @@ function addCmdToTable(_cmd) {
 			//	var inverse = $('<span>');
 			break;
 		case 'System':
-			$('.Equipement').hide();
+			$('.Equipement').show();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;

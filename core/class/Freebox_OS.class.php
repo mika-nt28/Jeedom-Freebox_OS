@@ -251,6 +251,81 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
+	public static function addSystem($update_value = false)
+	{
+		$FreeboxAPI = new FreeboxAPI();
+		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
+			$Template4G = null;
+			$templatecore_V4 = null;
+			$icontemp = 'fas fa-thermometer-half';
+			$iconfan = 'fas fa-fan';
+			$icone4Gon = 'fas fa-broadcast-tower';
+			$icone4Goff = 'fas fa-broadcast-tower';
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$Template4G = 'Freebox_OS::4G';
+			$templatecore_V4  = 'core::';
+			$icontemp = 'fas fa-thermometer-half icon_blue';
+			$iconfan = 'fas fa-fan icon_blue';
+			$icone4Gon = 'fas fa-broadcast-tower icon_green';
+			$icone4Goff = 'fas fa-broadcast-tower icon_red';
+		};
+		$boucle_update = 1; // 1 = sensors - 2 = fans - 3 = extension
+		$_order = 6;
+		while ($boucle_update <= 3) {
+			log::add('Freebox_OS', 'debug', '│──────────> Boucle Update : ' . $boucle_update);
+			foreach ($FreeboxAPI->getSystem($boucle_update) as $Equipement) {
+				$icon = null;
+				$_max = 'default';
+				$_min = 'default';
+				$_unit = null;
+				$_name = $Equipement['name'];
+				$_id = $Equipement['id'];
+				$_value = $Equipement['value'];
+				$_type = 'numeric';
+				$IsVisible = 1;
+				$_iconname = true;
+				if (strpos($_id, 'temp') !== FALSE) {
+					$_unit = '°C';
+					$_max = 100;
+					$_min = '0';
+					$icon = $icontemp;
+					$link_logicalId = 'sensors';
+				} else if (strpos($_id, 'fan') !== FALSE) {
+					$_unit = 'tr/min';
+					$_max = 5000;
+					$_min = '0';
+					$icon = $iconfan;
+					$link_logicalId = 'fans';
+				} else if ($boucle_update = 3) {
+					$_iconname = null;
+					$_type = 'binary';
+					$_id = $Equipement['slot'];
+					$_name = 'Slot ' . $Equipement['slot'] . ' - ' . $Equipement['type'];
+					$IsVisible = '0';
+					$_value = $Equipement['present'];
+					$link_logicalId = 'expansions';
+				}
+				log::add('Freebox_OS', 'debug', '│ Name : ' . $_name . ' -- id : ' . $_id . ' -- value : ' . $_value . ' -- unité : ' . $_unit . ' -- type : ' . $_type);
+				if ($_name != '') {
+					if ($update_value == false) {
+						$System->AddCommand($_name, $_id, 'info', $_type, $templatecore_V4 . 'line', $_unit, null, $IsVisible, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, $_order, 0, false, true, null, $_iconname);
+					}
+					$System->checkAndUpdateCmd($_id, $_value);
+					if ($Equipement['type'] == 'dsl_lte') {
+						// Début ajout 4G
+						$_4G = $System->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 32, '0', false, 'never', 'System', true);
+						$System->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icone4Gon, 1, 'default', 'default', 33, '0', false, false, 'System', true);
+						$System->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icone4Goff, 0, 'default', 'default', 34, '0', false, false, 'System', true);
+					}
+					$_order++;
+				}
+			}
+			$boucle_update++;
+		}
+	}
 	public static function addTiles()
 	{
 		$FreeboxAPI = new FreeboxAPI();
@@ -268,11 +343,9 @@ class Freebox_OS extends eqLogic
 					$category = 'security';
 				} elseif ($Equipement['type'] == 'light') {
 					$category = 'light';
-				}
-				elseif ($Equipement['action'] == 'store' || $Equipement['action'] == 'store_slider') {
+				} elseif ($Equipement['action'] == 'store' || $Equipement['action'] == 'store_slider') {
 					$category = 'opening';
-				}
-				else {
+				} else {
 					$category = 'default';
 				}
 
@@ -331,37 +404,32 @@ class Freebox_OS extends eqLogic
 								$icon = 'fas fa-stop';
 								$Link_I = $Link_I_store;
 								$order = 3;
-							}
-							elseif ($Command['name'] == 'down') {
+							} elseif ($Command['name'] == 'down') {
 								$generic_type = 'FLAP_DOWN';
 								$icon = 'fas fa-arrow-down';
 								$Link_I = $Link_I_store;
 								$order = 4;
-							}
-							elseif ($Command['name'] == 'alarm1' && $Equipement['type'] = 'alarm_control') {
+							} elseif ($Command['name'] == 'alarm1' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon jeedom-lock-ferme icon_red';
 								$Link_I = $Link_I_ALARM;
 								$_iconname = 1;
 								$order = 6;
 								$_home_mode_set = 'SetModeAbsent';
-							}
-							elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
+							} elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon nature-night2 icon_red';
 								$Link_I = $Link_I_ALARM;
 								$_iconname = 1;
 								$order = 7;
 								$_home_mode_set = 'SetModeNuit';
-							}
-							elseif ($Command['name'] == 'off' && $Equipement['type'] = 'alarm_control') {
+							} elseif ($Command['name'] == 'off' && $Equipement['type'] = 'alarm_control') {
 								$generic_type = 'ALARM_RELEASED';
 								$icon = 'icon jeedom-lock-ouvert icon_green';
 								$Link_I = $Link_I_ALARM_ENABLE;
 								$_iconname = 1;
 								$order = 8;
-							}
-							elseif ($Command['name'] == 'skip') {
+							} elseif ($Command['name'] == 'skip') {
 								$IsVisible = 0;
 								$order = 9;
 							}
@@ -397,23 +465,20 @@ class Freebox_OS extends eqLogic
 										$generic_type = 'LIGHT_SET_COLOR';
 										$generic_type_I = 'LIGHT_COLOR';
 										$link_logicalId = $Command['ep_id'];
-									}
-									elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+									} elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
 										$Templatecore_A = 'default';
 										$_min = '0';
 										$_max = 255;
 										$generic_type = 'LIGHT_SLIDER';
 										$generic_type_I = 'LIGHT_STATE';
 										$link_logicalId = $Command['ep_id'];
-									}
-									elseif ($Equipement['type'] == "alarm_remote" && $Command['name'] == 'pushed') {
+									} elseif ($Equipement['type'] == "alarm_remote" && $Command['name'] == 'pushed') {
 										$Templatecore = 'Freebox_OS::Télécommande Freebox';
 										$_min = '0';
 										$_max = $Command['ui']['range'][3];
 										$IsVisible_I = 1;
 										$IsHistorized = 1;
-									}
-									elseif ($Command['name'] == "battery_warning") {
+									} elseif ($Command['name'] == "battery_warning") {
 										$generic_type_I = 'BATTERY';
 										$icon = 'fas fa-battery-full';
 										$name = 'Batterie';
@@ -440,8 +505,7 @@ class Freebox_OS extends eqLogic
 										} elseif ($Command['value'] != '' || $Command['value'] != null) {
 											log::add('Freebox_OS', 'debug', '│ Valeur Batterie : ' . $Command['value']);
 											$Tile->batteryStatus($Command['value']);
-										}
-										else {
+										} else {
 											log::add('Freebox_OS', 'debug', '│ Valeur de Batterie  Nulle : ' . $Command['value']);
 											log::add('Freebox_OS', 'debug', '│ PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
 										}
@@ -473,17 +537,14 @@ class Freebox_OS extends eqLogic
 										$generic_type = 'SABOTAGE';
 										$Templatecore = null;
 										$invertBinary = 1;
-									}
-									elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] != 'Détection') {
+									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] != 'Détection') {
 										$generic_type = 'OPENING';
 										$Templatecore = $templatecore_V4 . 'door';
-									}
-									elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] == 'Détection') {
+									} elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] == 'Détection') {
 										$generic_type = 'PRESENCE';
 										$Templatecore = $templatecore_V4 . 'presence';
 										$invertBinary = 0;
-									}
-									elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
+									} elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $Equipement['action'] == 'toggle')) {
 										$generic_type = 'LIGHT_STATE';
 										$Templatecore = $templatecore_V4 . 'light';
 										$invertBinary = 0;
@@ -492,8 +553,7 @@ class Freebox_OS extends eqLogic
 										$link_logicalId = $Command['ep_id'];
 										$order = 1;
 										$IsVisible_PB = 1;
-									}
-									else {
+									} else {
 										$generic_type = null;
 										$Templatecore = null;
 										$invertBinary = 0;
@@ -505,8 +565,7 @@ class Freebox_OS extends eqLogic
 										$Link_I_store = $infoCmd;
 									} elseif ($Equipement['type'] == 'light') {
 										$Link_I_light = $infoCmd;
-									}
-									else {
+									} else {
 										$Link_I_store = 'default';
 									}
 									if ($Type_command == 'PB') {
@@ -653,7 +712,7 @@ class Freebox_OS extends eqLogic
 		if (is_object($link_I) && $Type == 'action') {
 			$Command->setValue($link_I->getId());
 		}
-		if ($link_logicalId != 'default' && $Type == 'action') {
+		if ($link_logicalId != 'default') {
 			$Command->setconfiguration('logicalId', $link_logicalId);
 		}
 		if ($_order != null) {
@@ -722,46 +781,44 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-			$Template4G = null;
+			//$Template4G = null;
 			$iconeUpdate = 'fas fa-download';
 			$iconeReboot = 'fas fa-sync';
-			$iconetemp = 'fas fa-thermometer-half';
-			$iconefan = 'fas fa-fan';
-			$icone4Gon = 'fas fa-broadcast-tower';
-			$icone4Goff = 'fas fa-broadcast-tower';
+			//$iconetemp = 'fas fa-thermometer-half';
+			//$iconefan = 'fas fa-fan';
+			//$icone4Gon = 'fas fa-broadcast-tower';
+			//$icone4Goff = 'fas fa-broadcast-tower';
 			$updateiconeSystem = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-			$Template4G = 'Freebox_OS::4G';
+			//$Template4G = 'Freebox_OS::4G';
 			$iconeUpdate = 'fas fa-download icon_blue';
 			$iconeReboot = 'fas fa-sync icon_red';
-			$iconetemp = 'fas fa-thermometer-half icon_blue';
-			$iconefan = 'fas fa-fan icon_blue';
+			//$iconetemp = 'fas fa-thermometer-half icon_blue';
+			//$iconefan = 'fas fa-fan icon_blue';
 			$updateiconeSystem = false;
-			$icone4Gon = 'fas fa-broadcast-tower icon_green';
-			$icone4Goff = 'fas fa-broadcast-tower icon_red';
+			//$icone4Gon = 'fas fa-broadcast-tower icon_green';
+			//$icone4Goff = 'fas fa-broadcast-tower icon_red';
 		};
 		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
-		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default',  11, '0', $updateiconeSystem, false);
-		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default',  12, '0', $updateiconeSystem, false);
+		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default',  30, '0', $updateiconeSystem, false);
+		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default',  31, '0', $updateiconeSystem, false);
 		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateiconeSystem, true);
 		$System->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeSystem, true);
 		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeSystem, true);
 		$System->AddCommand('board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeSystem, true);
-		$System->AddCommand('serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeSystem, true);
+		/*$System->AddCommand('serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeSystem, true);
 		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', $templatecore_V4 . 'line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000,  6, '0', $updateiconeSystem, true);
 		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100,  7, '0', $updateiconeSystem, true);
 		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 8, '0', $updateiconeSystem, true);
 		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 9, '0', $updateiconeSystem, true);
+		*/
 		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeSystem, false);
-		// Début ajout 4G
-		$_4G = $System->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 13, '0', false, 'never', 'System', true);
-		$System->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icone4Gon, 1, 'default', 'default', 14, '0', false, false, 'System', true);
-		$System->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icone4Goff, 0, 'default', 'default', 15, '0', false, false, 'System', true);
+
 
 		log::add('Freebox_OS', 'debug', '└─────────');
-		//Contrôle Parental
-		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
+		//Contrôle Parental // SUPPRESSION CAR FREE A TOUT CHANGER AVEC LA VERSION 4.2
+		/*log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$Templateparent = null;
@@ -780,7 +837,7 @@ class Freebox_OS extends eqLogic
 		$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'Parental', true);
 		$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'Parental', true);
 		$parental->AddCommand('Web Uniquement', 'webonly', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_webonly, 0, 'default', 'default', 4, '0', false, false, 'Parental', true);
-		log::add('Freebox_OS', 'debug', '└─────────');
+		log::add('Freebox_OS', 'debug', '└─────────');*/
 		//Wifi
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Wifi');
 		if (version_compare(jeedom::version(), "4", "<")) {
@@ -892,8 +949,8 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->disques();
 			$FreeboxAPI->universal_get();
 			$FreeboxAPI->universal_get('planning');
-			$FreeboxAPI->universal_get('parental');
-			$FreeboxAPI->system();
+			//$FreeboxAPI->universal_get('parental');
+			$FreeboxAPI->systemV8();
 			$FreeboxAPI->universal_get('4G');
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
@@ -1040,50 +1097,58 @@ class Freebox_OS extends eqLogic
 						break;
 					case 'System':
 						foreach ($Equipement->getCmd('info') as $Command) {
-							if (is_object($Command)) {
-								if ($Command->getLogicalId() == "4GStatut") {
-									$result = $FreeboxAPI->universal_get('4G');
-								} else {
-									$result = $FreeboxAPI->system();
-								}
-								switch ($Command->getLogicalId()) {
-									case "mac":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
-										break;
-									case "fan_rpm":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['fan_rpm']);
-										break;
-									case "temp_sw":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_sw']);
-										break;
-									case "uptime":
-										$result = $result['uptime'];
-										$result = str_replace(' heure ', 'h ', $result);
-										$result = str_replace(' heures ', 'h ', $result);
-										$result = str_replace(' minute ', 'min ', $result);
-										$result = str_replace(' minutes ', 'min ', $result);
-										$result = str_replace(' secondes', 's', $result);
-										$result = str_replace(' seconde', 's', $result);
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-										break;
-									case "board_name":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
-										break;
-									case "temp_cpub":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpub']);
-										break;
-									case "temp_cpum":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpum']);
-										break;
-									case "serial":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);
-										break;
-									case "firmware_version":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
-										break;
-									case "4GStatut":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-										break;
+							$logicalId = $Command->getConfiguration('logicalId');
+							log::add('Freebox_OS', 'debug', '│──────────> LogicalId : ' . $logicalId);
+							if ($logicalId == 'sensors') {
+								$result = $FreeboxAPI->getSystem(1, $Command->getLogicalId());
+								log::add('Freebox_OS', 'debug', '│──────────> PAS DE UPDATE: ' . $logicalId . ' -- ' . $result['value']);
+								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['value']);
+							} else {
+								if (is_object($Command)) {
+									if ($Command->getLogicalId() == "4GStatut") {
+										$result = $FreeboxAPI->universal_get('4G');
+									} else {
+										$result = $FreeboxAPI->systemV8();
+									}
+									switch ($Command->getLogicalId()) {
+										case "mac":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
+											break;
+										case "fan_rpm":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['fan_rpm']);
+											break;
+										case "temp_sw":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_sw']);
+											break;
+										case "uptime":
+											$result = $result['uptime'];
+											$result = str_replace(' heure ', 'h ', $result);
+											$result = str_replace(' heures ', 'h ', $result);
+											$result = str_replace(' minute ', 'min ', $result);
+											$result = str_replace(' minutes ', 'min ', $result);
+											$result = str_replace(' secondes', 's', $result);
+											$result = str_replace(' seconde', 's', $result);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+											break;
+										case "board_name":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
+											break;
+										case "temp_cpub":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpub']);
+											break;
+										case "temp_cpum":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpum']);
+											break;
+										case "serial":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);
+											break;
+										case "firmware_version":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
+											break;
+										case "4GStatut":
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+											break;
+									}
 								}
 							}
 						}
@@ -1344,10 +1409,10 @@ class Freebox_OS extends eqLogic
 }
 class Freebox_OSCmd extends cmd
 {
-	public function dontRemoveCmd()
+	/*	public function dontRemoveCmd()
 	{
 		return true;
-	}
+	}*/
 	public function execute($_options = array())
 	{
 		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
@@ -1423,8 +1488,6 @@ class Freebox_OSCmd extends cmd
 						$FreeboxAPI->universal_put('allowed', 'parental');
 						break;
 					case 'webonly':
-						//$result = $FreeboxAPI->universal_get('webonly','parental');
-						log::add('Freebox_OS', 'debug', '>───────── Mise à jour : webonly');
 						$FreeboxAPI->universal_put('webonly', 'parental');
 						break;
 					case 'denied':

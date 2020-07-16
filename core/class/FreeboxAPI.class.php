@@ -177,15 +177,15 @@ class FreeboxAPI
 	}
 	public function Downloads($Etat)
 	{
-		$List_DL = $this->fetch('/api/v3/downloads/');
+		$List_DL = $this->fetch('/api/v8/downloads/');
 		if ($List_DL === false)
 			return false;
 		$nbDL = count($List_DL['result']);
 		for ($i = 0; $i < $nbDL; ++$i) {
 			if ($Etat == 0)
-				$Downloads = $this->fetch('/api/v3/downloads/' . $List_DL['result'][$i]['id'], array("status" => "stopped"), "PUT");
+				$Downloads = $this->fetch('/api/v8/downloads/' . $List_DL['result'][$i]['id'], array("status" => "stopped"), "PUT");
 			if ($Etat == 1)
-				$Downloads = $this->fetch('/api/v3/downloads/' . $List_DL['result'][$i]['id'], array("status" => "downloading"), "PUT");
+				$Downloads = $this->fetch('/api/v8/downloads/' . $List_DL['result'][$i]['id'], array("status" => "downloading"), "PUT");
 		}
 		if ($Downloads === false)
 			return false;
@@ -196,7 +196,7 @@ class FreeboxAPI
 	}
 	public function DownloadStats()
 	{
-		$DownloadStats = $this->fetch('/api/v5/downloads/stats/');
+		$DownloadStats = $this->fetch('/api/v8/downloads/stats/');
 		if ($DownloadStats === false)
 			return false;
 		if ($DownloadStats['success'])

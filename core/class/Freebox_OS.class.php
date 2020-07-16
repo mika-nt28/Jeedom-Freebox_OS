@@ -1320,8 +1320,12 @@ class Freebox_OS extends eqLogic
 						if ($logicalType == 'Parental') {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								$results = $FreeboxAPI->getTile($Equipement->getLogicalId(), 'Parental');
+								log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['current_mode']);
 								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
+								log::add('Freebox_OS', 'debug', '└─────────');
+								break;
 							}
+							break;
 						} else {
 							$results = $FreeboxAPI->getTile($Equipement->getLogicalId());
 							log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
@@ -1423,8 +1427,8 @@ class Freebox_OS extends eqLogic
 									}
 								}
 							}
+							log::add('Freebox_OS', 'debug', '└─────────');
 						}
-						log::add('Freebox_OS', 'debug', '└─────────');
 						break;
 				}
 				if ($Equipement->getConfiguration('waite') == '') {

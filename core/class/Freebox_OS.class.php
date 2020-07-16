@@ -1139,7 +1139,6 @@ class Freebox_OS extends eqLogic
 										}
 										switch ($Command->getLogicalId()) {
 											case "mac":
-												log::add('Freebox_OS', 'debug', '│──────────> valeur : ' . $result['mac']);
 												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
 												break;
 											case "fan_rpm":

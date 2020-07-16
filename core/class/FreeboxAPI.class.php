@@ -170,7 +170,7 @@ class FreeboxAPI
 	}
 	public function WakeOnLAN($Mac)
 	{
-		$return = $this->fetch('/api/v3/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
+		$return = $this->fetch('/api/v8/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
 		if ($return === false)
 			return false;
 		return $return['success'];
@@ -206,16 +206,16 @@ class FreeboxAPI
 	}
 	public function PortForwarding($Port)
 	{
-		$PortForwarding = $this->fetch('/api/v3/fw/redir/');
+		$PortForwarding = $this->fetch('/api/v8/fw/redir/');
 		if ($PortForwarding === false)
 			return false;
 		$nbPF = count($PortForwarding['result']);
 		for ($i = 0; $i < $nbPF; ++$i) {
 			if ($PortForwarding['result'][$i]['wan_port_start'] == $Port) {
 				if ($PortForwarding['result'][$i]['enabled'])
-					$PortForwarding = $this->fetch('/api/v3/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => false), "PUT");
+					$PortForwarding = $this->fetch('/api/v8/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => false), "PUT");
 				else
-					$PortForwarding = $this->fetch('/api/v3/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => true), "PUT");
+					$PortForwarding = $this->fetch('/api/v8/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => true), "PUT");
 			}
 		}
 		if ($PortForwarding === false)
@@ -265,19 +265,19 @@ class FreeboxAPI
 				$config_log = 'Type de Boxe';
 				break;
 			case 'parental':
-				$config = 'api/v5/parental/config';
+				$config = '/api/v8/network_control/';
 				$config_log = 'Etat du Contrôle Parental';
 				break;
 			case 'planning':
-				$config = 'api/v5/wifi/planning';
+				$config = 'api/v8/wifi/planning';
 				$config_log = 'Etat du Planning du Wifi';
 				break;
 			case 'wifi':
-				$config = 'api/v5/wifi/config';
+				$config = 'api/v8/wifi/config';
 				$config_log = 'Etat du Wifi';
 				break;
 			case '4G':
-				$config = 'api/v5/connection/lte/config';
+				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Etat 4G';
 				break;
 		}
@@ -319,22 +319,22 @@ class FreeboxAPI
 	{
 		switch ($update) {
 			case 'wifi':
-				$config = 'api/v5/wifi/config';
+				$config = 'api/v8/wifi/config';
 				$config_commande = 'enabled';
 				$config_log = 'Mise à jour de : Etat du Wifi';
 				break;
 			case 'planning':
-				$config = 'api/v5/wifi/planning';
+				$config = 'api/v8/wifi/planning';
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
 				break;
 			case 'parental':
-				$config = 'api/v5/parental/config';
+				$config = 'api/v8/parental/config';
 				$config_log = 'Mise à jour du : Contrôle Parental';
 				$config_commande = 'default_filter_mode';
 				break;
 			case '4G':
-				$config = 'api/v5/connection/lte/config';
+				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Mise à jour du : Activation 4G';
 				$config_commande = 'enabled';
 				break;
@@ -402,11 +402,11 @@ class FreeboxAPI
 
 	public function adslStats()
 	{
-		$adslRateJson = $this->fetch('/api/v3/connection/');
+		$adslRateJson = $this->fetch('/api/v8/connection/');
 		if ($adslRateJson === false)
 			return false;
 		if ($adslRateJson['success']) {
-			$vdslRateJson = $this->fetch('/api/v3/connection/xdsl/');
+			$vdslRateJson = $this->fetch('/api/v38connection/xdsl/');
 			if ($vdslRateJson === false)
 				return false;
 			if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
@@ -531,7 +531,7 @@ class FreeboxAPI
 	}
 	public function getReseau()
 	{
-		$listEquipement = $this->fetch('/api/v3/lan/browser/pub/');
+		$listEquipement = $this->fetch('/api/v8/lan/browser/pub/');
 		if ($listEquipement === false)
 			return false;
 		if ($listEquipement['success'])
@@ -541,7 +541,7 @@ class FreeboxAPI
 	}
 	public function ReseauPing($id = '')
 	{
-		$Ping = $this->fetch('/api/v3/lan/browser/pub/' . $id);
+		$Ping = $this->fetch('/api/v8/lan/browser/pub/' . $id);
 		if ($Ping === false)
 			return false;
 		if ($Ping['success'])
@@ -554,7 +554,7 @@ class FreeboxAPI
 		$listNumber_missed = null;
 		$listNumber_accepted = null;
 		$listNumber_outgoing = null;
-		$pre_check_con = $this->fetch('/api/v3/call/log/');
+		$pre_check_con = $this->fetch('/api/v8/call/log/');
 		if ($pre_check_con === false)
 			return false;
 		if ($pre_check_con['success']) {
@@ -600,7 +600,7 @@ class FreeboxAPI
 	}
 	public function airmediaConfig($parametre)
 	{
-		$return = $this->fetch('/api/v5/airmedia/config/', $parametre, "PUT");
+		$return = $this->fetch('/api/v8/airmedia/config/', $parametre, "PUT");
 		if ($return === false)
 			return false;
 		if ($return['success'])
@@ -610,7 +610,7 @@ class FreeboxAPI
 	}
 	public function airmediaReceivers()
 	{
-		$return = $this->fetch('/api/v3/airmedia/receivers/');
+		$return = $this->fetch('/api/v8/airmedia/receivers/');
 		if ($return === false)
 			return false;
 
@@ -621,7 +621,7 @@ class FreeboxAPI
 	}
 	public function AirMediaAction($receiver, $Parameter)
 	{
-		$return = $this->fetch('/api/v3/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
+		$return = $this->fetch('/api/v8/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
 		if ($return === false)
 			return false;
 		if ($return['success'])

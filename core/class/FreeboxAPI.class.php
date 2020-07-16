@@ -139,11 +139,11 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] ' . $content);
 			$result = json_decode($content, true);
 			if ($result == null) return false;
-			log::add('Freebox_OS', 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '└─────────8');
 			return $result;
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', '│ [FreeboxRequest]' . $e->getCode());
-			log::add('Freebox_OS', 'debug', '└─────────');
+			log::add('Freebox_OS', 'debug', '└─────────9');
 		}
 	}
 	public function close_session()
@@ -241,7 +241,7 @@ class FreeboxAPI
 				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
 				$command = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, '0', 100,  null, '0', false);
 				$command->event($value);
-				log::add('Freebox_OS', 'debug', '└─────────');
+				log::add('Freebox_OS', 'debug', '└─────────10');
 			}
 		}
 	}

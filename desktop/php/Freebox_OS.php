@@ -101,7 +101,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
             }
             ?>
         </div>
-        <legend><i class="fas fa-user-shield"></i> {{Contrôle Parental}}</legend>
+        <legend><i class="fas fa-user-shield"></i> {{Contrôle parental}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php
             foreach ($eqLogics as $eqLogic) {

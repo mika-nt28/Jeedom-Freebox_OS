@@ -227,7 +227,7 @@ class FreeboxAPI
 	}
 	public function disques()
 	{
-		$reponse = $this->fetch('/api/v3/storage/disk/');
+		$reponse = $this->fetch('/api/v8/storage/disk/');
 		if ($reponse === false)
 			return false;
 		if ($reponse['success']) {
@@ -247,7 +247,7 @@ class FreeboxAPI
 	}
 	public function getdisque($logicalId = '')
 	{
-		$reponse = $this->fetch('/api/v3/storage/disk/' . $logicalId);
+		$reponse = $this->fetch('/api/v8/storage/disk/' . $logicalId);
 		if ($reponse === false)
 			return false;
 		if ($reponse['success']) {

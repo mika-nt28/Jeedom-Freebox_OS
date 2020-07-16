@@ -424,14 +424,13 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	public function getSystem($update = 1)
+	public function systemV8($update = 4)
 	{
 
-		$listEquipement = $this->fetch('/api/v8/system');
+		$listEquipement = $this->fetch('/api/v8/system/');
 		if ($listEquipement === false)
 			return false;
 		if ($listEquipement['success']) {
-			//log::add('Freebox_OS', 'debug', '│──────────> Boucle Update_getSystem : ' . $update);
 			switch ($update) {
 				case 1:
 					return $listEquipement['result']['sensors'];
@@ -439,49 +438,14 @@ class FreeboxAPI
 					return $listEquipement['result']['fans'];
 				case 3:
 					return $listEquipement['result']['expansions'];
+				case 4:
+					return $listEquipement['result'];
 			}
 		} else {
 			return false;
 		}
 	}
-	/*	public function getHomeAdapterStatus($id = '')
-	{
-		$Status = $this->fetch('/api/v8/home/adapters/' . $id);
-		if ($Status === false)
-			return false;
-		if ($Status['success'])
-			return $Status['result'];
-		else
-			return false;
-	}*/
-	public function update_system($update = 1, $id = '')
-	{
-		$Status = $this->fetch('/api/v8/system');
-		if ($Status === false)
-			return false;
-		if ($Status['success']) {
-			switch ($update) {
-				case 1:
-					return $Status['result']['sensors'];
-				case 2:
-					return $Status['result']['fans'];
-				case 3:
-					return $Status['result']['expansions'];
-			}
-		} else {
-			return false;
-		}
-	}
-	public function systemV8()
-	{
-		$DATA_Array = $this->fetch('/api/v8/system/');
-		if ($DATA_Array === false)
-			return false;
-		if ($DATA_Array['success']) {
-			return $DATA_Array['result'];
-		} else
-			return false;
-	}
+
 	/*	public function system() // FONCTION A SUPPRIMER APRES BASCULE V8 SYSTEM
 	{
 		$systemArray = $this->fetch('/api/v5/system/');

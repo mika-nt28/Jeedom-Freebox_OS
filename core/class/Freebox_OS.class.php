@@ -251,7 +251,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-	public static function addSystem($update_value = false)
+	public static function addSystem()
 	{
 		$FreeboxAPI = new FreeboxAPI();
 		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
@@ -276,7 +276,7 @@ class Freebox_OS extends eqLogic
 		$_order = 6;
 		while ($boucle_update <= 3) {
 			log::add('Freebox_OS', 'debug', '│──────────> Boucle Update : ' . $boucle_update);
-			foreach ($FreeboxAPI->getSystem($boucle_update) as $Equipement) {
+			foreach ($FreeboxAPI->systemV8($boucle_update) as $Equipement) {
 				$icon = null;
 				$_max = 'default';
 				$_min = 'default';
@@ -310,9 +310,9 @@ class Freebox_OS extends eqLogic
 				}
 				log::add('Freebox_OS', 'debug', '│ Name : ' . $_name . ' -- id : ' . $_id . ' -- value : ' . $_value . ' -- unité : ' . $_unit . ' -- type : ' . $_type);
 				if ($_name != '') {
-					if ($update_value == false) {
-						$System->AddCommand($_name, $_id, 'info', $_type, $templatecore_V4 . 'line', $_unit, null, $IsVisible, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, $_order, 0, false, true, null, $_iconname);
-					}
+
+					$System->AddCommand($_name, $_id, 'info', $_type, $templatecore_V4 . 'line', $_unit, null, $IsVisible, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, $_order, 0, false, true, null, $_iconname);
+
 					$System->checkAndUpdateCmd($_id, $_value);
 					if ($Equipement['type'] == 'dsl_lte') {
 						// Début ajout 4G
@@ -1098,58 +1098,87 @@ class Freebox_OS extends eqLogic
 					case 'System':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							$logicalId = $Command->getConfiguration('logicalId');
-							log::add('Freebox_OS', 'debug', '│──────────> LogicalId : ' . $logicalId);
-							if ($logicalId == 'sensors') {
-								$result = $FreeboxAPI->getSystem(1, $Command->getLogicalId());
-								log::add('Freebox_OS', 'debug', '│──────────> PAS DE UPDATE: ' . $logicalId . ' -- ' . $result['value']);
-								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['value']);
-							} else {
-								if (is_object($Command)) {
-									if ($Command->getLogicalId() == "4GStatut") {
-										$result = $FreeboxAPI->universal_get('4G');
-									} else {
-										$result = $FreeboxAPI->systemV8();
+
+							switch ($Command->getConfiguration('logicalId')) {
+								case "sensors":
+									foreach ($FreeboxAPI->systemV8(1) as $system) {
+										if ($system['id'] == $Command->getLogicalId()) {
+											$value = $system['value'];
+											log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $value);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
+											break;
+										}
 									}
-									switch ($Command->getLogicalId()) {
-										case "mac":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
+									break;
+								case "fans":
+									foreach ($FreeboxAPI->systemV8(2) as $system) {
+										if ($system['id'] == $Command->getLogicalId()) {
+											$value = $system['value'];
+											log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $value);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
 											break;
-										case "fan_rpm":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['fan_rpm']);
-											break;
-										case "temp_sw":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_sw']);
-											break;
-										case "uptime":
-											$result = $result['uptime'];
-											$result = str_replace(' heure ', 'h ', $result);
-											$result = str_replace(' heures ', 'h ', $result);
-											$result = str_replace(' minute ', 'min ', $result);
-											$result = str_replace(' minutes ', 'min ', $result);
-											$result = str_replace(' secondes', 's', $result);
-											$result = str_replace(' seconde', 's', $result);
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-											break;
-										case "board_name":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
-											break;
-										case "temp_cpub":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpub']);
-											break;
-										case "temp_cpum":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpum']);
-											break;
-										case "serial":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);
-											break;
-										case "firmware_version":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
-											break;
-										case "4GStatut":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-											break;
+										}
 									}
-								}
+									break;
+								case "expansions":
+									foreach ($FreeboxAPI->systemV8(3) as $system) {
+										if ($system['slot'] == $Command->getLogicalId()) {
+											$value = $system['present'];
+											log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $value);
+											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
+											break;
+										}
+									}
+									break;
+								default:
+									if (is_object($Command)) {
+										if ($Command->getLogicalId() == "4GStatut") {
+											$result = $FreeboxAPI->universal_get('4G');
+										} else {
+											$result = $FreeboxAPI->systemV8();
+										}
+										switch ($Command->getLogicalId()) {
+											case "mac":
+												log::add('Freebox_OS', 'debug', '│──────────> valeur : ' . $result['mac']);
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
+												break;
+											case "fan_rpm":
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['fan_rpm']);
+												break;
+											case "temp_sw":
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_sw']);
+												break;
+											case "uptime":
+												$result = $result['uptime'];
+												$result = str_replace(' heure ', 'h ', $result);
+												$result = str_replace(' heures ', 'h ', $result);
+												$result = str_replace(' minute ', 'min ', $result);
+												$result = str_replace(' minutes ', 'min ', $result);
+												$result = str_replace(' secondes', 's', $result);
+												$result = str_replace(' seconde', 's', $result);
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+												break;
+											case "board_name":
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
+												break;
+											case "temp_cpub":
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpub']);
+												break;
+											case "temp_cpum":
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpum']);
+												break;
+											case "serial":
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);
+												break;
+											case "firmware_version":
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
+												break;
+											case "4GStatut":
+												$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+												break;
+										}
+									}
+									break;
 							}
 						}
 						break;

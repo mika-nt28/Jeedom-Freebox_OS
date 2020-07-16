@@ -22,7 +22,7 @@ class FreeboxAPI
 	public function track_id()
 	{
 		try {
-			$http = new com_http($this->serveur . '/api/v3/login/authorize/');
+			$http = new com_http($this->serveur . '/api/v8/login/authorize/');
 			$http->setPost(
 				json_encode(
 					array(
@@ -45,7 +45,7 @@ class FreeboxAPI
 	public function ask_track_authorization()
 	{
 		try {
-			$http = new com_http($this->serveur . '/api/v3/login/authorize/' . $this->track_id);
+			$http = new com_http($this->serveur . '/api/v8/login/authorize/' . $this->track_id);
 			$result = $http->exec(30, 2);
 			if (is_json($result)) {
 				return json_decode($result, true);
@@ -59,7 +59,7 @@ class FreeboxAPI
 	public function getFreeboxPassword()
 	{
 		try {
-			$http = new com_http($this->serveur . '/api/v3/login/');
+			$http = new com_http($this->serveur . '/api/v8/login/');
 			$json = $http->exec(30, 2);
 			log::add('Freebox_OS', 'debug', '[FreeboxPassword]' . $json);
 			$json_connect = json_decode($json, true);
@@ -82,7 +82,7 @@ class FreeboxAPI
 				$challenge = cache::byKey('Freebox_OS::Challenge');
 			}
 
-			$http = new com_http($this->serveur . '/api/v3/login/session/');
+			$http = new com_http($this->serveur . '/api/v8/login/session/');
 			$http->setPost(json_encode(array(
 				'app_id' => $this->app_id,
 				'password' => hash_hmac('sha1', $challenge->getValue(''), $this->app_token)
@@ -156,7 +156,7 @@ class FreeboxAPI
 			$session_token = cache::byKey('Freebox_OS::SessionToken');
 			if (!is_object($session_token) || $session_token->getValue('') == '')
 				return;
-			$http = new com_http($this->serveur . '/api/v3/login/logout/');
+			$http = new com_http($this->serveur . '/api/v8/login/logout/');
 			$http->setPost(array());
 			$json = $http->exec(2, 2);
 			log::add('Freebox_OS', 'debug', 'closing session :' . $json);
@@ -260,14 +260,6 @@ class FreeboxAPI
 	public function universal_get($update = 'wifi')
 	{
 		switch ($update) {
-			case 'api_version':
-				$config = 'api_version';
-				$config_log = 'Type de Boxe';
-				break;
-			case 'parental':
-				$config = '/api/v8/network_control/';
-				$config_log = 'Etat du Contrôle Parental';
-				break;
 			case 'planning':
 				$config = 'api/v8/wifi/planning';
 				$config_log = 'Etat du Planning du Wifi';
@@ -288,11 +280,6 @@ class FreeboxAPI
 		if ($data_json['success']) {
 			$value = 0;
 			switch ($update) {
-				case 'parental':
-					if ($data_json['result']['default_filter_mode']) {
-						$value = $data_json['result']['default_filter_mode'];
-					}
-					break;
 				case 'planning':
 					if ($data_json['result']['use_planning']) {
 						$value = 1;
@@ -328,11 +315,6 @@ class FreeboxAPI
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
 				break;
-			case 'parental':
-				$config = 'api/v8/parental/config';
-				$config_log = 'Mise à jour du : Contrôle Parental';
-				$config_commande = 'default_filter_mode';
-				break;
 			case '4G':
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Mise à jour du : Activation 4G';
@@ -359,8 +341,6 @@ class FreeboxAPI
 				return $return['result']['enabled'];
 			case 'planning':
 				return $return['result']['use_planning'];
-			case 'parental':
-				return $return['result']['default_filter_modeg'];
 			case '4G':
 				return $return['result']['enabled'];
 		}
@@ -380,7 +360,7 @@ class FreeboxAPI
 	public function ringtone_on()
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Ringtone ON');
-		$content = $this->fetch('/api/v3/phone/dect_page_start/', "", "POST");
+		$content = $this->fetch('/api/v8/phone/dect_page_start/', "", "POST");
 		if ($content === false)
 			return false;
 		if ($content['success'])
@@ -391,7 +371,7 @@ class FreeboxAPI
 	public function ringtone_off()
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Ringtone OFF');
-		$content = $this->fetch('/api/v3/phone/dect_page_stop/', "", "POST");
+		$content = $this->fetch('/api/v8/phone/dect_page_stop/', "", "POST");
 		if ($content === false)
 			return false;
 		if ($content['success'])
@@ -470,9 +450,17 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', '[FreeboxUpdateSystem]' . $e->getCode());
 		}
 	}
-	public function getTiles()
+	public function getTiles($update = 'tiles')
 	{
-		$listEquipement = $this->fetch('/api/v8/home/tileset/all');
+		switch ($update) {
+			case 'tiles':
+				$config = 'api/v8/home/tileset/all';
+				break;
+			case 'controlparental':
+				$config = 'api/v8/profile';
+				break;
+		}
+		$listEquipement = $this->fetch('/' . $config);
 		if ($listEquipement === false)
 			return false;
 		if ($listEquipement['success'])
@@ -480,9 +468,18 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function getTile($id = '')
+	public function getTile($id = '', $update = 'tiles')
 	{
-		$Status = $this->fetch('/api/v8/home/tileset/' . $id);
+		switch ($update) {
+			case 'tiles':
+				$config = 'api/v8/home/tileset/';
+				break;
+			case 'Parental':
+				$config = 'api/v8/network_control/';
+				break;
+		}
+
+		$Status = $this->fetch('/' . $config . $id);
 		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
 		if ($Status === false)
 			return false;

@@ -21,6 +21,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 <br>
                 <span>{{Scan}}<br />{{Tiles}}</span>
             </div>
+            <div class="cursor eqLogicAction logoPrimary" data-action="control_parental">
+                <i class="fas fa-user-shield"></i>
+                <br>
+                <span>{{Scan}}<br />{{Contrôle parental}}</span>
+            </div>
             <div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
                 <i class="fas fa-wrench"></i>
                 <br>
@@ -68,7 +73,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
         <div class="eqLogicThumbnailContainer">
             <?php
             foreach ($eqLogics as $eqLogic) {
-                switch ($eqLogic->getLogicalId()) {
+                if ($eqLogic->getConfiguration('type') == 'Parental') {
+                    $template = $eqLogic->getConfiguration('type');
+                } else {
+                    $template = $eqLogic->getLogicalId();
+                }
+                switch ($template) {
                     case 'AirPlay':
                     case 'ADSL':
                     case 'Downloads':
@@ -87,6 +97,22 @@ $eqLogics = eqLogic::byType($plugin->getId());
                         echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
                         echo '</div>';
                         break;
+                }
+            }
+            ?>
+        </div>
+        <legend><i class="fas fa-user-shield"></i> {{Contrôle Parental}}</legend>
+        <div class="eqLogicThumbnailContainer">
+            <?php
+            foreach ($eqLogics as $eqLogic) {
+                if ($eqLogic->getConfiguration('type') == 'Parental') {
+                    $template = $eqLogic->getConfiguration('type');
+                    $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+                    echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+                    echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
+                    echo '<br>';
+                    echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+                    echo '</div>';
                 }
             }
             ?>

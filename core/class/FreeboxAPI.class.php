@@ -22,7 +22,7 @@ class FreeboxAPI
 	public function track_id()
 	{
 		try {
-			$http = new com_http($this->serveur . '/api/v3/login/authorize/');
+			$http = new com_http($this->serveur . '/api/v8/login/authorize/');
 			$http->setPost(
 				json_encode(
 					array(
@@ -45,7 +45,7 @@ class FreeboxAPI
 	public function ask_track_authorization()
 	{
 		try {
-			$http = new com_http($this->serveur . '/api/v3/login/authorize/' . $this->track_id);
+			$http = new com_http($this->serveur . '/api/v8/login/authorize/' . $this->track_id);
 			$result = $http->exec(30, 2);
 			if (is_json($result)) {
 				return json_decode($result, true);
@@ -59,7 +59,7 @@ class FreeboxAPI
 	public function getFreeboxPassword()
 	{
 		try {
-			$http = new com_http($this->serveur . '/api/v3/login/');
+			$http = new com_http($this->serveur . '/api/v8/login/');
 			$json = $http->exec(30, 2);
 			log::add('Freebox_OS', 'debug', '[FreeboxPassword]' . $json);
 			$json_connect = json_decode($json, true);
@@ -82,7 +82,7 @@ class FreeboxAPI
 				$challenge = cache::byKey('Freebox_OS::Challenge');
 			}
 
-			$http = new com_http($this->serveur . '/api/v3/login/session/');
+			$http = new com_http($this->serveur . '/api/v8/login/session/');
 			$http->setPost(json_encode(array(
 				'app_id' => $this->app_id,
 				'password' => hash_hmac('sha1', $challenge->getValue(''), $this->app_token)
@@ -156,7 +156,7 @@ class FreeboxAPI
 			$session_token = cache::byKey('Freebox_OS::SessionToken');
 			if (!is_object($session_token) || $session_token->getValue('') == '')
 				return;
-			$http = new com_http($this->serveur . '/api/v3/login/logout/');
+			$http = new com_http($this->serveur . '/api/v8/login/logout/');
 			$http->setPost(array());
 			$json = $http->exec(2, 2);
 			log::add('Freebox_OS', 'debug', 'closing session :' . $json);
@@ -380,7 +380,7 @@ class FreeboxAPI
 	public function ringtone_on()
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Ringtone ON');
-		$content = $this->fetch('/api/v3/phone/dect_page_start/', "", "POST");
+		$content = $this->fetch('/api/v8/phone/dect_page_start/', "", "POST");
 		if ($content === false)
 			return false;
 		if ($content['success'])
@@ -391,7 +391,7 @@ class FreeboxAPI
 	public function ringtone_off()
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Ringtone OFF');
-		$content = $this->fetch('/api/v3/phone/dect_page_stop/', "", "POST");
+		$content = $this->fetch('/api/v8/phone/dect_page_stop/', "", "POST");
 		if ($content === false)
 			return false;
 		if ($content['success'])

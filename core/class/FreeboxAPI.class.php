@@ -470,9 +470,17 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', '[FreeboxUpdateSystem]' . $e->getCode());
 		}
 	}
-	public function getTiles()
+	public function getTiles($update = 'tiles')
 	{
-		$listEquipement = $this->fetch('/api/v8/home/tileset/all');
+		switch ($update) {
+			case 'tiles':
+				$config = 'api/v8/home/tileset/all';
+				break;
+			case 'controlparental':
+				$config = 'api/v8/profile';
+				break;
+		}
+		$listEquipement = $this->fetch('/' . $config);
 		if ($listEquipement === false)
 			return false;
 		if ($listEquipement['success'])
@@ -480,9 +488,18 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function getTile($id = '')
+	public function getTile($id = '', $update = 'tiles')
 	{
-		$Status = $this->fetch('/api/v8/home/tileset/' . $id);
+		switch ($update) {
+			case 'tiles':
+				$config = 'api/v8/home/tileset/';
+				break;
+			case 'controlparental':
+				$config = 'api/v8/profile';
+				break;
+		}
+
+		$Status = $this->fetch('/' . $config . $id);
 		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
 		if ($Status === false)
 			return false;

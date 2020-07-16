@@ -65,6 +65,10 @@ try {
 			Freebox_OS::addHomeAdapters();
 			ajax::success(true);
 			break;
+		case 'SearchParental':
+			Freebox_OS::addparental();
+			ajax::success(true);
+			break;
 		case 'SearchReseau':
 			Freebox_OS::addReseau();
 			ajax::success(true);

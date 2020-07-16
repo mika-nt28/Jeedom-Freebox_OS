@@ -84,6 +84,37 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 	});
 
 });
+$('.eqLogicAction[data-action=control_parental]').on('click', function () {
+	$('#div_alert').showAlert({
+		message: '{{Recherche <b>Contrôle Parental</b>}}',
+		level: 'warning'
+	});
+	$.ajax({
+		type: 'POST',
+		async: true,
+		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		data: {
+			action: 'SearchParental'
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			$('#div_alert').showAlert({
+				message: '{{Erreur recherche <b>Contrôle Parental</b>}}',
+				level: 'danger'
+			});
+		},
+		success: function (data) {
+			$('#div_alert').showAlert({
+				message: "{{Opération réalisée avec succès.Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				level: 'success'
+
+			});
+			window.location.reload();
+		}
+	});
+
+});
 
 $('.eqLogicAction[data-action=tile]').on('click', function () {
 	$('#div_alert').showAlert({

@@ -260,14 +260,6 @@ class FreeboxAPI
 	public function universal_get($update = 'wifi')
 	{
 		switch ($update) {
-			case 'api_version':
-				$config = 'api_version';
-				$config_log = 'Type de Boxe';
-				break;
-			case 'parental':
-				$config = '/api/v8/network_control/';
-				$config_log = 'Etat du Contrôle Parental';
-				break;
 			case 'planning':
 				$config = 'api/v8/wifi/planning';
 				$config_log = 'Etat du Planning du Wifi';
@@ -288,11 +280,6 @@ class FreeboxAPI
 		if ($data_json['success']) {
 			$value = 0;
 			switch ($update) {
-				case 'parental':
-					if ($data_json['result']['default_filter_mode']) {
-						$value = $data_json['result']['default_filter_mode'];
-					}
-					break;
 				case 'planning':
 					if ($data_json['result']['use_planning']) {
 						$value = 1;
@@ -328,11 +315,6 @@ class FreeboxAPI
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
 				break;
-			case 'parental':
-				$config = 'api/v8/parental/config';
-				$config_log = 'Mise à jour du : Contrôle Parental';
-				$config_commande = 'default_filter_mode';
-				break;
 			case '4G':
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Mise à jour du : Activation 4G';
@@ -359,8 +341,6 @@ class FreeboxAPI
 				return $return['result']['enabled'];
 			case 'planning':
 				return $return['result']['use_planning'];
-			case 'parental':
-				return $return['result']['default_filter_modeg'];
 			case '4G':
 				return $return['result']['enabled'];
 		}
@@ -494,8 +474,8 @@ class FreeboxAPI
 			case 'tiles':
 				$config = 'api/v8/home/tileset/';
 				break;
-			case 'controlparental':
-				$config = 'api/v8/profile';
+			case 'Parental':
+				$config = 'api/v8/network_control/';
 				break;
 		}
 

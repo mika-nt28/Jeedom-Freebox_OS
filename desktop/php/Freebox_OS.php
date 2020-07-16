@@ -21,6 +21,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 <br>
                 <span>{{Scan}}<br />{{Tiles}}</span>
             </div>
+            <div class="cursor eqLogicAction logoPrimary" data-action="control_parental">
+                <i class="fas fa-user-shield"></i>
+                <br>
+                <span>{{Scan}}<br />{{Contrôle parental}}</span>
+            </div>
             <div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
                 <i class="fas fa-wrench"></i>
                 <br>

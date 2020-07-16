@@ -326,6 +326,43 @@ class Freebox_OS extends eqLogic
 			$boucle_update++;
 		}
 	}
+	public static function addparental()
+	{
+		$FreeboxAPI = new FreeboxAPI();
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$templatecore_V4 = null;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$templatecore_V4  = 'core::';
+		};
+		foreach ($FreeboxAPI->getTiles('controlparental') as $Equipement) {
+			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
+			if (version_compare(jeedom::version(), "4", "<")) {
+				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+				$Templateparent = null;
+				$iconeparent_allowed = 'fas fa-user-check';
+				$iconeparent_denied = 'fas fa-user-lock';
+				$iconeparent_webonly = 'fas fa-user-shield';
+			} else {
+				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+				$Templateparent = 'Freebox_OS::Parental';
+				$iconeparent_allowed = 'fas fa-user-check icon_green';
+				$iconeparent_denied = 'fas fa-user-lock icon_red';
+				$iconeparent_webonly = 'fas fa-user-shield icon_orange';
+			};
+
+			$category = 'default';
+			$Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
+
+			$parental = self::AddEqLogic($Equipement['name'], $Equipement['id'], $category, true, 'Parental', null);
+			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'Parental', true);
+			//$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'Parental', true);
+			//$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'Parental', true);
+			//$parental->AddCommand('Web Uniquement', 'webonly', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_webonly, 0, 'default', 'default', 4, '0', false, false, 'Parental', true);
+			log::add('Freebox_OS', 'debug', '└─────────');
+		}
+	}
 	public static function addTiles()
 	{
 		$FreeboxAPI = new FreeboxAPI();
@@ -814,30 +851,8 @@ class Freebox_OS extends eqLogic
 		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 9, '0', $updateiconeSystem, true);
 		*/
 		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeSystem, false);
-
-
 		log::add('Freebox_OS', 'debug', '└─────────');
-		//Contrôle Parental // SUPPRESSION CAR FREE A TOUT CHANGER AVEC LA VERSION 4.2
-		/*log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
-		if (version_compare(jeedom::version(), "4", "<")) {
-			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-			$Templateparent = null;
-			$iconeparent_allowed = 'fas fa-user-check';
-			$iconeparent_denied = 'fas fa-user-lock';
-			$iconeparent_webonly = 'fas fa-user-shield';
-		} else {
-			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-			$Templateparent = 'Freebox_OS::Parental';
-			$iconeparent_allowed = 'fas fa-user-check icon_green';
-			$iconeparent_denied = 'fas fa-user-lock icon_red';
-			$iconeparent_webonly = 'fas fa-user-shield icon_orange';
-		};
-		$parental = self::AddEqLogic('contrôle Parental', 'Parental', 'default', false, null, null);
-		$StatusParental = $parental->AddCommand('Etat Contrôle parental', 'parentalStatus', "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'Parental', true);
-		$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'Parental', true);
-		$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'Parental', true);
-		$parental->AddCommand('Web Uniquement', 'webonly', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_webonly, 0, 'default', 'default', 4, '0', false, false, 'Parental', true);
-		log::add('Freebox_OS', 'debug', '└─────────');*/
+
 		//Wifi
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Wifi');
 		if (version_compare(jeedom::version(), "4", "<")) {
@@ -949,7 +964,6 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->disques();
 			$FreeboxAPI->universal_get();
 			$FreeboxAPI->universal_get('planning');
-			//$FreeboxAPI->universal_get('parental');
 			$FreeboxAPI->systemV8();
 			$FreeboxAPI->universal_get('4G');
 			$FreeboxAPI->adslStats();
@@ -1301,103 +1315,112 @@ class Freebox_OS extends eqLogic
 						}
 						break;
 					default:
-						$results = $FreeboxAPI->getTile($Equipement->getLogicalId());
-						log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
+						$logicalType = $Equipement->getConfiguration('type');
 
-						if ($results != false) {
-							foreach ($results as $result) {
-								foreach ($result['data'] as $data) {
-									if (!$Equipement->getIsEnable()) break;
-									$cmd = $Equipement->getCmd('info', $data['ep_id']);
+						if ($logicalType == 'Parental') {
+							foreach ($Equipement->getCmd('info') as $Command) {
+								$results = $FreeboxAPI->getTile($Equipement->getLogicalId(), 'Parental');
+								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
+							}
+						} else {
+							$results = $FreeboxAPI->getTile($Equipement->getLogicalId());
+							log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
 
-									if (!is_object($cmd)) break;
+							if ($results != false) {
+								foreach ($results as $result) {
+									foreach ($result['data'] as $data) {
+										if (!$Equipement->getIsEnable()) break;
+										$cmd = $Equipement->getCmd('info', $data['ep_id']);
 
-									log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
-									if ($data['name'] == 'pushed') {
-										$nb_pushed = count($data['history']);
-										$nb_pushed_k = $nb_pushed - 1;
-										$_value_history = $data['history'][$nb_pushed_k]['value'];
-										log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
-									};
+										if (!is_object($cmd)) break;
+
+										log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
+										if ($data['name'] == 'pushed') {
+											$nb_pushed = count($data['history']);
+											$nb_pushed_k = $nb_pushed - 1;
+											$_value_history = $data['history'][$nb_pushed_k]['value'];
+											log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
+										};
 
 
-									switch ($cmd->getSubType()) {
-										case 'numeric':
-											if ($cmd->getConfiguration('inverse')) {
-												$_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
-											} else {
-												if ($data['name'] == 'pushed') {
-													$_value = $_value_history;
+										switch ($cmd->getSubType()) {
+											case 'numeric':
+												if ($cmd->getConfiguration('inverse')) {
+													$_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
+												} else {
+													if ($data['name'] == 'pushed') {
+														$_value = $_value_history;
+													} else {
+														$_value = $data['value'];
+													}
+												}
+												break;
+											case 'string':
+												if ($data['name'] == 'state' && $data['ep_id'] == 11) {
+													log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique pour Homebridge');
+													$_Alarm_stat_value = '0';
+													$_Alarm_enable_value = '1';
+
+													switch ($data['value']) {
+														case 'alarm1_arming':
+															$_Alarm_mode_value = 'Alarme principale';
+															log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale');
+															break;
+														case 'alarm1_armed':
+															$_Alarm_mode_value = 'Alarme principale';
+															log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale');
+															break;
+														case 'alarm2_arming':
+															$_Alarm_mode_value = 'Alarme secondaire';
+															log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire');
+															break;
+														case 'alarm2_armed':
+															$_Alarm_mode_value = 'Alarme secondaire';
+															log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire');
+															break;
+														case 'alert':
+															$_Alarm_stat_value = '1';
+															log::add('Freebox_OS', 'debug', '│ Alarme');
+															break;
+														case 'alarm1_alert_timer':
+															$_Alarm_stat_value = '1';
+															log::add('Freebox_OS', 'debug', '│ Alarme');
+															break;
+														case 'alarm2_alert_timer':
+															$_Alarm_stat_value = '1';
+															log::add('Freebox_OS', 'debug', '│ Alarme');
+															break;
+														case 'idle':
+															$_Alarm_enable_value = '0';
+															log::add('Freebox_OS', 'debug', '│ Alarme désactivée');
+															break;
+														default:
+															$_Alarm_mode_value = null;
+															log::add('Freebox_OS', 'debug', '│ Aucun Mode');
+															break;
+													}
+
+													$Equipement->checkAndUpdateCmd('ALARM_state', $_Alarm_stat_value);
+													log::add('Freebox_OS', 'debug', '│ Label : ' . 'Statut' . ' -- Id : ' . 'ALARM_state' . ' -- Value : ' . $_Alarm_stat_value);
+													$Equipement->checkAndUpdateCmd('ALARM_enable', $_Alarm_enable_value);
+													log::add('Freebox_OS', 'debug', '│ Label : ' . 'Actif' . ' -- Id : ' . 'ALARM_enable' . ' -- Value : ' . $_Alarm_enable_value);
+													$Equipement->checkAndUpdateCmd('ALARM_mode', $_Alarm_mode_value);
+													log::add('Freebox_OS', 'debug', '│ Label : ' . 'Mode' . ' -- Id : ' . 'ALARM_mode' . ' -- Value : ' . $_Alarm_mode_value);
+													log::add('Freebox_OS', 'debug', '│──────────> Fin Update commande spécifique pour Homebridge');
+												};
+
+												$_value = $data['value'];
+												break;
+											case 'binary':
+												if ($cmd->getConfiguration('inverse')) {
+													$_value = !$data['value'];
 												} else {
 													$_value = $data['value'];
 												}
-											}
-											break;
-										case 'string':
-											if ($data['name'] == 'state' && $data['ep_id'] == 11) {
-												log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique pour Homebridge');
-												$_Alarm_stat_value = '0';
-												$_Alarm_enable_value = '1';
-
-												switch ($data['value']) {
-													case 'alarm1_arming':
-														$_Alarm_mode_value = 'Alarme principale';
-														log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale');
-														break;
-													case 'alarm1_armed':
-														$_Alarm_mode_value = 'Alarme principale';
-														log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale');
-														break;
-													case 'alarm2_arming':
-														$_Alarm_mode_value = 'Alarme secondaire';
-														log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire');
-														break;
-													case 'alarm2_armed':
-														$_Alarm_mode_value = 'Alarme secondaire';
-														log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire');
-														break;
-													case 'alert':
-														$_Alarm_stat_value = '1';
-														log::add('Freebox_OS', 'debug', '│ Alarme');
-														break;
-													case 'alarm1_alert_timer':
-														$_Alarm_stat_value = '1';
-														log::add('Freebox_OS', 'debug', '│ Alarme');
-														break;
-													case 'alarm2_alert_timer':
-														$_Alarm_stat_value = '1';
-														log::add('Freebox_OS', 'debug', '│ Alarme');
-														break;
-													case 'idle':
-														$_Alarm_enable_value = '0';
-														log::add('Freebox_OS', 'debug', '│ Alarme désactivée');
-														break;
-													default:
-														$_Alarm_mode_value = null;
-														log::add('Freebox_OS', 'debug', '│ Aucun Mode');
-														break;
-												}
-
-												$Equipement->checkAndUpdateCmd('ALARM_state', $_Alarm_stat_value);
-												log::add('Freebox_OS', 'debug', '│ Label : ' . 'Statut' . ' -- Id : ' . 'ALARM_state' . ' -- Value : ' . $_Alarm_stat_value);
-												$Equipement->checkAndUpdateCmd('ALARM_enable', $_Alarm_enable_value);
-												log::add('Freebox_OS', 'debug', '│ Label : ' . 'Actif' . ' -- Id : ' . 'ALARM_enable' . ' -- Value : ' . $_Alarm_enable_value);
-												$Equipement->checkAndUpdateCmd('ALARM_mode', $_Alarm_mode_value);
-												log::add('Freebox_OS', 'debug', '│ Label : ' . 'Mode' . ' -- Id : ' . 'ALARM_mode' . ' -- Value : ' . $_Alarm_mode_value);
-												log::add('Freebox_OS', 'debug', '│──────────> Fin Update commande spécifique pour Homebridge');
-											};
-
-											$_value = $data['value'];
-											break;
-										case 'binary':
-											if ($cmd->getConfiguration('inverse')) {
-												$_value = !$data['value'];
-											} else {
-												$_value = $data['value'];
-											}
-											break;
+												break;
+										}
+										$Equipement->checkAndUpdateCmd($data['ep_id'], $_value);
 									}
-									$Equipement->checkAndUpdateCmd($data['ep_id'], $_value);
 								}
 							}
 						}

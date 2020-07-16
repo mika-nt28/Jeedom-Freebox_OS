@@ -128,8 +128,7 @@ class FreeboxAPI
 				curl_setopt($ch, CURLOPT_POST, true);
 			} elseif ($method == "DELETE") {
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-			}
-			elseif ($method == "PUT") {
+			} elseif ($method == "PUT") {
 				curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
 			}
 			if ($params)
@@ -171,22 +170,22 @@ class FreeboxAPI
 	}
 	public function WakeOnLAN($Mac)
 	{
-		$return = $this->fetch('/api/v3/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
+		$return = $this->fetch('/api/v8/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
 		if ($return === false)
 			return false;
 		return $return['success'];
 	}
 	public function Downloads($Etat)
 	{
-		$List_DL = $this->fetch('/api/v3/downloads/');
+		$List_DL = $this->fetch('/api/v8/downloads/');
 		if ($List_DL === false)
 			return false;
 		$nbDL = count($List_DL['result']);
 		for ($i = 0; $i < $nbDL; ++$i) {
 			if ($Etat == 0)
-				$Downloads = $this->fetch('/api/v3/downloads/' . $List_DL['result'][$i]['id'], array("status" => "stopped"), "PUT");
+				$Downloads = $this->fetch('/api/v8/downloads/' . $List_DL['result'][$i]['id'], array("status" => "stopped"), "PUT");
 			if ($Etat == 1)
-				$Downloads = $this->fetch('/api/v3/downloads/' . $List_DL['result'][$i]['id'], array("status" => "downloading"), "PUT");
+				$Downloads = $this->fetch('/api/v8/downloads/' . $List_DL['result'][$i]['id'], array("status" => "downloading"), "PUT");
 		}
 		if ($Downloads === false)
 			return false;
@@ -197,7 +196,7 @@ class FreeboxAPI
 	}
 	public function DownloadStats()
 	{
-		$DownloadStats = $this->fetch('/api/v5/downloads/stats/');
+		$DownloadStats = $this->fetch('/api/v8/downloads/stats/');
 		if ($DownloadStats === false)
 			return false;
 		if ($DownloadStats['success'])
@@ -207,16 +206,16 @@ class FreeboxAPI
 	}
 	public function PortForwarding($Port)
 	{
-		$PortForwarding = $this->fetch('/api/v3/fw/redir/');
+		$PortForwarding = $this->fetch('/api/v8/fw/redir/');
 		if ($PortForwarding === false)
 			return false;
 		$nbPF = count($PortForwarding['result']);
 		for ($i = 0; $i < $nbPF; ++$i) {
 			if ($PortForwarding['result'][$i]['wan_port_start'] == $Port) {
 				if ($PortForwarding['result'][$i]['enabled'])
-					$PortForwarding = $this->fetch('/api/v3/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => false), "PUT");
+					$PortForwarding = $this->fetch('/api/v8/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => false), "PUT");
 				else
-					$PortForwarding = $this->fetch('/api/v3/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => true), "PUT");
+					$PortForwarding = $this->fetch('/api/v8/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => true), "PUT");
 			}
 		}
 		if ($PortForwarding === false)
@@ -228,7 +227,7 @@ class FreeboxAPI
 	}
 	public function disques()
 	{
-		$reponse = $this->fetch('/api/v3/storage/disk/');
+		$reponse = $this->fetch('/api/v8/storage/disk/');
 		if ($reponse === false)
 			return false;
 		if ($reponse['success']) {
@@ -239,7 +238,7 @@ class FreeboxAPI
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
 				log::add('Freebox_OS', 'debug', '│ Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
-				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque');
+				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
 				$command = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, '0', 100,  null, '0', false);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
@@ -248,7 +247,7 @@ class FreeboxAPI
 	}
 	public function getdisque($logicalId = '')
 	{
-		$reponse = $this->fetch('/api/v3/storage/disk/' . $logicalId);
+		$reponse = $this->fetch('/api/v8/storage/disk/' . $logicalId);
 		if ($reponse === false)
 			return false;
 		if ($reponse['success']) {
@@ -261,25 +260,29 @@ class FreeboxAPI
 	public function universal_get($update = 'wifi')
 	{
 		switch ($update) {
+			case 'api_version':
+				$config = 'api_version';
+				$config_log = 'Type de Boxe';
+				break;
 			case 'parental':
-				$config = 'v5/parental/config';
+				$config = '/api/v8/network_control/';
 				$config_log = 'Etat du Contrôle Parental';
 				break;
 			case 'planning':
-				$config = 'v5/wifi/planning';
+				$config = 'api/v8/wifi/planning';
 				$config_log = 'Etat du Planning du Wifi';
 				break;
 			case 'wifi':
-				$config = 'v5/wifi/config';
+				$config = 'api/v8/wifi/config';
 				$config_log = 'Etat du Wifi';
 				break;
 			case '4G':
-				$config = 'v5/connection/lte/config';
+				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Etat 4G';
 				break;
 		}
 
-		$data_json = $this->fetch('/api/' . $config . '/');
+		$data_json = $this->fetch('/' . $config . '/');
 		if ($data_json === false)
 			return false;
 		if ($data_json['success']) {
@@ -316,22 +319,22 @@ class FreeboxAPI
 	{
 		switch ($update) {
 			case 'wifi':
-				$config = 'v5/wifi/config';
+				$config = 'api/v8/wifi/config';
 				$config_commande = 'enabled';
 				$config_log = 'Mise à jour de : Etat du Wifi';
 				break;
 			case 'planning':
-				$config = 'v5/wifi/planning';
+				$config = 'api/v8/wifi/planning';
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
 				break;
 			case 'parental':
-				$config = 'v5/parental/config';
+				$config = 'api/v8/parental/config';
 				$config_log = 'Mise à jour du : Contrôle Parental';
 				$config_commande = 'default_filter_mode';
 				break;
 			case '4G':
-				$config = 'v5/connection/lte/config';
+				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Mise à jour du : Activation 4G';
 				$config_commande = 'enabled';
 				break;
@@ -340,14 +343,13 @@ class FreeboxAPI
 			$parametre = true;
 		} elseif ($parametre === 0) {
 			$parametre = false;
-		}
-		else {
+		} else {
 			//	$parametre;
 		}
 
 		log::add('Freebox_OS', 'debug', '>───────── Mise à jour : ' . $config_log . ' avec la valeur : ' . $parametre);
 
-		$return = $this->fetch('/api/' . $config . '/', array($config_commande => $parametre), "PUT");
+		$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");
 
 		if ($return === false) {
 			return false;
@@ -366,7 +368,7 @@ class FreeboxAPI
 	public function reboot()
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Reboot Freebox');
-		$content  = $this->fetch('/api/v6/system/reboot/', null, "POST");
+		$content  = $this->fetch('/api/v8/system/reboot/', null, "POST");
 		if ($content === false)
 			return false;
 		if ($content['success']) {
@@ -397,37 +399,14 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function system()
-	{
-		$systemArray = $this->fetch('/api/v3/system/');
-		if ($systemArray === false)
-			return false;
-		if ($systemArray['success']) {
-			return $systemArray['result'];
-		} else
-			return false;
-	}
-	public function UpdateSystem()
-	{
-		try {
-			$System = Freebox_OS::AddEqLogic('Système', 'System');
-			$Command = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  null, '0', false, true);
-			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise a jours du serveur');
-			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
-			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
-			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
-				$this->reboot();
-		} catch (Exception $e) {
-			log::add('Freebox_OS', 'error', '[FreeboxUpdateSystem]' . $e->getCode());
-		}
-	}
+
 	public function adslStats()
 	{
-		$adslRateJson = $this->fetch('/api/v3/connection/');
+		$adslRateJson = $this->fetch('/api/v8/connection/');
 		if ($adslRateJson === false)
 			return false;
 		if ($adslRateJson['success']) {
-			$vdslRateJson = $this->fetch('/api/v3/connection/xdsl/');
+			$vdslRateJson = $this->fetch('/api/v38connection/xdsl/');
 			if ($vdslRateJson === false)
 				return false;
 			if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
@@ -445,9 +424,55 @@ class FreeboxAPI
 		} else
 			return false;
 	}
+	public function systemV8($update = 4)
+	{
+
+		$listEquipement = $this->fetch('/api/v8/system/');
+		if ($listEquipement === false)
+			return false;
+		if ($listEquipement['success']) {
+			switch ($update) {
+				case 1:
+					return $listEquipement['result']['sensors'];
+				case 2:
+					return $listEquipement['result']['fans'];
+				case 3:
+					return $listEquipement['result']['expansions'];
+				case 4:
+					return $listEquipement['result'];
+			}
+		} else {
+			return false;
+		}
+	}
+
+	/*	public function system() // FONCTION A SUPPRIMER APRES BASCULE V8 SYSTEM
+	{
+		$systemArray = $this->fetch('/api/v5/system/');
+		if ($systemArray === false)
+			return false;
+		if ($systemArray['success']) {
+			return $systemArray['result'];
+		} else
+			return false;
+	}*/
+	public function UpdateSystem()
+	{
+		try {
+			$System = Freebox_OS::AddEqLogic('Système', 'System', 'default', false, null, null);
+			$Command = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  null, '0', false, true);
+			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise a jours du serveur');
+			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
+			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
+			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
+				$this->reboot();
+		} catch (Exception $e) {
+			log::add('Freebox_OS', 'error', '[FreeboxUpdateSystem]' . $e->getCode());
+		}
+	}
 	public function getTiles()
 	{
-		$listEquipement = $this->fetch('/api/v6/home/tileset/all');
+		$listEquipement = $this->fetch('/api/v8/home/tileset/all');
 		if ($listEquipement === false)
 			return false;
 		if ($listEquipement['success'])
@@ -457,7 +482,7 @@ class FreeboxAPI
 	}
 	public function getTile($id = '')
 	{
-		$Status = $this->fetch('/api/v6/home/tileset/' . $id);
+		$Status = $this->fetch('/api/v8/home/tileset/' . $id);
 		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
 		if ($Status === false)
 			return false;
@@ -476,7 +501,7 @@ class FreeboxAPI
 			$endpointId = null;
 		}
 		log::add('Freebox_OS', 'debug', '└───────── Info nodeid : ' . $nodeId . ' -- endpointId : ' . $endpointId);
-		$return = $this->fetch('/api/v6/home/endpoints/' . $nodeId . '/' . $endpointId, $parametre, "PUT");
+		$return = $this->fetch('/api/v8/home/endpoints/' . $nodeId . '/' . $endpointId, $parametre, "PUT");
 		if ($return === false)
 			return false;
 		if ($return['success'])
@@ -486,7 +511,7 @@ class FreeboxAPI
 	}
 	public function getHomeAdapters()
 	{
-		$listEquipement = $this->fetch('/api/v6/home/adapters');
+		$listEquipement = $this->fetch('/api/v8/home/adapters');
 		if ($listEquipement === false)
 			return false;
 		if ($listEquipement['success'])
@@ -496,7 +521,7 @@ class FreeboxAPI
 	}
 	public function getHomeAdapterStatus($id = '')
 	{
-		$Status = $this->fetch('/api/v6/home/adapters/' . $id);
+		$Status = $this->fetch('/api/v8/home/adapters/' . $id);
 		if ($Status === false)
 			return false;
 		if ($Status['success'])
@@ -506,7 +531,7 @@ class FreeboxAPI
 	}
 	public function getReseau()
 	{
-		$listEquipement = $this->fetch('/api/v3/lan/browser/pub/');
+		$listEquipement = $this->fetch('/api/v8/lan/browser/pub/');
 		if ($listEquipement === false)
 			return false;
 		if ($listEquipement['success'])
@@ -516,7 +541,7 @@ class FreeboxAPI
 	}
 	public function ReseauPing($id = '')
 	{
-		$Ping = $this->fetch('/api/v3/lan/browser/pub/' . $id);
+		$Ping = $this->fetch('/api/v8/lan/browser/pub/' . $id);
 		if ($Ping === false)
 			return false;
 		if ($Ping['success'])
@@ -529,7 +554,7 @@ class FreeboxAPI
 		$listNumber_missed = null;
 		$listNumber_accepted = null;
 		$listNumber_outgoing = null;
-		$pre_check_con = $this->fetch('/api/v3/call/log/');
+		$pre_check_con = $this->fetch('/api/v8/call/log/');
 		if ($pre_check_con === false)
 			return false;
 		if ($pre_check_con['success']) {
@@ -575,7 +600,7 @@ class FreeboxAPI
 	}
 	public function airmediaConfig($parametre)
 	{
-		$return = $this->fetch('/api/v5/airmedia/config/', $parametre, "PUT");
+		$return = $this->fetch('/api/v8/airmedia/config/', $parametre, "PUT");
 		if ($return === false)
 			return false;
 		if ($return['success'])
@@ -585,7 +610,7 @@ class FreeboxAPI
 	}
 	public function airmediaReceivers()
 	{
-		$return = $this->fetch('/api/v3/airmedia/receivers/');
+		$return = $this->fetch('/api/v8/airmedia/receivers/');
 		if ($return === false)
 			return false;
 
@@ -596,7 +621,7 @@ class FreeboxAPI
 	}
 	public function AirMediaAction($receiver, $Parameter)
 	{
-		$return = $this->fetch('/api/v3/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
+		$return = $this->fetch('/api/v8/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
 		if ($return === false)
 			return false;
 		if ($return['success'])

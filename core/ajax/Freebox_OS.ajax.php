@@ -69,6 +69,10 @@ try {
 			Freebox_OS::addReseau();
 			ajax::success(true);
 			break;
+		case 'SearchSystem':
+			Freebox_OS::addSystem();
+			ajax::success(true);
+			break;
 		case 'SearchDisque':
 			ajax::success($FreeboxAPI->disques());
 			break;

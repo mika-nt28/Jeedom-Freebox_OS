@@ -16,7 +16,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 <br />
                 <span>{{Scan}}<br />{{équipements standard}}</span>
             </div>
-
             <div class="cursor eqLogicAction logoPrimary" data-action="tile">
                 <i class="fas fa-search"></i>
                 <br>

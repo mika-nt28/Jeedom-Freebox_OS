@@ -46,7 +46,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 });
 $('.MaFreebox').on('click', function () {
 	$('#md_modal').dialog({
-		title: "{{Parametre Freebox}}",
+		title: "{{Paramètre Freebox}}",
 		height: 700,
 		width: 850
 	});
@@ -75,7 +75,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès.Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -117,6 +117,10 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 
 });
 $('.Equipement').on('click', function () {
+	$('#div_alert').showAlert({
+		message: '{{Recherche des <b>commandes</b>}}',
+		level: 'warning'
+	});
 	$.ajax({
 		type: 'POST',
 		async: false,
@@ -126,8 +130,19 @@ $('.Equipement').on('click', function () {
 		},
 		dataType: 'json',
 		global: false,
-		error: function (request, status, error) {},
+		error: function (request, status, error) {
+			$('#div_alert').showAlert({
+				message: '{{Erreur recherche des <b>commandes</b>}}',
+				level: 'danger'
+			});
+
+		},
 		success: function (data) {
+			$('#div_alert').showAlert({
+				message: "{{Opération réalisée avec succès.}}",
+				level: 'success'
+
+			});
 			location.reload();
 		}
 	});
@@ -158,10 +173,10 @@ function addCmdToTable(_cmd) {
 			$('.Equipement').show();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
-			var inverse = $('<span>');
+			//	var inverse = $('<span>');
 			break;
 		case 'System':
-			$('.Equipement').hide();
+			$('.Equipement').show();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;

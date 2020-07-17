@@ -43,9 +43,10 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 <a id="bt_resetSearch" class="btn" style="width:30px"><i class="fas fa-times"></i> </a>
             </div>
         </div>
-        <legend><i class="fas fa-table"></i> {{Mes equipements}}</legend>
+        <legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php
+            $status = 0;
             foreach ($eqLogics as $eqLogic) {
                 switch ($eqLogic->getLogicalId()) {
                     case 'AirPlay':
@@ -57,6 +58,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Wifi':
                     case 'Parental':
                     case 'Reseau':
+                        $status = 1;
                         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
                         echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
                         echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
@@ -66,12 +68,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
                         break;
                 }
             }
+            if ($status == 0) {
+                echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un Scan équipement standard.}}</span></center>";
+            }
             ?>
         </div>
 
         <legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php
+            $status = 0;
             foreach ($eqLogics as $eqLogic) {
                 if ($eqLogic->getConfiguration('type') == 'Parental') {
                     $template = $eqLogic->getConfiguration('type');
@@ -90,6 +96,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Reseau':
                         break;
                     default:
+                        $status = 1;
                         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
                         echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
                         echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
@@ -99,13 +106,18 @@ $eqLogics = eqLogic::byType($plugin->getId());
                         break;
                 }
             }
+            if ($status == 0) {
+                echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un Scan Tiles.}}</span></center>";
+            }
             ?>
         </div>
-        <legend><i class="fas fa-user-shield"></i> {{Contrôle parental}}</legend>
+        <legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parental}}</legend>
         <div class="eqLogicThumbnailContainer">
             <?php
+            $status = 0;
             foreach ($eqLogics as $eqLogic) {
                 if ($eqLogic->getConfiguration('type') == 'Parental') {
+                    $status = 1;
                     $template = $eqLogic->getConfiguration('type');
                     $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
                     echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
@@ -114,6 +126,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
                     echo '</div>';
                 }
+            }
+            if ($status == 1) {
+                echo '</div>';
+            } else {
+                echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un Scan Contrôle parental.}}</span></center>";
             }
             ?>
         </div>

@@ -184,7 +184,8 @@ function addCmdToTable(_cmd) {
 		return;
 	}
 	var inverse = $('<span>');
-	switch ($('.eqLogicAttr[data-l1key=logicalId]').val()) {
+	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+	switch (template) {
 		case 'Home Adapters':
 			$('.Equipement').show();
 			$('.Equipement_tiles').hide();
@@ -227,6 +228,11 @@ function addCmdToTable(_cmd) {
 			$('.Equipement_tiles').hide();
 			break;
 		case 'AirPlay':
+			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
+			break;
+		case 'Player':
 			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();

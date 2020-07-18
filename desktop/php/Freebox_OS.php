@@ -48,7 +48,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
             <?php
             $status = 0;
             foreach ($eqLogics as $eqLogic) {
-                switch ($eqLogic->getLogicalId()) {
+                if ($eqLogic->getConfiguration('type') == 'Player') {
+                    $template = $eqLogic->getConfiguration('type');
+                } else {
+                    $template = $eqLogic->getLogicalId();
+                }
+                switch ($template) {
                     case 'AirPlay':
                     case 'ADSL':
                     case 'Downloads':
@@ -56,7 +61,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Disque':
                     case 'Phone':
                     case 'Wifi':
-                    case 'Parental':
+                    case 'Player':
                     case 'Reseau':
                         $status = 1;
                         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
@@ -79,7 +84,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
             <?php
             $status = 0;
             foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getConfiguration('type') == 'Parental') {
+                if ($eqLogic->getConfiguration('type') == 'Parental' || $eqLogic->getConfiguration('type') == 'Player') {
                     $template = $eqLogic->getConfiguration('type');
                 } else {
                     $template = $eqLogic->getLogicalId();
@@ -93,6 +98,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Phone':
                     case 'Wifi':
                     case 'Parental':
+                    case 'Player':
                     case 'Reseau':
                         break;
                     default:
@@ -264,6 +270,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
                                 <span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="action"></span>
                             </div>
                         </div>
+
+
                     </fieldset>
                 </form>
             </div>

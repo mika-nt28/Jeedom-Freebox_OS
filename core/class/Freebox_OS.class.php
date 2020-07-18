@@ -161,7 +161,7 @@ class Freebox_OS extends eqLogic
 				'#_time_widget_#' => '1'
 			)
 		);
-		// Template pour l'état ddu contrôle Parental'
+		// Template pour l'état du contrôle Parental'
 		$return['info']['string']['Parental'] = array(
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),
@@ -169,6 +169,16 @@ class Freebox_OS extends eqLogic
 				array('operation' => "#value# == 'allowed'", 'state_light' => '<i class=\'icon_green icon fas fa-user-check\'></i>'),
 				array('operation' => "#value# == 'denied'", 'state_light' => '<i class=\'icon_red icon fas fa-user-lock\'></i>'),
 				array('operation' => "#value# == 'webonly'", 'state_light' => '<i class=\'icon_orange icon fas fa-user-shield\'></i>')
+			)
+		);
+		// Template pour l'état du contrôle Player'
+		$return['info']['string']['Player'] = array(
+			'template' => 'tmplmultistate',
+			'replace' => array('#_time_widget_#' => '1'),
+			'test' => array(
+				array('operation' => "#value# == 'standby'", 'state_light' => '<i class=\'icon_red icon fas fa-power-off\'></i>'),
+				array('operation' => "#value# == 'running'", 'state_light' => '<i class=\'icon_green icon fas fa-power-off\'></i>'),
+				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_orange icon fas fa-question\'></i>')
 			)
 		);
 		// Template pour l'état de l'alarme'
@@ -239,7 +249,7 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
-		foreach ($FreeboxAPI->getHomeAdapters() as $Equipement) {
+		foreach ($FreeboxAPI->getHomeAdapters_player() as $Equipement) {
 			if ($Equipement['label'] != '') {
 				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
 				if ($Equipement['status'] == 'active') {
@@ -249,6 +259,29 @@ class Freebox_OS extends eqLogic
 				}
 				$HomeAdapters->checkAndUpdateCmd($Equipement['id'], $HomeAdapters_value);
 			}
+		}
+	}
+	public static function addPlayer()
+	{
+		$FreeboxAPI = new FreeboxAPI();
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
+			$TemplatePlayer = null;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$TemplatePlayer = 'Freebox_OS::Player';
+		};
+
+		$result = $FreeboxAPI->getHomeAdapters_player('Player');
+		foreach ($result as $Equipement) {
+			log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $Equipement['device_name'] . ' -- Id : ' . $Equipement['id']);
+			if ($Equipement['id'] != null) {
+				$player = self::AddEqLogic($Equipement['device_name'], $Equipement['id'], 'multimedia', true, 'Player', null);
+				log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id :' . $Equipement['id'] . ' -- id :' . $Equipement['mac'] . ' -- id :' . $Equipement['uid']);
+			}
+			$player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
+			$player->checkAndUpdateCmd('mac', $Equipement['mac']);
+			$player->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
 		}
 	}
 	public static function addSystem()
@@ -359,7 +392,6 @@ class Freebox_OS extends eqLogic
 			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'Parental', true);
 			//$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'Parental', true);
 			//$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'Parental', true);
-			//$parental->AddCommand('Web Uniquement', 'webonly', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_webonly, 0, 'default', 'default', 4, '0', false, false, 'Parental', true);
 			log::add('Freebox_OS', 'debug', '└─────────');
 		}
 	}
@@ -742,9 +774,9 @@ class Freebox_OS extends eqLogic
 		if ($valuemax != 'default') {
 			$Command->setconfiguration('maxValue', $valuemax);
 		}
-		if ($_Equipement != null) {
+		/*if ($_Equipement != null) {
 			$Command->setconfiguration('equipement', $_Equipement);
-		}
+		}*/
 
 		if (is_object($link_I) && $Type == 'action') {
 			$Command->setValue($link_I->getId());
@@ -818,24 +850,14 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-			//$Template4G = null;
 			$iconeUpdate = 'fas fa-download';
 			$iconeReboot = 'fas fa-sync';
-			//$iconetemp = 'fas fa-thermometer-half';
-			//$iconefan = 'fas fa-fan';
-			//$icone4Gon = 'fas fa-broadcast-tower';
-			//$icone4Goff = 'fas fa-broadcast-tower';
 			$updateiconeSystem = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-			//$Template4G = 'Freebox_OS::4G';
 			$iconeUpdate = 'fas fa-download icon_blue';
 			$iconeReboot = 'fas fa-sync icon_red';
-			//$iconetemp = 'fas fa-thermometer-half icon_blue';
-			//$iconefan = 'fas fa-fan icon_blue';
 			$updateiconeSystem = false;
-			//$icone4Gon = 'fas fa-broadcast-tower icon_green';
-			//$icone4Goff = 'fas fa-broadcast-tower icon_red';
 		};
 		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
 		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default',  30, '0', $updateiconeSystem, false);
@@ -843,13 +865,8 @@ class Freebox_OS extends eqLogic
 		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateiconeSystem, true);
 		$System->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeSystem, true);
 		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeSystem, true);
-		$System->AddCommand('board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeSystem, true);
-		/*$System->AddCommand('serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeSystem, true);
-		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', $templatecore_V4 . 'line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000,  6, '0', $updateiconeSystem, true);
-		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100,  7, '0', $updateiconeSystem, true);
-		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 8, '0', $updateiconeSystem, true);
-		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 9, '0', $updateiconeSystem, true);
-		*/
+		$System->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeSystem, true);
+		$System->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeSystem, true);
 		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeSystem, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 
@@ -877,7 +894,6 @@ class Freebox_OS extends eqLogic
 		$StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateiconeWifi, true);
 		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconeWifiOn, 0, 'default', 'default', 4, '0', $updateiconeWifi, false);
 		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconeWifiOff, 0, 'default', 'default', 5, '0', $updateiconeWifi, false);
-		//$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', null, null, null, 0, $StatusWifi, 'wifiStatut', 0, null, 0, 'default', 'default', 3, '0', $updateiconeWifi, false);
 		// Planification Wifi
 		$PlanningWifi = $Wifi->AddCommand('Etat Planning', 'wifiPlanning', "info", 'binary', null, null, null, 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateiconeWifi, true);
 		$Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOn, 0, 'default', 'default', 6, '0', $updateiconeWifi, false);
@@ -958,6 +974,9 @@ class Freebox_OS extends eqLogic
 		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
 		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 2, '0', $updateiconeAirPlay, false);
 		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 3, '0', $updateiconeAirPlay, false);
+		log::add('Freebox_OS', 'debug', '└─────────');
+		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Player');
+		self::addPlayer();
 		log::add('Freebox_OS', 'debug', '└─────────');
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 			$FreeboxAPI = new FreeboxAPI();
@@ -1211,18 +1230,6 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-					case 'Parental':
-						foreach ($Equipement->getCmd('info') as $Command) {
-							if (is_object($Command)) {
-								switch ($Command->getLogicalId()) {
-									case "parentalStatus":
-										$result = $FreeboxAPI->universal_get('parental');
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-										break;
-								}
-							}
-						}
-						break;
 					case 'Disque':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
@@ -1316,13 +1323,26 @@ class Freebox_OS extends eqLogic
 						break;
 					default:
 						$logicalType = $Equipement->getConfiguration('type');
-
 						if ($logicalType == 'Parental') {
 							foreach ($Equipement->getCmd('info') as $Command) {
+								if (!$Equipement->getIsEnable()) break;
 								$results = $FreeboxAPI->getTile($Equipement->getLogicalId(), 'Parental');
 								log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['current_mode']);
 								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
 								log::add('Freebox_OS', 'debug', '└─────────');
+								break;
+							}
+							break;
+						} else if ($logicalType == 'Player') {
+							foreach ($Equipement->getCmd('info') as $Command) {
+								if (!$Equipement->getIsEnable()) break;
+
+								if ($Command->getLogicalId() == 'power_state') {
+									$results = $FreeboxAPI->getTile($Equipement->getLogicalId(), 'Player');
+									log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['power_state']);
+									$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['power_state']);
+									log::add('Freebox_OS', 'debug', '└─────────');
+								}
 								break;
 							}
 							break;
@@ -1536,20 +1556,6 @@ class Freebox_OSCmd extends cmd
 						break;
 				}
 				break;
-			case 'Parental':
-				$result = $FreeboxAPI->universal_get('parental');
-				switch ($this->getLogicalId()) {
-					case 'allowed ':
-						$FreeboxAPI->universal_put('allowed', 'parental');
-						break;
-					case 'webonly':
-						$FreeboxAPI->universal_put('webonly', 'parental');
-						break;
-					case 'denied':
-						$FreeboxAPI->universal_put('denied', 'parental');
-						break;
-				}
-				break;
 			case 'Phone':
 				$result = $FreeboxAPI->nb_appel_absence();
 				if ($result != false) {
@@ -1585,58 +1591,68 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			default:
+				$logicalType = $this->getEqLogic()->getconfiguration('type');
+				$logicalEqu = $this->getEqLogic()->getLogicalId();
 				$logicalId = $this->getLogicalId();
-				switch ($this->getSubType()) {
-					case 'slider':
-						if ($this->getConfiguration('inverse')) {
-							$parametre['value'] = ($this->getConfiguration('maxValue') - $this->getConfiguration('minValue')) - $_options['slider'];
-						} else {
-							$parametre['value'] = (int) $_options['slider'];
-						}
-						$parametre['value_type'] = 'int';
-						break;
-					case 'color':
-						$parametre['value'] = $_options['color'];
-						$parametre['value_type'] = '';
-						break;
-					case 'message':
-						$parametre['value'] = $_options['message'];
-						$parametre['value_type'] = 'void';
-						break;
-					case 'select':
-						$parametre['value'] = $_options['select'];
-						$parametre['value_type'] = 'void';
-						break;
-					default:
-						$parametre['value_type'] = 'bool';
+				if ($logicalType == 'Parental') {
+					$parametre['value'] = 'void';
+					$parametre['value_type'] = 'void';
+					$FreeboxAPI->universal_put($logicalId, 'Parental', $logicalEqu);
 
-						if ($this->getConfiguration('logicalId') >= 0 && ($this->getLogicalId() == 'PB_On' || $this->getLogicalId() == 'PB_Off')) {
-							$logicalId = $this->getConfiguration('logicalId');
-							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $this->getLogicalId());
-							if ($this->getLogicalId() == 'PB_On') {
-								$parametre['value'] = true;
-							} else {
-								$parametre['value'] = false;
-							}
-
-							break;
-						} else {
-							$logicalId = $this->getLogicalId();
-							$parametre['value'] = true;
-							$Listener = cmd::byId(str_replace('#', '', $this->getValue()));
-
-							if (is_object($Listener)) {
-								$parametre['value'] = $Listener->execCmd();
-							}
+					log::add('Freebox_OS', 'debug', '└─────────');
+					break;
+				} else {
+					switch ($this->getSubType()) {
+						case 'slider':
 							if ($this->getConfiguration('inverse')) {
-								$parametre['value'] = !$parametre['value'];
+								$parametre['value'] = ($this->getConfiguration('maxValue') - $this->getConfiguration('minValue')) - $_options['slider'];
+							} else {
+								$parametre['value'] = (int) $_options['slider'];
 							}
-						}
-						break;
+							$parametre['value_type'] = 'int';
+							break;
+						case 'color':
+							$parametre['value'] = $_options['color'];
+							$parametre['value_type'] = '';
+							break;
+						case 'message':
+							$parametre['value'] = $_options['message'];
+							$parametre['value_type'] = 'void';
+							break;
+						case 'select':
+							$parametre['value'] = $_options['select'];
+							$parametre['value_type'] = 'void';
+							break;
+						default:
+							$parametre['value_type'] = 'bool';
+							if ($this->getConfiguration('logicalId') >= 0 && ($this->getLogicalId() == 'PB_On' || $this->getLogicalId() == 'PB_Off')) {
+								$logicalId = $this->getConfiguration('logicalId');
+								log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $this->getLogicalId());
+								if ($this->getLogicalId() == 'PB_On') {
+									$parametre['value'] = true;
+								} else {
+									$parametre['value'] = false;
+								}
+
+								break;
+							} else {
+								$logicalId = $this->getLogicalId();
+								$parametre['value'] = true;
+								$Listener = cmd::byId(str_replace('#', '', $this->getValue()));
+
+								if (is_object($Listener)) {
+									$parametre['value'] = $Listener->execCmd();
+								}
+								if ($this->getConfiguration('inverse')) {
+									$parametre['value'] = !$parametre['value'];
+								}
+							}
+							break;
+					}
+					$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
+					//	log::add('Freebox_OS', 'debug', '└─────────');
+					break;
 				}
-				$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
-				//	log::add('Freebox_OS', 'debug', '└─────────');
-				break;
 		}
 	}
 }

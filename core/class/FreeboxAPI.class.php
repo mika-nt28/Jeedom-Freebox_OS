@@ -139,11 +139,11 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] ' . $content);
 			$result = json_decode($content, true);
 			if ($result == null) return false;
-			log::add('Freebox_OS', 'debug', '└─────────8');
+			log::add('Freebox_OS', 'debug', '└─────────');
 			return $result;
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', '│ [FreeboxRequest]' . $e->getCode());
-			log::add('Freebox_OS', 'debug', '└─────────9');
+			log::add('Freebox_OS', 'debug', '└─────────');
 		}
 	}
 	public function close_session()
@@ -241,7 +241,7 @@ class FreeboxAPI
 				$Disque = Freebox_OS::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
 				$command = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, null, 0, '0', 100,  null, '0', false);
 				$command->event($value);
-				log::add('Freebox_OS', 'debug', '└─────────10');
+				log::add('Freebox_OS', 'debug', '└─────────');
 			}
 		}
 	}
@@ -302,7 +302,25 @@ class FreeboxAPI
 			return false;
 		}
 	}
-	public function universal_put($parametre, $update = 'wifi')
+	public function getHomeAdapters_player($update = 'HomeAdapters')
+	{
+		switch ($update) {
+			case 'HomeAdapters':
+				$config = 'api/v8/home/adapters';
+				break;
+			case 'Player':
+				$config = 'api/v8/player';
+				break;
+		}
+		$listEquipement = $this->fetch('/' . $config);
+		if ($listEquipement === false)
+			return false;
+		if ($listEquipement['success'])
+			return $listEquipement['result'];
+		else
+			return false;
+	}
+	public function universal_put($parametre, $update = 'wifi', $id = null)
 	{
 		switch ($update) {
 			case 'wifi':
@@ -314,6 +332,11 @@ class FreeboxAPI
 				$config = 'api/v8/wifi/planning';
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
+				break;
+			case 'Parental':
+				$config = 'api/v8/network_control'; //. $id . '/rules';
+				$config_log = 'Mise à jour du : Contrôle Parental';
+				$config_commande = 'enabled';
 				break;
 			case '4G':
 				$config = 'api/v8/connection/lte/config';
@@ -330,19 +353,23 @@ class FreeboxAPI
 		}
 
 		log::add('Freebox_OS', 'debug', '>───────── Mise à jour : ' . $config_log . ' avec la valeur : ' . $parametre);
-
 		$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");
-
 		if ($return === false) {
 			return false;
 		}
 		switch ($update) {
 			case 'wifi':
 				return $return['result']['enabled'];
+				break;
 			case 'planning':
 				return $return['result']['use_planning'];
+				break;
 			case '4G':
 				return $return['result']['enabled'];
+				break;
+			case 'Parental':
+				return $return['result']['current_mode'];
+				break;
 		}
 	}
 	public function reboot()
@@ -470,6 +497,7 @@ class FreeboxAPI
 	}
 	public function getTile($id = '', $update = 'tiles')
 	{
+		$config_sup = null;
 		switch ($update) {
 			case 'tiles':
 				$config = 'api/v8/home/tileset/';
@@ -477,9 +505,13 @@ class FreeboxAPI
 			case 'Parental':
 				$config = 'api/v8/network_control/';
 				break;
+			case 'Player':
+				$config = 'api/v8/player/';
+				$config_sup = '/api/v6/status';
+				break;
 		}
 
-		$Status = $this->fetch('/' . $config . $id);
+		$Status = $this->fetch('/' . $config . $id . $config_sup);
 		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
 		if ($Status === false)
 			return false;
@@ -489,16 +521,23 @@ class FreeboxAPI
 			return false;
 		}
 	}
-	public function setTile($nodeId, $endpointId, $parametre)
+	public function setTile($nodeId, $endpointId, $parametre, $update = 'tiles')
 	{
-
+		switch ($update) {
+			case 'tiles':
+				$config = 'api/v8/home/endpoints/';
+				break;
+			case 'Parental':
+				$config = 'api/v8/network_control/';
+				break;
+		}
 		if ($endpointId != null) {
 			$endpointId = $endpointId . '/';
 		} elseif ($endpointId != 'refresh') {
 			$endpointId = null;
 		}
-		log::add('Freebox_OS', 'debug', '└───────── Info nodeid : ' . $nodeId . ' -- endpointId : ' . $endpointId);
-		$return = $this->fetch('/api/v8/home/endpoints/' . $nodeId . '/' . $endpointId, $parametre, "PUT");
+		log::add('Freebox_OS', 'debug', '└───────── Info nodeid : ' . $nodeId . ' -- endpointId : ' . $endpointId . ' -- Paramètre : ' . $parametre);
+		$return = $this->fetch('/' . $config . $nodeId . '/' . $endpointId, $parametre, "PUT");
 		if ($return === false)
 			return false;
 		if ($return['success'])
@@ -506,16 +545,7 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function getHomeAdapters()
-	{
-		$listEquipement = $this->fetch('/api/v8/home/adapters');
-		if ($listEquipement === false)
-			return false;
-		if ($listEquipement['success'])
-			return $listEquipement['result'];
-		else
-			return false;
-	}
+
 	public function getHomeAdapterStatus($id = '')
 	{
 		$Status = $this->fetch('/api/v8/home/adapters/' . $id);

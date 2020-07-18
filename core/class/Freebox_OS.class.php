@@ -390,8 +390,8 @@ class Freebox_OS extends eqLogic
 
 			$parental = self::AddEqLogic($Equipement['name'], $Equipement['id'], $category, true, 'Parental', null);
 			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'Parental', true);
-			//$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'Parental', true);
-			//$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'Parental', true);
+			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'Parental', true);
+			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'Parental', true);
 			log::add('Freebox_OS', 'debug', '└─────────');
 		}
 	}
@@ -820,7 +820,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function CreateArchi()
 	{
-		self::AddEqLogic('Réseau', 'Reseau', 'default', false, null, null);
+		self::AddEqLogic('Equipement Réseau', 'Reseau', 'default', false, null, null);
 		self::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
@@ -830,7 +830,7 @@ class Freebox_OS extends eqLogic
 			$templatecore_V4  = 'core::';
 		};
 		// ADSL
-		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ADSL');
+		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Bandes Passantes');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$updateiconeADSL = false;
@@ -838,7 +838,7 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$updateiconeADSL = false;
 		};
-		$ADSL = self::AddEqLogic('ADSL', 'ADSL', 'default', false, null, null);
+		$ADSL = self::AddEqLogic('Bandes Passantes', 'ADSL', 'default', false, null, null);
 		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeADSL, true);
 		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeADSL, true);
 		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeADSL, true);

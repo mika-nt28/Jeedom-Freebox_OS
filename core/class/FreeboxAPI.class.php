@@ -334,9 +334,18 @@ class FreeboxAPI
 				$config_commande = 'use_planning';
 				break;
 			case 'Parental':
-				$config = 'api/v8/network_control'; //. $id . '/rules';
 				$config_log = 'Mise à jour du : Contrôle Parental';
-				$config_commande = 'enabled';
+				$config_commande = 'Parental';
+
+				$jsontestprofile = $this->fetch("/api/v8/network_control/" . $id);
+				$jsontestprofile = $jsontestprofile['result'];
+				if ($parametre == "denied") {
+					$jsontestprofile['override_until'] = 0;
+					$jsontestprofile['override'] = true;
+				} else {
+					$jsontestprofile['override'] = false;
+				}
+				$parametre = $jsontestprofile;
 				break;
 			case '4G':
 				$config = 'api/v8/connection/lte/config';
@@ -349,11 +358,16 @@ class FreeboxAPI
 		} elseif ($parametre === 0) {
 			$parametre = false;
 		} else {
-			//	$parametre;
+			//  $parametre;
 		}
 
+
 		log::add('Freebox_OS', 'debug', '>───────── Mise à jour : ' . $config_log . ' avec la valeur : ' . $parametre);
-		$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");
+		if ($config_commande == 'Parental') {
+			$return = $this->fetch('/' . $config . '', $parametre, "PUT");
+		} else {
+			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");
+		}
 		if ($return === false) {
 			return false;
 		}
@@ -367,21 +381,6 @@ class FreeboxAPI
 			case '4G':
 				return $return['result']['enabled'];
 				break;
-			case 'Parental':
-				return $return['result']['current_mode'];
-				break;
-		}
-	}
-	public function reboot()
-	{
-		log::add('Freebox_OS', 'debug', '>───────── Reboot Freebox');
-		$content  = $this->fetch('/api/v8/system/reboot/', null, "POST");
-		if ($content === false)
-			return false;
-		if ($content['success']) {
-			return $content;
-		} else {
-			return false;
 		}
 	}
 	public function ringtone_on()

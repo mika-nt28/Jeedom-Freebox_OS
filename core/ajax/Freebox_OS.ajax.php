@@ -100,11 +100,11 @@ try {
 			$Command = cmd::byId(init('id'));
 			if (is_object($Command)) {
 				$Mac = str_replace('ether-', '', $Command->getLogicalId());
-				ajax::success($FreeboxAPI->WakeOnLAN($Mac));
+				ajax::success($FreeboxAPI->universal_put($Mac, 'WakeOnLAN'));
 			}
 			ajax::success(false);
 			break;
-		case 'sendCmdPlayer':
+			/*case 'sendCmdPlayer':
 			$Player = eqLogic::byId(init('id'));
 			if (is_object($Player)) {
 				$Cmd = $Player->getCmd('action', init('cmd'));
@@ -112,11 +112,11 @@ try {
 					ajax::success($Cmd->execute());
 			}
 			ajax::success(false);
+			break;*/
+		case 'get_airmediareceivers':
+			ajax::success($FreeboxAPI->airmedia('receivers'));
 			break;
-		case 'getAirMediaRecivers':
-			ajax::success($FreeboxAPI->airmediaReceivers());
-			break;
-		case 'setAirMediaReciver':
+		case 'set_airmediareceivers':
 			$cmd = cmd::byId(init('id'));
 			if (is_object($cmd)) {
 				$cmd->setCollectDate('');

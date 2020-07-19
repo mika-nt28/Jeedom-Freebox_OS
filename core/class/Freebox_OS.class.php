@@ -1482,60 +1482,73 @@ class Freebox_OS extends eqLogic
 		exec($cmd);
 	}
 
+
+	public static function getlogicalinfo() {
+		return array(
+			'adslID' => 'ADSL',
+			'adslName' => 'ADSL',
+			'airPlayID' => 'AirPlay',
+			'airPlayName' => 'AirPlay',
+			'disqueID' => 'Disque',
+			'disqueName' => 'Disque Dur',
+			'reseauID' => 'Reseau',
+			'reseauName' => 'Réseau',
+			'systemID' => 'System',
+			'systemName' => 'Système',
+			'downloadsID' => 'Downloads',
+			'downloadsName' => 'Téléchargements',
+			'phoneID' => 'Phone',
+			'phoneName' => 'Téléphone',
+			'wifiID' => 'Wifi',
+			'wifiName' => 'Wifi',
+			'homeAdaptersID' => 'HomeAdapters',
+			'homeAdaptersName' => 'Home Adapters'
+		);
+	}
+
 	public function updateLogicalID($_version) {
-
-		$adslID = "ADSL";
-		$adslName = "ADSL";
-		$airPlayID = "AirPlay";
-		$airPlayName = "AirPlay";
-		$disqueID = "Disque";
-		$disqueName = "Disque Dur";
-		$reseauID = "Reseau";
-		$reseauName = "Réseau";
-		$systemID = "System";
-		$systemName = "Système";
-		$downloadsID = "Downloads";
-		$downloadsName = "Téléchargements";
-		$phoneID = "Phone";
-		$phoneName = "Téléphone";
-		$wifiID = "Wifi";
-		$wifiName = "Wifi";
-		$homeAdaptersID = "HomeAdapters";
-		$homeAdaptersName = "Home Adapters";
-
 		$eqLogics = eqLogic::byType('Freebox_OS');
+		$locicalinfo = getlogicalinfo();
 		foreach ($eqLogics as $eqLogic) {
 
 			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
-
-			$logicalId = $eqLogic->getLogicalId();
-			if ($logicalId = "ADSL") {
-				$eqLogic->setLogicalId($adslID);
-				$eqLogic->setName($adslName);
-			} else if ($logicalId = "AirPlay") {
-				$eqLogic->setLogicalId($airPlayID);
-				$eqLogic->setName($airPlayName);
-			} else if ($logicalId = "Disque") {
-				$eqLogic->setLogicalId($disqueID);
-				$eqLogic->setName($disqueName);
-			}  else if ($logicalId = "reseau") {
-				$eqLogic->setLogicalId($reseauID);
-				$eqLogic->setName($reseauName);
-			} else if ($logicalId = "System") {
-				$eqLogic->setLogicalId($systemID);
-				$eqLogic->setName($systemName);
-			} else if ($logicalId = "Downloads") {
-				$eqLogic->setLogicalId($downloadsID);
-				$eqLogic->setName($downloadsName);
-			} else if ($logicalId = "Phone") {
-				$eqLogic->setLogicalId($phoneID);
-				$eqLogic->setName($phoneName);
-			} else if ($logicalId = "Wifi") {
-				$eqLogic->setLogicalId($wifiID);
-				$eqLogic->setName($wifiName);
-			} else if ($logicalId = "HomeAdapters") {
-				$eqLogic->setLogicalId($homeAdaptersID);
-				$eqLogic->setName($homeAdaptersName);
+			switch ($eqLogic->getLogicalId()) {
+				case 'ADSL':
+					$eqLogic->setLogicalId($locicalinfo['adslID']);
+					$eqLogic->setName($locicalinfo['adslName']);
+				break;
+				case'AirPlay':
+					$eqLogic->setLogicalId($locicalinfo['airPlayID']);
+					$eqLogic->setName($locicalinfo['airPlayName']);
+				break;
+				case 'Disque':
+					$eqLogic->setLogicalId($locicalinfo['disqueID']);
+					$eqLogic->setName($locicalinfo['disqueName']);
+				break;
+				case 'reseau':
+					$eqLogic->setLogicalId($locicalinfo['reseauID']);
+					$eqLogic->setName($locicalinfo['reseauName']);
+				break;
+				case 'System':
+					$eqLogic->setLogicalId($locicalinfo['systemID']);
+					$eqLogic->setName($locicalinfo['systemName']);
+				break;
+				case 'Downloads':
+					$eqLogic->setLogicalId($locicalinfo['downloadsID']);
+					$eqLogic->setName($locicalinfo['downloadsName']);
+				break;
+				case 'Phone':
+					$eqLogic->setLogicalId($locicalinfo['phoneID']);
+					$eqLogic->setName($locicalinfo['phoneName']);
+				break;
+				case 'Wifi':
+					$eqLogic->setLogicalId($locicalinfo['wifiID']);
+					$eqLogic->setName($locicalinfo['wifiName']);
+				break;
+				case 'HomeAdapters':
+					$eqLogic->setLogicalId($locicalinfo['homeAdaptersID']);
+					$eqLogic->setName($locicalinfo['homeAdaptersName']);
+				break;
 			}
 
 			$eqLogic->setConfiguration('VersionLogicalID', $_version);

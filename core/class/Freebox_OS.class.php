@@ -820,6 +820,8 @@ class Freebox_OS extends eqLogic
 	}
 	public static function CreateArchi()
 	{
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+
 		self::AddEqLogic('Appareils connectés', 'Reseau', 'default', false, null, null);
 		self::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
@@ -970,7 +972,7 @@ class Freebox_OS extends eqLogic
 			$iconeAirPlayOff = 'fas fa-stop icon_red';
 			$updateiconeAirPlay = false;
 		};
-		$AirPlay = self::AddEqLogic('AirPlay', 'airplay', 'multimedia', false, null, null);
+		$AirPlay = self::AddEqLogic($logicalinfo[''], $logicalinfo[''], 'multimedia', false, null, null);
 		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
 		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 2, '0', $updateiconeAirPlay, false);
 		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 3, '0', $updateiconeAirPlay, false);
@@ -1510,7 +1512,7 @@ class Freebox_OS extends eqLogic
 	public function updateLogicalID($_version)
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
-		$locicalinfo = getlogicalinfo();
+		$logicalinfo = Freebox_OS::getlogicalinfo();
 		foreach ($eqLogics as $eqLogic) {
 
 			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;

@@ -296,7 +296,7 @@ class FreeboxAPI
 				$config = 'api/v8/lan/browser/pub';
 				break;
 			case 'reseau_ping':
-				$config = '/api/v8/lan/browser/pub/' . $id;
+				$config = 'api/v8/lan/browser/pub/' . $id;
 				break;
 			case 'system':
 				$config = 'api/v8/system';

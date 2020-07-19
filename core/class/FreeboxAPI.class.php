@@ -576,21 +576,21 @@ class FreeboxAPI
 			case 'tiles':
 				$config = 'api/v8/home/tileset/';
 				break;
-			case 'parental':
+				/*case 'parental':
 				$config = 'api/v8/network_control/';
-				break;
+				break;*/
 			case 'player':
 				$config = 'api/v8/player/';
 				$config_sup = '/api/v6/status';
 				break;
 		}
 
-		$Status = $this->fetch('/' . $config . $id . $config_sup);
+		$result = $this->fetch('/' . $config . $id . $config_sup);
 		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
-		if ($Status === false)
+		if ($result === false)
 			return false;
-		if ($Status['success']) {
-			return $Status['result'];
+		if ($result['success']) {
+			return $reseult['result'];
 		} else {
 			return false;
 		}
@@ -670,7 +670,31 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	public function airmediaConfig($parametre)
+	public function airmedia($update = 'config', $parametre, $receiver)
+	{
+		switch ($update) {
+			case 'config':
+				$config = 'config/';
+				$fonction = "PUT";
+				break;
+			case 'receivers':
+				$config = 'receivers/';
+				$fonction = null;
+				break;
+			case 'action':
+				$config = 'receivers/' . $receiver . '/';
+				$fonction = "POST";
+				break;
+		}
+		$result = $this->fetch('/api/v8/airmedia/' . $config, $parametre, $fonction);
+		if ($result === false)
+			return false;
+		if ($result['success'])
+			return $result['result'];
+		else
+			return false;
+	}
+	/*public function airmediaConfig($parametre) // Fonction plus appelé à supprimer => Intégrer dans "airmedia"
 	{
 		$result = $this->fetch('/api/v8/airmedia/config/', $parametre, "PUT");
 		if ($result === false)
@@ -679,8 +703,8 @@ class FreeboxAPI
 			return $result['result'];
 		else
 			return false;
-	}
-	public function airmediaReceivers()
+	}*/
+	/*public function airmediaReceivers() // Fonction plus appelé à supprimer => Intégrer dans "airmedia" => Fonction non appelé
 	{
 		$result = $this->fetch('/api/v8/airmedia/receivers/');
 		if ($result === false)
@@ -690,8 +714,8 @@ class FreeboxAPI
 			return $result['result'];
 		else
 			return false;
-	}
-	public function AirMediaAction($receiver, $Parameter)
+	}*/
+	/*public function AirMediaAction($receiver, $Parameter) // Fonction plus appelé à supprimer => Intégrer dans "airmedia"
 	{
 		$result = $this->fetch('/api/v8/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
 		if ($result === false)
@@ -700,5 +724,5 @@ class FreeboxAPI
 			return true;
 		else
 			return false;
-	}
+	}*/
 }

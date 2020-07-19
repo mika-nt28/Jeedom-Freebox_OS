@@ -1000,7 +1000,7 @@ class Freebox_OS extends eqLogic
 				$FreeboxAPI = new FreeboxAPI();
 				$parametre["enabled"] = $this->getIsEnable();
 				$parametre["password"] = $this->getConfiguration('password');
-				$FreeboxAPI->airmediaConfig($parametre);
+				$FreeboxAPI->airmedia('config',$parametre);
 				break;
 		}
 		if ($this->getConfiguration('waite') == '') {
@@ -1272,10 +1272,11 @@ class Freebox_OS extends eqLogic
 					case 'Reseau':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
-								$result = $FreeboxAPI->ReseauPing($Command->getLogicalId());
+								$result = $FreeboxAPI->universal_get('reseau_ping',$Command->getLogicalId());
 								if (!$result['success']) {
 									if ($result['error_code'] == "internal_error") {
 										$Command->remove();
+										$Command->save();
 									}
 								} else {
 									if (isset($result['result']['l3connectivities'])) {
@@ -1581,11 +1582,11 @@ class Freebox_OSCmd extends cmd
 					case "airmediastart":
 						log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
 						$Parameter["action"] = "start";
-						$return = $FreeboxAPI->AirMediaAction($receivers->execCmd(), $Parameter);
+						$return = $FreeboxAPI->airmedia('action', $Parameter, $receivers->execCmd());
 						break;
 					case "airmediastop":
 						$Parameter["action"] = "stop";
-						$return = $FreeboxAPI->AirMediaAction($receivers->execCmd(), $Parameter);
+						$return = $FreeboxAPI->airmedia('action', $Parameter, $receivers->execCmd();
 						break;
 				}
 				break;

@@ -55,14 +55,23 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 }
                 switch ($template) {
                     case 'AirPlay':
+                    case 'airplay':
                     case 'airmedia':
                     case 'connexion':
+                    case 'ADSL':
                     case 'downloads':
+                    case 'Downloads':
                     case 'system':
+                    case 'System':
                     case 'disk':
+                    case 'Disque':
                     case 'phone':
+                    case 'Phone':
                     case 'wifi':
+                    case 'Wifi':
                     case 'player':
+                    case 'Player':
+                    case 'reseau':
                     case 'Reseau':
                         $status = 1;
                         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';

@@ -54,7 +54,7 @@ function Freebox_OS_update()
 		}
 		Freebox_OS::updateLogicalID(1);
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Sauvegarde de l\'ensemble des équipements');
-		
+
 		/*$eqs = eqLogic::byType('Freebox_OS');
 		foreach ($eqs as $eq) {
 			$eq->save();

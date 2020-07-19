@@ -970,7 +970,7 @@ class Freebox_OS extends eqLogic
 			$iconeAirPlayOff = 'fas fa-stop icon_red';
 			$updateiconeAirPlay = false;
 		};
-		$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay', 'multimedia', false, null, null);
+		$AirPlay = self::AddEqLogic('AirPlay', 'airplay', 'multimedia', false, null, null);
 		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
 		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 2, '0', $updateiconeAirPlay, false);
 		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 3, '0', $updateiconeAirPlay, false);
@@ -987,7 +987,7 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->universal_get('4G');
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
-			$FreeboxAPI->DownloadStats();
+			$FreeboxAPI->universal_get('DownloadStats');
 			self::addReseau();
 			self::addTiles();
 			self::addHomeAdapters();
@@ -1000,7 +1000,7 @@ class Freebox_OS extends eqLogic
 				$FreeboxAPI = new FreeboxAPI();
 				$parametre["enabled"] = $this->getIsEnable();
 				$parametre["password"] = $this->getConfiguration('password');
-				$FreeboxAPI->airmedia('config',$parametre);
+				$FreeboxAPI->airmedia('config', $parametre);
 				break;
 		}
 		if ($this->getConfiguration('waite') == '') {
@@ -1075,7 +1075,7 @@ class Freebox_OS extends eqLogic
 						}
 						break;
 					case 'Downloads':
-						$result = $FreeboxAPI->DownloadStats();
+						$result = $FreeboxAPI->universal_get('DownloadStats');
 						if ($result != false) {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								if (is_object($Command)) {
@@ -1272,11 +1272,11 @@ class Freebox_OS extends eqLogic
 					case 'Reseau':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
-								$result = $FreeboxAPI->universal_get('reseau_ping',$Command->getLogicalId());
+								$result = $FreeboxAPI->universal_get('reseau_ping', $Command->getLogicalId());
 								if (!$result['success']) {
 									if ($result['error_code'] == "internal_error") {
 										$Command->remove();
-										$Command->save();
+										$Command->save(true);
 									}
 								} else {
 									if (isset($result['result']['l3connectivities'])) {
@@ -1497,7 +1497,7 @@ class Freebox_OSCmd extends cmd
 			case 'ADSL':
 				break;
 			case 'Downloads':
-				$result = $FreeboxAPI->DownloadStats();
+				$result = $FreeboxAPI->universal_get('DownloadStats');
 				if ($result != false) {
 					switch ($this->getLogicalId()) {
 						case "stop_dl":
@@ -1586,7 +1586,7 @@ class Freebox_OSCmd extends cmd
 						break;
 					case "airmediastop":
 						$Parameter["action"] = "stop";
-						$return = $FreeboxAPI->airmedia('action', $Parameter, $receivers->execCmd();
+						$return = $FreeboxAPI->airmedia('action', $Parameter, $receivers->execCmd());
 						break;
 				}
 				break;

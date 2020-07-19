@@ -55,6 +55,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 }
                 switch ($template) {
                     case 'AirPlay':
+                    case 'airplay':
                     case 'ADSL':
                     case 'Downloads':
                     case 'System':
@@ -91,6 +92,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 }
                 switch ($template) {
                     case 'AirPlay':
+                    case 'airplay':
                     case 'ADSL':
                     case 'Downloads':
                     case 'System':

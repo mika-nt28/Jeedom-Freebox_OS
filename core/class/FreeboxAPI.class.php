@@ -194,16 +194,6 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function DownloadStats()
-	{
-		$DownloadStats = $this->fetch('/api/v8/downloads/stats/');
-		if ($DownloadStats === false)
-			return false;
-		if ($DownloadStats['success'])
-			return $DownloadStats['result'];
-		else
-			return false;
-	}
 	public function PortForwarding($Port)
 	{
 		$PortForwarding = $this->fetch('/api/v8/fw/redir/');
@@ -247,31 +237,46 @@ class FreeboxAPI
 	}
 	public function getdisque($logicalId = '')
 	{
-		$reponse = $this->fetch('/api/v8/storage/disk/' . $logicalId);
-		if ($reponse === false)
+		$result = $this->fetch('/api/v8/storage/disk/' . $logicalId);
+		if ($result === false)
 			return false;
-		if ($reponse['success']) {
-			$total_bytes = $reponse['result']['partitions'][0]['total_bytes'];
-			$used_bytes = $reponse['result']['partitions'][0]['used_bytes'];
+		if ($result['success']) {
+			$total_bytes = $result['result']['partitions'][0]['total_bytes'];
+			$used_bytes = $result['result']['partitions'][0]['used_bytes'];
 			return round($used_bytes / $total_bytes * 100, 2);
 		}
 		return false;
 	}
+	/*public function DownloadStats() // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	{
+		$result = $this->fetch('/api/v8/downloads/stats/');
+		if ($result === false) {
+			return false;
+		}
+		if ($result['success'])
+			return $result['result'];
+		else
+			return false;
+	}*/
 	public function universal_get($update = 'wifi', $id = null, $boucle = 4)
 	{
 		$config_log = null;
 		switch ($update) {
-			case 'planning':
-				$config = 'api/v8/wifi/planning';
-				$config_log = 'Etat du Planning du Wifi';
-				break;
-			case 'wifi':
-				$config = 'api/v8/wifi/config';
-				$config_log = 'Etat du Wifi';
-				break;
 			case '4G':
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Etat 4G';
+				break;
+			case 'disques':
+				$config = '/api/v8/storage/disk/' . $id;
+				break;
+			case 'DownloadStats':
+				$config = 'api/v8/downloads/stats/';
+				break;
+			case 'HomeAdapters':
+				$config = 'api/v8/home/adapters';
+				break;
+			case 'HomeAdapters_status':
+				$config = 'api/v8/home/adapters/' . $id;
 				break;
 			case 'parental':
 				$config = 'api/v8/network_control';
@@ -280,26 +285,28 @@ class FreeboxAPI
 			case 'parentalprofile':
 				$config = 'api/v8/profile';
 				break;
-			case 'HomeAdapters':
-				$config = 'api/v8/home/adapters';
-				break;
-			case 'HomeAdapters_status':
-				$config = 'api/v8/home/adapters/' . $id;
+			case 'planning':
+				$config = 'api/v8/wifi/planning';
+				$config_log = 'Etat du Planning du Wifi';
 				break;
 			case 'player':
 				$config = 'api/v8/player';
-				break;
-			case 'tiles':
-				$config = 'api/v8/home/tileset/all';
-				break;
-			case 'system':
-				$config = 'api/v8/system';
 				break;
 			case 'reseau':
 				$config = 'api/v8/lan/browser/pub';
 				break;
 			case 'reseau_ping':
 				$config = '/api/v8/lan/browser/pub/' . $id;
+				break;
+			case 'system':
+				$config = 'api/v8/system';
+				break;
+			case 'tiles':
+				$config = 'api/v8/home/tileset/all';
+				break;
+			case 'wifi':
+				$config = 'api/v8/wifi/config';
+				$config_log = 'Etat du Wifi';
 				break;
 		}
 
@@ -310,18 +317,17 @@ class FreeboxAPI
 		if ($result['success']) {
 			$value = 0;
 			switch ($update) {
-				case 'planning':
-					if ($result['result']['use_planning']) {
-						$value = 1;
-					}
-					break;
-				case 'wifi':
-					if ($result['result']['enabled']) {
-						$value = 1;
-					}
-					break;
 				case '4G':
 					if ($result['result']['enabled']) {
+						$value = 1;
+					}
+					break;
+				case 'disques':
+					$total_bytes = $result['result']['partitions'][0]['total_bytes'];
+					$used_bytes = $result['result']['partitions'][0]['used_bytes'];
+					break;
+				case 'planning':
+					if ($result['result']['use_planning']) {
 						$value = 1;
 					}
 					break;
@@ -337,6 +343,11 @@ class FreeboxAPI
 							return $result['result'];
 					}
 					break;
+				case 'wifi':
+					if ($result['result']['enabled']) {
+						$value = 1;
+					}
+					break;
 				default:
 					return $result['result'];
 					break;
@@ -344,12 +355,16 @@ class FreeboxAPI
 			if ($config_log != null) {
 				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
 			}
-			return $value;
+			if ($update == 'disques') {
+				return round($used_bytes / $total_bytes * 100, 2);
+			} else {
+				return $value;
+			}
 		} else {
 			return false;
 		}
 	}
-	public function getHomeAdapterStatus($id = '')
+	/*public function getHomeAdapterStatus($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/home/adapters/' . $id);
 		if ($result === false)
@@ -358,9 +373,9 @@ class FreeboxAPI
 			return $result['result'];
 		else
 			return false;
-	}
+	}*/
 
-	public function ReseauPing($id = '')
+	/*public function ReseauPing($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/lan/browser/pub/' . $id);
 		if ($result === false)
@@ -369,7 +384,7 @@ class FreeboxAPI
 			return $result;
 		else
 			return false;
-	}
+	}*/
 	/*public function getReseau()  // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/lan/browser/pub/');
@@ -601,9 +616,9 @@ class FreeboxAPI
 			case 'tiles':
 				$config = 'api/v8/home/endpoints/';
 				break;
-			case 'parental':
+				/*case 'parental':
 				$config = 'api/v8/network_control/';
-				break;
+				break;*/
 		}
 		if ($endpointId != null) {
 			$endpointId = $endpointId . '/';

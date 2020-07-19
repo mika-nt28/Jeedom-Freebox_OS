@@ -457,7 +457,7 @@ class FreeboxAPI
 		}
 
 		if ($config_commande == 'parental') {
-			$return = $this->fetch('/' . $config . '', $parametre, "GET");
+			$return = $this->fetch('/' . $config . '', $parametre, "PUT", true);
 		} else {
 			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
 			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");

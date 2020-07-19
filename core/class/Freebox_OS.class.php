@@ -406,7 +406,7 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
-		foreach ($FreeboxAPI->getTiles() as $Equipement) {
+		foreach ($FreeboxAPI->universal_get('tiles') as $Equipement) {
 			if ($Equipement['type'] != 'camera') {
 				if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {
 					$category = 'security';
@@ -1233,7 +1233,7 @@ class Freebox_OS extends eqLogic
 					case 'Disque':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
-								$result = $FreeboxAPI->getdisque($Command->getLogicalId());
+								$result = $FreeboxAPI->universal_get('disques', $Command->getLogicalId());
 								if ($result != false) {
 									$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 								}
@@ -1338,7 +1338,7 @@ class Freebox_OS extends eqLogic
 								if (!$Equipement->getIsEnable()) break;
 
 								if ($Command->getLogicalId() == 'power_state') {
-									$results = $FreeboxAPI->getTile($Equipement->getLogicalId(), 'player');
+									$results = $FreeboxAPI->universal_get('player', $Equipement->getLogicalId());
 									log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['power_state']);
 									$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['power_state']);
 									log::add('Freebox_OS', 'debug', '└─────────');
@@ -1347,8 +1347,8 @@ class Freebox_OS extends eqLogic
 							}
 							break;
 						} else {
-							$results = $FreeboxAPI->getTile($Equipement->getLogicalId());
-							log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
+							$results = $FreeboxAPI->universal_get('tiles_ID', $Equipement->getLogicalId());
+							//log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
 
 							if ($results != false) {
 								foreach ($results as $result) {

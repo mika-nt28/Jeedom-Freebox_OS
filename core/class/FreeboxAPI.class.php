@@ -168,24 +168,18 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', '[FreeboxCloseSession]' . $e->getCode());
 		}
 	}
-	public function WakeOnLAN($Mac)
-	{
-		$return = $this->fetch('/api/v8/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
-		if ($return === false)
-			return false;
-		return $return['success'];
-	}
+
 	public function Downloads($Etat)
 	{
-		$List_DL = $this->fetch('/api/v8/downloads/');
-		if ($List_DL === false)
+		$result = $this->fetch('/api/v8/downloads/');
+		if ($result === false)
 			return false;
-		$nbDL = count($List_DL['result']);
+		$nbDL = count($result['result']);
 		for ($i = 0; $i < $nbDL; ++$i) {
 			if ($Etat == 0)
-				$Downloads = $this->fetch('/api/v8/downloads/' . $List_DL['result'][$i]['id'], array("status" => "stopped"), "PUT");
+				$Downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "stopped"), "PUT");
 			if ($Etat == 1)
-				$Downloads = $this->fetch('/api/v8/downloads/' . $List_DL['result'][$i]['id'], array("status" => "downloading"), "PUT");
+				$Downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "downloading"), "PUT");
 		}
 		if ($Downloads === false)
 			return false;
@@ -235,7 +229,7 @@ class FreeboxAPI
 			}
 		}
 	}
-	public function getdisque($logicalId = '')
+	/*public function getdisque($logicalId = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/storage/disk/' . $logicalId);
 		if ($result === false)
@@ -246,7 +240,7 @@ class FreeboxAPI
 			return round($used_bytes / $total_bytes * 100, 2);
 		}
 		return false;
-	}
+	}*/
 	/*public function DownloadStats() // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/downloads/stats/');
@@ -292,6 +286,10 @@ class FreeboxAPI
 			case 'player':
 				$config = 'api/v8/player';
 				break;
+			case 'player_ID':
+				$config = 'api/v8/player/' . $id . '/api/v6/status';
+				$config_log = 'Traitement de la Mise à jour de l\'id ';
+				break;
 			case 'reseau':
 				$config = 'api/v8/lan/browser/pub';
 				break;
@@ -303,6 +301,10 @@ class FreeboxAPI
 				break;
 			case 'tiles':
 				$config = 'api/v8/home/tileset/all';
+				break;
+			case 'tiles_ID':
+				$config = 'api/v8/home/tileset/' . $id;
+				$config_log = 'Traitement de la Mise à jour de l\'id ';
 				break;
 			case 'wifi':
 				$config = 'api/v8/wifi/config';
@@ -352,8 +354,10 @@ class FreeboxAPI
 					return $result['result'];
 					break;
 			}
-			if ($config_log != null) {
+			if ($config_log != null && $id == null) {
 				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
+			} else if ($config_log != null && $id != null) {
+				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
 			}
 			if ($update == 'disques') {
 				return round($used_bytes / $total_bytes * 100, 2);
@@ -364,6 +368,25 @@ class FreeboxAPI
 			return false;
 		}
 	}
+	/*public function getTile($id = '', $update = 'tiles') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	{
+		$config_sup = null;
+		switch ($update) {
+			case 'tiles':
+				$config = 'api/v8/home/tileset/';
+				break;
+		}
+
+		$result = $this->fetch('/' . $config . $id . $config_sup);
+		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
+		if ($result === false)
+			return false;
+		if ($result['success']) {
+			return $result['result'];
+		} else {
+			return false;
+		}
+	}*/
 	/*public function getHomeAdapterStatus($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/home/adapters/' . $id);
@@ -436,19 +459,21 @@ class FreeboxAPI
 			return false;
 		}
 	}*/
-
+	public function WakeOnLAN($Mac)
+	{
+		$return = $this->fetch('/api/v8/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
+		if ($return === false)
+			return false;
+		return $return['success'];
+	}
 	public function universal_put($parametre, $update = 'wifi', $id = null)
 	{
+		$fonction = "PUT";
 		switch ($update) {
-			case 'wifi':
-				$config = 'api/v8/wifi/config';
+			case '4G':
+				$config = 'api/v8/connection/lte/config';
+				$config_log = 'Mise à jour de : Activation 4G';
 				$config_commande = 'enabled';
-				$config_log = 'Mise à jour de : Etat du Wifi';
-				break;
-			case 'planning':
-				$config = 'api/v8/wifi/planning';
-				$config_log = 'Mise à jour : Planning du Wifi';
-				$config_commande = 'use_planning';
 				break;
 			case 'parental':
 				$config_log = 'Mise à jour du : Contrôle Parental';
@@ -459,16 +484,35 @@ class FreeboxAPI
 				if ($parametre == "denied") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+				} else if ($parametre == "denied_30m") {
+					$jsontestprofile['override_until'] = 0;
+					$jsontestprofile['override'] = true;
+				} else if ($parametre == "denied_1h") {
+					$jsontestprofile['override_until'] = 0;
+					$jsontestprofile['override'] = true;
+				} else if ($parametre == "denied_2h") {
+					$jsontestprofile['override_until'] = 0;
+					$jsontestprofile['override'] = true;
 				} else {
 					$jsontestprofile['override'] = false;
 				}
 				$parametre = $jsontestprofile;
 				$config = "api/v8/network_control/" . $id;
 				break;
-			case '4G':
-				$config = 'api/v8/connection/lte/config';
-				$config_log = 'Mise à jour de : Activation 4G';
+			case 'planning':
+				$config = 'api/v8/wifi/planning';
+				$config_log = 'Mise à jour : Planning du Wifi';
+				$config_commande = 'use_planning';
+				break;
+			case 'WakeOnLAN':
+				$config = '/api/v8/lan/wol/pub/';
+				$fonction = "POST";
+				$config_log = 'Mise à jour de : WakeOnLAN';
+				break;
+			case 'wifi':
+				$config = 'api/v8/wifi/config';
 				$config_commande = 'enabled';
+				$config_log = 'Mise à jour de : Etat du Wifi';
 				break;
 		}
 		if ($parametre === 1) {
@@ -477,11 +521,13 @@ class FreeboxAPI
 			$parametre = false;
 		}
 
-		if ($config_commande == 'parental') {
-			$return = $this->fetch('/' . $config . '', $parametre, "PUT", true);
+		if ($update == 'parental') {
+			$return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
+		} else if ($update == 'WakeOnLAN') {
+			$return = $this->fetch($config, array("mac" => $id, "password" => ""), $fonction);
 		} else {
 			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
-			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");
+			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction);
 			if ($return === false) {
 				return false;
 			}
@@ -494,6 +540,9 @@ class FreeboxAPI
 					break;
 				case '4G':
 					return $return['result']['enabled'];
+					break;
+				default:
+					return $return;
 					break;
 			}
 		}
@@ -569,7 +618,7 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', '[FreeboxUpdateSystem]' . $e->getCode());
 		}
 	}
-	public function getTiles($update = 'tiles')
+	/*public function getTiles($update = 'tiles')  // Fonction plus appelé à supprimer => Intégrer dans "ringtone_on" renomé en ringtone
 	{
 		switch ($update) {
 			case 'tiles':
@@ -583,42 +632,14 @@ class FreeboxAPI
 			return $result['result'];
 		else
 			return false;
-	}
-	public function getTile($id = '', $update = 'tiles')
-	{
-		$config_sup = null;
-		switch ($update) {
-			case 'tiles':
-				$config = 'api/v8/home/tileset/';
-				break;
-				/*case 'parental':
-				$config = 'api/v8/network_control/';
-				break;*/
-			case 'player':
-				$config = 'api/v8/player/';
-				$config_sup = '/api/v6/status';
-				break;
-		}
+	}*/
 
-		$result = $this->fetch('/' . $config . $id . $config_sup);
-		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
-		if ($result === false)
-			return false;
-		if ($result['success']) {
-			return $reseult['result'];
-		} else {
-			return false;
-		}
-	}
 	public function setTile($nodeId, $endpointId, $parametre, $update = 'tiles')
 	{
 		switch ($update) {
 			case 'tiles':
 				$config = 'api/v8/home/endpoints/';
 				break;
-				/*case 'parental':
-				$config = 'api/v8/network_control/';
-				break;*/
 		}
 		if ($endpointId != null) {
 			$endpointId = $endpointId . '/';

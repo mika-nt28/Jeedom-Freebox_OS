@@ -1501,7 +1501,7 @@ class Freebox_OS extends eqLogic
 		$wifiID = "Wifi";
 		$wifiName = "Wifi";
 		$homeAdaptersID = "HomeAdapters";
-		$homeAdaptersName = "";
+		$homeAdaptersName = "Home Adapters";
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {

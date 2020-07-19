@@ -212,7 +212,7 @@ class Freebox_OS extends eqLogic
 	public static function addReseau()
 	{
 		$FreeboxAPI = new FreeboxAPI();
-		$Reseau = self::AddEqLogic('Réseau', 'Reseau', 'multimedia', false, null, null);
+		$Reseau = self::AddEqLogic('Appareils connectés', 'Reseau', 'multimedia', false, null, null);
 		log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
 		foreach ($FreeboxAPI->getReseau() as $Equipement) {
 			if ($Equipement['primary_name'] != '') {
@@ -820,7 +820,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function CreateArchi()
 	{
-		self::AddEqLogic('Equipement Réseau', 'Reseau', 'default', false, null, null);
+		self::AddEqLogic('Appareils connectés', 'Reseau', 'default', false, null, null);
 		self::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
@@ -829,8 +829,8 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
-		// ADSL
-		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Bandes Passantes');
+		// ADSL - Réeseau
+		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Réseau');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$updateiconeADSL = false;
@@ -838,13 +838,13 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$updateiconeADSL = false;
 		};
-		$ADSL = self::AddEqLogic('Bandes Passantes', 'ADSL', 'default', false, null, null);
-		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeADSL, true);
+		$ADSL = self::AddEqLogic('Réseau', 'ADSL', 'default', false, null, null);
+		$ADSL->AddCommand('rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeADSL, true);
+		$ADSL->AddCommand('state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeADSL, true);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// System
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
@@ -1219,7 +1219,7 @@ class Freebox_OS extends eqLogic
 							if (is_object($Command)) {
 								switch ($Command->getLogicalId()) {
 									case "wifiStatut":
-										$result = $FreeboxAPI->universal_get();
+										$result = $FreeboxAPI->universal_get('wifi');
 										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 										break;
 									case "wifiPlanning":
@@ -1322,18 +1322,17 @@ class Freebox_OS extends eqLogic
 						}
 						break;
 					default:
-						$logicalType = $Equipement->getConfiguration('type');
-						if ($logicalType == 'Parental') {
+						if ($Equipement->getConfiguration('type') == 'Parental') {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								if (!$Equipement->getIsEnable()) break;
-								$results = $FreeboxAPI->getTile($Equipement->getLogicalId(), 'Parental');
-								log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['current_mode']);
+								$results = $FreeboxAPI->universal_get('Parental', $Equipement->getLogicalId());
+								//log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['current_mode']);
 								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
-								log::add('Freebox_OS', 'debug', '└─────────');
+								//log::add('Freebox_OS', 'debug', '└─────────');
 								break;
 							}
 							break;
-						} else if ($logicalType == 'Player') {
+						} else if ($Equipement->getConfiguration('type') == 'Player') {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								if (!$Equipement->getIsEnable()) break;
 
@@ -1591,15 +1590,9 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			default:
-				$logicalType = $this->getEqLogic()->getconfiguration('type');
-				$logicalEqu = $this->getEqLogic()->getLogicalId();
 				$logicalId = $this->getLogicalId();
-				if ($logicalType == 'Parental') {
-					$parametre['value'] = 'void';
-					$parametre['value_type'] = 'void';
-					$FreeboxAPI->universal_put($logicalId, 'Parental', $logicalEqu);
-
-					log::add('Freebox_OS', 'debug', '└─────────');
+				if ($this->getEqLogic()->getconfiguration('type') == 'Parental') {
+					$FreeboxAPI->universal_put($logicalId, 'Parental', $this->getEqLogic()->getLogicalId());
 					break;
 				} else {
 					switch ($this->getSubType()) {
@@ -1648,9 +1641,10 @@ class Freebox_OSCmd extends cmd
 								}
 							}
 							break;
+
+							$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
+							//	log::add('Freebox_OS', 'debug', '└─────────');
 					}
-					$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
-					//	log::add('Freebox_OS', 'debug', '└─────────');
 					break;
 				}
 		}

@@ -257,7 +257,7 @@ class FreeboxAPI
 		}
 		return false;
 	}
-	public function universal_get($update = 'wifi')
+	public function universal_get($update = 'wifi', $id = null)
 	{
 		switch ($update) {
 			case 'planning':
@@ -272,28 +272,35 @@ class FreeboxAPI
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Etat 4G';
 				break;
+			case 'Parental':
+				$config = 'api/v8/network_control/' . $id;
+				$config_log = 'Etat Contrôle Parental';
+				break;
 		}
 
-		$data_json = $this->fetch('/' . $config . '/');
+		$result = $this->fetch('/' . $config . '/');
 		if ($data_json === false)
 			return false;
-		if ($data_json['success']) {
+		if ($result['success']) {
 			$value = 0;
 			switch ($update) {
 				case 'planning':
-					if ($data_json['result']['use_planning']) {
+					if ($result['result']['use_planning']) {
 						$value = 1;
 					}
 					break;
 				case 'wifi':
-					if ($data_json['result']['enabled']) {
+					if ($result['result']['enabled']) {
 						$value = 1;
 					}
 					break;
 				case '4G':
-					if ($data_json['result']['enabled']) {
+					if ($result['result']['enabled']) {
 						$value = 1;
 					}
+					break;
+				case 'Parental':
+					return $result['result'];
 					break;
 			}
 			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
@@ -346,10 +353,11 @@ class FreeboxAPI
 					$jsontestprofile['override'] = false;
 				}
 				$parametre = $jsontestprofile;
+				$config = "api/v8/network_control/" . $id;
 				break;
 			case '4G':
 				$config = 'api/v8/connection/lte/config';
-				$config_log = 'Mise à jour du : Activation 4G';
+				$config_log = 'Mise à jour de : Activation 4G';
 				$config_commande = 'enabled';
 				break;
 		}
@@ -357,30 +365,27 @@ class FreeboxAPI
 			$parametre = true;
 		} elseif ($parametre === 0) {
 			$parametre = false;
-		} else {
-			//  $parametre;
 		}
 
-
-		log::add('Freebox_OS', 'debug', '>───────── Mise à jour : ' . $config_log . ' avec la valeur : ' . $parametre);
 		if ($config_commande == 'Parental') {
-			$return = $this->fetch('/' . $config . '', $parametre, "PUT");
+			$return = $this->fetch('/' . $config . '', $parametre, "GET");
 		} else {
+			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
 			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");
-		}
-		if ($return === false) {
-			return false;
-		}
-		switch ($update) {
-			case 'wifi':
-				return $return['result']['enabled'];
-				break;
-			case 'planning':
-				return $return['result']['use_planning'];
-				break;
-			case '4G':
-				return $return['result']['enabled'];
-				break;
+			if ($return === false) {
+				return false;
+			}
+			switch ($update) {
+				case 'wifi':
+					return $return['result']['enabled'];
+					break;
+				case 'planning':
+					return $return['result']['use_planning'];
+					break;
+				case '4G':
+					return $return['result']['enabled'];
+					break;
+			}
 		}
 	}
 	public function ringtone_on()

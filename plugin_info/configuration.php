@@ -21,12 +21,6 @@ if (!isConnect()) {
 			</div>
 		</div>
 		 <div class="form-group">
-			<label class="col-md-2 control-label" >{{Nom de l'application Freebox serveur}}</label>
-			<div class="col-md-3">
-				<input type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_NAME" />
-			</div>
-		</div>
-		 <div class="form-group">
 			<label class="col-md-2 control-label" >{{Version de l'application Freebox serveur}}</label>
 			<div class="col-md-3">
 				<input type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_VERSION" />
@@ -38,12 +32,27 @@ if (!isConnect()) {
 				<input type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" />
 			</div>
 		</div>
+		</br>
 		<div class="form-group">
 			<label class="col-md-2 control-label" >{{L'appairage doit être lancé après une sauvegarde des paramètres pour leurs prises en compte.}}</label>
 			<div class="col-md-3">
 				<a class="btn btn-primary FreeboxAppaire" ><i class="fas fa-rss"></i> {{Appairage}}</a>
 			</div>
 		</div>	
+		</br></br>
+		<div class="form-group">
+		  <label class="col-lg-2 control-label" >{{Ajouter automatiquement les équipements détectés dans :}}</label>
+		  <div class="col-lg-3">
+			<select id="sel_object" class="configKey form-control" data-l1key="defaultParentObject">
+			  <option value="">{{Aucune}}</option>
+			  <?php
+				foreach (jeeObject::all() as $object) {
+				  echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+				}
+			  ?>
+			</select>
+		  </div>
+		</div>
 	</fieldset> 
 </form>
 <?php include_file('desktop', 'configuration', 'js' , 'Freebox_OS'); ?>

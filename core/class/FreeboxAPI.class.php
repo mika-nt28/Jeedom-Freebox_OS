@@ -505,8 +505,7 @@ class FreeboxAPI
 				$config_commande = 'use_planning';
 				break;
 			case 'WakeOnLAN':
-				$config = 'api/v8/wifi/config';
-				$config_commande = 'enabled';
+				$config = '/api/v8/lan/wol/pub/';
 				$fonction = "POST";
 				$config_log = 'Mise à jour de : WakeOnLAN';
 				break;
@@ -522,8 +521,10 @@ class FreeboxAPI
 			$parametre = false;
 		}
 
-		if ($config_commande == 'parental') {
+		if ($update == 'parental') {
 			$return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
+		} else if ($update == 'WakeOnLAN') {
+			$return = $this->fetch($config, array("mac" => $id, "password" => ""), $fonction);
 		} else {
 			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
 			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction);

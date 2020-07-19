@@ -349,7 +349,7 @@ class FreeboxAPI
 			return false;
 		}
 	}
-	/*	public function getHomeAdapterStatus($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	public function getHomeAdapterStatus($id = '')
 	{
 		$result = $this->fetch('/api/v8/home/adapters/' . $id);
 		if ($result === false)
@@ -358,7 +358,7 @@ class FreeboxAPI
 			return $result['result'];
 		else
 			return false;
-	}*/
+	}
 
 	public function ReseauPing($id = '')
 	{
@@ -463,7 +463,7 @@ class FreeboxAPI
 		}
 
 		if ($config_commande == 'parental') {
-			$return = $this->fetch('/' . $config . '', $parametre, "GET");
+			$return = $this->fetch('/' . $config . '', $parametre, "PUT", true);
 		} else {
 			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
 			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");

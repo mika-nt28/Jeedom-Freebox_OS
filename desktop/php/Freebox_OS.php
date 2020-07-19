@@ -48,7 +48,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
             <?php
             $status = 0;
             foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getConfiguration('type') == 'Player') {
+                if ($eqLogic->getConfiguration('type') == 'player') {
                     $template = $eqLogic->getConfiguration('type');
                 } else {
                     $template = $eqLogic->getLogicalId();
@@ -61,7 +61,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Disque':
                     case 'Phone':
                     case 'Wifi':
-                    case 'Player':
+                    case 'player':
                     case 'Reseau':
                         $status = 1;
                         $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
@@ -84,7 +84,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
             <?php
             $status = 0;
             foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getConfiguration('type') == 'Parental' || $eqLogic->getConfiguration('type') == 'Player') {
+                if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player') {
                     $template = $eqLogic->getConfiguration('type');
                 } else {
                     $template = $eqLogic->getLogicalId();
@@ -97,8 +97,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
                     case 'Disque':
                     case 'Phone':
                     case 'Wifi':
-                    case 'Parental':
-                    case 'Player':
+                    case 'parental':
+                    case 'player':
                     case 'Reseau':
                         break;
                     default:
@@ -122,7 +122,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
             <?php
             $status = 0;
             foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getConfiguration('type') == 'Parental') {
+                if ($eqLogic->getConfiguration('type') == 'parental') {
                     $status = 1;
                     $template = $eqLogic->getConfiguration('type');
                     $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';

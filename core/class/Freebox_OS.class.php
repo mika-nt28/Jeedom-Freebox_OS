@@ -214,7 +214,7 @@ class Freebox_OS extends eqLogic
 		$FreeboxAPI = new FreeboxAPI();
 		$Reseau = self::AddEqLogic('Appareils connectés', 'Reseau', 'multimedia', false, null, null);
 		log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
-		foreach ($FreeboxAPI->getReseau() as $Equipement) {
+		foreach ($FreeboxAPI->universal_get('reseau') as $Equipement) {
 			if ($Equipement['primary_name'] != '') {
 				$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
 				$Command->setConfiguration('host_type', $Equipement['host_type']);
@@ -249,7 +249,7 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
-		foreach ($FreeboxAPI->getHomeAdapters_player() as $Equipement) {
+		foreach ($FreeboxAPI->universal_get('HomeAdapters') as $Equipement) {
 			if ($Equipement['label'] != '') {
 				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
 				if ($Equipement['status'] == 'active') {
@@ -272,11 +272,11 @@ class Freebox_OS extends eqLogic
 			$TemplatePlayer = 'Freebox_OS::Player';
 		};
 
-		$result = $FreeboxAPI->getHomeAdapters_player('Player');
+		$result = $FreeboxAPI->universal_get('player');
 		foreach ($result as $Equipement) {
 			log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $Equipement['device_name'] . ' -- Id : ' . $Equipement['id']);
 			if ($Equipement['id'] != null) {
-				$player = self::AddEqLogic($Equipement['device_name'], $Equipement['id'], 'multimedia', true, 'Player', null);
+				$player = self::AddEqLogic($Equipement['device_name'], $Equipement['id'], 'multimedia', true, 'player', null);
 				log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id :' . $Equipement['id'] . ' -- id :' . $Equipement['mac'] . ' -- id :' . $Equipement['uid']);
 			}
 			$player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
@@ -309,7 +309,7 @@ class Freebox_OS extends eqLogic
 		$_order = 6;
 		while ($boucle_update <= 3) {
 			log::add('Freebox_OS', 'debug', '│──────────> Boucle Update : ' . $boucle_update);
-			foreach ($FreeboxAPI->systemV8($boucle_update) as $Equipement) {
+			foreach ($FreeboxAPI->universal_get('system', null, $boucle_update) as $Equipement) {
 				$icon = null;
 				$_max = 'default';
 				$_min = 'default';
@@ -369,7 +369,7 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
-		foreach ($FreeboxAPI->getTiles('controlparental') as $Equipement) {
+		foreach ($FreeboxAPI->universal_get('parentalprofile') as $Equipement) {
 			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
 			if (version_compare(jeedom::version(), "4", "<")) {
 				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
@@ -388,10 +388,10 @@ class Freebox_OS extends eqLogic
 			$category = 'default';
 			$Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
 
-			$parental = self::AddEqLogic($Equipement['name'], $Equipement['id'], $category, true, 'Parental', null);
-			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'Parental', true);
-			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'Parental', true);
-			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'Parental', true);
+			$parental = self::AddEqLogic($Equipement['name'], $Equipement['id'], $category, true, 'parental', null);
+			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'parental', true);
+			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'parental', true);
+			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'parental', true);
 			log::add('Freebox_OS', 'debug', '└─────────');
 		}
 	}
@@ -983,7 +983,7 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->disques();
 			$FreeboxAPI->universal_get();
 			$FreeboxAPI->universal_get('planning');
-			$FreeboxAPI->systemV8();
+			$FreeboxAPI->universal_get('system', null, 4);
 			$FreeboxAPI->universal_get('4G');
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
@@ -1134,7 +1134,7 @@ class Freebox_OS extends eqLogic
 
 							switch ($Command->getConfiguration('logicalId')) {
 								case "sensors":
-									foreach ($FreeboxAPI->systemV8(1) as $system) {
+									foreach ($FreeboxAPI->universal_get('system', null, 1) as $system) {
 										if ($system['id'] == $Command->getLogicalId()) {
 											$value = $system['value'];
 											log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $value);
@@ -1144,7 +1144,7 @@ class Freebox_OS extends eqLogic
 									}
 									break;
 								case "fans":
-									foreach ($FreeboxAPI->systemV8(2) as $system) {
+									foreach ($FreeboxAPI->universal_get('system', null, 2) as $system) {
 										if ($system['id'] == $Command->getLogicalId()) {
 											$value = $system['value'];
 											log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $value);
@@ -1154,7 +1154,7 @@ class Freebox_OS extends eqLogic
 									}
 									break;
 								case "expansions":
-									foreach ($FreeboxAPI->systemV8(3) as $system) {
+									foreach ($FreeboxAPI->universal_get('system', null, 3) as $system) {
 										if ($system['slot'] == $Command->getLogicalId()) {
 											$value = $system['present'];
 											log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $value);
@@ -1168,7 +1168,7 @@ class Freebox_OS extends eqLogic
 										if ($Command->getLogicalId() == "4GStatut") {
 											$result = $FreeboxAPI->universal_get('4G');
 										} else {
-											$result = $FreeboxAPI->systemV8();
+											$result = $FreeboxAPI->universal_get('system', null, 4);
 										}
 										switch ($Command->getLogicalId()) {
 											case "mac":
@@ -1322,22 +1322,22 @@ class Freebox_OS extends eqLogic
 						}
 						break;
 					default:
-						if ($Equipement->getConfiguration('type') == 'Parental') {
+						if ($Equipement->getConfiguration('type') == 'parental') {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								if (!$Equipement->getIsEnable()) break;
-								$results = $FreeboxAPI->universal_get('Parental', $Equipement->getLogicalId());
+								$results = $FreeboxAPI->universal_get('parental', $Equipement->getLogicalId());
 								//log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['current_mode']);
 								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
 								//log::add('Freebox_OS', 'debug', '└─────────');
 								break;
 							}
 							break;
-						} else if ($Equipement->getConfiguration('type') == 'Player') {
+						} else if ($Equipement->getConfiguration('type') == 'player') {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								if (!$Equipement->getIsEnable()) break;
 
 								if ($Command->getLogicalId() == 'power_state') {
-									$results = $FreeboxAPI->getTile($Equipement->getLogicalId(), 'Player');
+									$results = $FreeboxAPI->getTile($Equipement->getLogicalId(), 'player');
 									log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['power_state']);
 									$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['power_state']);
 									log::add('Freebox_OS', 'debug', '└─────────');
@@ -1591,8 +1591,8 @@ class Freebox_OSCmd extends cmd
 				break;
 			default:
 				$logicalId = $this->getLogicalId();
-				if ($this->getEqLogic()->getconfiguration('type') == 'Parental') {
-					$FreeboxAPI->universal_put($logicalId, 'Parental', $this->getEqLogic()->getLogicalId());
+				if ($this->getEqLogic()->getconfiguration('type') == 'parental') {
+					$FreeboxAPI->universal_put($logicalId, 'parental', $this->getEqLogic()->getLogicalId());
 					break;
 				} else {
 					switch ($this->getSubType()) {

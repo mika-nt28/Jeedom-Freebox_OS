@@ -217,7 +217,7 @@ function addCmdToTable(_cmd) {
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
-		case 'Parental':
+		case 'parental':
 			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
@@ -232,7 +232,7 @@ function addCmdToTable(_cmd) {
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
-		case 'Player':
+		case 'player':
 			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();

@@ -257,7 +257,7 @@ class FreeboxAPI
 		}
 		return false;
 	}
-	public function universal_get($update = 'wifi', $id = null)
+	public function universal_get($update = 'wifi', $id = null, $boucle = 4)
 	{
 		$config_log = null;
 		switch ($update) {
@@ -273,21 +273,34 @@ class FreeboxAPI
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Etat 4G';
 				break;
-			case 'Parental':
-				$config = 'api/v8/network_control/' . $id;
+			case 'parental':
+				$config = 'api/v8/network_control';
 				$config_log = 'Etat Contrôle Parental';
+				break;
+			case 'parentalprofile':
+				$config = 'api/v8/profile';
 				break;
 			case 'HomeAdapters':
 				$config = 'api/v8/home/adapters';
 				break;
-			case 'Player':
+			case 'player':
 				$config = 'api/v8/player';
+				break;
+			case 'tiles':
+				$config = 'api/v8/home/tileset/all';
+				break;
+			case 'system':
+				$config = 'api/v8/system';
+				break;
+			case 'reseau':
+				$config = 'api/v8/lan/browser/pub';
 				break;
 		}
 
-		$result = $this->fetch('/' . $config . '/');
-		if ($result === false)
+		$result = $this->fetch('/' . $config);
+		if ($result === false) {
 			return false;
+		}
 		if ($result['success']) {
 			$value = 0;
 			switch ($update) {
@@ -306,6 +319,18 @@ class FreeboxAPI
 						$value = 1;
 					}
 					break;
+				case 'system':
+					switch ($boucle) {
+						case 1:
+							return $result['result']['sensors'];
+						case 2:
+							return $result['result']['fans'];
+						case 3:
+							return $result['result']['expansions'];
+						case 4:
+							return $result['result'];
+					}
+					break;
 				default:
 					return $result['result'];
 					break;
@@ -318,24 +343,58 @@ class FreeboxAPI
 			return false;
 		}
 	}
-	public function getHomeAdapters_player($update = 'HomeAdapters')
+	/*public function getReseau()  // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
-		switch ($update) {
-			case 'HomeAdapters':
-				$config = 'api/v8/home/adapters';
-				break;
-			case 'Player':
-				$config = 'api/v8/player';
-				break;
-		}
-		$result = $this->fetch('/' . $config);
+		$result = $this->fetch('/api/v8/lan/browser/pub/');
 		if ($result === false)
 			return false;
 		if ($result['success'])
 			return $result['result'];
 		else
 			return false;
-	}
+	}*/
+	/*public function systemV8($update = 'system', $id = null, $boucle = 4) // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	{
+
+		$result = $this->fetch('/api/v8/system');
+		if ($result === false)
+			return false;
+		if ($result['success']) {
+			switch ($boucle) {
+				case 1:
+					return $result['result']['sensors'];
+				case 2:
+					return $result['result']['fans'];
+				case 3:
+					return $result['result']['expansions'];
+				case 4:
+					return $result['result'];
+			}
+		} else {
+			return false;
+		}
+	}*/
+	/*public function getHomeAdapters_player($update = 'HomeAdapters') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	{
+		switch ($update) {
+			case 'HomeAdapters':
+				$config = 'api/v8/home/adapters';
+				break;
+			case 'player':
+				$config = 'api/v8/player';
+				break;
+		}
+		$result = $this->fetch('/' . $config);
+		if ($result === false) {
+			return false;
+		}
+		if ($result['success']) {
+			return $result['result'];
+		} else {
+			return false;
+		}
+	}*/
+
 	public function universal_put($parametre, $update = 'wifi', $id = null)
 	{
 		switch ($update) {
@@ -349,9 +408,9 @@ class FreeboxAPI
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
 				break;
-			case 'Parental':
+			case 'parental':
 				$config_log = 'Mise à jour du : Contrôle Parental';
-				$config_commande = 'Parental';
+				$config_commande = 'parental';
 
 				$jsontestprofile = $this->fetch("/api/v8/network_control/" . $id);
 				$jsontestprofile = $jsontestprofile['result'];
@@ -376,7 +435,7 @@ class FreeboxAPI
 			$parametre = false;
 		}
 
-		if ($config_commande == 'Parental') {
+		if ($config_commande == 'parental') {
 			$return = $this->fetch('/' . $config . '', $parametre, "GET");
 		} else {
 			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
@@ -400,22 +459,22 @@ class FreeboxAPI
 	public function ringtone_on()
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Ringtone ON');
-		$content = $this->fetch('/api/v8/phone/dect_page_start/', "", "POST");
-		if ($content === false)
+		$result = $this->fetch('/api/v8/phone/dect_page_start/', "", "POST");
+		if ($result === false)
 			return false;
-		if ($content['success'])
-			return $content;
+		if ($result['success'])
+			return $result;
 		else
 			return false;
 	}
 	public function ringtone_off()
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Ringtone OFF');
-		$content = $this->fetch('/api/v8/phone/dect_page_stop/', "", "POST");
-		if ($content === false)
+		$result = $this->fetch('/api/v8/phone/dect_page_stop/', "", "POST");
+		if ($result === false)
 			return false;
-		if ($content['success'])
-			return $content;
+		if ($result['success'])
+			return $result;
 		else
 			return false;
 	}
@@ -444,38 +503,8 @@ class FreeboxAPI
 		} else
 			return false;
 	}
-	public function systemV8($update = 4)
-	{
 
-		$result = $this->fetch('/api/v8/system/');
-		if ($result === false)
-			return false;
-		if ($result['success']) {
-			switch ($update) {
-				case 1:
-					return $result['result']['sensors'];
-				case 2:
-					return $result['result']['fans'];
-				case 3:
-					return $result['result']['expansions'];
-				case 4:
-					return $result['result'];
-			}
-		} else {
-			return false;
-		}
-	}
 
-	/*	public function system() // FONCTION A SUPPRIMER APRES BASCULE V8 SYSTEM
-	{
-		$systemArray = $this->fetch('/api/v5/system/');
-		if ($systemArray === false)
-			return false;
-		if ($systemArray['success']) {
-			return $systemArray['result'];
-		} else
-			return false;
-	}*/
 	public function UpdateSystem()
 	{
 		try {
@@ -515,10 +544,10 @@ class FreeboxAPI
 			case 'tiles':
 				$config = 'api/v8/home/tileset/';
 				break;
-			case 'Parental':
+			case 'parental':
 				$config = 'api/v8/network_control/';
 				break;
-			case 'Player':
+			case 'player':
 				$config = 'api/v8/player/';
 				$config_sup = '/api/v6/status';
 				break;
@@ -540,7 +569,7 @@ class FreeboxAPI
 			case 'tiles':
 				$config = 'api/v8/home/endpoints/';
 				break;
-			case 'Parental':
+			case 'parental':
 				$config = 'api/v8/network_control/';
 				break;
 		}
@@ -569,23 +598,14 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function getReseau()
+
+	public function ReseauPing($id = '')
 	{
-		$result = $this->fetch('/api/v8/lan/browser/pub/');
+		$result = $this->fetch('/api/v8/lan/browser/pub/' . $id);
 		if ($result === false)
 			return false;
 		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}
-	public function ReseauPing($id = '')
-	{
-		$Ping = $this->fetch('/api/v8/lan/browser/pub/' . $id);
-		if ($Ping === false)
-			return false;
-		if ($Ping['success'])
-			return $Ping;
+			return $result;
 		else
 			return false;
 	}
@@ -640,31 +660,31 @@ class FreeboxAPI
 	}
 	public function airmediaConfig($parametre)
 	{
-		$return = $this->fetch('/api/v8/airmedia/config/', $parametre, "PUT");
-		if ($return === false)
+		$result = $this->fetch('/api/v8/airmedia/config/', $parametre, "PUT");
+		if ($result === false)
 			return false;
-		if ($return['success'])
-			return $return['result'];
+		if ($result['success'])
+			return $result['result'];
 		else
 			return false;
 	}
 	public function airmediaReceivers()
 	{
-		$return = $this->fetch('/api/v8/airmedia/receivers/');
-		if ($return === false)
+		$result = $this->fetch('/api/v8/airmedia/receivers/');
+		if ($result === false)
 			return false;
 
-		if ($return['success'])
-			return $return['result'];
+		if ($result['success'])
+			return $result['result'];
 		else
 			return false;
 	}
 	public function AirMediaAction($receiver, $Parameter)
 	{
-		$return = $this->fetch('/api/v8/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
-		if ($return === false)
+		$result = $this->fetch('/api/v8/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
+		if ($result === false)
 			return false;
-		if ($return['success'])
+		if ($result['success'])
 			return true;
 		else
 			return false;

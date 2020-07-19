@@ -447,19 +447,19 @@ class FreeboxAPI
 	public function systemV8($update = 4)
 	{
 
-		$listEquipement = $this->fetch('/api/v8/system/');
-		if ($listEquipement === false)
+		$result = $this->fetch('/api/v8/system/');
+		if ($result === false)
 			return false;
-		if ($listEquipement['success']) {
+		if ($result['success']) {
 			switch ($update) {
 				case 1:
-					return $listEquipement['result']['sensors'];
+					return $result['result']['sensors'];
 				case 2:
-					return $listEquipement['result']['fans'];
+					return $result['result']['fans'];
 				case 3:
-					return $listEquipement['result']['expansions'];
+					return $result['result']['expansions'];
 				case 4:
-					return $listEquipement['result'];
+					return $result['result'];
 			}
 		} else {
 			return false;
@@ -500,11 +500,11 @@ class FreeboxAPI
 				$config = 'api/v8/profile';
 				break;
 		}
-		$listEquipement = $this->fetch('/' . $config);
-		if ($listEquipement === false)
+		$result = $this->fetch('/' . $config);
+		if ($result === false)
 			return false;
-		if ($listEquipement['success'])
-			return $listEquipement['result'];
+		if ($result['success'])
+			return $result['result'];
 		else
 			return false;
 	}
@@ -571,11 +571,11 @@ class FreeboxAPI
 	}
 	public function getReseau()
 	{
-		$listEquipement = $this->fetch('/api/v8/lan/browser/pub/');
-		if ($listEquipement === false)
+		$result = $this->fetch('/api/v8/lan/browser/pub/');
+		if ($result === false)
 			return false;
-		if ($listEquipement['success'])
-			return $listEquipement['result'];
+		if ($result['success'])
+			return $result['result'];
 		else
 			return false;
 	}

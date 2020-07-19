@@ -259,6 +259,7 @@ class FreeboxAPI
 	}
 	public function universal_get($update = 'wifi', $id = null)
 	{
+		$config_log = null;
 		switch ($update) {
 			case 'planning':
 				$config = 'api/v8/wifi/planning';
@@ -276,10 +277,16 @@ class FreeboxAPI
 				$config = 'api/v8/network_control/' . $id;
 				$config_log = 'Etat Contrôle Parental';
 				break;
+			case 'HomeAdapters':
+				$config = 'api/v8/home/adapters';
+				break;
+			case 'Player':
+				$config = 'api/v8/player';
+				break;
 		}
 
 		$result = $this->fetch('/' . $config . '/');
-		if ($data_json === false)
+		if ($result === false)
 			return false;
 		if ($result['success']) {
 			$value = 0;
@@ -299,11 +306,13 @@ class FreeboxAPI
 						$value = 1;
 					}
 					break;
-				case 'Parental':
+				default:
 					return $result['result'];
 					break;
 			}
-			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
+			if ($config_log != null) {
+				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
+			}
 			return $value;
 		} else {
 			return false;
@@ -319,11 +328,11 @@ class FreeboxAPI
 				$config = 'api/v8/player';
 				break;
 		}
-		$listEquipement = $this->fetch('/' . $config);
-		if ($listEquipement === false)
+		$result = $this->fetch('/' . $config);
+		if ($result === false)
 			return false;
-		if ($listEquipement['success'])
-			return $listEquipement['result'];
+		if ($result['success'])
+			return $result['result'];
 		else
 			return false;
 	}

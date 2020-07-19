@@ -168,13 +168,7 @@ class FreeboxAPI
 			log::add('Freebox_OS', 'error', '[FreeboxCloseSession]' . $e->getCode());
 		}
 	}
-	public function WakeOnLAN($Mac)
-	{
-		$return = $this->fetch('/api/v8/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
-		if ($return === false)
-			return false;
-		return $return['success'];
-	}
+
 	public function Downloads($Etat)
 	{
 		$result = $this->fetch('/api/v8/downloads/');
@@ -465,9 +459,16 @@ class FreeboxAPI
 			return false;
 		}
 	}*/
-
+	public function WakeOnLAN($Mac)
+	{
+		$return = $this->fetch('/api/v8/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
+		if ($return === false)
+			return false;
+		return $return['success'];
+	}
 	public function universal_put($parametre, $update = 'wifi', $id = null)
 	{
+		$fonction = "PUT";
 		switch ($update) {
 			case 'wifi':
 				$config = 'api/v8/wifi/config';
@@ -516,10 +517,10 @@ class FreeboxAPI
 		}
 
 		if ($config_commande == 'parental') {
-			$return = $this->fetch('/' . $config . '', $parametre, "PUT", true);
+			$return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
 		} else {
 			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
-			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), "PUT");
+			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction);
 			if ($return === false) {
 				return false;
 			}

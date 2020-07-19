@@ -186,7 +186,7 @@ function addCmdToTable(_cmd) {
 	var inverse = $('<span>');
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
 	switch (template) {
-		case 'AirPlay':
+		case 'airmedia':
 			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
@@ -196,7 +196,7 @@ function addCmdToTable(_cmd) {
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
-		case 'ADSL':
+		case 'connexion':
 			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();

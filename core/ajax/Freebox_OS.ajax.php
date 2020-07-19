@@ -130,6 +130,7 @@ try {
 			ajax::success(true);
 			break;
 		case 'SearchArchi':
+			Freebox_OS::updateLogicalID(1);
 			Freebox_OS::CreateArchi();
 			ajax::success(true);
 			break;

@@ -55,13 +55,13 @@ $eqLogics = eqLogic::byType($plugin->getId());
                 }
                 switch ($template) {
                     case 'AirPlay':
-                    case 'airplay':
-                    case 'ADSL':
-                    case 'Downloads':
-                    case 'System':
-                    case 'Disque':
-                    case 'Phone':
-                    case 'Wifi':
+                    case 'airmedia':
+                    case 'connexion':
+                    case 'downloads':
+                    case 'system':
+                    case 'disk':
+                    case 'phone':
+                    case 'wifi':
                     case 'player':
                     case 'Reseau':
                         $status = 1;

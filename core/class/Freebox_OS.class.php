@@ -287,7 +287,9 @@ class Freebox_OS extends eqLogic
 	public static function addSystem()
 	{
 		$FreeboxAPI = new FreeboxAPI();
-		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
+
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+		$System = self::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
 			$Template4G = null;
@@ -398,7 +400,10 @@ class Freebox_OS extends eqLogic
 	public static function addTiles()
 	{
 		$FreeboxAPI = new FreeboxAPI();
-		self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
+
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+
+		self::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$templatecore_V4 = null;
@@ -822,8 +827,8 @@ class Freebox_OS extends eqLogic
 	{
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 
-		self::AddEqLogic('Appareils connectés', 'Reseau', 'default', false, null, null);
-		self::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
+		self::AddEqLogic($logicalinfo['reseauName'], $logicalinfo['reseauID'], 'default', false, null, null);
+		self::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$templatecore_V4 = null;
@@ -840,13 +845,13 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$updateiconeADSL = false;
 		};
-		$ADSL = self::AddEqLogic('Réseau', 'ADSL', 'default', false, null, null);
-		$ADSL->AddCommand('rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeADSL, true);
-		$ADSL->AddCommand('state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeADSL, true);
+		$Connexion = self::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null);
+		$Connexion->AddCommand('rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeADSL, true);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// System
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
@@ -861,7 +866,7 @@ class Freebox_OS extends eqLogic
 			$iconeReboot = 'fas fa-sync icon_red';
 			$updateiconeSystem = false;
 		};
-		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
+		$System = self::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
 		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default',  30, '0', $updateiconeSystem, false);
 		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default',  31, '0', $updateiconeSystem, false);
 		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateiconeSystem, true);
@@ -892,7 +897,7 @@ class Freebox_OS extends eqLogic
 			$iconeWifiPlanningOff = 'fas fa-calendar-times icon_red';
 			$updateiconeWifi = false;
 		};
-		$Wifi = self::AddEqLogic('Wifi', 'Wifi', 'default', false, null, null);
+		$Wifi = self::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null);
 		$StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateiconeWifi, true);
 		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconeWifiOn, 0, 'default', 'default', 4, '0', $updateiconeWifi, false);
 		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconeWifiOff, 0, 'default', 'default', 5, '0', $updateiconeWifi, false);
@@ -920,7 +925,7 @@ class Freebox_OS extends eqLogic
 			$iconePasses = 'icon techno-phone2 icon_green';
 			$updateiconePhone = false;
 		};
-		$Phone = self::AddEqLogic('Téléphone', 'Phone', 'default', false, null, null);
+		$Phone = self::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null);
 		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default',  1, '0', $updateiconePhone, true);
 		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 2, '0', $updateiconePhone, true);
 		$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  3, '0', $updateiconePhone, true);
@@ -943,7 +948,7 @@ class Freebox_OS extends eqLogic
 			$iconeDownloadsOff = 'fas fa-stop icon_red';
 			$updateiconeDownloads = false;
 		};
-		$Downloads = self::AddEqLogic('Téléchargements', 'Downloads', 'multimedia', false, null, null);
+		$Downloads = self::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null);
 		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeDownloads, true);
 		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeDownloads, true);
 		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeDownloads, true);
@@ -972,10 +977,10 @@ class Freebox_OS extends eqLogic
 			$iconeAirPlayOff = 'fas fa-stop icon_red';
 			$updateiconeAirPlay = false;
 		};
-		$AirPlay = self::AddEqLogic($logicalinfo[''], $logicalinfo[''], 'multimedia', false, null, null);
-		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
-		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 2, '0', $updateiconeAirPlay, false);
-		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 3, '0', $updateiconeAirPlay, false);
+		$Airmedia = self::AddEqLogic($logicalinfo['airmediaName'], $logicalinfo['airmediaID'], 'multimedia', false, null, null);
+		$Airmedia->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
+		$Airmedia->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 2, '0', $updateiconeAirPlay, false);
+		$Airmedia->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 3, '0', $updateiconeAirPlay, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Player');
 		self::addPlayer();
@@ -1488,13 +1493,13 @@ class Freebox_OS extends eqLogic
 	public static function getlogicalinfo()
 	{
 		return array(
-			'adslID' => 'ADSL',
-			'adslName' => 'Réseau',
-			'airPlayID' => 'AirPlay',
-			'airPlayName' => 'Air Média',
+			'connexionID' => 'connexion',
+			'connexionName' => 'Réseau',
+			'airmediaID' => 'airmedia',
+			'airmediaName' => 'Air Média',
 			'disqueID' => 'Disque',
 			'disqueName' => 'Disque Dur',
-			'reseauID' => 'Reseau',
+			'reseauID' => 'reseau',
 			'reseauName' => 'Appareils connectés',
 			'systemID' => 'System',
 			'systemName' => 'Système',
@@ -1502,10 +1507,10 @@ class Freebox_OS extends eqLogic
 			'downloadsName' => 'Téléchargements',
 			'phoneID' => 'Phone',
 			'phoneName' => 'Téléphone',
-			'wifiID' => 'Wifi',
+			'wifiID' => 'wifi',
 			'wifiName' => 'Wifi',
-			'homeAdaptersID' => 'HomeAdapters',
-			'homeAdaptersName' => 'Home Adapters'
+			'homeadaptersID' => 'Homeadapters',
+			'homeadaptersName' => 'Home Adapters'
 		);
 	}
 
@@ -1518,12 +1523,12 @@ class Freebox_OS extends eqLogic
 			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
 			switch ($eqLogic->getLogicalId()) {
 				case 'ADSL':
-					$eqLogic->setLogicalId($locicalinfo['adslID']);
-					$eqLogic->setName($locicalinfo['adslName']);
+					$eqLogic->setLogicalId($locicalinfo['connexionID']);
+					$eqLogic->setName($locicalinfo['connexionName']);
 					break;
 				case 'AirPlay':
-					$eqLogic->setLogicalId($locicalinfo['airPlayID']);
-					$eqLogic->setName($locicalinfo['airPlayName']);
+					$eqLogic->setLogicalId($locicalinfo['airmediaID']);
+					$eqLogic->setName($locicalinfo['airmediaName']);
 					break;
 				case 'Disque':
 					$eqLogic->setLogicalId($locicalinfo['disqueID']);
@@ -1550,12 +1555,12 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setName($locicalinfo['wifiName']);
 					break;
 				case 'HomeAdapters':
-					$eqLogic->setLogicalId($locicalinfo['homeAdaptersID']);
-					$eqLogic->setName($locicalinfo['homeAdaptersName']);
+					$eqLogic->setLogicalId($locicalinfo['homeadaptersID']);
+					$eqLogic->setName($locicalinfo['homeadaptersName']);
 					break;
 				case 'Home Adapters':
-					$eqLogic->setLogicalId($locicalinfo['homeAdaptersID']);
-					$eqLogic->setName($locicalinfo['homeAdaptersName']);
+					$eqLogic->setLogicalId($locicalinfo['homeadaptersID']);
+					$eqLogic->setName($locicalinfo['homeadaptersName']);
 					break;
 			}
 

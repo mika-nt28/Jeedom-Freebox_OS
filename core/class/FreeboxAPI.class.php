@@ -470,15 +470,10 @@ class FreeboxAPI
 	{
 		$fonction = "PUT";
 		switch ($update) {
-			case 'wifi':
-				$config = 'api/v8/wifi/config';
+			case '4G':
+				$config = 'api/v8/connection/lte/config';
+				$config_log = 'Mise à jour de : Activation 4G';
 				$config_commande = 'enabled';
-				$config_log = 'Mise à jour de : Etat du Wifi';
-				break;
-			case 'planning':
-				$config = 'api/v8/wifi/planning';
-				$config_log = 'Mise à jour : Planning du Wifi';
-				$config_commande = 'use_planning';
 				break;
 			case 'parental':
 				$config_log = 'Mise à jour du : Contrôle Parental';
@@ -504,10 +499,21 @@ class FreeboxAPI
 				$parametre = $jsontestprofile;
 				$config = "api/v8/network_control/" . $id;
 				break;
-			case '4G':
-				$config = 'api/v8/connection/lte/config';
-				$config_log = 'Mise à jour de : Activation 4G';
+			case 'planning':
+				$config = 'api/v8/wifi/planning';
+				$config_log = 'Mise à jour : Planning du Wifi';
+				$config_commande = 'use_planning';
+				break;
+			case 'WakeOnLAN':
+				$config = 'api/v8/wifi/config';
 				$config_commande = 'enabled';
+				$fonction = "POST";
+				$config_log = 'Mise à jour de : WakeOnLAN';
+				break;
+			case 'wifi':
+				$config = 'api/v8/wifi/config';
+				$config_commande = 'enabled';
+				$config_log = 'Mise à jour de : Etat du Wifi';
 				break;
 		}
 		if ($parametre === 1) {
@@ -533,6 +539,9 @@ class FreeboxAPI
 					break;
 				case '4G':
 					return $return['result']['enabled'];
+					break;
+				default:
+					return $return;
 					break;
 			}
 		}

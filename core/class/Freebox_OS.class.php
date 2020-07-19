@@ -1560,10 +1560,10 @@ class Freebox_OSCmd extends cmd
 				if ($result != false) {
 					switch ($this->getLogicalId()) {
 						case "sonnerieDectOn":
-							$FreeboxAPI->ringtone_on();
+							$FreeboxAPI->ringtone('ON');
 							break;
 						case "sonnerieDectOff":
-							$FreeboxAPI->ringtone_off();
+							$FreeboxAPI->ringtone('OFF');
 							break;
 					}
 				}

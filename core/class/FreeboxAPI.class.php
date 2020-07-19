@@ -343,6 +343,27 @@ class FreeboxAPI
 			return false;
 		}
 	}
+	public function getHomeAdapterStatus($id = '')
+	{
+		$Status = $this->fetch('/api/v8/home/adapters/' . $id);
+		if ($Status === false)
+			return false;
+		if ($Status['success'])
+			return $Status['result'];
+		else
+			return false;
+	}
+
+	public function ReseauPing($id = '')
+	{
+		$result = $this->fetch('/api/v8/lan/browser/pub/' . $id);
+		if ($result === false)
+			return false;
+		if ($result['success'])
+			return $result;
+		else
+			return false;
+	}
 	/*public function getReseau()  // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/lan/browser/pub/');
@@ -456,10 +477,18 @@ class FreeboxAPI
 			}
 		}
 	}
-	public function ringtone_on()
+	public function ringtone($update = 'ON')
 	{
-		log::add('Freebox_OS', 'debug', '>───────── Ringtone ON');
-		$result = $this->fetch('/api/v8/phone/dect_page_start/', "", "POST");
+		switch ($update) {
+			case 'ON':
+				$config = 'dect_page_start';
+				break;
+			case 'OFF':
+				$config = 'dect_page_stop';
+				break;
+		}
+		log::add('Freebox_OS', 'debug', '>───────── Ringtone ' . $update);
+		$result = $this->fetch('/api/v8/phone/' . $config . '/', "", "POST");
 		if ($result === false)
 			return false;
 		if ($result['success'])
@@ -467,7 +496,7 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function ringtone_off()
+	/*public function ringtone_off() // Fonction plus appelé à supprimer => Intégrer dans "ringtone_on" renomé en ringtone
 	{
 		log::add('Freebox_OS', 'debug', '>───────── Ringtone OFF');
 		$result = $this->fetch('/api/v8/phone/dect_page_stop/', "", "POST");
@@ -477,7 +506,7 @@ class FreeboxAPI
 			return $result;
 		else
 			return false;
-	}
+	}*/
 
 	public function adslStats()
 	{
@@ -524,9 +553,6 @@ class FreeboxAPI
 		switch ($update) {
 			case 'tiles':
 				$config = 'api/v8/home/tileset/all';
-				break;
-			case 'controlparental':
-				$config = 'api/v8/profile';
 				break;
 		}
 		$result = $this->fetch('/' . $config);
@@ -588,27 +614,7 @@ class FreeboxAPI
 			return false;
 	}
 
-	public function getHomeAdapterStatus($id = '')
-	{
-		$Status = $this->fetch('/api/v8/home/adapters/' . $id);
-		if ($Status === false)
-			return false;
-		if ($Status['success'])
-			return $Status['result'];
-		else
-			return false;
-	}
 
-	public function ReseauPing($id = '')
-	{
-		$result = $this->fetch('/api/v8/lan/browser/pub/' . $id);
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result;
-		else
-			return false;
-	}
 	public function nb_appel_absence()
 	{
 		$listNumber_missed = null;

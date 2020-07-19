@@ -1481,6 +1481,67 @@ class Freebox_OS extends eqLogic
 		$cmd .= ' >> ' . log::getPathToLog('Freebox_OS_update') . ' 2>&1 &';
 		exec($cmd);
 	}
+
+	public function updateLogicalID($_version) {
+
+		$adslID = "ADSL";
+		$adslName = "ADSL";
+		$airPlayID = "AirPlay";
+		$airPlayName = "AirPlay";
+		$disqueID = "Disque";
+		$disqueName = "Disque Dur";
+		$reseauID = "Reseau";
+		$reseauName = "Réseau";
+		$systemID = "System";
+		$systemName = "Système";
+		$downloadsID = "Downloads";
+		$downloadsName = "Téléchargements";
+		$phoneID = "Phone";
+		$phoneName = "Téléphone";
+		$wifiID = "Wifi";
+		$wifiName = "Wifi";
+		$homeAdaptersID = "HomeAdapters";
+		$homeAdaptersName = "";
+
+		$eqLogics = eqLogic::byType('Freebox_OS');
+		foreach ($eqLogics as $eqLogic) {
+
+			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
+
+			$logicalId = $eqLogic->getLogicalId();
+			if ($logicalId = "ADSL") {
+				$eqLogic->setLogicalId($adslID);
+				$eqLogic->setName($adslName);
+			} else if ($logicalId = "AirPlay") {
+				$eqLogic->setLogicalId($airPlayID);
+				$eqLogic->setName($airPlayName);
+			} else if ($logicalId = "Disque") {
+				$eqLogic->setLogicalId($disqueID);
+				$eqLogic->setName($disqueName);
+			}  else if ($logicalId = "reseau") {
+				$eqLogic->setLogicalId($reseauID);
+				$eqLogic->setName($reseauName);
+			} else if ($logicalId = "System") {
+				$eqLogic->setLogicalId($systemID);
+				$eqLogic->setName($systemName);
+			} else if ($logicalId = "Downloads") {
+				$eqLogic->setLogicalId($downloadsID);
+				$eqLogic->setName($downloadsName);
+			} else if ($logicalId = "Phone") {
+				$eqLogic->setLogicalId($phoneID);
+				$eqLogic->setName($phoneName);
+			} else if ($logicalId = "Wifi") {
+				$eqLogic->setLogicalId($wifiID);
+				$eqLogic->setName($wifiName);
+			} else if ($logicalId = "HomeAdapters") {
+				$eqLogic->setLogicalId($homeAdaptersID);
+				$eqLogic->setName($homeAdaptersName);
+			}
+
+			$eqLogic->setConfiguration('VersionLogicalID', $_version);
+			$eqLogic->save();
+		}
+	}
 }
 class Freebox_OSCmd extends cmd
 {

@@ -1310,7 +1310,7 @@ class Freebox_OS extends eqLogic
 						break;
 					case 'HomeAdapters':
 						foreach ($Equipement->getCmd('info') as $Command) {
-							$result = $FreeboxAPI->getHomeAdapterStatus($Command->getLogicalId());
+							$result = $FreeboxAPI->universal_get('HomeAdapters_status', $Command->getLogicalId());
 							if ($result != false) {
 								if ($result['status'] == 'active') {
 									$HomeAdapters_value = 1;

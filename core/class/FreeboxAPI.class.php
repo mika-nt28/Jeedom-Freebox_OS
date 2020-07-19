@@ -349,7 +349,7 @@ class FreeboxAPI
 			return false;
 		}
 	}
-	public function getHomeAdapterStatus($id = '')
+	/*	public function getHomeAdapterStatus($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/home/adapters/' . $id);
 		if ($result === false)
@@ -358,7 +358,7 @@ class FreeboxAPI
 			return $result['result'];
 		else
 			return false;
-	}
+	}*/
 
 	public function ReseauPing($id = '')
 	{

@@ -52,7 +52,7 @@ function Freebox_OS_update()
 			UpdateLogicId($eqLogic, 'rx_rate', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'tx_rate', '', 'numeric'); // Correction sous Type 20200616
 		}
-		Freebox_OS::updateLogicalID(1);
+		Freebox_OS::updateLogicalID(1, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Sauvegarde de l\'ensemble des équipements');
 
 		/*$eqs = eqLogic::byType('Freebox_OS');

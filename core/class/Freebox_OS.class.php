@@ -1525,14 +1525,17 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$eqLogic->getLogicalId());
 			switch ($eqLogic->getLogicalId()) {
 				case 'ADSL':
-					$eqLogic->setLogicalId($locicalinfo['adslID']);
-					$eqLogic->setName($locicalinfo['adslName']);
-					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$locicalinfo['adslID']);
+				case 'connexion': 
+					$eqLogic->setLogicalId($locicalinfo['connexionID']);
+					$eqLogic->setName($locicalinfo['connexionName']);
+					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$locicalinfo['connexionID']);
 				break;
-				case'AirPlay':
-					$eqLogic->setLogicalId($locicalinfo['airPlayID']);
-					$eqLogic->setName($locicalinfo['airPlayName']);
-					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$locicalinfo['airPlayID']);
+				case 'AirPlay':
+				case 'airmedia':
+				case '': 
+					$eqLogic->setLogicalId($locicalinfo['airmediaID']);
+					$eqLogic->setName($locicalinfo['airmediaName']);
+					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$locicalinfo['airmediaID']);
 				break;
 				case 'Disque':
 					$eqLogic->setLogicalId($locicalinfo['disqueID']);
@@ -1560,14 +1563,16 @@ class Freebox_OS extends eqLogic
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$locicalinfo['phoneID']);
 				break;
 				case 'Wifi':
+				case 'wifi':
 					$eqLogic->setLogicalId($locicalinfo['wifiID']);
 					$eqLogic->setName($locicalinfo['wifiName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$locicalinfo['wifiID']);
 				break;
 				case 'HomeAdapters':
-					$eqLogic->setLogicalId($locicalinfo['homeAdaptersID']);
-					$eqLogic->setName($locicalinfo['homeAdaptersName']);
-					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$locicalinfo['homeAdaptersID']);
+				case 'Homeadapters':
+					$eqLogic->setLogicalId($locicalinfo['homeadaptersID']);
+					$eqLogic->setName($locicalinfo['homeadaptersName']);
+					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update '.$locicalinfo['homeadaptersID']);
 				break;
 			}
 

@@ -303,7 +303,7 @@ class FreeboxAPI
 				$config = 'api/v8/home/tileset/all';
 				break;
 			case 'tiles_ID':
-				$config = 'api/v8/home/tileset/';
+				$config = 'api/v8/home/tileset/' . $id;
 				$config_log = 'Traitement de la Mise à jour de l\'id ';
 				break;
 			case 'wifi':

@@ -179,6 +179,24 @@ $('.Equipement').on('click', function () {
 	});
 });
 
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', function ()
+{
+	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
+	$icon2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
+	console.log($icon2)
+	if ($icon2 == "parental") $icon = $icon2;
+	if($icon != '' && $icon != null)
+		$('#img_device').attr("src", 'plugins/Freebox_OS/plugin_info/images/' + $icon + '.png');
+});
+
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function ()
+{
+	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
+	$icon2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
+	if ($icon2 == "parental") $icon = $icon2;
+	if($icon != '' && $icon != null)
+		$('#img_device').attr("src", 'plugins/Freebox_OS/plugin_info/images/' + $icon + '.png');
+}); 
 function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;

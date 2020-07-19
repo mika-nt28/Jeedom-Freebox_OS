@@ -1482,7 +1482,8 @@ class Freebox_OS extends eqLogic
 		exec($cmd);
 	}
 
-	public function updateLogicalID($_version) {
+	public function updateLogicalID($_version)
+	{
 
 		$adslID = "ADSL";
 		$adslName = "ADSL";
@@ -1518,7 +1519,7 @@ class Freebox_OS extends eqLogic
 			} else if ($logicalId = "Disque") {
 				$eqLogic->setLogicalId($disqueID);
 				$eqLogic->setName($disqueName);
-			}  else if ($logicalId = "reseau") {
+			} else if ($logicalId = "reseau") {
 				$eqLogic->setLogicalId($reseauID);
 				$eqLogic->setName($reseauName);
 			} else if ($logicalId = "System") {

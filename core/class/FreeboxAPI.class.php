@@ -605,7 +605,7 @@ class FreeboxAPI
 		if ($result === false)
 			return false;
 		if ($result['success']) {
-			return $reseult['result'];
+			return $result['result'];
 		} else {
 			return false;
 		}

@@ -283,6 +283,9 @@ class FreeboxAPI
 			case 'HomeAdapters':
 				$config = 'api/v8/home/adapters';
 				break;
+			case 'HomeAdapters_status':
+				$config = 'api/v8/home/adapters/' . $id;
+				break;
 			case 'player':
 				$config = 'api/v8/player';
 				break;
@@ -294,6 +297,9 @@ class FreeboxAPI
 				break;
 			case 'reseau':
 				$config = 'api/v8/lan/browser/pub';
+				break;
+			case 'reseau_ping':
+				$config = '/api/v8/lan/browser/pub/' . $id;
 				break;
 		}
 
@@ -345,11 +351,11 @@ class FreeboxAPI
 	}
 	public function getHomeAdapterStatus($id = '')
 	{
-		$Status = $this->fetch('/api/v8/home/adapters/' . $id);
-		if ($Status === false)
+		$result = $this->fetch('/api/v8/home/adapters/' . $id);
+		if ($result === false)
 			return false;
-		if ($Status['success'])
-			return $Status['result'];
+		if ($result['success'])
+			return $result['result'];
 		else
 			return false;
 	}

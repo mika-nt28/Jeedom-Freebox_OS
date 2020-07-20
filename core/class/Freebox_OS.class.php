@@ -242,10 +242,12 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-	public static function addHomeAdapters()
+	public static function addhomeadapters()
 	{
+		$logicalinfo = Freebox_OS::getlogicalinfo();
 		$FreeboxAPI = new FreeboxAPI();
-		$HomeAdapters = self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
+
+		$homeadapters = self::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$templatecore_V4 = null;
@@ -255,13 +257,13 @@ class Freebox_OS extends eqLogic
 		};
 		foreach ($FreeboxAPI->universal_get('HomeAdapters') as $Equipement) {
 			if ($Equipement['label'] != '') {
-				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
+				$homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
 				if ($Equipement['status'] == 'active') {
-					$HomeAdapters_value = 1;
+					$homeadapters_value = 1;
 				} else {
-					$HomeAdapters_value = 0;
+					$homeadapters_value = 0;
 				}
-				$HomeAdapters->checkAndUpdateCmd($Equipement['id'], $HomeAdapters_value);
+				$homeadapters->checkAndUpdateCmd($Equipement['id'], $homeadapters_value);
 			}
 		}
 	}
@@ -993,15 +995,13 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI = new FreeboxAPI();
 			$FreeboxAPI->disk();
 			$FreeboxAPI->universal_get();
+			$FreeboxAPI->universal_get('download_stats');
 			$FreeboxAPI->universal_get('planning');
 			$FreeboxAPI->universal_get('system', null, 4);
-			$FreeboxAPI->universal_get('4G');
-			$FreeboxAPI->adslStats();
+			//$FreeboxAPI->universal_get('4G');
+			//download_stats
+			$FreeboxAPI->connexion_stats();
 			$FreeboxAPI->nb_appel_absence();
-			$FreeboxAPI->universal_get('download_stats');
-			//self::addnetwork();
-			//self::addTiles();
-			//self::addHomeAdapters();
 		}
 	}
 	public function preSave()
@@ -1057,7 +1057,7 @@ class Freebox_OS extends eqLogic
 					case 'airmedia':
 						break;
 					case 'connexion':
-						$result = $FreeboxAPI->adslStats();
+						$result = $FreeboxAPI->connexion_stats();
 						if ($result != false) {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								if (is_object($Command)) {
@@ -1322,14 +1322,14 @@ class Freebox_OS extends eqLogic
 						break;
 					case 'homeadapters':
 						foreach ($Equipement->getCmd('info') as $Command) {
-							$result = $FreeboxAPI->universal_get('HomeAdapters_status', $Command->getLogicalId());
+							$result = $FreeboxAPI->universal_get('homeadapters_status', $Command->getLogicalId());
 							if ($result != false) {
 								if ($result['status'] == 'active') {
-									$HomeAdapters_value = 1;
+									$homeadapters_value = 1;
 								} else {
-									$HomeAdapters_value = 0;
+									$homeadapters_value = 0;
 								}
-								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $HomeAdapters_value);
+								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $homeadapters_value);
 							}
 						}
 						break;
@@ -1576,6 +1576,7 @@ class Freebox_OS extends eqLogic
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['wifiID']);
 					break;
 				case 'HomeAdapters':
+				case 'Home Adapters':
 				case 'Homeadapters':
 					$eqLogic->setLogicalId($logicalinfo['homeadaptersID']);
 					$eqLogic->setName($logicalinfo['homeadaptersName']);
@@ -1633,7 +1634,6 @@ class Freebox_OSCmd extends cmd
 						break;
 					case '4GOff':
 						$result = $FreeboxAPI->universal_get('4G');
-						log::add('Freebox_OS', 'debug', '┌───────── 4F ');
 						$FreeboxAPI->universal_put(0, '4G');
 						break;
 				}
@@ -1751,7 +1751,7 @@ class Freebox_OSCmd extends cmd
 									$parametre['value'] = !$parametre['value'];
 								}
 							}
-							$FreeboxAPI->settile($parametre, 'tiles', $logicalId, $this->getEqLogic()->getLogicalId());
+							$FreeboxAPI->universal_put($parametre, 'set_tiles', $logicalId, $this->getEqLogic()->getLogicalId());
 
 							break;
 

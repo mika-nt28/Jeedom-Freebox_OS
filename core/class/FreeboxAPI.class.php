@@ -266,13 +266,13 @@ class FreeboxAPI
 			case 'disk':
 				$config = 'api/v8/storage/disk/' . $id;
 				break;
-			case 'DownloadStats':
+			case 'download_stats':
 				$config = 'api/v8/downloads/stats/';
 				break;
-			case 'HomeAdapters':
+			case 'homeadapters':
 				$config = 'api/v8/home/adapters';
 				break;
-			case 'HomeAdapters_status':
+			case 'homeadapters_status':
 				$config = 'api/v8/home/adapters/' . $id;
 				break;
 			case 'parental':
@@ -327,7 +327,7 @@ class FreeboxAPI
 						$value = 1;
 					}
 					break;
-				case 'disks':
+				case 'disk':
 					$total_bytes = $result['result']['partitions'][0]['total_bytes'];
 					$used_bytes = $result['result']['partitions'][0]['used_bytes'];
 					break;
@@ -390,7 +390,7 @@ class FreeboxAPI
 			return false;
 		}
 	}*/
-	/*public function getHomeAdapterStatus($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	/*public function gethomeadapter_status($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/home/adapters/' . $id);
 		if ($result === false)
@@ -442,10 +442,10 @@ class FreeboxAPI
 			return false;
 		}
 	}*/
-	/*public function getHomeAdapters_player($update = 'HomeAdapters') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	/*public function gethomeadapters_player($update = 'homeadapters') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		switch ($update) {
-			case 'HomeAdapters':
+			case 'homeadapters':
 				$config = 'api/v8/home/adapters';
 				break;
 			case 'player':
@@ -469,7 +469,7 @@ class FreeboxAPI
 			return false;
 		return $return['success'];
 	}
-	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId)
+	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null)
 	{
 		$fonction = "PUT";
 		$config_log = null;
@@ -518,7 +518,7 @@ class FreeboxAPI
 				$config_commande = 'enabled';
 				$config_log = 'Mise à jour de : Etat du Wifi';
 				break;
-			case 'settile':
+			case 'set_tiles':
 				if ($id != null) {
 					$id = $id . '/';
 				} elseif ($id != 'refresh') {
@@ -540,7 +540,7 @@ class FreeboxAPI
 			$return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
 		} else if ($update == 'WakeOnLAN') {
 			$return = $this->fetch($config, array("mac" => $id, "password" => ""), $fonction);
-		} else if ($update == 'settile') {
+		} else if ($update == 'set_tiles') {
 			$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
 		} else {
 			if ($config_log != null) {
@@ -569,8 +569,8 @@ class FreeboxAPI
 			}
 		}
 	}
-	public function settile($parametre, $update = 'tiles', $id = null, $nodeId)
-	{                     //$parametre, $update = 'wifi', $id = null, $nodeId
+	/*public function set_tiles($parametre, $update = 'tiles', $id = null, $nodeId) // Fonction plus appelé à supprimer => Intégrer dans "universal_put"
+	{
 
 		$config = 'api/v8/home/endpoints/';
 
@@ -587,7 +587,7 @@ class FreeboxAPI
 			return $return['result'];
 		else
 			return false;
-	}
+	}*/
 	public function ringtone($update = 'ON')
 	{
 		switch ($update) {
@@ -619,7 +619,7 @@ class FreeboxAPI
 			return false;
 	}*/
 
-	public function adslStats()
+	public function connexion_stats()
 	{
 		$adslRateJson = $this->fetch('/api/v8/connection/');
 		if ($adslRateJson === false)

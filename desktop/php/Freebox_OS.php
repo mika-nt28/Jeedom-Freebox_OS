@@ -123,7 +123,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						$status = 1;
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
+						echo '<img src="plugins/Freebox_OS/plugin_info/images/default.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
 						echo '</div>';
@@ -240,7 +240,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<form class="form-horizontal col-sm-2">
 					<fieldset>
 						<div class="form-group">
-							<img src="<?php echo $plugin->getPathImgIcon(); ?>" data-original=".jpg" id="img_device" class="img-responsive" style="max-height : 250px;" onerror="this.src='plugins/Freebox_OS/plugin_info/freebox_os_icon.png'" />
+							<img src="plugins/Freebox_OS/plugin_info/images/default.png" data-original=".jpg" id="img_device" class="img-responsive" style="max-height : 250px;" onerror="this.src='plugins/Freebox_OS/plugin_info/images/default.png'" />
 						</div>
 					</fieldset>
 				</form>

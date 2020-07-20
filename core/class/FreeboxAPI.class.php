@@ -264,7 +264,7 @@ class FreeboxAPI
 				$config_log = 'Etat 4G';
 				break;
 			case 'disk':
-				$config = '/api/v8/storage/disk/' . $id;
+				$config = 'api/v8/storage/disk/' . $id;
 				break;
 			case 'DownloadStats':
 				$config = 'api/v8/downloads/stats/';

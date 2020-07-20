@@ -14,7 +14,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
 				<i class="fas fa-bullseye"></i>
 				<br />
-				<span>{{Scan}}<br />{{équipements standard}}</span>
+				<span>{{Scan}}<br />{{équipements standards}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary" data-action="tile">
 				<i class="fas fa-search"></i>
@@ -34,7 +34,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<div class="cursor MaFreebox logoSecondary">
 				<i class="fas fa-sitemap"></i>
 				<br>
-				<span>{{Paramètre de la Freebox}}</span>
+				<span>{{Paramètres de la Freebox}}</span>
 			</div>
 		</div>
 		<div class="input-group" style="margin:5px;">

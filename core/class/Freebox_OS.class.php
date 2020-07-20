@@ -1512,7 +1512,7 @@ class Freebox_OS extends eqLogic
 			'phoneName' => 'Téléphone',
 			'wifiID' => 'wifi',
 			'wifiName' => 'Wifi',
-			'homeadaptersID' => 'Homeadapters',
+			'homeadaptersID' => 'homeadapters',
 			'homeadaptersName' => 'Home Adapters'
 		);
 	}
@@ -1548,7 +1548,7 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setName($logicalinfo['diskName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['diskID']);
 					break;
-				case 'network':
+				case 'Reseau':
 					$eqLogic->setLogicalId($logicalinfo['networkID']);
 					$eqLogic->setName($logicalinfo['networkName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['networkID']);

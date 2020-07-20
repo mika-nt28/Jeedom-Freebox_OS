@@ -925,15 +925,15 @@ class Freebox_OS extends eqLogic
 			$iconePasses = 'icon techno-phone2 icon_green';
 			$updateiconePhone = false;
 		};
-		$Phone = self::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null);
-		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default',  1, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 2, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  3, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default',  6, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 7, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
-		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
+		$phone = self::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null);
+		$phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default',  1, '0', $updateiconePhone, true);
+		$phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 2, '0', $updateiconePhone, true);
+		$phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  3, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default',  6, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 7, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
+		$phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
+		$phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Downloads
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');
@@ -1247,7 +1247,7 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-					case 'Phone':
+					case 'phone':
 						$result = $FreeboxAPI->nb_appel_absence();
 						if ($result != false) {
 							foreach ($Equipement->getCmd('info') as $Command) {
@@ -1505,7 +1505,7 @@ class Freebox_OS extends eqLogic
 			'systemName' => 'Système',
 			'downloadsID' => 'downloads',
 			'downloadsName' => 'Téléchargements',
-			'phoneID' => 'Phone',
+			'phoneID' => 'phone',
 			'phoneName' => 'Téléphone',
 			'wifiID' => 'wifi',
 			'wifiName' => 'Wifi',
@@ -1662,7 +1662,7 @@ class Freebox_OSCmd extends cmd
 						break;
 				}
 				break;
-			case 'Phone':
+			case 'phone':
 				$result = $FreeboxAPI->nb_appel_absence();
 				if ($result != false) {
 					switch ($this->getLogicalId()) {

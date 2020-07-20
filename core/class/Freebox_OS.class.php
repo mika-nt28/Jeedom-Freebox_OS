@@ -1350,9 +1350,9 @@ class Freebox_OS extends eqLogic
 
 								if ($Command->getLogicalId() == 'power_state') {
 									$results = $FreeboxAPI->universal_get('player_ID', $Equipement->getLogicalId());
-									log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['power_state']);
+									//log::add('Freebox_OS', 'debug', '│ Id : ' . $Equipement->getLogicalId() . ' -- Value : ' . $results['power_state']);
 									$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['power_state']);
-									log::add('Freebox_OS', 'debug', '└─────────');
+									//log::add('Freebox_OS', 'debug', '└─────────');
 								}
 								break;
 							}

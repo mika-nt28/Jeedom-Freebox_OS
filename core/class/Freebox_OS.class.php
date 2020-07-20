@@ -1054,9 +1054,9 @@ class Freebox_OS extends eqLogic
 		if (is_object($Equipement) && $Equipement->getIsEnable()) {
 			while (true) {
 				switch ($Equipement->getLogicalId()) {
-					case 'AirPlay':
+					case 'airmedia':
 						break;
-					case 'ADSL':
+					case 'connexion':
 						$result = $FreeboxAPI->adslStats();
 						if ($result != false) {
 							foreach ($Equipement->getCmd('info') as $Command) {
@@ -1085,7 +1085,7 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-					case 'Downloads':
+					case 'downloads':
 						$result = $FreeboxAPI->universal_get('download_stats');
 						if ($result != false) {
 							foreach ($Equipement->getCmd('info') as $Command) {
@@ -1225,7 +1225,7 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-					case 'Wifi':
+					case 'wifi':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
 								switch ($Command->getLogicalId()) {
@@ -1320,7 +1320,7 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-					case 'HomeAdapters':
+					case 'homeadapters':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							$result = $FreeboxAPI->universal_get('HomeAdapters_status', $Command->getLogicalId());
 							if ($result != false) {
@@ -1604,7 +1604,7 @@ class Freebox_OSCmd extends cmd
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $this->getName());
 		$FreeboxAPI = new FreeboxAPI();
 		switch ($this->getEqLogic()->getLogicalId()) {
-			case 'ADSL':
+			case 'connexion':
 				break;
 			case 'downloads':
 				$result = $FreeboxAPI->universal_get('download_stats');
@@ -1638,7 +1638,7 @@ class Freebox_OSCmd extends cmd
 						break;
 				}
 				break;
-			case 'Wifi':
+			case 'wifi':
 				switch ($this->getLogicalId()) {
 					case "wifiOnOff":
 						$result = $FreeboxAPI->universal_get();
@@ -1679,7 +1679,7 @@ class Freebox_OSCmd extends cmd
 					}
 				}
 				break;
-			case 'AirPlay':
+			case 'airmedia':
 				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
 				if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
 					log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);

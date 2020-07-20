@@ -204,69 +204,24 @@ function addCmdToTable(_cmd) {
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
 	switch (template) {
 		case 'airmedia':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
 		case 'airplay':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
 		case 'connexion':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Disque':
-			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			//	var inverse = $('<span>');
-			break;
-		case 'Downloads':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Home Adapters':
-			$('.Equipement').show();
-			$('.Equipement_tiles').hide();
-			$('.Add_Equipement').hide();
-			break;
-		case 'HomeAdapters':
-			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
+		case 'downloads':
 		case 'parental':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
 		case 'phone':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
 		case 'player':
+		case 'wifi':
 			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
+		case 'disk':
+		case 'Home Adapters':
+		case 'HomeAdapters':
+		case 'homeadapters':
 		case 'network':
-			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-
 		case 'system':
 			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Wifi':
-			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;

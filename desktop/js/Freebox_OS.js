@@ -254,7 +254,7 @@ function addCmdToTable(_cmd) {
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
-		case 'Reseau':
+		case 'network':
 			$('.Equipement').show();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();

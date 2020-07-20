@@ -69,8 +69,8 @@ try {
 			Freebox_OS::addparental();
 			ajax::success(true);
 			break;
-		case 'SearchReseau':
-			Freebox_OS::addReseau();
+		case 'Searchnetwork':
+			Freebox_OS::addNetwork();
 			ajax::success(true);
 			break;
 		case 'SearchSystem':

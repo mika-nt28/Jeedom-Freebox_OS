@@ -209,14 +209,14 @@ class Freebox_OS extends eqLogic
 		);
 		return $return;
 	}
-	public static function addReseau()
+	public static function addNetwork()
 	{
 		$FreeboxAPI = new FreeboxAPI();
-		$Reseau = self::AddEqLogic('Appareils connectés', 'Reseau', 'multimedia', false, null, null);
+		$Network = self::AddEqLogic('Appareils connectés', 'Reseau', 'multimedia', false, null, null);
 		log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
-		foreach ($FreeboxAPI->universal_get('reseau') as $Equipement) {
+		foreach ($FreeboxAPI->universal_get('network') as $Equipement) {
 			if ($Equipement['primary_name'] != '') {
-				$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
+				$Command = $Network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
 				$Command->setConfiguration('host_type', $Equipement['host_type']);
 				if (isset($Equipement['l3connectivities'])) {
 					foreach ($Equipement['l3connectivities'] as $Ip) {
@@ -827,7 +827,7 @@ class Freebox_OS extends eqLogic
 	{
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 
-		self::AddEqLogic($logicalinfo['reseauName'], $logicalinfo['reseauID'], 'default', false, null, null);
+		self::AddEqLogic($logicalinfo['networkName'], $logicalinfo['networkID'], 'default', false, null, null);
 		self::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
@@ -995,7 +995,7 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
 			$FreeboxAPI->universal_get('DownloadStats');
-			self::addReseau();
+			self::addNetwork();
 			self::addTiles();
 			self::addHomeAdapters();
 		}
@@ -1276,10 +1276,10 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-					case 'Reseau':
+					case 'network':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
-								$result = $FreeboxAPI->universal_get('reseau_ping', $Command->getLogicalId());
+								$result = $FreeboxAPI->universal_get('network_ping', $Command->getLogicalId());
 								if (!$result['success']) {
 									if ($result['error_code'] == "internal_error") {
 										$Command->remove();
@@ -1499,8 +1499,8 @@ class Freebox_OS extends eqLogic
 			'airmediaName' => 'Air Média',
 			'disqueID' => 'Disque',
 			'disqueName' => 'Disque Dur',
-			'reseauID' => 'reseau',
-			'reseauName' => 'Appareils connectés',
+			'networkID' => 'network',
+			'networkName' => 'Appareils connectés',
 			'systemID' => 'System',
 			'systemName' => 'Système',
 			'downloadsID' => 'Downloads',
@@ -1545,10 +1545,10 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setName($logicalinfo['disqueName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['disqueID']);
 					break;
-				case 'reseau':
-					$eqLogic->setLogicalId($logicalinfo['reseauID']);
-					$eqLogic->setName($logicalinfo['reseauName']);
-					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['reseauID']);
+				case 'network':
+					$eqLogic->setLogicalId($logicalinfo['networkID']);
+					$eqLogic->setName($logicalinfo['networkName']);
+					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['networkID']);
 					break;
 				case 'System':
 					$eqLogic->setLogicalId($logicalinfo['systemID']);

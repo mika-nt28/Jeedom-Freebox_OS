@@ -292,10 +292,10 @@ class FreeboxAPI
 				$config = 'api/v8/player/' . $id . '/api/v6/status';
 				$config_log = 'Traitement de la Mise à jour de l\'id ';
 				break;
-			case 'reseau':
+			case 'network':
 				$config = 'api/v8/lan/browser/pub';
 				break;
-			case 'reseau_ping':
+			case 'network_ping':
 				$config = 'api/v8/lan/browser/pub/' . $id;
 				break;
 			case 'system':
@@ -400,7 +400,7 @@ class FreeboxAPI
 			return false;
 	}*/
 
-	/*public function ReseauPing($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	/*public function networkPing($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/lan/browser/pub/' . $id);
 		if ($result === false)
@@ -410,7 +410,7 @@ class FreeboxAPI
 		else
 			return false;
 	}*/
-	/*public function getReseau()  // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	/*public function getnetwork()  // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/lan/browser/pub/');
 		if ($result === false)

@@ -1,6 +1,6 @@
 <?php
 if (!isConnect('admin')) {
-    throw new Exception('{{401 - Accès non autorisé}}');
+	throw new Exception('{{401 - Accès non autorisé}}');
 }
 $plugin = plugin::byId('Freebox_OS');
 sendVarToJS('eqType', $plugin->getId());
@@ -46,115 +46,115 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
 		<div class="eqLogicThumbnailContainer">
 			<?php
-            $status = 0;
-            foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getConfiguration('type') == 'player') {
-                    $template = $eqLogic->getConfiguration('type');
-                } else {
-                    $template = $eqLogic->getLogicalId();
-                }
-                switch ($template) {
-                    case 'AirPlay':
-                    case 'airplay':
-                    case 'airmedia':
-                    case 'connexion':
-                    case 'ADSL':
-                    case 'downloads':
-                    case 'Downloads':
-                    case 'system':
-                    case 'System':
-                    case 'disk':
-                    case 'Disque':
-                    case 'phone':
-                    case 'Phone':
-                    case 'wifi':
-                    case 'Wifi':
-                    case 'player':
-                    case 'Player':
-                    case 'reseau':
-                    case 'Reseau':
-                        $status = 1;
-                        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-                        echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-                        echo '<img src="plugins/Freebox_OS/plugin_info/images/'.$template.'.png"/>';
-                        echo '<br>';
-                        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-                        echo '</div>';
-                        break;
-                }
-            }
-            if ($status == 0) {
-                echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un Scan équipement standard.}}</span></center>";
-            }
-            ?>
+			$status = 0;
+			foreach ($eqLogics as $eqLogic) {
+				if ($eqLogic->getConfiguration('type') == 'player') {
+					$template = $eqLogic->getConfiguration('type');
+				} else {
+					$template = $eqLogic->getLogicalId();
+				}
+				switch ($template) {
+					case 'AirPlay':
+					case 'airplay':
+					case 'airmedia':
+					case 'connexion':
+					case 'ADSL':
+					case 'downloads':
+					case 'Downloads':
+					case 'system':
+					case 'System':
+					case 'disk':
+					case 'Disque':
+					case 'phone':
+					case 'Phone':
+					case 'wifi':
+					case 'Wifi':
+					case 'player':
+					case 'Player':
+					case 'network':
+					case 'Reseau':
+						$status = 1;
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="plugins/Freebox_OS/plugin_info/images/' . $template . '.png"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+						echo '</div>';
+						break;
+				}
+			}
+			if ($status == 0) {
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un Scan équipement standard.}}</span></center>";
+			}
+			?>
 		</div>
 
 		<legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
 		<div class="eqLogicThumbnailContainer">
 			<?php
-            $status = 0;
-            foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player') {
-                    $template = $eqLogic->getConfiguration('type');
-                } else {
-                    $template = $eqLogic->getLogicalId();
-                }
-                switch ($template) {
-                    case 'AirPlay':
-                    case 'airplay':
-                    case 'ADSL':
-                    case 'Downloads':
-                    case 'System':
-                    case 'Disque':
-                    case 'Phone':
-                    case 'Wifi':
-                    case 'parental':
-                    case 'player':
-                    case 'Reseau':
-                    case 'airmedia':
-                    case 'reseau':
-                    case 'connexion':
-                    case 'wifi':
+			$status = 0;
+			foreach ($eqLogics as $eqLogic) {
+				if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player') {
+					$template = $eqLogic->getConfiguration('type');
+				} else {
+					$template = $eqLogic->getLogicalId();
+				}
+				switch ($template) {
+					case 'AirPlay':
+					case 'airplay':
+					case 'ADSL':
+					case 'Downloads':
+					case 'System':
+					case 'Disque':
+					case 'Phone':
+					case 'Wifi':
+					case 'parental':
+					case 'player':
+					case 'Reseau':
+					case 'airmedia':
+					case 'network':
+					case 'connexion':
+					case 'wifi':
 
-                        break;
-                    default:
-                        $status = 1;
-                        $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-                        echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-                        echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
-                        echo '<br>';
-                        echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-                        echo '</div>';
-                        break;
-                }
-            }
-            if ($status == 0) {
-                echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un Scan Tiles.}}</span></center>";
-            }
-            ?>
+						break;
+					default:
+						$status = 1;
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="' . $plugin->getPathImgIcon() . '"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+						echo '</div>';
+						break;
+				}
+			}
+			if ($status == 0) {
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un Scan Tiles.}}</span></center>";
+			}
+			?>
 		</div>
 		<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parental}}</legend>
 		<div class="eqLogicThumbnailContainer">
 			<?php
-            $status = 0;
-            foreach ($eqLogics as $eqLogic) {
-                if ($eqLogic->getConfiguration('type') == 'parental') {
-                    $status = 1;
-                    $template = $eqLogic->getConfiguration('type');
-                    $opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-                    echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-                    echo '<img src="plugins/Freebox_OS/plugin_info/images/'.$template.'.png"/>';
-                    echo '<br>';
-                    echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-                    echo '</div>';
-                }
-            }
-            if ($status == 1) {
-                echo '</div>';
-            } else {
-                echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un Scan Contrôle parental.}}</span></center>";
-            }
-            ?>
+			$status = 0;
+			foreach ($eqLogics as $eqLogic) {
+				if ($eqLogic->getConfiguration('type') == 'parental') {
+					$status = 1;
+					$template = $eqLogic->getConfiguration('type');
+					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+					echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+					echo '<img src="plugins/Freebox_OS/plugin_info/images/' . $template . '.png"/>';
+					echo '<br>';
+					echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+					echo '</div>';
+				}
+			}
+			if ($status == 1) {
+				echo '</div>';
+			} else {
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un Scan Contrôle parental.}}</span></center>";
+			}
+			?>
 		</div>
 	</div>
 
@@ -202,9 +202,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
 									<option value="">{{Aucun}}</option>
 									<?php
-                                    foreach (jeeObject::all() as $object)
-                                        echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-                                    ?>
+									foreach (jeeObject::all() as $object)
+										echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+									?>
 								</select>
 							</div>
 						</div>
@@ -212,12 +212,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<label class="col-sm-2 control-label">{{Catégorie}}</label>
 							<div class="col-sm-9">
 								<?php
-                                foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
-                                    echo '<label class="checkbox-inline">';
-                                    echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
-                                    echo '</label>';
-                                }
-                                ?>
+								foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
+									echo '<label class="checkbox-inline">';
+									echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
+									echo '</label>';
+								}
+								?>
 							</div>
 						</div>
 						<div class="form-group">
@@ -238,7 +238,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<form class="form-horizontal col-sm-2">
 					<fieldset>
 						<div class="form-group">
-							<img src="<?php echo $plugin->getPathImgIcon();?>" data-original=".jpg" id="img_device" class="img-responsive" style="max-height : 250px;" onerror="this.src='plugins/Freebox_OS/plugin_info/freebox_os_icon.png'" />
+							<img src="<?php echo $plugin->getPathImgIcon(); ?>" data-original=".jpg" id="img_device" class="img-responsive" style="max-height : 250px;" onerror="this.src='plugins/Freebox_OS/plugin_info/freebox_os_icon.png'" />
 						</div>
 					</fieldset>
 				</form>

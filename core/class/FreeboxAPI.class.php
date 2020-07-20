@@ -222,9 +222,10 @@ class FreeboxAPI
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
 				log::add('Freebox_OS', 'debug', '│ Occupation [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
-				$logicalinfo = Freebox_OS::getlogicalinfo();
 
-				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskID'], $logicalinfo['diskName'], 'default', false, null, null);
+				$logicalinfo = Freebox_OS::getlogicalinfo();
+				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
+
 				$command = $disk->AddCommand('Occupation [' . $disks['type'] . '] - ' . $disks['id'], $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');

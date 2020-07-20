@@ -215,7 +215,7 @@ class Freebox_OS extends eqLogic
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 		$FreeboxAPI = new FreeboxAPI();
 
-		$network = sself::AddEqLogic($logicalinfo['networkName'], $logicalinfo['networkID'], 'default', false, null, null);
+		$network = self::AddEqLogic($logicalinfo['networkName'], $logicalinfo['networkID'], 'default', false, null, null);
 		//$Network = self::AddEqLogic('Appareils connectés', 'Reseau', 'multimedia', false, null, null);
 		log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
 		foreach ($FreeboxAPI->universal_get('network') as $Equipement) {

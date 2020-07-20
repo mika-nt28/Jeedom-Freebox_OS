@@ -75,7 +75,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès.Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -179,6 +179,21 @@ $('.Equipement').on('click', function () {
 	});
 });
 
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', function () {
+	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
+	$icon2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
+	console.log($icon2)
+	if ($icon2 == "parental" || $icon2 == "player" || $icon2 == "alarm_control" || $icon2 == "alarm_sensor" || $icon2 == "alarm_remote") $icon = $icon2;
+	if ($icon != '' && $icon != null)
+		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
+});
+
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function () {
+	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
+	if ($icon != '' && $icon != null)
+		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
+});
+
 function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
@@ -186,64 +201,25 @@ function addCmdToTable(_cmd) {
 	var inverse = $('<span>');
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
 	switch (template) {
+		case 'airmedia':
+		case 'airplay':
+		case 'connexion':
+		case 'downloads':
+		case 'parental':
+		case 'phone':
+		case 'player':
+		case 'wifi':
+			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
+			break;
+		case 'disk':
 		case 'Home Adapters':
-			$('.Equipement').show();
-			$('.Equipement_tiles').hide();
-			$('.Add_Equipement').hide();
-			break;
 		case 'HomeAdapters':
+		case 'homeadapters':
+		case 'network':
+		case 'system':
 			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Reseau':
-			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Disque':
-			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			//	var inverse = $('<span>');
-			break;
-		case 'System':
-			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Wifi':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Parental':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'ADSL':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'AirPlay':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Player':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Downloads':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Phone':
-			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;

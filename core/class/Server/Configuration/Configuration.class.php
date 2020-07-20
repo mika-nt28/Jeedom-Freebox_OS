@@ -132,21 +132,7 @@ class FreeboxAPI
 		}
 	}
 
-	public function Downloads($Etat)
-	{
-		$List_DL = self::fetch('/api/v3/downloads/');
-		$nbDL = count($List_DL['result']);
-		for ($i = 0; $i < $nbDL; ++$i) {
-			if ($Etat == 0)
-				$Downloads = self::fetch('/api/v3/downloads/' . $List_DL['result'][$i]['id'], array("status" => "stopped"), "PUT");
-			if ($Etat == 1)
-				$Downloads = self::fetch('/api/v3/downloads/' . $List_DL['result'][$i]['id'], array("status" => "downloading"), "PUT");
-		}
-		if ($Downloads['success'])
-			return $Downloads['success'];
-		else
-			return false;
-	}
+	
 
 	public function PortForwarding($Port)
 	{
@@ -168,71 +154,6 @@ class FreeboxAPI
 
 	}*/
 
-	public function system()
-	{
-		$systemArray = self::fetch('/api/v3/system/');
 
-		if ($systemArray['success']) {
-			return $systemArray['result'];
-		} else
-			return false;
-	}
-
-	public function ReseauPing($id = '')
-	{
-		$Ping = self::fetch('/api/v3/lan/browser/pub/' . $id);
-
-		if ($Ping['success'])
-			return $Ping['result'];
-		else
-			return false;
-	}
-	public function nb_appel_absence()
-	{
-		$listNumber_missed = '';
-		$listNumber_accepted = '';
-		$listNumber_outgoing = '';
-		$pre_check_con = self::fetch('/api/v3/call/log/');
-		if ($pre_check_con['success']) {
-			$timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-			if (isset($pre_check_con['result'])) {
-				$nb_call = count($pre_check_con['result']);
-
-				$cptAppel_outgoing = 0;
-				$cptAppel_missed = 0;
-				$cptAppel_accepted = 0;
-				for ($k = 0; $k < $nb_call; $k++) {
-					$jour = $pre_check_con['result'][$k]['datetime'];
-
-					$time = date('H:i', $pre_check_con['result'][$k]['datetime']);
-					if ($timestampToday <= $jour) {
-						if ($pre_check_con['result'][$k]['name'] == $pre_check_con['result'][$k]['number']) {
-							$name = "N.C.";
-						} else {
-							$name = $pre_check_con['result'][$k]['name'];
-						}
-
-						if ($pre_check_con['result'][$k]['type'] == 'missed') {
-							$cptAppel_missed++;
-							$listNumber_missed .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s<br>";
-						}
-						if ($pre_check_con['result'][$k]['type'] == 'accepted') {
-							$cptAppel_accepted++;
-							$listNumber_accepted .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s<br>";
-						}
-						if ($pre_check_con['result'][$k]['type'] == 'outgoing') {
-							$cptAppel_outgoing++;
-							$listNumber_outgoing .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s<br>";
-						}
-					}
-				}
-				$retourFbx = array('missed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'list_outgoing' => $listNumber_outgoing);
-			} else
-				$retourFbx = array('missed' => 0, 'list_missed' => "", 'accepted' => 0, 'list_accepted' => "", 'outgoing' => 0, 'list_outgoing' => "");
-
-			return $retourFbx;
-		} else
-			return false;
-	}
 	
 }

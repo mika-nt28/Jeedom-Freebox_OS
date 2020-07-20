@@ -61,24 +61,24 @@ try {
 		case 'ask_track_authorization':
 			ajax::success($FreeboxAPI->ask_track_authorization());
 			break;
-		case 'SearchHomeAdapters':
-			Freebox_OS::addHomeAdapters();
+		case 'Searchhomeadapters':
+			Freebox_OS::addhomeadapters();
 			ajax::success(true);
 			break;
 		case 'SearchParental':
 			Freebox_OS::addparental();
 			ajax::success(true);
 			break;
-		case 'SearchReseau':
-			Freebox_OS::addReseau();
+		case 'Searchnetwork':
+			Freebox_OS::addnetwork();
 			ajax::success(true);
 			break;
-		case 'SearchSystem':
-			Freebox_OS::addSystem();
+		case 'Searchsystem':
+			Freebox_OS::addsystem();
 			ajax::success(true);
 			break;
-		case 'SearchDisque':
-			ajax::success($FreeboxAPI->disques());
+		case 'Searchdisk':
+			ajax::success($FreeboxAPI->disk());
 			break;
 		case 'AddPortForwarding':
 			$PortForwarding = array(
@@ -100,11 +100,11 @@ try {
 			$Command = cmd::byId(init('id'));
 			if (is_object($Command)) {
 				$Mac = str_replace('ether-', '', $Command->getLogicalId());
-				ajax::success($FreeboxAPI->WakeOnLAN($Mac));
+				ajax::success($FreeboxAPI->universal_put($Mac, 'WakeOnLAN'));
 			}
 			ajax::success(false);
 			break;
-		case 'sendCmdPlayer':
+			/*case 'sendCmdPlayer':
 			$Player = eqLogic::byId(init('id'));
 			if (is_object($Player)) {
 				$Cmd = $Player->getCmd('action', init('cmd'));
@@ -112,11 +112,11 @@ try {
 					ajax::success($Cmd->execute());
 			}
 			ajax::success(false);
+			break;*/
+		case 'get_airmediareceivers':
+			ajax::success($FreeboxAPI->airmedia('receivers'));
 			break;
-		case 'getAirMediaRecivers':
-			ajax::success($FreeboxAPI->airmediaReceivers());
-			break;
-		case 'setAirMediaReciver':
+		case 'set_airmediareceivers':
 			$cmd = cmd::byId(init('id'));
 			if (is_object($cmd)) {
 				$cmd->setCollectDate('');
@@ -126,10 +126,12 @@ try {
 			ajax::success(false);
 			break;
 		case 'SearchTile':
+			Freebox_OS::updateLogicalID(1);
 			Freebox_OS::addTiles();
 			ajax::success(true);
 			break;
 		case 'SearchArchi':
+			Freebox_OS::updateLogicalID(1);
 			Freebox_OS::CreateArchi();
 			ajax::success(true);
 			break;

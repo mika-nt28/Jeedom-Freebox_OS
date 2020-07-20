@@ -994,7 +994,7 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->universal_get('4G');
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
-			$FreeboxAPI->universal_get('DownloadStats');
+			$FreeboxAPI->universal_get('download_stats');
 			self::addNetwork();
 			self::addTiles();
 			self::addHomeAdapters();
@@ -1082,7 +1082,7 @@ class Freebox_OS extends eqLogic
 						}
 						break;
 					case 'Downloads':
-						$result = $FreeboxAPI->universal_get('DownloadStats');
+						$result = $FreeboxAPI->universal_get('download_stats');
 						if ($result != false) {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								if (is_object($Command)) {
@@ -1503,7 +1503,7 @@ class Freebox_OS extends eqLogic
 			'networkName' => 'Appareils connectés',
 			'systemID' => 'system',
 			'systemName' => 'Système',
-			'downloadsID' => 'Downloads',
+			'downloadsID' => 'downloads',
 			'downloadsName' => 'Téléchargements',
 			'phoneID' => 'Phone',
 			'phoneName' => 'Téléphone',
@@ -1602,15 +1602,15 @@ class Freebox_OSCmd extends cmd
 		switch ($this->getEqLogic()->getLogicalId()) {
 			case 'ADSL':
 				break;
-			case 'Downloads':
-				$result = $FreeboxAPI->universal_get('DownloadStats');
+			case 'downloads':
+				$result = $FreeboxAPI->universal_get('download_stats');
 				if ($result != false) {
 					switch ($this->getLogicalId()) {
 						case "stop_dl":
-							$FreeboxAPI->Downloads(0);
+							$FreeboxAPI->downloads(0);
 							break;
 						case "start_dl":
-							$FreeboxAPI->Downloads(1);
+							$FreeboxAPI->downloads(1);
 							break;
 					}
 				}

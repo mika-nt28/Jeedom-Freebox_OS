@@ -132,21 +132,7 @@ class FreeboxAPI
 		}
 	}
 
-	public function Downloads($Etat)
-	{
-		$List_DL = self::fetch('/api/v3/downloads/');
-		$nbDL = count($List_DL['result']);
-		for ($i = 0; $i < $nbDL; ++$i) {
-			if ($Etat == 0)
-				$Downloads = self::fetch('/api/v3/downloads/' . $List_DL['result'][$i]['id'], array("status" => "stopped"), "PUT");
-			if ($Etat == 1)
-				$Downloads = self::fetch('/api/v3/downloads/' . $List_DL['result'][$i]['id'], array("status" => "downloading"), "PUT");
-		}
-		if ($Downloads['success'])
-			return $Downloads['success'];
-		else
-			return false;
-	}
+	
 
 	public function PortForwarding($Port)
 	{

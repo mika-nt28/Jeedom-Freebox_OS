@@ -104,6 +104,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					case 'AirPlay':
 					case 'airplay':
 					case 'ADSL':
+					case 'downloads':
 					case 'Downloads':
 					case 'system':
 					case 'Disque':

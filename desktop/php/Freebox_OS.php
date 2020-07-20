@@ -95,10 +95,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<?php
 			$status = 0;
 			foreach ($eqLogics as $eqLogic) {
-				if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player') {
+				if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'alarm_control' || $eqLogic->getConfiguration('type') == 'alarm_sensor' || $eqLogic->getConfiguration('type') == 'alarm_remote') {
 					$template = $eqLogic->getConfiguration('type');
+					$icon = $template;
 				} else {
 					$template = $eqLogic->getLogicalId();
+					if ($template == 'homeadapters') {
+						$icon = $template;
+					} else {
+						$icon = 'default';
+					}
 				}
 				switch ($template) {
 					case 'AirPlay':
@@ -125,7 +131,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						$status = 1;
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="plugins/Freebox_OS/core/images/default.png"/>';
+						echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
 						echo '</div>';

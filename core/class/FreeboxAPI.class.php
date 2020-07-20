@@ -469,9 +469,10 @@ class FreeboxAPI
 			return false;
 		return $return['success'];
 	}
-	public function universal_put($parametre, $update = 'wifi', $id = null)
+	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId)
 	{
 		$fonction = "PUT";
+		$config_log = null;
 		switch ($update) {
 			case '4G':
 				$config = 'api/v8/connection/lte/config';
@@ -517,6 +518,17 @@ class FreeboxAPI
 				$config_commande = 'enabled';
 				$config_log = 'Mise à jour de : Etat du Wifi';
 				break;
+			case 'settile':
+				if ($id != null) {
+					$id = $id . '/';
+				} elseif ($id != 'refresh') {
+					$id = null;
+				}
+				log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
+				$config = 'api/v8/home/endpoints/';
+				$config_commande = 'enabled';
+				$config_log = 'Mise à jour de : Etat du Wifi';
+				break;
 		}
 		if ($parametre === 1) {
 			$parametre = true;
@@ -528,8 +540,12 @@ class FreeboxAPI
 			$return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
 		} else if ($update == 'WakeOnLAN') {
 			$return = $this->fetch($config, array("mac" => $id, "password" => ""), $fonction);
+		} else if ($update == 'settile') {
+			$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
 		} else {
-			log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
+			if ($config_log != null) {
+				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
+			}
 			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction);
 			if ($return === false) {
 				return false;
@@ -544,11 +560,33 @@ class FreeboxAPI
 				case '4G':
 					return $return['result']['enabled'];
 					break;
+				case 'settile':
+					return $return['result'];
+					break;
 				default:
 					return $return;
 					break;
 			}
 		}
+	}
+	public function settile($parametre, $update = 'tiles', $id = null, $nodeId)
+	{                     //$parametre, $update = 'wifi', $id = null, $nodeId
+
+		$config = 'api/v8/home/endpoints/';
+
+		if ($id != null) {
+			$$id = $id . '/';
+		} elseif ($id != 'refresh') {
+			$id = null;
+		}
+		log::add('Freebox_OS', 'debug', '└───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
+		$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
+		if ($return === false)
+			return false;
+		if ($return['success'])
+			return $return['result'];
+		else
+			return false;
 	}
 	public function ringtone($update = 'ON')
 	{
@@ -639,27 +677,7 @@ class FreeboxAPI
 			return false;
 	}*/
 
-	public function setTile($nodeId, $endpointId, $parametre, $update = 'tiles')
-	{
-		switch ($update) {
-			case 'tiles':
-				$config = 'api/v8/home/endpoints/';
-				break;
-		}
-		if ($endpointId != null) {
-			$endpointId = $endpointId . '/';
-		} elseif ($endpointId != 'refresh') {
-			$endpointId = null;
-		}
-		log::add('Freebox_OS', 'debug', '└───────── Info nodeid : ' . $nodeId . ' -- endpointId : ' . $endpointId . ' -- Paramètre : ' . $parametre);
-		$return = $this->fetch('/' . $config . $nodeId . '/' . $endpointId, $parametre, "PUT");
-		if ($return === false)
-			return false;
-		if ($return['success'])
-			return $return['result'];
-		else
-			return false;
-	}
+
 
 
 	public function nb_appel_absence()

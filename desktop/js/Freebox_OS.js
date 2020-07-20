@@ -244,7 +244,7 @@ function addCmdToTable(_cmd) {
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;
-		case 'Phone':
+		case 'phone':
 			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();

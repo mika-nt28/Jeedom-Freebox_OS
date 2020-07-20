@@ -169,7 +169,7 @@ class FreeboxAPI
 		}
 	}
 
-	public function Downloads($Etat)
+	public function downloads($Etat)
 	{
 		$result = $this->fetch('/api/v8/downloads/');
 		if ($result === false)
@@ -177,14 +177,14 @@ class FreeboxAPI
 		$nbDL = count($result['result']);
 		for ($i = 0; $i < $nbDL; ++$i) {
 			if ($Etat == 0)
-				$Downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "stopped"), "PUT");
+				$downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "stopped"), "PUT");
 			if ($Etat == 1)
-				$Downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "downloading"), "PUT");
+				$downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "downloading"), "PUT");
 		}
-		if ($Downloads === false)
+		if ($downloads === false)
 			return false;
-		if ($Downloads['success'])
-			return $Downloads['success'];
+		if ($downloads['success'])
+			return $downloads['success'];
 		else
 			return false;
 	}
@@ -222,9 +222,10 @@ class FreeboxAPI
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
 				log::add('Freebox_OS', 'debug', '│ Occupation [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
-				$logicalinfo = Freebox_OS::getlogicalinfo();
 
-				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskID'], $logicalinfo['diskName'], 'default', false, null, null);
+				$logicalinfo = Freebox_OS::getlogicalinfo();
+				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
+
 				$command = $disk->AddCommand('Occupation [' . $disks['type'] . '] - ' . $disks['id'], $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
@@ -243,7 +244,7 @@ class FreeboxAPI
 		}
 		return false;
 	}*/
-	/*public function DownloadStats() // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
+	/*public function download_stats() // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
 	{
 		$result = $this->fetch('/api/v8/downloads/stats/');
 		if ($result === false) {

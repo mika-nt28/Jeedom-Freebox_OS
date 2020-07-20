@@ -209,14 +209,17 @@ class Freebox_OS extends eqLogic
 		);
 		return $return;
 	}
-	public static function addNetwork()
+	public static function addnetwork()
 	{
+
+		$logicalinfo = Freebox_OS::getlogicalinfo();
 		$FreeboxAPI = new FreeboxAPI();
-		$Network = self::AddEqLogic('Appareils connectés', 'Reseau', 'multimedia', false, null, null);
+
+		$network = self::AddEqLogic($logicalinfo['networkName'], $logicalinfo['networkID'], 'default', false, null, null);
 		log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
 		foreach ($FreeboxAPI->universal_get('network') as $Equipement) {
 			if ($Equipement['primary_name'] != '') {
-				$Command = $Network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
+				$Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
 				$Command->setConfiguration('host_type', $Equipement['host_type']);
 				if (isset($Equipement['l3connectivities'])) {
 					foreach ($Equipement['l3connectivities'] as $Ip) {
@@ -925,15 +928,15 @@ class Freebox_OS extends eqLogic
 			$iconePasses = 'icon techno-phone2 icon_green';
 			$updateiconePhone = false;
 		};
-		$Phone = self::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null);
-		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default',  1, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 2, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  3, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default',  6, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 7, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
-		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
-		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
+		$phone = self::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null);
+		$phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default',  1, '0', $updateiconePhone, true);
+		$phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 2, '0', $updateiconePhone, true);
+		$phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  3, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default',  6, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 7, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
+		$phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
+		$phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Downloads
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');
@@ -948,21 +951,21 @@ class Freebox_OS extends eqLogic
 			$iconeDownloadsOff = 'fas fa-stop icon_red';
 			$updateiconeDownloads = false;
 		};
-		$Downloads = self::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null);
-		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  7, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  8, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  9, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 11, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  12, '0', $updateiconeDownloads, true);
-		$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOn, 0, 'default', 'default',  13, '0', $updateiconeDownloads, false);
-		$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOff, 0, 'default', 'default',  14, '0', $updateiconeDownloads, false);
+		$downloads = self::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null);
+		$downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  7, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  8, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  9, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 11, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  12, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOn, 0, 'default', 'default',  13, '0', $updateiconeDownloads, false);
+		$downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOff, 0, 'default', 'default',  14, '0', $updateiconeDownloads, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// AirPlay
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : AirPlay');
@@ -994,10 +997,10 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->universal_get('4G');
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
-			$FreeboxAPI->universal_get('DownloadStats');
-			self::addNetwork();
-			self::addTiles();
-			self::addHomeAdapters();
+			$FreeboxAPI->universal_get('download_stats');
+			//self::addnetwork();
+			//self::addTiles();
+			//self::addHomeAdapters();
 		}
 	}
 	public function preSave()
@@ -1082,7 +1085,7 @@ class Freebox_OS extends eqLogic
 						}
 						break;
 					case 'Downloads':
-						$result = $FreeboxAPI->universal_get('DownloadStats');
+						$result = $FreeboxAPI->universal_get('download_stats');
 						if ($result != false) {
 							foreach ($Equipement->getCmd('info') as $Command) {
 								if (is_object($Command)) {
@@ -1247,7 +1250,7 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-					case 'Phone':
+					case 'phone':
 						$result = $FreeboxAPI->nb_appel_absence();
 						if ($result != false) {
 							foreach ($Equipement->getCmd('info') as $Command) {
@@ -1503,9 +1506,9 @@ class Freebox_OS extends eqLogic
 			'networkName' => 'Appareils connectés',
 			'systemID' => 'system',
 			'systemName' => 'Système',
-			'downloadsID' => 'Downloads',
+			'downloadsID' => 'downloads',
 			'downloadsName' => 'Téléchargements',
-			'phoneID' => 'Phone',
+			'phoneID' => 'phone',
 			'phoneName' => 'Téléphone',
 			'wifiID' => 'wifi',
 			'wifiName' => 'Wifi',
@@ -1602,15 +1605,15 @@ class Freebox_OSCmd extends cmd
 		switch ($this->getEqLogic()->getLogicalId()) {
 			case 'ADSL':
 				break;
-			case 'Downloads':
-				$result = $FreeboxAPI->universal_get('DownloadStats');
+			case 'downloads':
+				$result = $FreeboxAPI->universal_get('download_stats');
 				if ($result != false) {
 					switch ($this->getLogicalId()) {
 						case "stop_dl":
-							$FreeboxAPI->Downloads(0);
+							$FreeboxAPI->downloads(0);
 							break;
 						case "start_dl":
-							$FreeboxAPI->Downloads(1);
+							$FreeboxAPI->downloads(1);
 							break;
 					}
 				}
@@ -1662,7 +1665,7 @@ class Freebox_OSCmd extends cmd
 						break;
 				}
 				break;
-			case 'Phone':
+			case 'phone':
 				$result = $FreeboxAPI->nb_appel_absence();
 				if ($result != false) {
 					switch ($this->getLogicalId()) {

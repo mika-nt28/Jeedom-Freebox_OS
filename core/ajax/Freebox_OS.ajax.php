@@ -61,7 +61,7 @@ try {
 		case 'ask_track_authorization':
 			ajax::success($FreeboxAPI->ask_track_authorization());
 			break;
-		case 'SearchHomeAdapters':
+		case 'Searchhomeadapters':
 			Freebox_OS::addHomeAdapters();
 			ajax::success(true);
 			break;

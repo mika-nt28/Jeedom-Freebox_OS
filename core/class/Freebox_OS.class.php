@@ -100,10 +100,10 @@ class Freebox_OS extends eqLogic
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		if (!is_object($EqLogic)) {
-			$defaultRoom = intval(config::byKey('defaultParentObject',"Freebox_OS",'',true));
+			$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
-			if($defaultRoom) $EqLogic->setObject_id($defaultRoom);
+			if ($defaultRoom) $EqLogic->setObject_id($defaultRoom);
 			$EqLogic->setEqType_name('Freebox_OS');
 			$EqLogic->setIsEnable(1);
 			$EqLogic->setIsVisible(0);
@@ -1498,7 +1498,7 @@ class Freebox_OS extends eqLogic
 	{
 		return array(
 			'connexionID' => 'connexion',
-			'connexionName' => 'Réseau',
+			'connexionName' => 'Connexion Réseau Free',
 			'airmediaID' => 'airmedia',
 			'airmediaName' => 'Air Média',
 			'diskID' => 'disk',
@@ -1751,9 +1751,11 @@ class Freebox_OSCmd extends cmd
 									$parametre['value'] = !$parametre['value'];
 								}
 							}
+							$FreeboxAPI->settile($parametre, 'tiles', $logicalId, $this->getEqLogic()->getLogicalId());
+
 							break;
 
-							$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
+							//$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
 							//	log::add('Freebox_OS', 'debug', '└─────────');
 					}
 					break;

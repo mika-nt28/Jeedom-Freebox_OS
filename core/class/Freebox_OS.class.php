@@ -1544,12 +1544,14 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setName("Freebox " . $logicalinfo['airmediaName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
 					break;
+				case 'Disque':
 				case 'Disques':
 					$eqLogic->setLogicalId($logicalinfo['diskID']);
 					$eqLogic->setName($logicalinfo['diskName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['diskID']);
 					break;
 				case 'Reseau':
+				case 'reseau':
 					$eqLogic->setLogicalId($logicalinfo['networkID']);
 					$eqLogic->setName($logicalinfo['networkName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['networkID']);

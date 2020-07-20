@@ -209,23 +209,23 @@ class FreeboxAPI
 		else
 			return false;
 	}
-	public function disques()
+	public function disk()
 	{
 		$reponse = $this->fetch('/api/v8/storage/disk/');
 		if ($reponse === false)
 			return false;
 		if ($reponse['success']) {
 			$value = 0;
-			foreach ($reponse['result'] as $Disques) {
-				$total_bytes = $Disques['partitions'][0]['total_bytes'];
-				$used_bytes = $Disques['partitions'][0]['used_bytes'];
+			foreach ($reponse['result'] as $disks) {
+				$total_bytes = $disks['partitions'][0]['total_bytes'];
+				$used_bytes = $disks['partitions'][0]['used_bytes'];
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
-				log::add('Freebox_OS', 'debug', '│ Occupation [' . $Disques['type'] . '] - ' . $Disques['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
+				log::add('Freebox_OS', 'debug', '│ Occupation [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 				$logicalinfo = Freebox_OS::getlogicalinfo();
 
-				$Disque = Freebox_OS::AddEqLogic($logicalinfo['diskID'], $logicalinfo['diskName'], 'default', false, null, null);
-				$command = $Disque->AddCommand('Occupation [' . $Disques['type'] . '] - ' . $Disques['id'], $Disques['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false);
+				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskID'], $logicalinfo['diskName'], 'default', false, null, null);
+				$command = $disk->AddCommand('Occupation [' . $disks['type'] . '] - ' . $disks['id'], $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
 			}
@@ -262,7 +262,7 @@ class FreeboxAPI
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Etat 4G';
 				break;
-			case 'disques':
+			case 'disk':
 				$config = '/api/v8/storage/disk/' . $id;
 				break;
 			case 'DownloadStats':
@@ -326,7 +326,7 @@ class FreeboxAPI
 						$value = 1;
 					}
 					break;
-				case 'disques':
+				case 'disks':
 					$total_bytes = $result['result']['partitions'][0]['total_bytes'];
 					$used_bytes = $result['result']['partitions'][0]['used_bytes'];
 					break;
@@ -361,7 +361,7 @@ class FreeboxAPI
 			} else if ($config_log != null && $id != null) {
 				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
 			}
-			if ($update == 'disques') {
+			if ($update == 'disks') {
 				return round($used_bytes / $total_bytes * 100, 2);
 			} else {
 				return $value;

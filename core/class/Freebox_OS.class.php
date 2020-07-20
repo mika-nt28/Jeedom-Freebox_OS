@@ -987,7 +987,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '└─────────');
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 			$FreeboxAPI = new FreeboxAPI();
-			$FreeboxAPI->disques();
+			$FreeboxAPI->disk();
 			$FreeboxAPI->universal_get();
 			$FreeboxAPI->universal_get('planning');
 			$FreeboxAPI->universal_get('system', null, 4);
@@ -1237,10 +1237,10 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-					case 'Disque':
+					case 'disk':
 						foreach ($Equipement->getCmd('info') as $Command) {
 							if (is_object($Command)) {
-								$result = $FreeboxAPI->universal_get('disques', $Command->getLogicalId());
+								$result = $FreeboxAPI->universal_get('disk', $Command->getLogicalId());
 								if ($result != false) {
 									$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
 								}
@@ -1497,11 +1497,11 @@ class Freebox_OS extends eqLogic
 			'connexionName' => 'Réseau',
 			'airmediaID' => 'airmedia',
 			'airmediaName' => 'Air Média',
-			'disqueID' => 'Disque',
-			'disqueName' => 'Disque Dur',
+			'diskID' => 'disk',
+			'diskName' => 'Disque Dur',
 			'networkID' => 'network',
 			'networkName' => 'Appareils connectés',
-			'systemID' => 'System',
+			'systemID' => 'system',
 			'systemName' => 'Système',
 			'downloadsID' => 'Downloads',
 			'downloadsName' => 'Téléchargements',
@@ -1540,17 +1540,17 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setName("Freebox " . $logicalinfo['airmediaName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
 					break;
-				case 'Disque':
-					$eqLogic->setLogicalId($logicalinfo['disqueID']);
-					$eqLogic->setName($logicalinfo['disqueName']);
-					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['disqueID']);
+				case 'Disques':
+					$eqLogic->setLogicalId($logicalinfo['diskID']);
+					$eqLogic->setName($logicalinfo['diskName']);
+					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['diskID']);
 					break;
 				case 'network':
 					$eqLogic->setLogicalId($logicalinfo['networkID']);
 					$eqLogic->setName($logicalinfo['networkName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['networkID']);
 					break;
-				case 'system':
+				case 'System':
 					$eqLogic->setLogicalId($logicalinfo['systemID']);
 					$eqLogic->setName($logicalinfo['systemName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['systemID']);

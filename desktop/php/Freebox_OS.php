@@ -65,6 +65,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					case 'System':
 					case 'disk':
 					case 'Disque':
+					case 'disk':
 					case 'phone':
 					case 'Phone':
 					case 'wifi':
@@ -106,6 +107,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					case 'Downloads':
 					case 'system':
 					case 'Disque':
+					case 'disk':
 					case 'Phone':
 					case 'Wifi':
 					case 'parental':

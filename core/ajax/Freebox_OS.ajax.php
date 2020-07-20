@@ -77,8 +77,8 @@ try {
 			Freebox_OS::addsystem();
 			ajax::success(true);
 			break;
-		case 'SearchDisque':
-			ajax::success($FreeboxAPI->disques());
+		case 'Searchdisk':
+			ajax::success($FreeboxAPI->disk());
 			break;
 		case 'AddPortForwarding':
 			$PortForwarding = array(

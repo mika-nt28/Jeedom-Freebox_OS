@@ -183,7 +183,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 	$icon2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
 	console.log($icon2)
-	if ($icon2 == "parental") $icon = $icon2;
+	if ($icon2 == "parental" || $icon2 == "player" || $icon2 == "alarm_control" || $icon2 == "alarm_sensor" || $icon2 == "alarm_remote") $icon = $icon2;
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 });

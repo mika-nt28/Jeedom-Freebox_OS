@@ -73,8 +73,8 @@ try {
 			Freebox_OS::addNetwork();
 			ajax::success(true);
 			break;
-		case 'SearchSystem':
-			Freebox_OS::addSystem();
+		case 'Searchsystem':
+			Freebox_OS::addsystem();
 			ajax::success(true);
 			break;
 		case 'SearchDisque':

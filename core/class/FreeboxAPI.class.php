@@ -606,20 +606,20 @@ class FreeboxAPI
 	}
 
 
-	public function UpdateSystem()
+	public function Updatesystem()
 	{
 		try {
 			$logicalinfo = Freebox_OS::getlogicalinfo();
 
-			$System = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
-			$Command = $System->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  null, '0', false, true);
+			$system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
+			$Command = $system->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  null, '0', false, true);
 			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise a jours du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
 			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
 				$this->reboot();
 		} catch (Exception $e) {
-			log::add('Freebox_OS', 'error', '[FreeboxUpdateSystem]' . $e->getCode());
+			log::add('Freebox_OS', 'error', '[FreeboxUpdatesystem]' . $e->getCode());
 		}
 	}
 	/*public function getTiles($update = 'tiles')  // Fonction plus appelé à supprimer => Intégrer dans "ringtone_on" renomé en ringtone

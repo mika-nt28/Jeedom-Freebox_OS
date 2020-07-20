@@ -260,7 +260,7 @@ function addCmdToTable(_cmd) {
 			$('.Equipement_tiles').hide();
 			break;
 
-		case 'System':
+		case 'system':
 			$('.Equipement').show();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();

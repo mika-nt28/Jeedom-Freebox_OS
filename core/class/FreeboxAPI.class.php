@@ -625,7 +625,7 @@ class FreeboxAPI
 		if ($adslRateJson === false)
 			return false;
 		if ($adslRateJson['success']) {
-			$vdslRateJson = $this->fetch('/api/v38connection/xdsl/');
+			$vdslRateJson = $this->fetch('/api/v8/connection/xdsl/');
 			if ($vdslRateJson === false)
 				return false;
 			if ($vdslRateJson['result']['status']['modulation'] == "vdsl")

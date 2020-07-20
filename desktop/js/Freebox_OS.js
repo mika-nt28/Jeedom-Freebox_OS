@@ -185,13 +185,13 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 	console.log($icon2)
 	if ($icon2 == "parental") $icon = $icon2;
 	if ($icon != '' && $icon != null)
-		$('#img_device').attr("src", 'plugins/data/plugin_info/images/' + $icon + '.png');
+		$('#img_device').attr("src", 'plugins/core/data/plugin_info/images/' + $icon + '.png');
 });
 
 $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function () {
 	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
 	if ($icon != '' && $icon != null)
-		$('#img_device').attr("src", 'plugins/data/plugin_info/images/' + $icon + '.png');
+		$('#img_device').attr("src", 'plugins/core/data/plugin_info/images/' + $icon + '.png');
 });
 
 function addCmdToTable(_cmd) {

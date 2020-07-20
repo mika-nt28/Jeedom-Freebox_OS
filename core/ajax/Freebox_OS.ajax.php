@@ -126,6 +126,7 @@ try {
 			ajax::success(false);
 			break;
 		case 'SearchTile':
+			Freebox_OS::updateLogicalID(1);
 			Freebox_OS::addTiles();
 			ajax::success(true);
 			break;

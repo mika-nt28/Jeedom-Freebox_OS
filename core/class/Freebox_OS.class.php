@@ -828,7 +828,7 @@ class Freebox_OS extends eqLogic
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 
 		self::AddEqLogic($logicalinfo['reseauName'], $logicalinfo['reseauID'], 'default', false, null, null);
-		self::AddEqLogic($logicalinfo['disqueName'], $logicalinfo['disqueID'], 'default', false, null, null);
+		self::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$templatecore_V4 = null;
@@ -1494,23 +1494,23 @@ class Freebox_OS extends eqLogic
 	{
 		return array(
 			'connexionID' => 'connexion',
-			'connexionName' => 'Freebox Réseau',
+			'connexionName' => 'Réseau',
 			'airmediaID' => 'airmedia',
-			'airmediaName' => 'Freebox Air Média',
+			'airmediaName' => 'Air Média',
 			'disqueID' => 'Disque',
-			'disqueName' => 'Freebox Disque Dur',
+			'disqueName' => 'Disque Dur',
 			'reseauID' => 'reseau',
-			'reseauName' => 'Freebox Appareils connectés',
+			'reseauName' => 'Appareils connectés',
 			'systemID' => 'System',
-			'systemName' => 'Freebox Système',
+			'systemName' => 'Système',
 			'downloadsID' => 'Downloads',
-			'downloadsName' => 'Freebox Téléchargements',
+			'downloadsName' => 'Téléchargements',
 			'phoneID' => 'Phone',
-			'phoneName' => 'Freebox Téléphone',
+			'phoneName' => 'Téléphone',
 			'wifiID' => 'wifi',
-			'wifiName' => 'Freebox Wifi',
+			'wifiName' => 'Wifi',
 			'homeadaptersID' => 'Homeadapters',
-			'homeadaptersName' => 'Freebox Home Adapters'
+			'homeadaptersName' => 'Home Adapters'
 		);
 	}
 
@@ -1530,14 +1530,14 @@ class Freebox_OS extends eqLogic
 				case 'ADSL':
 				case 'connexion':
 					$eqLogic->setLogicalId($logicalinfo['connexionID']);
-					$eqLogic->setName($logicalinfo['connexionName']);
+					$eqLogic->setName("Freebox " . $logicalinfo['connexionName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update logicalID : "' . $logicalinfo['connexionID'] . '" et Update name : "' . $logicalinfo['connexionName'] . '"');
 					break;
 				case 'AirPlay':
 				case 'airmedia':
 				case '':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
-					$eqLogic->setName($logicalinfo['airmediaName']);
+					$eqLogic->setName("Freebox " . $logicalinfo['airmediaName']);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
 					break;
 				case 'Disque':

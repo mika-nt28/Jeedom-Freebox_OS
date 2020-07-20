@@ -70,7 +70,7 @@ try {
 			ajax::success(true);
 			break;
 		case 'Searchnetwork':
-			Freebox_OS::addNetwork();
+			Freebox_OS::addnetwork();
 			ajax::success(true);
 			break;
 		case 'Searchsystem':

@@ -209,14 +209,18 @@ class Freebox_OS extends eqLogic
 		);
 		return $return;
 	}
-	public static function addNetwork()
+	public static function addnetwork()
 	{
+
+		$logicalinfo = Freebox_OS::getlogicalinfo();
 		$FreeboxAPI = new FreeboxAPI();
-		$Network = self::AddEqLogic('Appareils connectés', 'Reseau', 'multimedia', false, null, null);
+
+		$network = sself::AddEqLogic($logicalinfo['networkName'], $logicalinfo['networkID'], 'default', false, null, null);
+		//$Network = self::AddEqLogic('Appareils connectés', 'Reseau', 'multimedia', false, null, null);
 		log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
 		foreach ($FreeboxAPI->universal_get('network') as $Equipement) {
 			if ($Equipement['primary_name'] != '') {
-				$Command = $Network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
+				$Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
 				$Command->setConfiguration('host_type', $Equipement['host_type']);
 				if (isset($Equipement['l3connectivities'])) {
 					foreach ($Equipement['l3connectivities'] as $Ip) {
@@ -995,9 +999,9 @@ class Freebox_OS extends eqLogic
 			$FreeboxAPI->adslStats();
 			$FreeboxAPI->nb_appel_absence();
 			$FreeboxAPI->universal_get('download_stats');
-			self::addNetwork();
-			self::addTiles();
-			self::addHomeAdapters();
+			//self::addnetwork();
+			//self::addTiles();
+			//self::addHomeAdapters();
 		}
 	}
 	public function preSave()

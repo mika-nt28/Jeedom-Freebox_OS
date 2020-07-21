@@ -273,6 +273,7 @@ class Free_Refresh {
             switch ($Command->getConfiguration('logicalId')) {
                 case "sensors":
                     foreach ($Free_API->universal_get('system', null, "sensors") as $system) {
+                        if ($Command->getLogicalId() != $system['id']) continue;
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
                         $Equipement->checkAndUpdateCmd($system['id'], $value);
@@ -280,6 +281,7 @@ class Free_Refresh {
                 break;
                 case "fans":
                     foreach ($Free_API->universal_get('system', null, "fans") as $system) {
+                        if ($Command->getLogicalId() != $system['id']) continue;
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
                         $Equipement->checkAndUpdateCmd($system['id'], $value);
@@ -287,6 +289,7 @@ class Free_Refresh {
                 break;
                 case "expansions":
                     foreach ($Free_API->universal_get('system', null, "expansions") as $system) {
+                        if ($Command->getLogicalId() != $system['slot']) continue;
                         $value = $system['present'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['slot'] . ' -- valeur : ' . $value);
                         $Equipement->checkAndUpdateCmd($system['slot'], $value);

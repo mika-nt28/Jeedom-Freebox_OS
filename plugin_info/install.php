@@ -27,6 +27,9 @@ function Freebox_OS_update()
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/5 : Update nouveautés + corrections commandes');
 
+		while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
+		$cron->remove();
+
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			if ($WifiEX != 1) {

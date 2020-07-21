@@ -75,7 +75,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès. Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -106,7 +106,7 @@ $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès.Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès.Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -138,7 +138,7 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès. Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});

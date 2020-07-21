@@ -1360,10 +1360,6 @@ class Freebox_OS extends eqLogic
 							}
 						}
 						break;
-
-
-
-
 					default:
 						$results = $FreeboxAPI->universal_get('tiles_ID', $Equipement->getLogicalId());
 						//log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
@@ -1398,8 +1394,8 @@ class Freebox_OS extends eqLogic
 											}
 											break;
 										case 'string':
-											if ($data['name'] == 'state' && $data['ep_id'] == 11) {
-												log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique pour Homebridge');
+											if ($data['name'] == 'state' && $Equipement->getConfiguration('type') == 'alarm_control') {
+												log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique pour Homebridge : ' . $Equipement->getConfiguration('type'));
 												$_Alarm_stat_value = '0';
 												$_Alarm_enable_value = '1';
 

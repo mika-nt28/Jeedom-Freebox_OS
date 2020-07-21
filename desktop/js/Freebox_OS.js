@@ -46,7 +46,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 });
 $('.MaFreebox').on('click', function () {
 	$('#md_modal').dialog({
-		title: "{{Paramètre Freebox}}",
+		title: "{{Paramètres de la Freebox}}",
 		height: 700,
 		width: 850
 	});

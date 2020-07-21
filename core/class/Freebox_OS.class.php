@@ -1769,7 +1769,7 @@ class Freebox_OSCmd extends cmd
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 			$cmd = cmd::byId($logicalId_value);
-			$cmd->execute());
+			$cmd->execute();
 		}
 	}
 }

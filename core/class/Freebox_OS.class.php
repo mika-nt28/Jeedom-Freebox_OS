@@ -1602,25 +1602,16 @@ class Freebox_OS extends eqLogic
 }
 class Freebox_OSCmd extends cmd
 {
-	/*	public function dontRemoveCmd()
-	{
-		return true;
-	}*/
 	public function execute($_options = array())
 	{
 		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $this->getName());
 		$logicalId = $this->getLogicalId();
 		$logicalId_value = $this->getvalue();
-		if ($this->getvalue() != null) {
+		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
 		$FreeboxAPI = new FreeboxAPI();
-		/*if ($Equipement->getConfiguration('type') == 'player' || $Equipement->getConfiguration('type') == 'parental') {
-			$refresh = $Equipement->getConfiguration('type');
-		} else {
-			$refresh = $Equipement->getLogicalId();
-		}*/
 		switch ($this->getEqLogic()->getLogicalId()) {
 			case 'airmedia':
 				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
@@ -1721,13 +1712,7 @@ class Freebox_OSCmd extends cmd
 						break;
 				}
 				break;
-
-
 			default:
-				/*if ($this->getEqLogic()->getconfiguration('type') == 'parental') {
-					$FreeboxAPI->universal_put($logicalId, 'parental', $this->getEqLogic()->getLogicalId());
-					break;
-				} else {*/
 				switch ($this->getSubType()) {
 					case 'slider':
 						if ($this->getConfiguration('inverse')) {
@@ -1777,11 +1762,14 @@ class Freebox_OSCmd extends cmd
 
 						break;
 
-						//$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
-						//	log::add('Freebox_OS', 'debug', '└─────────');
 				}
 				break;
-				//} // a supprimer
+			}
+		}
+		if ($logicalId_value != null) {
+			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
+			$cmd = cmd::byId($logicalId_value);
+			$cmd->execute());
 		}
 	}
 }

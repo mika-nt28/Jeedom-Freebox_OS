@@ -1617,8 +1617,7 @@ class Freebox_OSCmd extends cmd
 		$logicalId = $this->getLogicalId();
 		$logicalId_value = $this->getvalue();
 		if ($this->getvalue() != null) {
-			$logicalId_lie = $this->getLogicalId($logicalId_value);
-			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value . ' -- ' . $logicalId_lie);
+			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
 		$FreeboxAPI = new FreeboxAPI();
 		/*if ($Equipement->getConfiguration('type') == 'player' || $Equipement->getConfiguration('type') == 'parental') {

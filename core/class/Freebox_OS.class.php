@@ -1503,24 +1503,26 @@ class Freebox_OS extends eqLogic
 	public static function getlogicalinfo()
 	{
 		return array(
-			'connexionID' => 'connexion',
-			'connexionName' => 'Connexion Réseau Free',
+			'4GID' => '4G',
+			'4GName' => '4G',
 			'airmediaID' => 'airmedia',
 			'airmediaName' => 'Air Média',
+			'connexionID' => 'connexion',
+			'connexionName' => 'Freebox Débits',
 			'diskID' => 'disk',
 			'diskName' => 'Disque Dur',
-			'networkID' => 'network',
-			'networkName' => 'Appareils connectés',
-			'systemID' => 'system',
-			'systemName' => 'Système',
 			'downloadsID' => 'downloads',
 			'downloadsName' => 'Téléchargements',
+			'homeadaptersID' => 'homeadapters',
+			'homeadaptersName' => 'Home Adapters',
+			'networkID' => 'network',
+			'networkName' => 'Appareils connectés',
 			'phoneID' => 'phone',
 			'phoneName' => 'Téléphone',
+			'systemID' => 'system',
+			'systemName' => 'Système',
 			'wifiID' => 'wifi',
-			'wifiName' => 'Wifi',
-			'homeadaptersID' => 'homeadapters',
-			'homeadaptersName' => 'Home Adapters'
+			'wifiName' => 'Wifi'
 		);
 	}
 

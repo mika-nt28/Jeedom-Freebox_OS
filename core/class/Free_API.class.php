@@ -1,5 +1,5 @@
 <?php
-class FreeboxAPI
+class Free_API
 {
 	private $ErrorLoop = 0;
 	private $serveur;

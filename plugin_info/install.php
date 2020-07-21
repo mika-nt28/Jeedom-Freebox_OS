@@ -9,7 +9,7 @@ function Freebox_OS_update()
 	try {
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
-		log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Suppression FreeboxTv');
+		log::add('Freebox_OS', 'debug', '│ Etape 1/5 : Suppression FreeboxTv');
 		foreach (eqLogic::byLogicalId('FreeboxTv', 'Freebox_OS', true) as $eqLogic) {
 			$eqLogic->remove();
 			log::add('Freebox_OS', 'debug', '│ Etape 1 : OK pour la suppression');
@@ -17,15 +17,15 @@ function Freebox_OS_update()
 		$WifiEX = 0;
 		foreach (eqLogic::byLogicalId('Wifi', 'Freebox_OS', true) as $eqLogic) {
 			$WifiEX = 1;
-			log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Migration Wifi déjà faite (' . $WifiEX . ')');
+			log::add('Freebox_OS', 'debug', '│ Etape 2/5 : Migration Wifi déjà faite (' . $WifiEX . ')');
 		}
 		if ($WifiEX != 1) {
-			$Wifi = Freebox_OS::AddEqLogic('Wifi', 'Wifi');
+			$Wifi = Freebox_OS::AddEqLogic('Wifi', 'wifi', 'default', false, null, null);
 			$link_IA = $Wifi->getId();
-			log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Création Equipement WIFI -- ID N° : ' . $link_IA);
+			log::add('Freebox_OS', 'debug', '│ Etape 2/5 : Création Equipement WIFI -- ID N° : ' . $link_IA);
 		}
 
-		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Update nouveautés + corrections commandes');
+		log::add('Freebox_OS', 'debug', '│ Etape 3/5 : Update nouveautés + corrections commandes');
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
@@ -52,8 +52,9 @@ function Freebox_OS_update()
 			UpdateLogicId($eqLogic, 'rx_rate', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'tx_rate', '', 'numeric'); // Correction sous Type 20200616
 		}
+		log::add('Freebox_OS', 'debug', '│ Etape 4/5 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);
-		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Sauvegarde de l\'ensemble des équipements');
+		log::add('Freebox_OS', 'debug', '│ Etape 5/5 : Sauvegarde de l\'ensemble des équipements');
 
 		/*$eqs = eqLogic::byType('Freebox_OS');
 		foreach ($eqs as $eq) {

@@ -5,6 +5,22 @@ require_once dirname(__FILE__) . '/../../core/php/Freebox_OS.inc.php';
 
 class Freebox_OS extends eqLogic
 {
+	public static function cron() {
+		$eqLogics = eqLogic::byType('Freebox_OS');
+		foreach ($eqLogics as $eqLogic) {
+			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
+			try {
+				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+				if ($c->isDue($dateRun)) {
+					log::add('Freebox_OS', 'debug', 'Cron '.$eqLogic->getName());
+					Free_Refresh::RefreshInformation($eqLogic->getId());
+				}
+			} catch (Exception $exc) {
+				log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh);
+			}
+		}
+	}
+
 	public static function deamon_info()
 	{
 		$return = array();
@@ -24,15 +40,6 @@ class Freebox_OS extends eqLogic
 		if (!is_object($cron)) {
 			$return['state'] = 'nok';
 			return $return;
-		}
-		foreach (eqLogic::byType('Freebox_OS') as $Equipement) {
-			if ($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0) {
-				$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
-				if (!is_object($cron) || !$cron->running()) {
-					$return['state'] = 'nok';
-					return $return;
-				}
-			}
 		}
 		return $return;
 	}
@@ -55,11 +62,6 @@ class Freebox_OS extends eqLogic
 		}
 		$cron->start();
 		$cron->run();
-		foreach (eqLogic::byType('Freebox_OS') as $Equipement) {
-			if ($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0) {
-				$Equipement->CreateDemon();
-			}
-		}
 	}
 	public static function deamon_stop()
 	{
@@ -68,33 +70,8 @@ class Freebox_OS extends eqLogic
 			$cron->stop();
 			$cron->remove();
 		}
-		foreach (eqLogic::byType('Freebox_OS') as $Equipement) {
-			$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
-			if (is_object($cron)) {
-				$cron->stop();
-				$cron->remove();
-			}
-		}
 		$Free_API = new Free_API();
 		$Free_API->close_session();
-	}
-	private function CreateDemon()
-	{
-		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $this->getId()));
-		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('Freebox_OS');
-			$cron->setFunction('RefreshInformation');
-			$cron->setOption(array('Freebox_id' => $this->getId()));
-			$cron->setEnable(1);
-			$cron->setDeamon(1);
-			$cron->setSchedule('* * * * *');
-			$cron->setTimeout('1');
-			$cron->save();
-		}
-		$cron->start();
-		$cron->run();
-		return $cron;
 	}
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action)
 	{
@@ -122,12 +99,10 @@ class Freebox_OS extends eqLogic
 		$EqLogic->save();
 		return $EqLogic;
 	}
-	
 	public static function templateWidget()
 	{
 		return Free_Template::getTemplate();
 	}
-
 	public static function addnetwork()
 	{
 
@@ -633,7 +608,6 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-
 	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_Equipement = null, $_iconname = null, $_home_mode_set = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
@@ -939,14 +913,9 @@ class Freebox_OS extends eqLogic
 	public function postSave()
 	{
 		if ($this->getIsEnable()) {
-			$this->CreateDemon();
-		} else {
-			$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $this->getId()));
-			if (is_object($cron)) {
-				$cron->stop();
-				$cron->remove();
-			}
+			Free_Refresh::RefreshInformation($this->getId());
 		}
+
 		$refresh = $this->getCmd(null, 'refresh');
 		if (!is_object($refresh)) {
 			$refresh = new Freebox_OSCmd();
@@ -965,8 +934,6 @@ class Freebox_OS extends eqLogic
 		$Free_API->close_session();
 		if ($Free_API->getFreeboxOpenSession() === false) self::deamon_stop();
 	}
-
-
 	public static function getlogicalinfo()
 	{
 		return array(
@@ -992,7 +959,6 @@ class Freebox_OS extends eqLogic
 			'wifiName' => 'Wifi'
 		);
 	}
-
 	public static function updateLogicalID($_version, $_update = false)
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
@@ -1071,6 +1037,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 }
+
 class Freebox_OSCmd extends cmd
 {
 	public function execute($_options = array())

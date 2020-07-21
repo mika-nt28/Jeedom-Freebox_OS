@@ -341,15 +341,10 @@ class Free_API
 					}
 					break;
 				case 'system':
-					switch ($boucle) {
-						case 1:
-							return $result['result']['sensors'];
-						case 2:
-							return $result['result']['fans'];
-						case 3:
-							return $result['result']['expansions'];
-						case 4:
-							return $result['result'];
+					if ($boucle != null) {
+						return $result['result'][$boucle];
+					} else {
+						return $result['result']
 					}
 					break;
 				case 'wifi':

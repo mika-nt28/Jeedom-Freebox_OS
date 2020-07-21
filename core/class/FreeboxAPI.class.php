@@ -279,6 +279,10 @@ class FreeboxAPI
 				$config = 'api/v8/network_control';
 				$config_log = 'Etat Contrôle Parental';
 				break;
+			case 'parental_ID':
+				$config = 'api/v8/network_control/' . $id;
+				$config_log = 'Etat Contrôle Parental';
+				break;
 			case 'parentalprofile':
 				$config = 'api/v8/profile';
 				break;
@@ -357,6 +361,7 @@ class FreeboxAPI
 					return $result['result'];
 					break;
 			}
+
 			if ($config_log != null && $id == null) {
 				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
 			} else if ($config_log != null && $id != null) {

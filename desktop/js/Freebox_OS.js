@@ -193,12 +193,6 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', functi
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 });
-
-$('#bt_cronGenerator').on('click',function(){
-	jeedom.getCronSelectModal({},function (result) {
-		$('.eqLogicAttr[data-l1key=configuration][data-l2key=autorefresh]').value(result.value);
-	});
-  });
   
 
 function addCmdToTable(_cmd) {

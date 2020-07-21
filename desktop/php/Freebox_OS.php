@@ -85,7 +85,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				}
 			}
 			if ($status == 0) {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un Scan équipement standard.}}</span></center>";
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un \"Scan équipements standards\".}}</span></center>";
 			}
 			?>
 		</div>
@@ -139,7 +139,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				}
 			}
 			if ($status == 0) {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un Scan Tiles.}}</span></center>";
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un \"Scan Tiles\".}}</span></center>";
 			}
 			?>
 		</div>
@@ -162,7 +162,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			if ($status == 1) {
 				echo '</div>';
 			} else {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un Scan Contrôle parental.}}</span></center>";
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un \"Scan Contrôle parental\".}}</span></center>";
 			}
 			?>
 		</div>

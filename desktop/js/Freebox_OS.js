@@ -46,7 +46,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 });
 $('.MaFreebox').on('click', function () {
 	$('#md_modal').dialog({
-		title: "{{Paramètre Freebox}}",
+		title: "{{Paramètres de la Freebox}}",
 		height: 700,
 		width: 850
 	});
@@ -75,7 +75,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès. Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -106,7 +106,7 @@ $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès.Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès.Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -138,7 +138,7 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès. Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -181,9 +181,6 @@ $('.Equipement').on('click', function () {
 
 $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', function () {
 	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
-	$icon2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
-	console.log($icon2)
-	if ($icon2 == "parental" || $icon2 == "player" || $icon2 == "alarm_control" || $icon2 == "alarm_sensor" || $icon2 == "alarm_remote") $icon = $icon2;
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 });
@@ -193,6 +190,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', functi
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 });
+  
 
 function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {

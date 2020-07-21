@@ -85,7 +85,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				}
 			}
 			if ($status == 0) {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un Scan équipement standard.}}</span></center>";
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un \"Scan équipements standards\".}}</span></center>";
 			}
 			?>
 		</div>
@@ -139,7 +139,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				}
 			}
 			if ($status == 0) {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un Scan Tiles.}}</span></center>";
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un \"Scan Tiles\".}}</span></center>";
 			}
 			?>
 		</div>
@@ -162,7 +162,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			if ($status == 1) {
 				echo '</div>';
 			} else {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un Scan Contrôle parental.}}</span></center>";
+				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un \"Scan Contrôle parental\".}}</span></center>";
 			}
 			?>
 		</div>
@@ -258,12 +258,19 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
 				<form class="form-horizontal col-sm-10">
 					<fieldset>
-						<div class="form-group ">
-							<label class="col-sm-2 control-label">{{Temps de rafraichissement}}
-								<sup><i class="fas fa-question-circle" title="{{(s) Temps de rafraichissement, Cela ne concerne uniquement les commandes de type info}}"></i></sup>
+						<div class="form-group">
+							<label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}
+								<sup><i class="fas fa-question-circle" title="{{Cron }}"></i></sup>
 							</label>
 							<div class="col-sm-3">
-								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="waite" placeholder="{{Temps de rafraichissement (s)}}" />
+								<div class="input-group">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{*/5 * * * *}}" />
+									<span class="input-group-btn">
+										<a class="btn btn-default cursor jeeHelper" data-helper="cron">
+											<i class="fas fa-question-circle"></i>
+										</a>
+									</span>
+								</div>
 							</div>
 						</div>
 						<div class="form-group Equipement">

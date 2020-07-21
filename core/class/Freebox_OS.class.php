@@ -1402,19 +1402,19 @@ class Freebox_OS extends eqLogic
 												switch ($data['value']) {
 													case 'alarm1_arming':
 														$_Alarm_mode_value = 'Alarme principale';
-														log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale');
+														log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale (arming)');
 														break;
 													case 'alarm1_armed':
 														$_Alarm_mode_value = 'Alarme principale';
-														log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale');
+														log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale (armed)');
 														break;
 													case 'alarm2_arming':
 														$_Alarm_mode_value = 'Alarme secondaire';
-														log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire');
+														log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire (arming)');
 														break;
 													case 'alarm2_armed':
 														$_Alarm_mode_value = 'Alarme secondaire';
-														log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire');
+														log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire (armed)');
 														break;
 													case 'alert':
 														$_Alarm_stat_value = '1';

@@ -259,12 +259,18 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<form class="form-horizontal col-sm-10">
 					<fieldset>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}</label>
+							<label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}
+								<sup><i class="fas fa-question-circle" title="{{Cron }}"></i></sup>
+							</label>
 							<div class="col-sm-3">
-								<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{(cron), Cela ne concerne uniquement les commandes de type info}}"/>
-							</div>
-							<div class="col-sm-1">
-								<i class="fas fa-question-circle cursor floatright" id="bt_cronGenerator"></i>
+								<div class="input-group">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{*/5 * * * *}}" />
+									<span class="input-group-btn">
+										<a class="btn btn-default cursor jeeHelper" data-helper="cron">
+											<i class="fas fa-question-circle"></i>
+										</a>
+									</span>
+								</div>
 							</div>
 						</div>
 						<div class="form-group Equipement">

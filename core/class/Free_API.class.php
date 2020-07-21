@@ -344,7 +344,7 @@ class Free_API
 					if ($boucle != null) {
 						return $result['result'][$boucle];
 					} else {
-						return $result['result']
+						return $result['result'];
 					}
 					break;
 				case 'wifi':

@@ -1183,7 +1183,7 @@ class Freebox_OSCmd extends cmd
 							} else {
 								$parametre['value'] = false;
 							}
-							break;
+							//break;
 						} else {
 							$logicalId = $this->getLogicalId();
 							$parametre['value'] = true;

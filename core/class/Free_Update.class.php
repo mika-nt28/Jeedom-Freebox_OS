@@ -21,7 +21,7 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 class Free_Update
 {
 
-    public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq)
+    public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
         log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
@@ -87,17 +87,17 @@ class Free_Update
 
                 break;
             case 'wifi':
-                Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API);
+                Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
 
                 break;
             default:
-                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API);
+                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
 
                 break;
         }
     }
 
-    private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API)
+    private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         $receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
         if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
@@ -121,15 +121,15 @@ class Free_Update
     }
 
 
-    private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API)
+    private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
     }
 
-    private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API)
+    private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
     }
 
-    private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API)
+    private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($this->getLogicalId()) {
             case "reboot":
@@ -149,7 +149,7 @@ class Free_Update
         }
     }
 
-    private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API)
+    private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
             case "wifiOnOff":
@@ -179,7 +179,7 @@ class Free_Update
         }
     }
 
-    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API)
+    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId_type) {
             case 'slider':
@@ -229,7 +229,7 @@ class Free_Update
                 }
                 $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $this->getEqLogic()->getLogicalId());
 
-            break;
+                break;
         }
     }
 }

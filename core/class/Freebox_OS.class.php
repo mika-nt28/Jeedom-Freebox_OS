@@ -1105,8 +1105,8 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			case 'parental':
-				//Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq);
-				$Free_API->universal_put($logicalId, 'parental', $logicalId_eq);
+				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options);
+				//$Free_API->universal_put($logicalId, 'parental', $logicalId_eq);
 				break;
 			case 'phone':
 				$result = $Free_API->nb_appel_absence();

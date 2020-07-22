@@ -70,7 +70,7 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             default:
-                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
         }
@@ -174,7 +174,7 @@ class Free_Update
         }
     }
 
-    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
+    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf)
     {
         switch ($logicalId_type) {
             case 'slider':

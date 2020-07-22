@@ -43,17 +43,7 @@ class Free_Update
             case 'disk':
                 break;
             case 'downloads':
-                $result = $Free_API->universal_get('download_stats');
-                if ($result != false) {
-                    switch ($logicalId) {
-                        case "stop_dl":
-                            $Free_API->downloads(0);
-                            break;
-                        case "start_dl":
-                            $Free_API->downloads(1);
-                            break;
-                    }
-                }
+                Free_Update::update_download();
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'homeadapters':
@@ -64,17 +54,7 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
-                $result = $Free_API->nb_appel_absence();
-                if ($result != false) {
-                    switch ($logicalId) {
-                        case "sonnerieDectOn":
-                            $Free_API->ringtone('ON');
-                            break;
-                        case "sonnerieDectOff":
-                            $Free_API->ringtone('OFF');
-                            break;
-                    }
-                }
+                Free_Update::update_phone();
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'player':
@@ -122,10 +102,32 @@ class Free_Update
 
     private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
+        $result = $Free_API->universal_get('download_stats');
+        if ($result != false) {
+            switch ($logicalId) {
+                case "stop_dl":
+                    $Free_API->downloads(0);
+                    break;
+                case "start_dl":
+                    $Free_API->downloads(1);
+                    break;
+            }
+        }
     }
 
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
+        $result = $Free_API->nb_appel_absence();
+        if ($result != false) {
+            switch ($logicalId) {
+                case "sonnerieDectOn":
+                    $Free_API->ringtone('ON');
+                    break;
+                case "sonnerieDectOff":
+                    $Free_API->ringtone('OFF');
+                    break;
+            }
+        }
     }
 
     private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)

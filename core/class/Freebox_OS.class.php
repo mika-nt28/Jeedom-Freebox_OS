@@ -1051,18 +1051,18 @@ class Freebox_OSCmd extends cmd
 	public function execute($_options = array())
 	{
 		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
-		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $this->getName());
 		$logicalId = $this->getLogicalId();
 		$logicalId_type = $this->getSubType();
 		$logicalId_value = $this->getvalue();
-		$logicalId_name = $this->getName();
+		= $this->getName();
+		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name );
 		$logicalId_conf = $this->getConfiguration('logicalId');
 		$logicalId_eq = $this->getEqLogic()->getLogicalId();
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
 		$Free_API = new Free_API();
-		if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getConfiguration('type') == 'player') {
+		if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getEqLogic()->getconfiguration('type') == 'player') {
 			$update = $this->getEqLogic()->getconfiguration('type');
 		} else {
 			$update = $logicalId;

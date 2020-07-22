@@ -207,10 +207,17 @@ class Freebox_OS extends eqLogic
 			$icone4Gon = 'fas fa-broadcast-tower icon_green';
 			$icone4Goff = 'fas fa-broadcast-tower icon_red';
 		};
-		$boucle_update = 1; // 1 = sensors - 2 = fans - 3 = extension
+		$boucle_num = 1; // 1 = sensors - 2 = fans - 3 = extension
 		$_order = 6;
-		while ($boucle_update <= 3) {
-			log::add('Freebox_OS', 'debug', '│──────────> Boucle Update : ' . $boucle_update);
+		while ($boucle_num <= 3) {
+			if ($boucle_num == 1) {
+				$boucle_update = 'sensors';
+			} else if ($boucle_num == 2) {
+				$boucle_update = 'fans';
+			} else if ($boucle_num == 3) {
+				$boucle_update = 'expansions';
+			}
+			log::add('Freebox_OS', 'debug', '│──────────> Boucle pour Update : ' . $boucle_update);
 			foreach ($Free_API->universal_get('system', null, $boucle_update) as $Equipement) {
 				$icon = null;
 				$_max = 'default';
@@ -234,7 +241,7 @@ class Freebox_OS extends eqLogic
 					$_min = '0';
 					$icon = $iconfan;
 					$link_logicalId = 'fans';
-				} else if ($boucle_update = 3) {
+				} else if ($boucle_num = 3) {
 					$_iconname = null;
 					$_type = 'binary';
 					$_id = $Equipement['slot'];
@@ -258,7 +265,7 @@ class Freebox_OS extends eqLogic
 					$_order++;
 				}
 			}
-			$boucle_update++;
+			$boucle_num++;
 		}
 	}
 	public static function addparental()

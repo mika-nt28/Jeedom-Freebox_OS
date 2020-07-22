@@ -1051,7 +1051,13 @@ class Freebox_OSCmd extends cmd
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
 		$Free_API = new Free_API();
-		switch ($this->getEqLogic()->getLogicalId()) {
+		if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getConfiguration('type') == 'player') {
+			$action = $this->getEqLogic()->getconfiguration('type');
+		} else {
+			$action = $this->getLogicalId();
+		}
+		log::add('Freebox_OS', 'debug', '│ TYPE : ' . $action);
+		switch ($action) {
 			case 'airmedia':
 				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
 				if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {

@@ -5,14 +5,15 @@ require_once dirname(__FILE__) . '/../../core/php/Freebox_OS.inc.php';
 
 class Freebox_OS extends eqLogic
 {
-	public static function cron() {
+	public static function cron()
+	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
 				if ($c->isDue($dateRun)) {
-					log::add('Freebox_OS', 'debug', 'Cron '.$eqLogic->getName());
+					log::add('Freebox_OS', 'debug', 'Cron ' . $eqLogic->getName());
 					Free_Refresh::RefreshInformation($eqLogic->getId());
 				}
 			} catch (Exception $exc) {
@@ -1102,26 +1103,26 @@ class Freebox_OSCmd extends cmd
 							break;
 					}
 				}
-			break;
+				break;
 			case 'system':
 
 				switch ($this->getLogicalId()) {
 					case "reboot":
 						$Free_API->reboot();
-					break;
+						break;
 					case "update":
 						$Free_API->Updatesystem();
-					break;
+						break;
 					case '4GOn':
 						//$result = $Free_API->universal_get('4G');
 						$Free_API->universal_put(1, '4G');
-					break;
+						break;
 					case '4GOff':
 						//$result = $Free_API->universal_get('4G');
 						$Free_API->universal_put('0', '4G');
-					break;
+						break;
 				}
-			break;
+				break;
 			case 'wifi':
 				switch ($this->getLogicalId()) {
 					case "wifiOnOff":
@@ -1131,25 +1132,25 @@ class Freebox_OSCmd extends cmd
 						} else {
 							$Free_API->universal_put(1);
 						}
-					break;
+						break;
 					case 'wifiOn':
 						$result = $Free_API->universal_get();
 						$Free_API->universal_put(1);
-					break;
+						break;
 					case 'wifiOff':
 						$result = $Free_API->universal_get();
 						$Free_API->universal_put(0);
-					break;
+						break;
 					case 'wifiPlanningOn':
 						$result = $Free_API->universal_get('planning');
 						$Free_API->universal_put(1, 'planning');
-					break;
+						break;
 					case 'wifiPlanningOff':
 						$result = $Free_API->universal_get('planning');
 						$Free_API->universal_put(0, 'planning');
-					break;
+						break;
 				}
-			break;
+				break;
 			default:
 				switch ($this->getSubType()) {
 					case 'slider':
@@ -1159,19 +1160,19 @@ class Freebox_OSCmd extends cmd
 							$parametre['value'] = (int) $_options['slider'];
 						}
 						$parametre['value_type'] = 'int';
-					break;
+						break;
 					case 'color':
 						$parametre['value'] = $_options['color'];
 						$parametre['value_type'] = '';
-					break;
+						break;
 					case 'message':
 						$parametre['value'] = $_options['message'];
 						$parametre['value_type'] = 'void';
-					break;
+						break;
 					case 'select':
 						$parametre['value'] = $_options['select'];
 						$parametre['value_type'] = 'void';
-					break;
+						break;
 					default:
 						$parametre['value_type'] = 'bool';
 						if ($this->getConfiguration('logicalId') >= 0 && ($this->getLogicalId() == 'PB_On' || $this->getLogicalId() == 'PB_Off')) {
@@ -1182,7 +1183,7 @@ class Freebox_OSCmd extends cmd
 							} else {
 								$parametre['value'] = false;
 							}
-					break;
+							break;
 						} else {
 							$logicalId = $this->getLogicalId();
 							$parametre['value'] = true;
@@ -1197,16 +1198,15 @@ class Freebox_OSCmd extends cmd
 						}
 						$Free_API->universal_put($parametre, 'set_tiles', $logicalId, $this->getEqLogic()->getLogicalId());
 
-					break;
-
+						break;
 				}
-			break;
+				break;
 		}
-		if ($logicalId_value != null) {
+		/*if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée Refresh : ' . $logicalId_value);
 			$cmd = cmd::byId($logicalId_value);
 			$cmd->execute();
 			log::add('Freebox_OS', 'debug', '│ Commande liéefinRefresh : ' . $logicalId_value);
-		}
+		}*/
 	}
 }

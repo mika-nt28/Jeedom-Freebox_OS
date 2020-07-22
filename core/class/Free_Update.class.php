@@ -21,14 +21,13 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 class Free_Update
 {
 
-    public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options)
+    public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $_cmd)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
         log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 
         $Free_API = new Free_API();
         if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player') {
-            // $update = $this->getEqLogic()->getconfiguration('type');
             $update = $logicalId_eq->getconfiguration('type');
         } else {
             $update = $logicalId;
@@ -36,7 +35,8 @@ class Free_Update
 
         switch ($update) {
             case 'airmedia':
-                break;
+                Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
+            break;
             case 'connexion':
                 break;
             case 'disk':
@@ -60,6 +60,7 @@ class Free_Update
                 break;
             case 'parental':
                 $Free_API->universal_put($logicalId, $update, $logicalId_eq->getLogicalId());
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
                 $result = $Free_API->nb_appel_absence();
@@ -84,21 +85,21 @@ class Free_Update
                 Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 break;
             default:
-                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
                 break;
         }
     }
 
-    private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
-        $receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
+        $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");
         if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
             log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
             return;
         }
         $Parameter["media_type"] = $_options['titre'];
         $Parameter["media"] = $_options['message'];
-        $Parameter["password"] = $this->getConfiguration('password');
+        $Parameter["password"] = $_cmd->getConfiguration('password');
         switch ($logicalId) {
             case "airmediastart":
                 log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
@@ -171,12 +172,12 @@ class Free_Update
         }
     }
 
-    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
         switch ($logicalId_type) {
             case 'slider':
-                if ($this->getConfiguration('inverse')) {
-                    $parametre['value'] = ($this->getConfiguration('maxValue') - $this->getConfiguration('minValue')) - $_options['slider'];
+                if ($_cmd->getConfiguration('inverse')) {
+                    $parametre['value'] = ($_cmd->getConfiguration('maxValue') - $_cmd->getConfiguration('minValue')) - $_options['slider'];
                 } else {
                     $parametre['value'] = (int) $_options['slider'];
                 }
@@ -208,18 +209,17 @@ class Free_Update
                     $logicalId = $logicalId_eq;
                     //break;
                 } else {
-                    //$logicalId = $this->getLogicalId();
                     $parametre['value'] = true;
-                    $Listener = cmd::byId(str_replace('#', '', $this->getValue()));
+                    $Listener = cmd::byId(str_replace('#', '', $_cmd->getValue()));
 
                     if (is_object($Listener)) {
                         $parametre['value'] = $Listener->execCmd();
                     }
-                    if ($this->getConfiguration('inverse')) {
+                    if ($_cmd->getConfiguration('inverse')) {
                         $parametre['value'] = !$parametre['value'];
                     }
                 }
-                $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $this->getEqLogic()->getLogicalId());
+                $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId());
 
                 break;
         }

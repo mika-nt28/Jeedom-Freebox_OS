@@ -1057,7 +1057,7 @@ class Freebox_OSCmd extends cmd
 		$logicalId_name = $this->getName();
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 		$logicalId_conf = $this->getConfiguration('logicalId');
-		$logicalId_eq = $this->getEqLogic()->getLogicalId();
+		$logicalId_eq = $this->getEqLogic();
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
@@ -1105,7 +1105,7 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			case 'parental':
-				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options);
+				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 				//$Free_API->universal_put($logicalId, 'parental', $logicalId_eq);
 				break;
 			case 'phone':
@@ -1141,7 +1141,8 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			case 'wifi':
-				switch ($logicalId) {
+				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
+				/*switch ($logicalId) {
 					case "wifiOnOff":
 						$result = $Free_API->universal_get();
 						if ($result == true) {
@@ -1166,7 +1167,7 @@ class Freebox_OSCmd extends cmd
 						//$result = $Free_API->universal_get('planning');
 						$Free_API->universal_put(0, 'planning');
 						break;
-				}
+				}*/
 				break;
 			default:
 				switch ($logicalId_type) {

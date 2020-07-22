@@ -43,7 +43,7 @@ class Free_Update
             case 'disk':
                 break;
             case 'downloads':
-                Free_Update::update_download();
+                Free_Update::update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'homeadapters':
@@ -54,7 +54,7 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
-                Free_Update::update_phone();
+                Free_Update::update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'player':

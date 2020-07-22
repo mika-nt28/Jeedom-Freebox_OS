@@ -140,7 +140,7 @@ class Free_Update
                 $Free_API->universal_put(1, '4G');
                 break;
             case '4GOff':
-                $Free_API->universal_put('0', '4G');
+                $Free_API->universal_put(0, '4G');
                 break;
         }
     }

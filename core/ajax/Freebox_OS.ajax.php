@@ -1,12 +1,12 @@
 <?php
 try {
 	require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
-	include_file('core', 'FreeboxAPI', 'class', 'Freebox_OS');
+	require_once dirname(__FILE__) . '/../../core/php/Freebox_OS.inc.php';
 	include_file('core', 'authentification', 'php');
 	if (!isConnect('admin')) {
 		throw new Exception(__('401 - Accès non autorisé', __FILE__));
 	}
-	$FreeboxAPI = new FreeboxAPI();
+	$Free_API = new Free_API();
 	switch (init('action')) {
 		case 'createCamera':
 			$EqLogic = eqLogic::byLogicalId(init('id'), 'camera');
@@ -56,10 +56,10 @@ try {
 			ajax::success(true);
 			break;
 		case 'connect':
-			ajax::success($FreeboxAPI->track_id());
+			ajax::success($Free_API->track_id());
 			break;
 		case 'ask_track_authorization':
-			ajax::success($FreeboxAPI->ask_track_authorization());
+			ajax::success($Free_API->ask_track_authorization());
 			break;
 		case 'Searchhomeadapters':
 			Freebox_OS::addhomeadapters();
@@ -78,7 +78,7 @@ try {
 			ajax::success(true);
 			break;
 		case 'Searchdisk':
-			ajax::success($FreeboxAPI->disk());
+			ajax::success($Free_API->disk());
 			break;
 		case 'AddPortForwarding':
 			$PortForwarding = array(
@@ -100,7 +100,7 @@ try {
 			$Command = cmd::byId(init('id'));
 			if (is_object($Command)) {
 				$Mac = str_replace('ether-', '', $Command->getLogicalId());
-				ajax::success($FreeboxAPI->universal_put($Mac, 'WakeOnLAN'));
+				ajax::success($Free_API->universal_put($Mac, 'WakeOnLAN'));
 			}
 			ajax::success(false);
 			break;
@@ -114,7 +114,7 @@ try {
 			ajax::success(false);
 			break;*/
 		case 'get_airmediareceivers':
-			ajax::success($FreeboxAPI->airmedia('receivers'));
+			ajax::success($Free_API->airmedia('receivers', null, null));
 			break;
 		case 'set_airmediareceivers':
 			$cmd = cmd::byId(init('id'));

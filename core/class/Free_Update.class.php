@@ -102,7 +102,7 @@ class Free_Update
         $receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
         if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
             log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
-            break;
+            return;
         }
         $Parameter["media_type"] = $_options['titre'];
         $Parameter["media"] = $_options['message'];
@@ -229,7 +229,7 @@ class Free_Update
                 }
                 $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $this->getEqLogic()->getLogicalId());
 
-                break;
+            break;
         }
     }
 }

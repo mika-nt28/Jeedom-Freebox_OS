@@ -36,14 +36,10 @@ class Free_Update
 
         switch ($update) {
             case 'airmedia':
-
-
                 break;
             case 'connexion':
-
                 break;
             case 'disk':
-
                 break;
             case 'downloads':
                 $result = $Free_API->universal_get('download_stats');
@@ -79,21 +75,16 @@ class Free_Update
                 }
                 break;
             case 'player':
-
                 break;
             case 'network':
-
                 break;
             case 'system':
-
                 break;
             case 'wifi':
                 Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
-
                 break;
             default:
                 Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
-
                 break;
         }
     }

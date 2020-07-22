@@ -1050,12 +1050,14 @@ class Freebox_OSCmd extends cmd
 {
 	public function execute($_options = array())
 	{
-		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
+	/*	log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $this->getName());
 		$logicalId = $this->getLogicalId();
 		$logicalId_type = $this->getSubType();
 		$logicalId_value = $this->getvalue();
-		$logicalId_eq = $this->getConfiguration('logicalId');
+		$logicalId_name = $this->getName();
+		$logicalId_conf = $this->getConfiguration('logicalId');
+		$logicalId_eq = $this->getEqLogic()->getLogicalId();
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
@@ -1103,7 +1105,8 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			case 'parental':
-				$Free_API->universal_put($logicalId, 'parental', $this->getEqLogic()->getLogicalId());
+				//Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq);
+				//$Free_API->universal_put($logicalId, 'parental', $logicalId_eq);
 				break;
 			case 'phone':
 				$result = $Free_API->nb_appel_absence();
@@ -1189,16 +1192,16 @@ class Freebox_OSCmd extends cmd
 						break;
 					default:
 						$parametre['value_type'] = 'bool';
-						if ($logicalId_eq >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
+						if ($logicalId_conf >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
 
-							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_eq);
+							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
 
 							if ($logicalId == 'PB_On') {
 								$parametre['value'] = true;
 							} else {
 								$parametre['value'] = false;
 							}
-							$logicalId = $logicalId_eq;
+							$logicalId = $logicalId_conf;
 							//break;
 						} else {
 							//$logicalId = $this->getLogicalId();
@@ -1223,6 +1226,6 @@ class Freebox_OSCmd extends cmd
 			$cmd = cmd::byId($logicalId_value);
 			$cmd->execute();
 			log::add('Freebox_OS', 'debug', '│ Commande liéefinRefresh : ' . $logicalId_value);
-		}*/
-	}
+		}
+	}*/
 }

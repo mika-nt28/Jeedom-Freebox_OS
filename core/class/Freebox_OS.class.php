@@ -1202,7 +1202,6 @@ class Freebox_OSCmd extends cmd
 								$parametre['value'] = false;
 							}
 							$logicalId = $logicalId_conf;
-							//break;
 						} else {
 							//$logicalId = $this->getLogicalId();
 							$parametre['value'] = true;

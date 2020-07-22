@@ -1065,7 +1065,7 @@ class Freebox_OSCmd extends cmd
 		if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getEqLogic()->getconfiguration('type') == 'player') {
 			$update = $this->getEqLogic()->getconfiguration('type');
 		} else {
-			$update = $logicalId;
+			$update = $update = $this->getEqLogic()->getLogicalId();
 		}
 		switch ($update) {
 			case 'airmedia':

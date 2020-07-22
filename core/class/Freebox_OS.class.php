@@ -1046,17 +1046,19 @@ class Freebox_OSCmd extends cmd
 		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $this->getName());
 		$logicalId = $this->getLogicalId();
+		$logicalId_type = $this->getSubType();
 		$logicalId_value = $this->getvalue();
+		$logicalId_eq = $this->getConfiguration('logicalId');
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
 		$Free_API = new Free_API();
 		if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getConfiguration('type') == 'player') {
-			$action = $this->getEqLogic()->getconfiguration('type');
+			$update = $this->getEqLogic()->getconfiguration('type');
 		} else {
-			$action = $this->getLogicalId();
+			$update = $logicalId;
 		}
-		switch ($action) {
+		switch ($update) {
 			case 'airmedia':
 				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
 				if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
@@ -1066,7 +1068,7 @@ class Freebox_OSCmd extends cmd
 				$Parameter["media_type"] = $_options['titre'];
 				$Parameter["media"] = $_options['message'];
 				$Parameter["password"] = $this->getConfiguration('password');
-				switch ($this->getLogicalId()) {
+				switch ($logicalId) {
 					case "airmediastart":
 						log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
 						$Parameter["action"] = "start";
@@ -1083,7 +1085,7 @@ class Freebox_OSCmd extends cmd
 			case 'downloads':
 				$result = $Free_API->universal_get('download_stats');
 				if ($result != false) {
-					switch ($this->getLogicalId()) {
+					switch ($logicalId) {
 						case "stop_dl":
 							$Free_API->downloads(0);
 							break;
@@ -1099,7 +1101,7 @@ class Freebox_OSCmd extends cmd
 			case 'phone':
 				$result = $Free_API->nb_appel_absence();
 				if ($result != false) {
-					switch ($this->getLogicalId()) {
+					switch ($logicalId) {
 						case "sonnerieDectOn":
 							$Free_API->ringtone('ON');
 							break;
@@ -1111,7 +1113,7 @@ class Freebox_OSCmd extends cmd
 				break;
 			case 'system':
 
-				switch ($this->getLogicalId()) {
+				switch ($logicalId) {
 					case "reboot":
 						$Free_API->reboot();
 						break;
@@ -1129,7 +1131,7 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			case 'wifi':
-				switch ($this->getLogicalId()) {
+				switch ($logicalId) {
 					case "wifiOnOff":
 						$result = $Free_API->universal_get();
 						if ($result == true) {
@@ -1157,7 +1159,7 @@ class Freebox_OSCmd extends cmd
 				}
 				break;
 			default:
-				switch ($this->getSubType()) {
+				switch ($logicalId_type) {
 					case 'slider':
 						if ($this->getConfiguration('inverse')) {
 							$parametre['value'] = ($this->getConfiguration('maxValue') - $this->getConfiguration('minValue')) - $_options['slider'];
@@ -1180,17 +1182,19 @@ class Freebox_OSCmd extends cmd
 						break;
 					default:
 						$parametre['value_type'] = 'bool';
-						if ($this->getConfiguration('logicalId') >= 0 && ($this->getLogicalId() == 'PB_On' || $this->getLogicalId() == 'PB_Off')) {
-							$logicalId = $this->getConfiguration('logicalId');
-							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $this->getLogicalId());
-							if ($this->getLogicalId() == 'PB_On') {
+						if ($logicalId_eq >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
+
+							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_eq);
+
+							if ($logicalId == 'PB_On') {
 								$parametre['value'] = true;
 							} else {
 								$parametre['value'] = false;
 							}
+							$logicalId = $logicalId_eq;
 							//break;
 						} else {
-							$logicalId = $this->getLogicalId();
+							//$logicalId = $this->getLogicalId();
 							$parametre['value'] = true;
 							$Listener = cmd::byId(str_replace('#', '', $this->getValue()));
 

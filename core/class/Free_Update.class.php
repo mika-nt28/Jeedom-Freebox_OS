@@ -21,11 +21,11 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 class Free_Update
 {
 
-   /*  public static function UpdateAction($logicalId, $logicalId_type,$logicalId_name, $logicalId_value,$logicalId_conf,$logicalId_eq)
+    public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
         log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
-        
+
         $Free_API = new Free_API();
         if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getConfiguration('type') == 'player') {
             $update = $this->getEqLogic()->getconfiguration('type');
@@ -45,7 +45,7 @@ class Free_Update
 
                 break;
             case 'downloads':
-               /* $result = $Free_API->universal_get('download_stats');
+                $result = $Free_API->universal_get('download_stats');
                 if ($result != false) {
                     switch ($this->getLogicalId()) {
                         case "stop_dl":
@@ -62,10 +62,10 @@ class Free_Update
 
                 break;
             case 'parental':
-                /$Free_API->universal_put($logicalId, $update, $this->getEqLogic()->getLogicalId());
+                $Free_API->universal_put($logicalId, $update, $this->getEqLogic()->getLogicalId());
                 break;
             case 'phone':
-               /* $result = $Free_API->nb_appel_absence();
+                $result = $Free_API->nb_appel_absence();
                 if ($result != false) {
                     switch ($this->getLogicalId()) {
                         case "sonnerieDectOn":
@@ -87,16 +87,16 @@ class Free_Update
 
                 break;
             case 'wifi':
-             //   Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API);
+                Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API);
 
                 break;
             default:
-               // Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API);
+                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API);
 
                 break;
         }
     }
-/*
+
     private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API)
     {
         $receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");

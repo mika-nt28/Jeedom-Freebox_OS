@@ -199,17 +199,16 @@ class Free_Update
                 break;
             default:
                 $parametre['value_type'] = 'bool';
-                if ($update >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
+                if ($logicalId_conf >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
 
-                    log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $update);
+                    log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
 
                     if ($logicalId == 'PB_On') {
                         $parametre['value'] = true;
                     } else {
                         $parametre['value'] = false;
                     }
-                    $logicalId = $update;
-                    //break;
+                    $logicalId = $logicalId_conf;
                 } else {
                     $parametre['value'] = true;
                     $Listener = cmd::byId(str_replace('#', '', $_cmd->getValue()));

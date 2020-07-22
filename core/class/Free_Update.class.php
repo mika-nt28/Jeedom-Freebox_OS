@@ -28,7 +28,8 @@ class Free_Update
 
         $Free_API = new Free_API();
         if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getConfiguration('type') == 'player') {
-            $update = $this->getEqLogic()->getconfiguration('type');
+            // $update = $this->getEqLogic()->getconfiguration('type');
+            $update = $logicalId_eq->getconfiguration('type');
         } else {
             $update = $logicalId;
         }

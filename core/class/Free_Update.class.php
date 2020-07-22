@@ -63,7 +63,7 @@ class Free_Update
 
                 break;
             case 'parental':
-                $Free_API->universal_put($logicalId, $update, $this->getEqLogic()->getLogicalId());
+                $Free_API->universal_put($logicalId, $update, $logicalId_eq->getLogicalId());
                 break;
             case 'phone':
                 $result = $Free_API->nb_appel_absence();

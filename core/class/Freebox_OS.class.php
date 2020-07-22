@@ -1061,24 +1061,6 @@ class Freebox_OSCmd extends cmd
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
-		$Free_API = new Free_API();
-		if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getEqLogic()->getconfiguration('type') == 'player') {
-			$update = $this->getEqLogic()->getconfiguration('type');
-		} else {
-			$update = $this->getEqLogic()->getLogicalId();
-		}
-		switch ($update) {
-			case 'airmedia':
-			case 'connexion':
-			case 'downloads':
-			case 'parental':
-			case 'phone':
-			case 'system':
-			case 'wifi':
-				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-			break;
-			default:
-				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);		
-		}
+		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 	}
 }

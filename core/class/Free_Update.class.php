@@ -30,7 +30,7 @@ class Free_Update
         if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player') {
             $update = $logicalId_eq->getconfiguration('type');
         } else {
-            $update = $logicalId;
+            $update = $logicalId_eq->getLogicalId();
         }
 
         switch ($update) {
@@ -60,7 +60,6 @@ class Free_Update
                 break;
             case 'parental':
                 $Free_API->universal_put($logicalId, $update, $logicalId_eq->getLogicalId());
-                sleep(1);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
@@ -84,6 +83,7 @@ class Free_Update
                 break;
             case 'wifi':
                 Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             default:
                 Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
@@ -125,6 +125,7 @@ class Free_Update
 
     private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
+        log::add('Freebox_OS', 'debug', '│ [WIFI] Logical ID : ' .$logicalId);
         switch ($logicalId) {
             case "reboot":
                 $Free_API->reboot();
@@ -155,19 +156,16 @@ class Free_Update
                 }
                 break;
             case 'wifiOn':
-                //$result = $Free_API->universal_get();
                 $Free_API->universal_put(1);
                 break;
             case 'wifiOff':
-                //$result = $Free_API->universal_get();
                 $Free_API->universal_put(0);
                 break;
             case 'wifiPlanningOn':
-                //$result = $Free_API->universal_get('planning');
                 $Free_API->universal_put(1, 'planning');
                 break;
             case 'wifiPlanningOff':
-                $result = $Free_API->universal_get('planning');
+                //$result = $Free_API->universal_get('planning');
                 $Free_API->universal_put(0, 'planning');
                 break;
         }

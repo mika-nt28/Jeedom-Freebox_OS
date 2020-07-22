@@ -1065,7 +1065,7 @@ class Freebox_OSCmd extends cmd
 		if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getEqLogic()->getconfiguration('type') == 'player') {
 			$update = $this->getEqLogic()->getconfiguration('type');
 		} else {
-			$update = $logicalId;
+			$update = $this->getEqLogic()->getLogicalId();
 		}
 		switch ($update) {
 			case 'airmedia':
@@ -1142,32 +1142,6 @@ class Freebox_OSCmd extends cmd
 				break;
 			case 'wifi':
 				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-				/*switch ($logicalId) {
-					case "wifiOnOff":
-						$result = $Free_API->universal_get();
-						if ($result == true) {
-							$Free_API->universal_put(0);
-						} else {
-							$Free_API->universal_put(1);
-						}
-						break;
-					case 'wifiOn':
-						//$result = $Free_API->universal_get();
-						$Free_API->universal_put(1);
-						break;
-					case 'wifiOff':
-						//$result = $Free_API->universal_get();
-						$Free_API->universal_put(0);
-						break;
-					case 'wifiPlanningOn':
-						//$result = $Free_API->universal_get('planning');
-						$Free_API->universal_put(1, 'planning');
-						break;
-					case 'wifiPlanningOff':
-						//$result = $Free_API->universal_get('planning');
-						$Free_API->universal_put(0, 'planning');
-						break;
-				}*/
 				break;
 			default:
 				switch ($logicalId_type) {

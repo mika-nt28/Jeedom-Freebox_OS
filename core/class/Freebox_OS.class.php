@@ -1056,7 +1056,6 @@ class Freebox_OSCmd extends cmd
 		} else {
 			$action = $this->getLogicalId();
 		}
-		log::add('Freebox_OS', 'debug', '│ TYPE : ' . $action);
 		switch ($action) {
 			case 'airmedia':
 				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");

@@ -114,7 +114,7 @@ try {
 			ajax::success(false);
 			break;*/
 		case 'get_airmediareceivers':
-			ajax::success($Free_API->airmedia('receivers'));
+			ajax::success($Free_API->airmedia('receivers', null, null));
 			break;
 		case 'set_airmediareceivers':
 			$cmd = cmd::byId(init('id'));

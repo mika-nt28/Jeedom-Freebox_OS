@@ -1151,19 +1151,19 @@ class Freebox_OSCmd extends cmd
 						}
 						break;
 					case 'wifiOn':
-						$result = $Free_API->universal_get();
+						//$result = $Free_API->universal_get();
 						$Free_API->universal_put(1);
 						break;
 					case 'wifiOff':
-						$result = $Free_API->universal_get();
+						//$result = $Free_API->universal_get();
 						$Free_API->universal_put(0);
 						break;
 					case 'wifiPlanningOn':
-						$result = $Free_API->universal_get('planning');
+						//$result = $Free_API->universal_get('planning');
 						$Free_API->universal_put(1, 'planning');
 						break;
 					case 'wifiPlanningOff':
-						$result = $Free_API->universal_get('planning');
+						//$result = $Free_API->universal_get('planning');
 						$Free_API->universal_put(0, 'planning');
 						break;
 				}

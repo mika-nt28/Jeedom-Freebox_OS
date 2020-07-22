@@ -27,4 +27,4 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 include_file('core', 'Free_API', 'class', 'Freebox_OS');
 include_file('core', 'Free_Template', 'class', 'Freebox_OS');
 include_file('core', 'Free_Refresh', 'class', 'Freebox_OS');
-?>
+include_file('core', 'Free_Update', 'class', 'Freebox_OS');

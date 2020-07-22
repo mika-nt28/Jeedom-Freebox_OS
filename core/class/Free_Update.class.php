@@ -107,7 +107,7 @@ class Free_Update
         $Parameter["media_type"] = $_options['titre'];
         $Parameter["media"] = $_options['message'];
         $Parameter["password"] = $this->getConfiguration('password');
-        switch ($this->getLogicalId()) {
+        switch ($logicalId) {
             case "airmediastart":
                 log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
                 $Parameter["action"] = "start";
@@ -131,7 +131,7 @@ class Free_Update
 
     private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
-        switch ($this->getLogicalId()) {
+        switch ($logicalId) {
             case "reboot":
                 $Free_API->reboot();
                 break;

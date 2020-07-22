@@ -1036,12 +1036,10 @@ class Freebox_OS extends eqLogic
 			}
 
 			if (!$_update) $eqLogic->setName($eqName);
-			//$eqLogic->setConfiguration('VersionLogicalID', strval($_version));
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update V' . $_version);
 			$eqLogic->save(true);
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update save');
 		}
-		//log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update Finish');
 		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 }
@@ -1055,9 +1053,10 @@ class Freebox_OSCmd extends cmd
 		$logicalId_type = $this->getSubType();
 		$logicalId_value = $this->getvalue();
 		$logicalId_name = $this->getName();
-		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 		$logicalId_conf = $this->getConfiguration('logicalId');
 		$logicalId_eq = $this->getEqLogic();
+		
+		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}

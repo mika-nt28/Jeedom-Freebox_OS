@@ -70,7 +70,7 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             default:
-                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
+                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
         }
@@ -174,7 +174,7 @@ class Free_Update
         }
     }
 
-    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
+    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
         switch ($logicalId_type) {
             case 'slider':
@@ -199,16 +199,16 @@ class Free_Update
                 break;
             default:
                 $parametre['value_type'] = 'bool';
-                if ($logicalId_eq >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
+                if ($update >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
 
-                    log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_eq);
+                    log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $update);
 
                     if ($logicalId == 'PB_On') {
                         $parametre['value'] = true;
                     } else {
                         $parametre['value'] = false;
                     }
-                    $logicalId = $logicalId_eq;
+                    $logicalId = $update;
                     //break;
                 } else {
                     $parametre['value'] = true;

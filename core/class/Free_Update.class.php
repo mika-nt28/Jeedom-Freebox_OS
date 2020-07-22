@@ -36,9 +36,10 @@ class Free_Update
         switch ($update) {
             case 'airmedia':
                 Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
             break;
             case 'connexion':
-                break;
+            break;
             case 'disk':
                 break;
             case 'downloads':
@@ -53,7 +54,7 @@ class Free_Update
                             break;
                     }
                 }
-
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'homeadapters':
 
@@ -74,12 +75,15 @@ class Free_Update
                             break;
                     }
                 }
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'player':
                 break;
             case 'network':
                 break;
             case 'system':
+                Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'wifi':
                 Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -125,7 +129,6 @@ class Free_Update
 
     private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
-        log::add('Freebox_OS', 'debug', '│ [WIFI] Logical ID : ' .$logicalId);
         switch ($logicalId) {
             case "reboot":
                 $Free_API->reboot();
@@ -134,11 +137,9 @@ class Free_Update
                 $Free_API->Updatesystem();
                 break;
             case '4GOn':
-                //$result = $Free_API->universal_get('4G');
                 $Free_API->universal_put(1, '4G');
                 break;
             case '4GOff':
-                //$result = $Free_API->universal_get('4G');
                 $Free_API->universal_put('0', '4G');
                 break;
         }

@@ -1069,60 +1069,23 @@ class Freebox_OSCmd extends cmd
 		}
 		switch ($update) {
 			case 'airmedia':
-				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
-				if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
-					log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
-					break;
-				}
-				$Parameter["media_type"] = $_options['titre'];
-				$Parameter["media"] = $_options['message'];
-				$Parameter["password"] = $this->getConfiguration('password');
-				switch ($logicalId) {
-					case "airmediastart":
-						log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
-						$Parameter["action"] = "start";
-						$return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
-						break;
-					case "airmediastop":
-						$Parameter["action"] = "stop";
-						$return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
-						break;
-				}
-				break;
+				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
+			break;
 			case 'connexion':
+
 				break;
 			case 'downloads':
-				$result = $Free_API->universal_get('download_stats');
-				if ($result != false) {
-					switch ($logicalId) {
-						case "stop_dl":
-							$Free_API->downloads(0);
-							break;
-						case "start_dl":
-							$Free_API->downloads(1);
-							break;
-					}
-				}
+				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 				break;
 			case 'parental':
 				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-				//$Free_API->universal_put($logicalId, 'parental', $logicalId_eq);
 				break;
 			case 'phone':
-				$result = $Free_API->nb_appel_absence();
-				if ($result != false) {
-					switch ($logicalId) {
-						case "sonnerieDectOn":
-							$Free_API->ringtone('ON');
-							break;
-						case "sonnerieDectOff":
-							$Free_API->ringtone('OFF');
-							break;
-					}
-				}
+				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 				break;
 			case 'system':
-
+				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
+				/*
 				switch ($logicalId) {
 					case "reboot":
 						$Free_API->reboot();
@@ -1138,11 +1101,11 @@ class Freebox_OSCmd extends cmd
 						//$result = $Free_API->universal_get('4G');
 						$Free_API->universal_put('0', '4G');
 						break;
-				}
+				}*/
 				break;
 			case 'wifi':
 				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-				break;
+			break;
 			default:
 				switch ($logicalId_type) {
 					case 'slider':

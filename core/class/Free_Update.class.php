@@ -47,7 +47,7 @@ class Free_Update
             case 'downloads':
                 $result = $Free_API->universal_get('download_stats');
                 if ($result != false) {
-                    switch ($this->getLogicalId()) {
+                    switch ($logicalId) {
                         case "stop_dl":
                             $Free_API->downloads(0);
                             break;
@@ -67,7 +67,7 @@ class Free_Update
             case 'phone':
                 $result = $Free_API->nb_appel_absence();
                 if ($result != false) {
-                    switch ($this->getLogicalId()) {
+                    switch ($logicalId) {
                         case "sonnerieDectOn":
                             $Free_API->ringtone('ON');
                             break;

@@ -1069,100 +1069,16 @@ class Freebox_OSCmd extends cmd
 		}
 		switch ($update) {
 			case 'airmedia':
-				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-			break;
 			case 'connexion':
-
-				break;
 			case 'downloads':
-				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-				break;
 			case 'parental':
-				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-				break;
 			case 'phone':
-				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-				break;
 			case 'system':
-				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
-				/*
-				switch ($logicalId) {
-					case "reboot":
-						$Free_API->reboot();
-						break;
-					case "update":
-						$Free_API->Updatesystem();
-						break;
-					case '4GOn':
-						//$result = $Free_API->universal_get('4G');
-						$Free_API->universal_put(1, '4G');
-						break;
-					case '4GOff':
-						//$result = $Free_API->universal_get('4G');
-						$Free_API->universal_put('0', '4G');
-						break;
-				}*/
-				break;
 			case 'wifi':
 				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 			break;
 			default:
-				switch ($logicalId_type) {
-					case 'slider':
-						if ($this->getConfiguration('inverse')) {
-							$parametre['value'] = ($this->getConfiguration('maxValue') - $this->getConfiguration('minValue')) - $_options['slider'];
-						} else {
-							$parametre['value'] = (int) $_options['slider'];
-						}
-						$parametre['value_type'] = 'int';
-						break;
-					case 'color':
-						$parametre['value'] = $_options['color'];
-						$parametre['value_type'] = '';
-						break;
-					case 'message':
-						$parametre['value'] = $_options['message'];
-						$parametre['value_type'] = 'void';
-						break;
-					case 'select':
-						$parametre['value'] = $_options['select'];
-						$parametre['value_type'] = 'void';
-						break;
-					default:
-						$parametre['value_type'] = 'bool';
-						if ($logicalId_conf >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
-
-							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
-
-							if ($logicalId == 'PB_On') {
-								$parametre['value'] = true;
-							} else {
-								$parametre['value'] = false;
-							}
-							$logicalId = $logicalId_conf;
-						} else {
-							//$logicalId = $this->getLogicalId();
-							$parametre['value'] = true;
-							$Listener = cmd::byId(str_replace('#', '', $this->getValue()));
-
-							if (is_object($Listener)) {
-								$parametre['value'] = $Listener->execCmd();
-							}
-							if ($this->getConfiguration('inverse')) {
-								$parametre['value'] = !$parametre['value'];
-							}
-						}
-						$Free_API->universal_put($parametre, 'set_tiles', $logicalId, $this->getEqLogic()->getLogicalId());
-
-						break;
-				}
-				break;
+				Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);		
 		}
-		/*if ($logicalId_value != null) {
-			log::add('Freebox_OS', 'debug', '│ Commande liée Refresh : ' . $logicalId_value);
-			$cmd = cmd::byId($logicalId_value);
-			$cmd->execute();
-			log::add('Freebox_OS', 'debug', '│ Commande liéefinRefresh : ' . $logicalId_value);
-		}*/
 	}
 }

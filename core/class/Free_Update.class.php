@@ -91,6 +91,7 @@ class Free_Update
                 break;
             default:
                 Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
         }
     }
@@ -166,7 +167,6 @@ class Free_Update
                 $Free_API->universal_put(1, 'planning');
                 break;
             case 'wifiPlanningOff':
-                //$result = $Free_API->universal_get('planning');
                 $Free_API->universal_put(0, 'planning');
                 break;
         }
@@ -220,7 +220,6 @@ class Free_Update
                     }
                 }
                 $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId());
-
                 break;
         }
     }

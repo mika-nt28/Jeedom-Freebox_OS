@@ -60,6 +60,7 @@ class Free_Update
                 break;
             case 'parental':
                 $Free_API->universal_put($logicalId, $update, $logicalId_eq->getLogicalId());
+                sleep(1);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':

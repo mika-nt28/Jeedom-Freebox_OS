@@ -1,6 +1,7 @@
-<div class="cmd tooltips cmd-widget cursor #history#" data-type="info" data-subtype="binary" data-cmd_id="#id#" data-cmd_uid="#uid#" data-version="#version#" style="min-width:100px;">
+<div class="cmd tooltips cmd-widget cursor #history#" data-type="info" data-subtype="numeric" data-cmd_id="#id#"
+	data-cmd_uid="#uid#" data-version="#version#" style="min-width:100px;min-height:65px;margin-bottom:10px">
 	<div class="title #hide_name#">
-		<div class="cmdName">#name_display#</div>
+		<div style="margin-bottom:10px" class="cmdName">#name_display#</div>
 	</div>
 	<div class="content-sm">
 		<div class="group_phone" style="width:45px;height:25px;">
@@ -9,52 +10,93 @@
 		</div>
 	</div>
 	<script>
-	jeedom.cmd.update['#id#'] =function(_options){
-		var cmd = $('.cmd[data-cmd_id=#id#]');
-		cmd.attr('title','Date de valeur : '+_options.valueDate+'<br/>Date de collecte : '+_options.collectDate);
-		cmd.find('.alerte_couleur').text(_options.display_value);
-		if(_options.display_value == "Collecte en cours"){
-			cmd.find('.alerte_couleur').css({"font-size":'9px',"background-color":'rgba(237,32,32,0.7)',"color":'white',"font-weight":'bold'});
-			cmd.find('.alerte_couleur').text("?");
-		}else if( _options.display_value == ""){
-			cmd.find('.alerte_couleur').css({"font-size":'9px',"background-color":'rgba(237,32,32,0.7)',"color":'white',"font-weight":'bold'});
-			cmd.find('.alerte_couleur').text("?");
-		}else{
-			if(_options.display_value == "0" || _options.display_value == 0)
-				cmd.find('.alerte_couleur').css({"position":'absolute',"margin-left":'5px',"margin-top":'-10px',"-moz-border-radius":'50%',"-webkit-border-radius":'15px',"border-radius":'15px',"width":'20px',"height":'20px',"text-align":'center',"background-color":'rgba(83,107,217,0.5)',"border":'1px solid rgba(83,107,217,1)'});
-			else
-				cmd.find('.alerte_couleur').css({"position":'absolute',"margin-left":'5px',"margin-top":'-10px',"-moz-border-radius":'50%',"-webkit-border-radius":'15px',"border-radius":'15px',"width":'20px',"height":'20px',"text-align":'center',"background-color":'rgba(207,36,36,0.5)',"border":'1px solid rgba(207,36,36,1)'});
-			switch('#logicalId#') {
-				case 'nbAppelsManquee':
-					cmd.find('.picture_phone').append('<div class="icon techno-phone1" style="font-size:35px;" ></div>'); 
-					cmd.find('.group_phone').css({"left":'0%'});
-					cmd.find('.group_phone').off().on('click',function(){
-						$('#listAppelsManquee').closest('.cmd').show();
-						$('#listAppelsRecus').closest('.cmd').hide()
-						$('#listAppelsPasse').closest('.cmd').hide()
+		jeedom.cmd.update['#id#'] = function (_options) {
+			var cmd = $('.cmd[data-cmd_id=#id#]');
+			cmd.attr('title', 'Date de valeur : ' + _options.valueDate + '<br/> Date de collecte : ' + _options
+				.collectDate);
+			cmd.find('.alerte_couleur').text(_options.display_value);
+			if (_options.display_value == "Collecte en cours" || _options.display_value == "") {
+				cmd.find('.alerte_couleur').css({
+					"font-size": '9px',
+					"background-color": 'rgba(237,32,32,0.7)',
+					"color": 'white',
+					"font-weight": 'bold'
+				});
+				cmd.find('.alerte_couleur').text("?");
+			} else {
+				if (_options.display_value == "0" || _options.display_value == 0)
+					cmd.find('.alerte_couleur').css({
+						"position": 'absolute',
+						"margin-left": '5px',
+						"margin-top": '-10px',
+						"-moz-border-radius": '50%',
+						"-webkit-border-radius": '15px',
+						"border-radius": '15px',
+						"width": '20px',
+						"height": '20px',
+						"text-align": 'center',
+						"background-color": 'rgba(83,107,217,0.5)',
+						"border": '1px solid rgba(83,107,217,1)'
 					});
-				break;
-				case 'nbAppelRecus':
-					cmd.find('.picture_phone').append('<div class="icon techno-phone3" style="font-size:35px;"></div>');
-					cmd.find('.group_phone').css({"right":'50%'});
-					cmd.find('.group_phone').off().on('click',function(){
-						$('#listAppelsRecus').closest('.cmd').show();
-						$('#listAppelsManquee').closest('.cmd').hide();
-						$('#listAppelsPasse').closest('.cmd').hide()
+				else
+					cmd.find('.alerte_couleur').css({
+						"position": 'absolute',
+						"margin-left": '5px',
+						"margin-top": '-10px',
+						"-moz-border-radius": '50%',
+						"-webkit-border-radius": '15px',
+						"border-radius": '15px',
+						"width": '20px',
+						"height": '20px',
+						"text-align": 'center',
+						"background-color": 'rgba(207,36,36,0.5)',
+						"border": '1px solid rgba(207,36,36,1)'
 					});
-				break;
-				case 'nbAppelPasse':
-					cmd.find('.picture_phone').append('<div class="icon techno-phone2" style="font-size:35px;"></div>');
-					cmd.find('.group_phone').css({"right":'0%'});
-					cmd.find('.group_phone').off().on('click',function(){
-						$('#listAppelsPasse').closest('.cmd').show();
-						$('#listAppelsManquee').closest('.cmd').hide();
-						$('#listAppelsRecus').closest('.cmd').hide()
-					});
-				break;
+				switch ('#logicalId#') {
+					case 'nbAppelsManquee':
+						cmd.find('.picture_phone').empty().append(
+							'<div class="icon techno-phone1" style="font-size:35px;color:red" ></div>');
+						cmd.find('.group_phone').css({
+							"left": '0%'
+						});
+						cmd.find('.group_phone').off().on('click', function () {
+							$('#listAppelsManquee').closest('.cmd').show();
+							$('#listAppelsRecus').closest('.cmd').hide()
+							$('#listAppelsPasse').closest('.cmd').hide()
+						});
+						break;
+					case 'nbAppelRecus':
+						cmd.find('.picture_phone').empty().append(
+							'<div class="icon techno-phone3" style="font-size:35px;color:blue"></div>');
+						cmd.find('.group_phone').css({
+							"right": '50%'
+						});
+						cmd.find('.group_phone').off().on('click', function () {
+							$('#listAppelsRecus').closest('.cmd').show();
+							$('#listAppelsManquee').closest('.cmd').hide();
+							$('#listAppelsPasse').closest('.cmd').hide()
+						});
+						break;
+					case 'nbAppelPasse':
+						cmd.find('.picture_phone').empty().append(
+							'<div class="icon techno-phone2" style="font-size:35px;color:green"></div>');
+						cmd.find('.group_phone').css({
+							"right": '0%'
+						});
+						cmd.find('.group_phone').off().on('click', function () {
+							$('#listAppelsPasse').closest('.cmd').show();
+							$('#listAppelsManquee').closest('.cmd').hide();
+							$('#listAppelsRecus').closest('.cmd').hide()
+						});
+						break;
+				}
 			}
 		}
-	}
-	jeedom.cmd.update['#id#']({display_value:'#state#',valueDate:'#valueDate#',collectDate:'#collectDate#',alertLevel:'#alertLevel#'});
+		jeedom.cmd.update['#id#']({
+			display_value: '#state#',
+			valueDate: '#valueDate#',
+			collectDate: '#collectDate#',
+			alertLevel: '#alertLevel#'
+		});
 	</script>
 </div>

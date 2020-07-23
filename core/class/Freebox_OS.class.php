@@ -93,10 +93,19 @@ class Freebox_OS extends eqLogic
 			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
-
+		if ($EqLogic->getConfiguration('autorefresh') == null && $tiles != true && $EqLogic->getLogicalId() != 'disk') {
+			$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+		} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getLogicalId() == 'disk') {
+			$EqLogic->setConfiguration('autorefresh', '1 * * * *');
+		}
 		if ($tiles == true) {
 			$EqLogic->setConfiguration('type', $eq_type);
 			$EqLogic->setConfiguration('action', $eq_action);
+			if ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player') {
+				$EqLogic->setConfiguration('autorefresh', '* * * * *');
+			} else {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			}
 		}
 		$EqLogic->save();
 		return $EqLogic;

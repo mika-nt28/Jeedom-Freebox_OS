@@ -101,8 +101,10 @@ class Freebox_OS extends eqLogic
 		if ($tiles == true) {
 			$EqLogic->setConfiguration('type', $eq_type);
 			$EqLogic->setConfiguration('action', $eq_action);
-			if ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player') {
+			if ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player' && $EqLogic->getConfiguration('type', $eq_type) != 'alarm_remote') {
 				$EqLogic->setConfiguration('autorefresh', '* * * * *');
+			} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) == 'alarm_remote') {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			} else {
 				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			}

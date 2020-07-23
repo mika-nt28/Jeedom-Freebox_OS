@@ -17,7 +17,7 @@ if (!isConnect('admin')) {
                         <tr>
                             <th>{{Activer}}</th>
                             <th>{{Ip source}}</th>
-                            <th>{{Debut port source}}</th>
+                            <th>{{Début port source}}</th>
                             <th>{{Fin port source}}</th>
                             <th>{{Type}}</th>
                             <th>{{Ip de destination}}</th>

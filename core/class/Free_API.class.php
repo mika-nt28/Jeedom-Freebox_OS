@@ -376,15 +376,19 @@ class Free_API
 				if ($parametre == "denied") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else if ($parametre == "denied_30m") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else if ($parametre == "denied_1h") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else if ($parametre == "denied_2h") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else {
 					$jsontestprofile['override'] = false;
 				}

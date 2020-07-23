@@ -67,7 +67,7 @@ class Free_Refresh
                     break;
                 case 'parental':
                     foreach ($Equipement->getCmd('info') as $Command) {
-                        $results = $Free_API->universal_get('parental_ID', $Equipement->getLogicalId());
+                        $results = $Free_API->universal_get('parental_ID', $Equipement->getConfiguration('action'));
                         $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
                     }
                     break;

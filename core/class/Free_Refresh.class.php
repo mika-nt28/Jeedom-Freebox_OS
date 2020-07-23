@@ -37,7 +37,7 @@ class Free_Refresh
 
                     break;
                 case 'connexion':
-                    Free_Refresh::refresh_connexion($result, $Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion($Equipement, $Free_API);
                     break;
                 case 'disk':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -50,7 +50,7 @@ class Free_Refresh
                     }
                     break;
                 case 'downloads':
-                    Free_Refresh::refresh_download($result, $Equipement, $Free_API);
+                    Free_Refresh::refresh_download($Equipement, $Free_API);
                     break;
                 case 'homeadapters':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -72,7 +72,7 @@ class Free_Refresh
                     }
                     break;
                 case 'phone':
-                    Free_Refresh::refresh_phone($result, $Equipement, $Free_API);
+                    Free_Refresh::refresh_phone($Equipement, $Free_API);
                     break;
                 case 'player':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -83,10 +83,10 @@ class Free_Refresh
                     }
                     break;
                 case 'network':
-                    Free_Refresh::refresh_network($result, $Equipement, $Free_API);
+                    Free_Refresh::refresh_network($Equipement, $Free_API);
                     break;
                 case 'system':
-                    Free_Refresh::refresh_system($result, $Equipement, $Free_API);
+                    Free_Refresh::refresh_system($Equipement, $Free_API);
                     break;
                 case 'wifi':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -105,13 +105,13 @@ class Free_Refresh
                     }
                     break;
                 default:
-                    Free_Refresh::refresh_default($result, $Equipement, $Free_API);
+                    Free_Refresh::refresh_default($Equipement, $Free_API);
                     break;
             }
         }
     }
 
-    private static function refresh_connexion($result, $Equipement, $Free_API)
+    private static function refresh_connexion($Equipement, $Free_API)
     {
         $result = $Free_API->connexion_stats();
         if ($result != false) {
@@ -142,7 +142,7 @@ class Free_Refresh
         }
     }
 
-    private static function refresh_download($result, $Equipement, $Free_API)
+    private static function refresh_download($Equipement, $Free_API)
     {
         $result = $Free_API->universal_get('download_stats');
         if ($result != false) {
@@ -198,7 +198,7 @@ class Free_Refresh
         }
     }
 
-    private static function refresh_phone($result, $Equipement, $Free_API)
+    private static function refresh_phone($Equipement, $Free_API)
     {
         $result = $Free_API->nb_appel_absence();
         if ($result != false) {
@@ -229,7 +229,7 @@ class Free_Refresh
         }
     }
 
-    private static function refresh_network($result, $Equipement, $Free_API)
+    private static function refresh_network($Equipement, $Free_API)
     {
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
@@ -271,7 +271,7 @@ class Free_Refresh
         }
     }
 
-    private static function refresh_system($result, $Equipement, $Free_API)
+    private static function refresh_system($Equipement, $Free_API)
     {
         foreach ($Equipement->getCmd('info') as $Command) {
             $logicalId = $Command->getConfiguration('logicalId');
@@ -348,7 +348,7 @@ class Free_Refresh
         }
     }
 
-    private static function refresh_default($result, $Equipement, $Free_API)
+    private static function refresh_default($Equipement, $Free_API)
     {
         $results = $Free_API->universal_get('tiles_ID', $Equipement->getLogicalId());
 

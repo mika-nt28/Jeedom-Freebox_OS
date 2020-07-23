@@ -376,15 +376,19 @@ class Free_API
 				if ($parametre == "denied") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else if ($parametre == "denied_30m") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else if ($parametre == "denied_1h") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else if ($parametre == "denied_2h") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else {
 					$jsontestprofile['override'] = false;
 				}
@@ -593,194 +597,4 @@ class Free_API
 		else
 			return false;
 	}
-	/*public function airmediaConfig($parametre) // Fonction plus appelé à supprimer => Intégrer dans "airmedia"
-	{
-		$result = $this->fetch('/api/v8/airmedia/config/', $parametre, "PUT");
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-	/*public function airmediaReceivers() // Fonction plus appelé à supprimer => Intégrer dans "airmedia" => Fonction non appelé
-	{
-		$result = $this->fetch('/api/v8/airmedia/receivers/');
-		if ($result === false)
-			return false;
-
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-	/*public function AirMediaAction($receiver, $Parameter) // Fonction plus appelé à supprimer => Intégrer dans "airmedia"
-	{
-		$result = $this->fetch('/api/v8/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return true;
-		else
-			return false;
-	}*/
-	/*public function getTiles($update = 'tiles')  // Fonction plus appelé à supprimer => Intégrer dans "ringtone_on" renomé en ringtone
-	{
-		switch ($update) {
-			case 'tiles':
-				$config = 'api/v8/home/tileset/all';
-				break;
-		}
-		$result = $this->fetch('/' . $config);
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-	/*public function ringtone_off() // Fonction plus appelé à supprimer => Intégrer dans "ringtone_on" renomé en ringtone
-	{
-		log::add('Freebox_OS', 'debug', '>───────── Ringtone OFF');
-		$result = $this->fetch('/api/v8/phone/dect_page_stop/', "", "POST");
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result;
-		else
-			return false;
-	}*/
-	/*public function set_tiles($parametre, $update = 'tiles', $id = null, $nodeId) // Fonction plus appelé à supprimer => Intégrer dans "universal_put"
-	{
-
-		$config = 'api/v8/home/endpoints/';
-
-		if ($id != null) {
-			$$id = $id . '/';
-		} elseif ($id != 'refresh') {
-			$id = null;
-		}
-		log::add('Freebox_OS', 'debug', '└───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
-		$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
-		if ($return === false)
-			return false;
-		if ($return['success'])
-			return $return['result'];
-		else
-			return false;
-	}*/
-	/*public function getTile($id = '', $update = 'tiles') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$config_sup = null;
-		switch ($update) {
-			case 'tiles':
-				$config = 'api/v8/home/tileset/';
-				break;
-		}
-
-		$result = $this->fetch('/' . $config . $id . $config_sup);
-		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
-		if ($result === false)
-			return false;
-		if ($result['success']) {
-			return $result['result'];
-		} else {
-			return false;
-		}
-	}*/
-	/*public function gethomeadapter_status($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/home/adapters/' . $id);
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-
-	/*public function networkPing($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/lan/browser/pub/' . $id);
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result;
-		else
-			return false;
-	}*/
-	/*public function getnetwork()  // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/lan/browser/pub/');
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-	/*public function systemV8($update = 'system', $id = null, $boucle = 4) // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-
-		$result = $this->fetch('/api/v8/system');
-		if ($result === false)
-			return false;
-		if ($result['success']) {
-			switch ($boucle) {
-				case 1:
-					return $result['result']['sensors'];
-				case 2:
-					return $result['result']['fans'];
-				case 3:
-					return $result['result']['expansions'];
-				case 4:
-					return $result['result'];
-			}
-		} else {
-			return false;
-		}
-	}*/
-	/*public function gethomeadapters_player($update = 'homeadapters') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		switch ($update) {
-			case 'homeadapters':
-				$config = 'api/v8/home/adapters';
-				break;
-			case 'player':
-				$config = 'api/v8/player';
-				break;
-		}
-		$result = $this->fetch('/' . $config);
-		if ($result === false) {
-			return false;
-		}
-		if ($result['success']) {
-			return $result['result'];
-		} else {
-			return false;
-		}
-	}*/
-	/*public function getdisque($logicalId = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/storage/disk/' . $logicalId);
-		if ($result === false)
-			return false;
-		if ($result['success']) {
-			$total_bytes = $result['result']['partitions'][0]['total_bytes'];
-			$used_bytes = $result['result']['partitions'][0]['used_bytes'];
-			return round($used_bytes / $total_bytes * 100, 2);
-		}
-		return false;
-	}*/
-	/*public function download_stats() // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/downloads/stats/');
-		if ($result === false) {
-			return false;
-		}
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
 }

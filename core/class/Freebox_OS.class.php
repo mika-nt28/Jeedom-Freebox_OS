@@ -192,8 +192,8 @@ class Freebox_OS extends eqLogic
 		foreach ($result as $Equipement) {
 			log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $Equipement['device_name'] . ' -- Id : ' . $Equipement['id']);
 			if ($Equipement['id'] != null) {
-				$player = self::AddEqLogic($Equipement['device_name'], 'player_'.$Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id']);
-				log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id : player_'.$Equipement['id']. ' -- freeID : '.$Equipement['id']);
+				$player = self::AddEqLogic($Equipement['device_name'], 'player_' . $Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id']);
+				log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id : player_' . $Equipement['id'] . ' -- freeID : ' . $Equipement['id']);
 			}
 			$player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
 			$player->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
@@ -202,7 +202,7 @@ class Freebox_OS extends eqLogic
 			$player->AddCommand('API Disponible', 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
 			$player->AddCommand('Disponible sur le réseau', 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
 			$player->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
-		
+
 			Free_Refresh::RefreshInformation($player->getId());
 		}
 	}
@@ -319,7 +319,7 @@ class Freebox_OS extends eqLogic
 			$category = 'default';
 			$Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
 
-			$parental = self::AddEqLogic($Equipement['name'], 'parental_'.$Equipement['id'], $category, true, 'parental', null, $Equipement['id']);
+			$parental = self::AddEqLogic($Equipement['name'], 'parental_' . $Equipement['id'], $category, true, 'parental', null, $Equipement['id']);
 			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'parental', true);
 			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'parental', true);
 			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'parental', true);
@@ -1014,14 +1014,14 @@ class Freebox_OS extends eqLogic
 				case 'ADSL':
 				case 'connexion':
 					$eqLogic->setLogicalId($logicalinfo['connexionID']);
-					$eqLogic->setName("Freebox " . $logicalinfo['connexionName']);
+					$eqLogic->setName($logicalinfo['connexionName']);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update logicalID : "' . $logicalinfo['connexionID'] . '" et Update name : "' . $logicalinfo['connexionName'] . '"');
 					break;
 				case 'AirPlay':
 				case 'airmedia':
 				case '':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
-					$eqLogic->setName("Freebox " . $logicalinfo['airmediaName']);
+					$eqLogic->setName($logicalinfo['airmediaName']);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
 					break;
 				case 'Disque':

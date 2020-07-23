@@ -209,6 +209,33 @@ class Free_API
 		else
 			return false;
 	}
+
+	public function getPortForwarding($id)
+	{
+		$PortForwarding = $this->fetch('/api/v8/fw/redir/');
+		if ($PortForwarding === false)
+			return false;
+
+		$_ip = cmd::byId($id)->getConfiguration('IPV4','192.168.0.0');
+		log::add('Freebox_OS', 'debug', 'ip test = '.$_ip);
+
+
+		$result = array();
+
+		foreach ($PortForwarding['result'] as $value) {
+			if ($value['lan_ip'] != $_ip) continue;
+			array_push($result, array('enabled' => (string)  $value['enabled'], 
+				'src_ip' => $value['src_ip'], 
+				'wan_port_start' => $value['wan_port_start'], 
+				'wan_port_end' => $value['wan_port_end'],
+				'ip_proto' => $value['ip_proto'],
+				'lan_ip' => $value['lan_ip'],
+				'lan_port' => $value['lan_port'],
+				'comment' => $value['comment']));
+		}
+
+		return $result;
+	}
 	public function disk()
 	{
 		$reponse = $this->fetch('/api/v8/storage/disk/');
@@ -295,6 +322,9 @@ class Free_API
 				$config = 'api/v8/wifi/config';
 				$config_log = 'Etat du Wifi';
 				break;
+			case 'PortForwarding':
+				$config = '/api/v8/fw/redir/';
+				$config_log = 'Redirection de port';
 		}
 
 		$result = $this->fetch('/' . $config);

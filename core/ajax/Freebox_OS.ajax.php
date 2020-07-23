@@ -94,7 +94,8 @@ try {
 			ajax::success();
 			break;
 		case 'PortForwarding':
-			ajax::success();
+			log::add('Freebox_OS', 'debug', 'Debug PortWorward id = ' . init('id'));
+			ajax::success($Free_API->getPortForwarding(init('id')));
 			break;
 		case 'WakeOnLAN':
 			$Command = cmd::byId(init('id'));

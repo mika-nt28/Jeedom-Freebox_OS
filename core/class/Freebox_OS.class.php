@@ -323,6 +323,7 @@ class Freebox_OS extends eqLogic
 			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'parental', true);
 			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'parental', true);
 			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'parental', true);
+			$parental->AddCommand('Bloquer Temporairement', 'tempDenied', 'action', 'select', null, null, null, 1, '', '', '', '', 0, 'default', 'default', 4, '0', false, false, '', true);
 			log::add('Freebox_OS', 'debug', '└─────────');
 		}
 	}
@@ -735,6 +736,10 @@ class Freebox_OS extends eqLogic
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
 			}
+		}
+
+		if ($_logicalId == "tempDenied") {
+			$Command->setConfiguration('listValue', '1800|30 minutes;3600|1 heure;7200|2 heure');
 		}
 		$Command->save();
 

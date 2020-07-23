@@ -928,6 +928,15 @@ class Freebox_OS extends eqLogic
 			$this->setConfiguration('waite', 300);
 		}
 	}
+	public function preUpdate()
+	{
+		if (!$this->getIsEnable()) return;
+
+		if ($this->getConfiguration('autorefresh') == '') {
+			throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide', __FILE__));
+			log::add(__CLASS__, 'error', '│ Configuration : Temps de rafraichissement (cron) : ' . $this->getConfiguration('autorefresh'));
+		}
+	}
 	public function postSave()
 	{
 		if ($this->getIsEnable()) {

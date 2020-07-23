@@ -13,7 +13,7 @@ class Freebox_OS extends eqLogic
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
 				if ($c->isDue($dateRun)) {
-					log::add('Freebox_OS', 'debug', 'Cron ' . $eqLogic->getName());
+					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
 					Free_Refresh::RefreshInformation($eqLogic->getId());
 				}
 			} catch (Exception $exc) {
@@ -1055,7 +1055,7 @@ class Freebox_OSCmd extends cmd
 		$logicalId_name = $this->getName();
 		$logicalId_conf = $this->getConfiguration('logicalId');
 		$logicalId_eq = $this->getEqLogic();
-		
+
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);

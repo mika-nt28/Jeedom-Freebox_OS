@@ -188,54 +188,46 @@ class Free_API
 		else
 			return false;
 	}
-	public function PortForwarding($Port)
+
+	public function PortForwarding($id, $fonction = "get", $active = null)
 	{
 		$PortForwarding = $this->fetch('/api/v8/fw/redir/');
 		if ($PortForwarding === false)
 			return false;
-		$nbPF = count($PortForwarding['result']);
-		for ($i = 0; $i < $nbPF; ++$i) {
-			if ($PortForwarding['result'][$i]['wan_port_start'] == $Port) {
-				if ($PortForwarding['result'][$i]['enabled'])
-					$PortForwarding = $this->fetch('/api/v8/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => false), "PUT");
-				else
-					$PortForwarding = $this->fetch('/api/v8/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => true), "PUT");
+
+
+		if ($fonction == "get") {
+			$result = array();
+			$_ip = cmd::byId($id)->getConfiguration('IPV4','192.168.0.0');
+
+			foreach ($PortForwarding['result'] as $value) {
+				if ($value['lan_ip'] != $_ip) continue;
+				$enabled = "0";
+				if ($value['enabled'] == true) $enabled = "1";
+				array_push($result, array(
+					'id' => $value['id'],
+					'enabled' => $enabled, 
+					'src_ip' => $value['src_ip'], 
+					'wan_port_start' => $value['wan_port_start'], 
+					'wan_port_end' => $value['wan_port_end'],
+					'ip_proto' => $value['ip_proto'],
+					'lan_ip' => $value['lan_ip'],
+					'lan_port' => $value['lan_port'],
+					'comment' => $value['comment']));				
+			}
+			return $result;
+			
+		} elseif ($fonction == "put") {
+			if ($active == 1) {
+				$this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => true), "PUT");
+				return true;
+			} else {
+				$this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => false), "PUT");
+				return true;
 			}
 		}
-		if ($PortForwarding === false)
-			return false;
-		if ($PortForwarding['success'])
-			return $PortForwarding['result'];
-		else
-			return false;
 	}
 
-	public function getPortForwarding($id)
-	{
-		$PortForwarding = $this->fetch('/api/v8/fw/redir/');
-		if ($PortForwarding === false)
-			return false;
-
-		$_ip = cmd::byId($id)->getConfiguration('IPV4','192.168.0.0');
-		log::add('Freebox_OS', 'debug', 'ip test = '.$_ip);
-
-
-		$result = array();
-
-		foreach ($PortForwarding['result'] as $value) {
-			if ($value['lan_ip'] != $_ip) continue;
-			array_push($result, array('enabled' => (string)  $value['enabled'], 
-				'src_ip' => $value['src_ip'], 
-				'wan_port_start' => $value['wan_port_start'], 
-				'wan_port_end' => $value['wan_port_end'],
-				'ip_proto' => $value['ip_proto'],
-				'lan_ip' => $value['lan_ip'],
-				'lan_port' => $value['lan_port'],
-				'comment' => $value['comment']));
-		}
-
-		return $result;
-	}
 	public function disk()
 	{
 		$reponse = $this->fetch('/api/v8/storage/disk/');

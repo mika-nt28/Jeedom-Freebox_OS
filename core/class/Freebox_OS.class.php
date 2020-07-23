@@ -89,10 +89,11 @@ class Freebox_OS extends eqLogic
 			if ($category != null) {
 				$EqLogic->setcategory($category, 1);
 			}
-			$EqLogic->setConfiguration('waite', '300');
+			$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
+
 		if ($tiles == true) {
 			$EqLogic->setConfiguration('type', $eq_type);
 			$EqLogic->setConfiguration('action', $eq_action);

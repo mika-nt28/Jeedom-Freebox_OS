@@ -75,12 +75,7 @@ class Free_Refresh
                     Free_Refresh::refresh_phone($Equipement, $Free_API);
                     break;
                 case 'player':
-                    foreach ($Equipement->getCmd('info') as $Command) {
-                        if ($Command->getLogicalId() == 'power_state') {
-                            $results = $Free_API->universal_get('player_ID', $Equipement->getLogicalId());
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['power_state']);
-                        }
-                    }
+                    Free_Refresh::refresh_player($Equipement, $Free_API);
                     break;
                 case 'network':
                     Free_Refresh::refresh_network($Equipement, $Free_API);
@@ -448,5 +443,31 @@ class Free_Refresh
             }
         }
         log::add('Freebox_OS', 'debug', '└─────────');
+    }
+
+    private static function refresh_player($Equipement, $Free_API) {
+
+        $results_playerID = $Free_API->universal_get('player_ID', $Equipement->getLogicalId());
+        $results_player = $Free_API->universal_get('player', $Equipement->getLogicalId());
+
+        $cmd_mac = $Equipement->getCmd('info', 'mac');
+        $cmd_stb_type = $Equipement->getCmd('info', 'stb_type');
+        $cmd_device_model = $Equipement->getCmd('info', 'device_model');
+        $cmd_api_version = $Equipement->getCmd('info', 'api_version');
+        $cmd_api_available = $Equipement->getCmd('info', 'api_available');
+        $cmd_reachable = $Equipement->getCmd('info', 'reachable');
+        $cmd_powerState = $Equipement->getCmd('info', 'power_state');
+
+        if ($results_player['api_available']) {
+            $Equipement->checkAndUpdateCmd($cmd_stb_type->getLogicalId(), $results_player['stb_type']);
+            $Equipement->checkAndUpdateCmd($cmd_device_model->getLogicalId(), $results_player['device_model']);
+            $Equipement->checkAndUpdateCmd($cmd_api_version->getLogicalId(), $results_player['api_version']);
+        }
+
+        $Equipement->checkAndUpdateCmd($cmd_mac->getLogicalId(), $results_player['mac']);
+        $Equipement->checkAndUpdateCmd($cmd_api_available->getLogicalId(), $results_player['api_available']);
+        $Equipement->checkAndUpdateCmd($cmd_reachable->getLogicalId(), $results_player['reachable']);
+        $Equipement->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $results_playerID['power_state']);
+
     }
 }

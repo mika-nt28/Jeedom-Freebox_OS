@@ -143,6 +143,12 @@ class Freebox_OS extends eqLogic
 						}
 					}
 				}
+				if (isset($Equipement['l2ident'])) {
+					$ident = $Equipement['l2ident'];
+					if ($ident['type'] == 'mac_address') {
+						$Command->setConfiguration('mac_address', $ident['id']);
+					}
+				}
 				if ($Command->execCmd() != $Equipement['active']) {
 					$Command->setCollectDate(date('Y-m-d H:i:s'));
 					$Command->setConfiguration('doNotRepeatEvent', 1);
@@ -280,9 +286,9 @@ class Freebox_OS extends eqLogic
 					$system->checkAndUpdateCmd($_id, $_value);
 					if ($Equipement['type'] == 'dsl_lte') {
 						// Début ajout 4G
-						$_4G = $system->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 32, '0', false, 'never', 'system', true);
-						$system->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icone4Gon, 1, 'default', 'default', 33, '0', false, false, 'system', true);
-						$system->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icone4Goff, 0, 'default', 'default', 34, '0', false, false, 'system', true);
+						$_4G = $system->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 32, '0', false, 'never', null, true);
+						$system->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icone4Gon, 1, 'default', 'default', 33, '0', false, false, null, true);
+						$system->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icone4Goff, 0, 'default', 'default', 34, '0', false, false, null, true);
 					}
 					$_order++;
 				}
@@ -320,9 +326,9 @@ class Freebox_OS extends eqLogic
 			$Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
 
 			$parental = self::AddEqLogic($Equipement['name'], 'parental_' . $Equipement['id'], $category, true, 'parental', null, $Equipement['id']);
-			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'parental', true);
-			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'parental', true);
-			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'parental', true);
+			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, null, true);
+			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, null, true);
+			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, null, true);
 			$parental->AddCommand('Bloquer Temporairement', 'tempDenied', 'action', 'select', null, null, null, 1, '', '', '', '', 0, 'default', 'default', 4, '0', false, false, '', true);
 			log::add('Freebox_OS', 'debug', '└─────────');
 		}
@@ -437,7 +443,7 @@ class Freebox_OS extends eqLogic
 								$IsVisible = 0;
 								$order = 9;
 							}
-							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, $Equipement['type'], $_iconname, $_home_mode_set);
+							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, null, $_iconname, $_home_mode_set);
 							break;
 						case "int":
 							foreach (str_split($Command['ui']['access']) as $access) {
@@ -463,7 +469,7 @@ class Freebox_OS extends eqLogic
 										$_min = '0';
 										$_max = 100;
 									} elseif ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-										$Templatecore_A = $templatecore_V4 . 'light';
+										$Templatecore_A = 'default'; //$templatecore_V4 . 'light';
 										$_min = '0';
 										$_max = 255;
 										$generic_type = 'LIGHT_SET_COLOR';
@@ -488,17 +494,21 @@ class Freebox_OS extends eqLogic
 										$name = 'Batterie';
 									}
 									if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-										if ($Equipement['action'] != 'intensity_picker' && $Equipement['action'] != 'color_picker') {
-											$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $Equipement['type']);
-											$Link_I_light = $infoCmd;
-										}
-										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max,  2, $IsHistorized, false, false);
+										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $binaireID);
+
+										$_cmd = $Tile->getCmd("info", 0);
+
+
+										$Link_I_light = $infoCmd;
+										$_slider = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max,  2, $IsHistorized, false, false);
+										$_slider->setConfiguration("binaryID", $_cmd->getID());
+										$_slider->save();
 									} else {
-										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, $Equipement['type']);
+										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null);
 									}
 
 									if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
-										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, $Equipement['type']);
+										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
 									}
 									$label_sup = null;
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
@@ -517,7 +527,7 @@ class Freebox_OS extends eqLogic
 								}
 								if ($access == "w") {
 									if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker") {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', null, 0, false, false, $Equipement['type']);
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', null, 0, false, false, null);
 									}
 								}
 							}
@@ -563,7 +573,7 @@ class Freebox_OS extends eqLogic
 										$invertBinary = 0;
 									}
 
-									$infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default',  $order, 0, false, true, $Equipement['type']);
+									$infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default',  $order, 0, false, true, null);
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									if ($Equipement['action'] == 'store') {
 										$Link_I_store = $infoCmd;
@@ -573,8 +583,8 @@ class Freebox_OS extends eqLogic
 										$Link_I_store = 'default';
 									}
 									if ($Type_command == 'PB') {
-										$Tile->AddCommand('On', 'PB_On', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_ON', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 1, 'default', 'default', 3, 0, false, false, $Equipement['type']);
-										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_OFF', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 0, 'default', 'default', 4, 0, false, false, $Equipement['type']);
+										$Tile->AddCommand('On', 'PB_On', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_ON', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 1, 'default', 'default', 3, 0, false, false, null);
+										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_OFF', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 0, 'default', 'default', 4, 0, false, false, null);
 									}
 
 									$label_sup = null;
@@ -584,7 +594,7 @@ class Freebox_OS extends eqLogic
 								}
 								if ($access == "w") {
 									if ($Type_command != 'PB') {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false, false, $Equipement['type']);
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false, false, null);
 									}
 								}
 							}
@@ -611,21 +621,21 @@ class Freebox_OS extends eqLogic
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', $order, 0, false, true, $Equipement['type']);
+									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', $order, 0, false, true, null);
 									$Link_I_ALARM = $info;
 									if ($Command['name'] == "state" && $Equipement['type'] == 'alarm_control') {
 										log::add('Freebox_OS', 'debug', '│──────────> Ajout commande spécifique pour Homebridge');
-										$ALARM_ENABLE = $Tile->AddCommand('Actif', 'ALARM_enable', 'info', 'binary', 'core::lock', null, 'ALARM_ENABLE_STATE', 1, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 1, 1, false, true, $Equipement['type']);
+										$ALARM_ENABLE = $Tile->AddCommand('Actif', 'ALARM_enable', 'info', 'binary', 'core::lock', null, 'ALARM_ENABLE_STATE', 1, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 1, 1, false, true, null);
 										$Link_I_ALARM_ENABLE = $ALARM_ENABLE;
-										$Tile->AddCommand('Statut', 'ALARM_state', 'info', 'binary', 'core::alert', null, 'ALARM_STATE', 1, 'default', $Command['ep_id'], 1, null, 0, 'default', 'default',  2, 1, false, true, $Equipement['type']);
-										$Tile->AddCommand('Mode', 'ALARM_mode', 'info', 'string', null, null, 'ALARM_MODE', 1, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 3, 1, false, true, $Equipement['type']);
+										$Tile->AddCommand('Statut', 'ALARM_state', 'info', 'binary', 'core::alert', null, 'ALARM_STATE', 1, 'default', $Command['ep_id'], 1, null, 0, 'default', 'default',  2, 1, false, true, null);
+										$Tile->AddCommand('Mode', 'ALARM_mode', 'info', 'string', null, null, 'ALARM_MODE', 1, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 3, 1, false, true, null);
 										log::add('Freebox_OS', 'debug', '│──────────> Fin Ajout commande spécifique pour Homebridge');
 									}
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 								}
 								$label_sup = null;
 								if ($access == "w") {
-									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', $order, 0, false, false, $Equipement['type']);
+									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', $order, 0, false, false, null);
 								}
 							}
 							break;
@@ -639,7 +649,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_Equipement = null, $_iconname = null, $_home_mode_set = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
@@ -688,6 +698,10 @@ class Freebox_OS extends eqLogic
 		if ($generic_type != null) {
 			$Command->setGeneric_type($generic_type);
 		}
+		if ($_logicalId_slider != null) { // logical Id spécial Slider
+			$Command->setConfiguration('logicalId_slider', $link_I);
+		}
+
 		if ($_home_mode_set != null) { // Compatibilité Homebridge
 			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
 			$this->save(true);
@@ -708,10 +722,6 @@ class Freebox_OS extends eqLogic
 		if ($valuemax != 'default') {
 			$Command->setconfiguration('maxValue', $valuemax);
 		}
-		/*if ($_Equipement != null) {
-			$Command->setconfiguration('equipement', $_Equipement);
-		}*/
-
 		if (is_object($link_I) && $Type == 'action') {
 			$Command->setValue($link_I->getId());
 		}
@@ -800,14 +810,12 @@ class Freebox_OS extends eqLogic
 			$updateiconeSystem = false;
 		};
 		$system = self::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
-		$system->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default',  30, '0', $updateiconeSystem, false);
 		$system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default',  31, '0', $updateiconeSystem, false);
 		$system->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateiconeSystem, true);
 		$system->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeSystem, true);
 		$system->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeSystem, true);
 		$system->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeSystem, true);
 		$system->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeSystem, true);
-		$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeSystem, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 
 		//Wifi

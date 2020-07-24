@@ -37,9 +37,9 @@ class Free_Update
             case 'airmedia':
                 Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
-            break;
+                break;
             case 'connexion':
-            break;
+                break;
             case 'disk':
                 break;
             case 'downloads':
@@ -50,7 +50,7 @@ class Free_Update
 
                 break;
             case 'parental':
-                $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'),null,$_options);
+                $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
@@ -63,7 +63,9 @@ class Free_Update
                 break;
             case 'system':
                 Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                if ($logicalId != 'reboot') {
+                    Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                }
                 break;
             case 'wifi':
                 Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -134,16 +136,16 @@ class Free_Update
     {
         switch ($logicalId) {
             case "reboot":
-                $Free_API->reboot();
+                $Free_API->universal_put(null, 'reboot', null, null, null);
                 break;
             case "update":
                 $Free_API->Updatesystem();
                 break;
             case '4GOn':
-                $Free_API->universal_put(1, '4G');
+                $Free_API->universal_put(1, '4G', null, null, null);
                 break;
             case '4GOff':
-                $Free_API->universal_put(0, '4G');
+                $Free_API->universal_put(0, '4G', null, null, null);
                 break;
         }
     }
@@ -154,22 +156,22 @@ class Free_Update
             case "wifiOnOff":
                 $result = $Free_API->universal_get();
                 if ($result == true) {
-                    $Free_API->universal_put(0);
+                    $Free_API->universal_put(0, 'wifi', null, null, null);
                 } else {
-                    $Free_API->universal_put(1);
+                    $Free_API->universal_put(1, 'wifi', null, null, null);
                 }
                 break;
             case 'wifiOn':
-                $Free_API->universal_put(1);
+                $Free_API->universal_put(1, 'wifi', null, null, null);
                 break;
             case 'wifiOff':
-                $Free_API->universal_put(0);
+                $Free_API->universal_put(0, 'wifi', null, null, null);
                 break;
             case 'wifiPlanningOn':
-                $Free_API->universal_put(1, 'planning');
+                $Free_API->universal_put(1, 'planning', null, null, null);
                 break;
             case 'wifiPlanningOff':
-                $Free_API->universal_put(0, 'planning');
+                $Free_API->universal_put(0, 'planning', null, null, null);
                 break;
         }
     }
@@ -220,8 +222,8 @@ class Free_Update
                         $parametre['value'] = !$parametre['value'];
                     }
                 }
-                $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId());
                 break;
         }
+        $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
     }
 }

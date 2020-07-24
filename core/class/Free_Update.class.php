@@ -190,13 +190,10 @@ class Free_Update
                 $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
 
                 if ($cmd !== false) {
-
-                    if ($cmd->getValue() == 0) {
-                        log::add('Freebox_OS', 'debug', '│ Binaire : ' . $cmd->getValue());
+                    if ($cmd->getValue() === false) {
                         $_execute = 0;
                     }
                 }
-                log::add('Freebox_OS', 'debug', '│ TEST : 2 : ' . $_execute);
                 break;
             case 'color':
                 $parametre['value'] = $_options['color'];
@@ -235,7 +232,6 @@ class Free_Update
                 }
                 break;
         }
-        log::add('Freebox_OS', 'debug', '│ TEST : avant action   ' . $_execute);
         if ($_execute == 1) $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
     }
 }

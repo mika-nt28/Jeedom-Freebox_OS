@@ -37,9 +37,9 @@ class Free_Update
             case 'airmedia':
                 Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
-            break;
+                break;
             case 'connexion':
-            break;
+                break;
             case 'disk':
                 break;
             case 'downloads':
@@ -50,7 +50,7 @@ class Free_Update
 
                 break;
             case 'parental':
-                $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'),null,$_options);
+                $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
@@ -134,7 +134,7 @@ class Free_Update
     {
         switch ($logicalId) {
             case "reboot":
-                $Free_API->reboot();
+                $Free_API->universal_put(null, 'reboot');
                 break;
             case "update":
                 $Free_API->Updatesystem();

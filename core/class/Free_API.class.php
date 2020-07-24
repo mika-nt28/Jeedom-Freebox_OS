@@ -198,7 +198,7 @@ class Free_API
 
 		if ($fonction == "get") {
 			$result = array();
-			$_ip = cmd::byId($id)->getConfiguration('IPV4','192.168.0.0');
+			$_ip = cmd::byId($id)->getConfiguration('IPV4', '192.168.0.0');
 
 			foreach ($PortForwarding['result'] as $value) {
 				if ($value['lan_ip'] != $_ip) continue;
@@ -206,17 +206,17 @@ class Free_API
 				if ($value['enabled'] == true) $enabled = "1";
 				array_push($result, array(
 					'id' => $value['id'],
-					'enabled' => $enabled, 
-					'src_ip' => $value['src_ip'], 
-					'wan_port_start' => $value['wan_port_start'], 
+					'enabled' => $enabled,
+					'src_ip' => $value['src_ip'],
+					'wan_port_start' => $value['wan_port_start'],
 					'wan_port_end' => $value['wan_port_end'],
 					'ip_proto' => $value['ip_proto'],
 					'lan_ip' => $value['lan_ip'],
 					'lan_port' => $value['lan_port'],
-					'comment' => $value['comment']));				
+					'comment' => $value['comment']
+				));
 			}
 			return $result;
-			
 		} elseif ($fonction == "put") {
 			if ($active == 1) {
 				$this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => true), "PUT");
@@ -402,7 +402,7 @@ class Free_API
 				} else if ($parametre == "tempDenied") {
 					$date = new DateTime();
 					$timestamp = $date->getTimestamp();
-					$jsontestprofile['override_until'] = $timestamp+$_options['select'];
+					$jsontestprofile['override_until'] = $timestamp + $_options['select'];
 					$jsontestprofile['override'] = true;
 					$jsontestprofile['override_mode'] = "denied";
 				} else {
@@ -416,8 +416,12 @@ class Free_API
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
 				break;
+			case 'reboot':
+				$config = 'api/v8/system/reboot';
+				$fonction = "POST";
+				break;
 			case 'WakeOnLAN':
-				$config = '/api/v8/lan/wol/pub/';
+				$config = 'api/v8/lan/wol/pub/';
 				$fonction = "POST";
 				$config_log = 'Mise à jour de : WakeOnLAN';
 				break;
@@ -450,11 +454,14 @@ class Free_API
 			$return = $this->fetch($config, array("mac" => $id, "password" => ""), $fonction);
 		} else if ($update == 'set_tiles') {
 			$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
+		} else if ($update == 'reboot') {
+			$return = $this->fetch('/' . $config . '/', null, $fonction);
 		} else {
 			if ($config_log != null) {
 				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
 			}
 			$return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction);
+
 			if ($return === false) {
 				return false;
 			}
@@ -534,7 +541,7 @@ class Free_API
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
 			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
-				$this->reboot();
+				$this->universal_put(null, 'reboot');
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', '[FreeboxUpdatesystem]' . $e->getCode());
 		}

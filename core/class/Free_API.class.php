@@ -530,7 +530,7 @@ class Free_API
 			return false;
 	}
 
-	public function Updatesystem()
+	/*public function Updatesystem()
 	{
 		try {
 			$logicalinfo = Freebox_OS::getlogicalinfo();
@@ -545,7 +545,7 @@ class Free_API
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', '[FreeboxUpdatesystem]' . $e->getCode());
 		}
-	}
+	}*/
 
 	public function nb_appel_absence()
 	{

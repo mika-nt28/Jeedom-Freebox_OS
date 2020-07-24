@@ -188,27 +188,46 @@ class Free_API
 		else
 			return false;
 	}
-	public function PortForwarding($Port)
+
+	public function PortForwarding($id, $fonction = "get", $active = null)
 	{
 		$PortForwarding = $this->fetch('/api/v8/fw/redir/');
 		if ($PortForwarding === false)
 			return false;
-		$nbPF = count($PortForwarding['result']);
-		for ($i = 0; $i < $nbPF; ++$i) {
-			if ($PortForwarding['result'][$i]['wan_port_start'] == $Port) {
-				if ($PortForwarding['result'][$i]['enabled'])
-					$PortForwarding = $this->fetch('/api/v8/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => false), "PUT");
-				else
-					$PortForwarding = $this->fetch('/api/v8/fw/redir/' . $PortForwarding['result'][$i]['id'], array("enabled" => true), "PUT");
+
+
+		if ($fonction == "get") {
+			$result = array();
+			$_ip = cmd::byId($id)->getConfiguration('IPV4','192.168.0.0');
+
+			foreach ($PortForwarding['result'] as $value) {
+				if ($value['lan_ip'] != $_ip) continue;
+				$enabled = "0";
+				if ($value['enabled'] == true) $enabled = "1";
+				array_push($result, array(
+					'id' => $value['id'],
+					'enabled' => $enabled, 
+					'src_ip' => $value['src_ip'], 
+					'wan_port_start' => $value['wan_port_start'], 
+					'wan_port_end' => $value['wan_port_end'],
+					'ip_proto' => $value['ip_proto'],
+					'lan_ip' => $value['lan_ip'],
+					'lan_port' => $value['lan_port'],
+					'comment' => $value['comment']));				
+			}
+			return $result;
+			
+		} elseif ($fonction == "put") {
+			if ($active == 1) {
+				$this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => true), "PUT");
+				return true;
+			} else {
+				$this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => false), "PUT");
+				return true;
 			}
 		}
-		if ($PortForwarding === false)
-			return false;
-		if ($PortForwarding['success'])
-			return $PortForwarding['result'];
-		else
-			return false;
 	}
+
 	public function disk()
 	{
 		$reponse = $this->fetch('/api/v8/storage/disk/');
@@ -232,29 +251,7 @@ class Free_API
 			}
 		}
 	}
-	/*public function getdisque($logicalId = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/storage/disk/' . $logicalId);
-		if ($result === false)
-			return false;
-		if ($result['success']) {
-			$total_bytes = $result['result']['partitions'][0]['total_bytes'];
-			$used_bytes = $result['result']['partitions'][0]['used_bytes'];
-			return round($used_bytes / $total_bytes * 100, 2);
-		}
-		return false;
-	}*/
-	/*public function download_stats() // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/downloads/stats/');
-		if ($result === false) {
-			return false;
-		}
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
+
 	public function universal_get($update = 'wifi', $id = null, $boucle = 4)
 	{
 		$config_log = null;
@@ -317,6 +314,9 @@ class Free_API
 				$config = 'api/v8/wifi/config';
 				$config_log = 'Etat du Wifi';
 				break;
+			case 'PortForwarding':
+				$config = '/api/v8/fw/redir/';
+				$config_log = 'Redirection de port';
 		}
 
 		$result = $this->fetch('/' . $config);
@@ -371,97 +371,7 @@ class Free_API
 			return false;
 		}
 	}
-	/*public function getTile($id = '', $update = 'tiles') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$config_sup = null;
-		switch ($update) {
-			case 'tiles':
-				$config = 'api/v8/home/tileset/';
-				break;
-		}
 
-		$result = $this->fetch('/' . $config . $id . $config_sup);
-		log::add('Freebox_OS', 'debug', '┌───────── Traitement de la Mise à jour de l\'id : ' . $id);
-		if ($result === false)
-			return false;
-		if ($result['success']) {
-			return $result['result'];
-		} else {
-			return false;
-		}
-	}*/
-	/*public function gethomeadapter_status($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/home/adapters/' . $id);
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-
-	/*public function networkPing($id = '') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/lan/browser/pub/' . $id);
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result;
-		else
-			return false;
-	}*/
-	/*public function getnetwork()  // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		$result = $this->fetch('/api/v8/lan/browser/pub/');
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-	/*public function systemV8($update = 'system', $id = null, $boucle = 4) // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-
-		$result = $this->fetch('/api/v8/system');
-		if ($result === false)
-			return false;
-		if ($result['success']) {
-			switch ($boucle) {
-				case 1:
-					return $result['result']['sensors'];
-				case 2:
-					return $result['result']['fans'];
-				case 3:
-					return $result['result']['expansions'];
-				case 4:
-					return $result['result'];
-			}
-		} else {
-			return false;
-		}
-	}*/
-	/*public function gethomeadapters_player($update = 'homeadapters') // Fonction plus appelé à supprimer => Intégrer dans "universal_get"
-	{
-		switch ($update) {
-			case 'homeadapters':
-				$config = 'api/v8/home/adapters';
-				break;
-			case 'player':
-				$config = 'api/v8/player';
-				break;
-		}
-		$result = $this->fetch('/' . $config);
-		if ($result === false) {
-			return false;
-		}
-		if ($result['success']) {
-			return $result['result'];
-		} else {
-			return false;
-		}
-	}*/
 	public function WakeOnLAN($Mac)
 	{
 		$return = $this->fetch('/api/v8/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
@@ -469,7 +379,7 @@ class Free_API
 			return false;
 		return $return['success'];
 	}
-	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null)
+	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options)
 	{
 		$fonction = "PUT";
 		$config_log = null;
@@ -488,15 +398,13 @@ class Free_API
 				if ($parametre == "denied") {
 					$jsontestprofile['override_until'] = 0;
 					$jsontestprofile['override'] = true;
-				} else if ($parametre == "denied_30m") {
-					$jsontestprofile['override_until'] = 0;
+					$jsontestprofile['override_mode'] = "denied";
+				} else if ($parametre == "tempDenied") {
+					$date = new DateTime();
+					$timestamp = $date->getTimestamp();
+					$jsontestprofile['override_until'] = $timestamp+$_options['select'];
 					$jsontestprofile['override'] = true;
-				} else if ($parametre == "denied_1h") {
-					$jsontestprofile['override_until'] = 0;
-					$jsontestprofile['override'] = true;
-				} else if ($parametre == "denied_2h") {
-					$jsontestprofile['override_until'] = 0;
-					$jsontestprofile['override'] = true;
+					$jsontestprofile['override_mode'] = "denied";
 				} else {
 					$jsontestprofile['override'] = false;
 				}
@@ -569,25 +477,7 @@ class Free_API
 			}
 		}
 	}
-	/*public function set_tiles($parametre, $update = 'tiles', $id = null, $nodeId) // Fonction plus appelé à supprimer => Intégrer dans "universal_put"
-	{
 
-		$config = 'api/v8/home/endpoints/';
-
-		if ($id != null) {
-			$$id = $id . '/';
-		} elseif ($id != 'refresh') {
-			$id = null;
-		}
-		log::add('Freebox_OS', 'debug', '└───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
-		$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
-		if ($return === false)
-			return false;
-		if ($return['success'])
-			return $return['result'];
-		else
-			return false;
-	}*/
 	public function ringtone($update = 'ON')
 	{
 		switch ($update) {
@@ -607,17 +497,6 @@ class Free_API
 		else
 			return false;
 	}
-	/*public function ringtone_off() // Fonction plus appelé à supprimer => Intégrer dans "ringtone_on" renomé en ringtone
-	{
-		log::add('Freebox_OS', 'debug', '>───────── Ringtone OFF');
-		$result = $this->fetch('/api/v8/phone/dect_page_stop/', "", "POST");
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result;
-		else
-			return false;
-	}*/
 
 	public function connexion_stats()
 	{
@@ -644,7 +523,6 @@ class Free_API
 			return false;
 	}
 
-
 	public function Updatesystem()
 	{
 		try {
@@ -661,24 +539,6 @@ class Free_API
 			log::add('Freebox_OS', 'error', '[FreeboxUpdatesystem]' . $e->getCode());
 		}
 	}
-	/*public function getTiles($update = 'tiles')  // Fonction plus appelé à supprimer => Intégrer dans "ringtone_on" renomé en ringtone
-	{
-		switch ($update) {
-			case 'tiles':
-				$config = 'api/v8/home/tileset/all';
-				break;
-		}
-		$result = $this->fetch('/' . $config);
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-
-
-
 
 	public function nb_appel_absence()
 	{
@@ -753,35 +613,4 @@ class Free_API
 		else
 			return false;
 	}
-	/*public function airmediaConfig($parametre) // Fonction plus appelé à supprimer => Intégrer dans "airmedia"
-	{
-		$result = $this->fetch('/api/v8/airmedia/config/', $parametre, "PUT");
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-	/*public function airmediaReceivers() // Fonction plus appelé à supprimer => Intégrer dans "airmedia" => Fonction non appelé
-	{
-		$result = $this->fetch('/api/v8/airmedia/receivers/');
-		if ($result === false)
-			return false;
-
-		if ($result['success'])
-			return $result['result'];
-		else
-			return false;
-	}*/
-	/*public function AirMediaAction($receiver, $Parameter) // Fonction plus appelé à supprimer => Intégrer dans "airmedia"
-	{
-		$result = $this->fetch('/api/v8/airmedia/receivers/' . $receiver . '/', $Parameter, 'POST');
-		if ($result === false)
-			return false;
-		if ($result['success'])
-			return true;
-		else
-			return false;
-	}*/
 }

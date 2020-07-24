@@ -81,20 +81,10 @@ try {
 			ajax::success($Free_API->disk());
 			break;
 		case 'AddPortForwarding':
-			$PortForwarding = array(
-				"enabled"		=> 	init('enabled'),
-				"comment"		=> 	init('comment'),
-				"lan_port"		=> 	init('lan_port'),
-				"wan_port_end"	=> 	init('wan_port_end'),
-				"wan_port_start" => 	init('wan_port_start'),
-				"lan_ip" 		=>	init('lan_ip'),
-				"ip_proto" 		=> 	init('ip_proto'),
-				"src_ip"		=> 	init('src_ip')
-			);
-			ajax::success();
+			ajax::success($Free_API->PortForwarding(init('id'), "put",init('enabled')));
 			break;
 		case 'PortForwarding':
-			ajax::success();
+			ajax::success($Free_API->PortForwarding(init('id'), "get"));
 			break;
 		case 'WakeOnLAN':
 			$Command = cmd::byId(init('id'));
@@ -104,15 +94,6 @@ try {
 			}
 			ajax::success(false);
 			break;
-			/*case 'sendCmdPlayer':
-			$Player = eqLogic::byId(init('id'));
-			if (is_object($Player)) {
-				$Cmd = $Player->getCmd('action', init('cmd'));
-				if (is_object($Cmd))
-					ajax::success($Cmd->execute());
-			}
-			ajax::success(false);
-			break;*/
 		case 'get_airmediareceivers':
 			ajax::success($Free_API->airmedia('receivers', null, null));
 			break;

@@ -13,7 +13,7 @@ class Freebox_OS extends eqLogic
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
 				if ($c->isDue($dateRun)) {
-					log::add('Freebox_OS', 'debug', 'Cron ' . $eqLogic->getName());
+					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
 					Free_Refresh::RefreshInformation($eqLogic->getId());
 				}
 			} catch (Exception $exc) {
@@ -74,7 +74,7 @@ class Freebox_OS extends eqLogic
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		if (!is_object($EqLogic)) {
@@ -89,13 +89,29 @@ class Freebox_OS extends eqLogic
 			if ($category != null) {
 				$EqLogic->setcategory($category, 1);
 			}
-			$EqLogic->setConfiguration('waite', '300');
+			$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
+		if ($EqLogic->getConfiguration('autorefresh') == null && $tiles != true && $EqLogic->getLogicalId() != 'disk') {
+			$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+		} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getLogicalId() == 'disk') {
+			$EqLogic->setConfiguration('autorefresh', '1 * * * *');
+		}
 		if ($tiles == true) {
 			$EqLogic->setConfiguration('type', $eq_type);
 			$EqLogic->setConfiguration('action', $eq_action);
+			if ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player' && $EqLogic->getConfiguration('type', $eq_type) != 'alarm_remote') {
+				$EqLogic->setConfiguration('autorefresh', '* * * * *');
+			} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) == 'alarm_remote') {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			} else {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			}
+
+			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
+				$EqLogic->setConfiguration('action', $logicalID_equip);
+			}
 		}
 		$EqLogic->save();
 		return $EqLogic;
@@ -176,12 +192,18 @@ class Freebox_OS extends eqLogic
 		foreach ($result as $Equipement) {
 			log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $Equipement['device_name'] . ' -- Id : ' . $Equipement['id']);
 			if ($Equipement['id'] != null) {
-				$player = self::AddEqLogic($Equipement['device_name'], $Equipement['id'], 'multimedia', true, 'player', null);
-				log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id :' . $Equipement['id'] . ' -- id :' . $Equipement['mac'] . ' -- id :' . $Equipement['uid']);
+				$player = self::AddEqLogic($Equipement['device_name'], 'player_' . $Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id']);
+				log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id : player_' . $Equipement['id'] . ' -- freeID : ' . $Equipement['id']);
 			}
 			$player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
-			$player->checkAndUpdateCmd('mac', $Equipement['mac']);
-			$player->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
+			$player->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
+			$player->AddCommand('Modèle', 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);
+			$player->AddCommand('Version', 'api_version', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
+			$player->AddCommand('API Disponible', 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
+			$player->AddCommand('Disponible sur le réseau', 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
+			$player->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
+
+			Free_Refresh::RefreshInformation($player->getId());
 		}
 	}
 	public static function addsystem()
@@ -207,10 +229,17 @@ class Freebox_OS extends eqLogic
 			$icone4Gon = 'fas fa-broadcast-tower icon_green';
 			$icone4Goff = 'fas fa-broadcast-tower icon_red';
 		};
-		$boucle_update = 1; // 1 = sensors - 2 = fans - 3 = extension
+		$boucle_num = 1; // 1 = sensors - 2 = fans - 3 = extension
 		$_order = 6;
-		while ($boucle_update <= 3) {
-			log::add('Freebox_OS', 'debug', '│──────────> Boucle Update : ' . $boucle_update);
+		while ($boucle_num <= 3) {
+			if ($boucle_num == 1) {
+				$boucle_update = 'sensors';
+			} else if ($boucle_num == 2) {
+				$boucle_update = 'fans';
+			} else if ($boucle_num == 3) {
+				$boucle_update = 'expansions';
+			}
+			log::add('Freebox_OS', 'debug', '│──────────> Boucle pour Update : ' . $boucle_update);
 			foreach ($Free_API->universal_get('system', null, $boucle_update) as $Equipement) {
 				$icon = null;
 				$_max = 'default';
@@ -234,7 +263,7 @@ class Freebox_OS extends eqLogic
 					$_min = '0';
 					$icon = $iconfan;
 					$link_logicalId = 'fans';
-				} else if ($boucle_update = 3) {
+				} else if ($boucle_num = 3) {
 					$_iconname = null;
 					$_type = 'binary';
 					$_id = $Equipement['slot'];
@@ -258,7 +287,7 @@ class Freebox_OS extends eqLogic
 					$_order++;
 				}
 			}
-			$boucle_update++;
+			$boucle_num++;
 		}
 	}
 	public static function addparental()
@@ -290,10 +319,11 @@ class Freebox_OS extends eqLogic
 			$category = 'default';
 			$Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
 
-			$parental = self::AddEqLogic($Equipement['name'], $Equipement['id'], $category, true, 'parental', null);
+			$parental = self::AddEqLogic($Equipement['name'], 'parental_' . $Equipement['id'], $category, true, 'parental', null, $Equipement['id']);
 			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, 'parental', true);
 			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, 'parental', true);
 			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, 'parental', true);
+			$parental->AddCommand('Bloquer Temporairement', 'tempDenied', 'action', 'select', null, null, null, 1, '', '', '', '', 0, 'default', 'default', 4, '0', false, false, '', true);
 			log::add('Freebox_OS', 'debug', '└─────────');
 		}
 	}
@@ -707,6 +737,10 @@ class Freebox_OS extends eqLogic
 				$Command->setdisplay('forceReturnLineBefore', 1);
 			}
 		}
+
+		if ($_logicalId == "tempDenied") {
+			$Command->setConfiguration('listValue', '1800|30 minutes;3600|1 heure;7200|2 heure');
+		}
 		$Command->save();
 
 		$refresh = $this->getCmd(null, 'refresh');
@@ -911,6 +945,15 @@ class Freebox_OS extends eqLogic
 			$this->setConfiguration('waite', 300);
 		}
 	}
+	public function preUpdate()
+	{
+		if (!$this->getIsEnable()) return;
+
+		if ($this->getConfiguration('autorefresh') == '') {
+			throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide', __FILE__));
+			log::add(__CLASS__, 'error', '│ Configuration : Temps de rafraichissement (cron) : ' . $this->getConfiguration('autorefresh'));
+		}
+	}
 	public function postSave()
 	{
 		if ($this->getIsEnable()) {
@@ -976,14 +1019,14 @@ class Freebox_OS extends eqLogic
 				case 'ADSL':
 				case 'connexion':
 					$eqLogic->setLogicalId($logicalinfo['connexionID']);
-					$eqLogic->setName("Freebox " . $logicalinfo['connexionName']);
+					$eqLogic->setName($logicalinfo['connexionName']);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update logicalID : "' . $logicalinfo['connexionID'] . '" et Update name : "' . $logicalinfo['connexionName'] . '"');
 					break;
 				case 'AirPlay':
 				case 'airmedia':
 				case '':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
-					$eqLogic->setName("Freebox " . $logicalinfo['airmediaName']);
+					$eqLogic->setName($logicalinfo['airmediaName']);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
 					break;
 				case 'Disque':
@@ -1029,12 +1072,10 @@ class Freebox_OS extends eqLogic
 			}
 
 			if (!$_update) $eqLogic->setName($eqName);
-			//$eqLogic->setConfiguration('VersionLogicalID', strval($_version));
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update V' . $_version);
 			$eqLogic->save(true);
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update save');
 		}
-		//log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update Finish');
 		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 }
@@ -1044,174 +1085,17 @@ class Freebox_OSCmd extends cmd
 	public function execute($_options = array())
 	{
 		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
-		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $this->getName());
 		$logicalId = $this->getLogicalId();
+		$logicalId_type = $this->getSubType();
 		$logicalId_value = $this->getvalue();
+		$logicalId_name = $this->getName();
+		$logicalId_conf = $this->getConfiguration('logicalId');
+		$logicalId_eq = $this->getEqLogic();
+
+		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 		if ($logicalId_value != null) {
 			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
-		$Free_API = new Free_API();
-		if ($this->getEqLogic()->getconfiguration('type') == 'parental' || $this->getConfiguration('type') == 'player') {
-			$action = $this->getEqLogic()->getconfiguration('type');
-		} else {
-			$action = $this->getLogicalId();
-		}
-		switch ($action) {
-			case 'airmedia':
-				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
-				if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
-					log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
-					break;
-				}
-				$Parameter["media_type"] = $_options['titre'];
-				$Parameter["media"] = $_options['message'];
-				$Parameter["password"] = $this->getConfiguration('password');
-				switch ($this->getLogicalId()) {
-					case "airmediastart":
-						log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
-						$Parameter["action"] = "start";
-						$return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
-						break;
-					case "airmediastop":
-						$Parameter["action"] = "stop";
-						$return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
-						break;
-				}
-				break;
-			case 'connexion':
-				break;
-			case 'downloads':
-				$result = $Free_API->universal_get('download_stats');
-				if ($result != false) {
-					switch ($this->getLogicalId()) {
-						case "stop_dl":
-							$Free_API->downloads(0);
-							break;
-						case "start_dl":
-							$Free_API->downloads(1);
-							break;
-					}
-				}
-				break;
-			case 'parental':
-				$Free_API->universal_put($logicalId, 'parental', $this->getEqLogic()->getLogicalId());
-				break;
-			case 'phone':
-				$result = $Free_API->nb_appel_absence();
-				if ($result != false) {
-					switch ($this->getLogicalId()) {
-						case "sonnerieDectOn":
-							$Free_API->ringtone('ON');
-							break;
-						case "sonnerieDectOff":
-							$Free_API->ringtone('OFF');
-							break;
-					}
-				}
-				break;
-			case 'system':
-
-				switch ($this->getLogicalId()) {
-					case "reboot":
-						$Free_API->reboot();
-						break;
-					case "update":
-						$Free_API->Updatesystem();
-						break;
-					case '4GOn':
-						//$result = $Free_API->universal_get('4G');
-						$Free_API->universal_put(1, '4G');
-						break;
-					case '4GOff':
-						//$result = $Free_API->universal_get('4G');
-						$Free_API->universal_put('0', '4G');
-						break;
-				}
-				break;
-			case 'wifi':
-				switch ($this->getLogicalId()) {
-					case "wifiOnOff":
-						$result = $Free_API->universal_get();
-						if ($result == true) {
-							$Free_API->universal_put(0);
-						} else {
-							$Free_API->universal_put(1);
-						}
-						break;
-					case 'wifiOn':
-						$result = $Free_API->universal_get();
-						$Free_API->universal_put(1);
-						break;
-					case 'wifiOff':
-						$result = $Free_API->universal_get();
-						$Free_API->universal_put(0);
-						break;
-					case 'wifiPlanningOn':
-						$result = $Free_API->universal_get('planning');
-						$Free_API->universal_put(1, 'planning');
-						break;
-					case 'wifiPlanningOff':
-						$result = $Free_API->universal_get('planning');
-						$Free_API->universal_put(0, 'planning');
-						break;
-				}
-				break;
-			default:
-				switch ($this->getSubType()) {
-					case 'slider':
-						if ($this->getConfiguration('inverse')) {
-							$parametre['value'] = ($this->getConfiguration('maxValue') - $this->getConfiguration('minValue')) - $_options['slider'];
-						} else {
-							$parametre['value'] = (int) $_options['slider'];
-						}
-						$parametre['value_type'] = 'int';
-						break;
-					case 'color':
-						$parametre['value'] = $_options['color'];
-						$parametre['value_type'] = '';
-						break;
-					case 'message':
-						$parametre['value'] = $_options['message'];
-						$parametre['value_type'] = 'void';
-						break;
-					case 'select':
-						$parametre['value'] = $_options['select'];
-						$parametre['value_type'] = 'void';
-						break;
-					default:
-						$parametre['value_type'] = 'bool';
-						if ($this->getConfiguration('logicalId') >= 0 && ($this->getLogicalId() == 'PB_On' || $this->getLogicalId() == 'PB_Off')) {
-							$logicalId = $this->getConfiguration('logicalId');
-							log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $this->getLogicalId());
-							if ($this->getLogicalId() == 'PB_On') {
-								$parametre['value'] = true;
-							} else {
-								$parametre['value'] = false;
-							}
-							//break;
-						} else {
-							$logicalId = $this->getLogicalId();
-							$parametre['value'] = true;
-							$Listener = cmd::byId(str_replace('#', '', $this->getValue()));
-
-							if (is_object($Listener)) {
-								$parametre['value'] = $Listener->execCmd();
-							}
-							if ($this->getConfiguration('inverse')) {
-								$parametre['value'] = !$parametre['value'];
-							}
-						}
-						$Free_API->universal_put($parametre, 'set_tiles', $logicalId, $this->getEqLogic()->getLogicalId());
-
-						break;
-				}
-				break;
-		}
-		/*if ($logicalId_value != null) {
-			log::add('Freebox_OS', 'debug', '│ Commande liée Refresh : ' . $logicalId_value);
-			$cmd = cmd::byId($logicalId_value);
-			$cmd->execute();
-			log::add('Freebox_OS', 'debug', '│ Commande liéefinRefresh : ' . $logicalId_value);
-		}*/
+		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 	}
 }

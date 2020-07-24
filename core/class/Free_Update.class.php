@@ -178,6 +178,7 @@ class Free_Update
 
     private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf)
     {
+        $execute = true;
         switch ($logicalId_type) {
             case 'slider':
                 if ($_cmd->getConfiguration('inverse')) {
@@ -186,6 +187,9 @@ class Free_Update
                     $parametre['value'] = (int) $_options['slider'];
                 }
                 $parametre['value_type'] = 'int';
+                
+                $cmd = cmd::byid($_cmd->getConfiguration('logicalId'));
+                if ($cmd !== false) {if ($cmd->getValue() == 0) $execute = false;}
                 break;
             case 'color':
                 $parametre['value'] = $_options['color'];
@@ -224,6 +228,6 @@ class Free_Update
                 }
                 break;
         }
-        $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
+        if ($execute) $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
     }
 }

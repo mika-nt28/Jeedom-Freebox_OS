@@ -23,7 +23,7 @@ class Free_Update
 
     public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $_cmd)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
+        log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
         log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 
         $Free_API = new Free_API();
@@ -178,6 +178,7 @@ class Free_Update
 
     private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf)
     {
+        $_execute = 1;
         switch ($logicalId_type) {
             case 'slider':
                 if ($_cmd->getConfiguration('inverse')) {
@@ -186,6 +187,13 @@ class Free_Update
                     $parametre['value'] = (int) $_options['slider'];
                 }
                 $parametre['value_type'] = 'int';
+                $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
+
+                if ($cmd !== false) {
+                    if ($cmd->getValue() === false) {
+                        $_execute = 0;
+                    }
+                }
                 break;
             case 'color':
                 $parametre['value'] = $_options['color'];
@@ -224,6 +232,6 @@ class Free_Update
                 }
                 break;
         }
-        $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
+        if ($_execute == 1) $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
     }
 }

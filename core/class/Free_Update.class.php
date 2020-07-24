@@ -187,9 +187,11 @@ class Free_Update
                     $parametre['value'] = (int) $_options['slider'];
                 }
                 $parametre['value_type'] = 'int';
-                
+
                 $cmd = cmd::byid($_cmd->getConfiguration('logicalId'));
-                if ($cmd !== false) {if ($cmd->getValue() == 0) $execute = false;}
+                if ($cmd !== false) {
+                    if ($cmd->getValue() == 0) $execute = false;
+                }
                 break;
             case 'color':
                 $parametre['value'] = $_options['color'];

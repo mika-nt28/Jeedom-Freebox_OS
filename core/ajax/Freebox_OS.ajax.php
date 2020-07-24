@@ -81,7 +81,7 @@ try {
 			ajax::success($Free_API->disk());
 			break;
 		case 'AddPortForwarding':
-			ajax::success($Free_API->PortForwarding(init('id'), "put",init('enabled')));
+			ajax::success($Free_API->PortForwarding(init('id'), "put", init('enabled')));
 			break;
 		case 'PortForwarding':
 			ajax::success($Free_API->PortForwarding(init('id'), "get"));
@@ -90,7 +90,7 @@ try {
 			$Command = cmd::byId(init('id'));
 			if (is_object($Command)) {
 				$Mac = str_replace('ether-', '', $Command->getLogicalId());
-				ajax::success($Free_API->universal_put($Mac, 'WakeOnLAN'));
+				ajax::success($Free_API->universal_put($Mac, 'WakeOnLAN', null, null, null));
 			}
 			ajax::success(false);
 			break;

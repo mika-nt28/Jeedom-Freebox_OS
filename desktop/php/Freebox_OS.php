@@ -245,10 +245,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						</div>
 					</fieldset>
 				</form>
+
 				<form class="form-horizontal col-sm-2">
 					<fieldset>
 						<div class="form-group">
-							<img src="plugins/Freebox_OS/core/images/default.png" data-original=".jpg" id="img_device" class="img-responsive" style="max-height : 120px;" onerror="this.src='plugins/Freebox_OS/core/images/default.png'" />
+							<label class="col-sm-2 control-label"></label>
+							<div class="col-sm-8">
+								<img src="plugins/Freebox_OS/core/images/default.png" data-original=".jpg" id="img_device" class="img-responsive" style="width:120px" onerror="this.src='plugins/Freebox_OS/core/images/default.png'" />
+							</div>
 						</div>
 					</fieldset>
 				</form>

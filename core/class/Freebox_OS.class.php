@@ -708,10 +708,6 @@ class Freebox_OS extends eqLogic
 		if ($valuemax != 'default') {
 			$Command->setconfiguration('maxValue', $valuemax);
 		}
-		/*if ($_Equipement != null) {
-			$Command->setconfiguration('equipement', $_Equipement);
-		}*/
-
 		if (is_object($link_I) && $Type == 'action') {
 			$Command->setValue($link_I->getId());
 		}

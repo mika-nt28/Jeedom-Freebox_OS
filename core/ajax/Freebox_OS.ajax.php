@@ -81,18 +81,14 @@ try {
 			ajax::success($Free_API->disk());
 			break;
 		case 'AddPortForwarding':
-			ajax::success($Free_API->PortForwarding(init('id'), "put",init('enabled')));
+			ajax::success($Free_API->PortForwarding(init('id'), "put", init('enabled')));
 			break;
 		case 'PortForwarding':
 			ajax::success($Free_API->PortForwarding(init('id'), "get"));
 			break;
 		case 'WakeOnLAN':
-			$Command = cmd::byId(init('id'));
-			if (is_object($Command)) {
-				$Mac = str_replace('ether-', '', $Command->getLogicalId());
-				ajax::success($Free_API->universal_put($Mac, 'WakeOnLAN'));
-			}
-			ajax::success(false);
+			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
+			ajax::success($Free_API->universal_put(null, 'WakeOnLAN', $Mac, null, null));
 			break;
 		case 'get_airmediareceivers':
 			ajax::success($Free_API->airmedia('receivers', null, null));

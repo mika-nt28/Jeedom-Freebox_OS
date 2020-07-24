@@ -444,7 +444,7 @@ class Free_API
 		if ($update == 'parental') {
 			$return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
 		} else if ($update == 'WakeOnLAN') {
-			$return = $this->fetch($config, array("mac" => $id, "password" => ""), $fonction);
+			$return = $this->fetch('/' . $config, array("mac" => $id, "password" => ""), $fonction);
 		} else if ($update == 'set_tiles') {
 			$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
 		} else if ($update == 'reboot') {

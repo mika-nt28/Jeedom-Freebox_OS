@@ -88,8 +88,7 @@ try {
 			break;
 		case 'WakeOnLAN':
 			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
-			log::add('Freebox_OS', 'debug', 'Mac = '.$Mac);
-			ajax::success($Free_API->universal_put($Mac, 'WakeOnLAN', null, null, null));
+			ajax::success($Free_API->universal_put(null, 'WakeOnLAN', $Mac, null, null));
 			break;
 		case 'get_airmediareceivers':
 			ajax::success($Free_API->airmedia('receivers', null, null));

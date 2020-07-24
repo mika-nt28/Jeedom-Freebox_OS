@@ -1,10 +1,27 @@
 <?php
 /* * ***************************Includes********************************* */
 require_once dirname(__FILE__) . '/../../../../core/php/core.inc.php';
-include_file('core', 'FreeboxAPI', 'class', 'Freebox_OS');
+require_once dirname(__FILE__) . '/../../core/php/Freebox_OS.inc.php';
 
 class Freebox_OS extends eqLogic
 {
+	public static function cron()
+	{
+		$eqLogics = eqLogic::byType('Freebox_OS');
+		foreach ($eqLogics as $eqLogic) {
+			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
+			try {
+				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+				if ($c->isDue($dateRun)) {
+					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
+					Free_Refresh::RefreshInformation($eqLogic->getId());
+				}
+			} catch (Exception $exc) {
+				log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh);
+			}
+		}
+	}
+
 	public static function deamon_info()
 	{
 		$return = array();
@@ -24,15 +41,6 @@ class Freebox_OS extends eqLogic
 		if (!is_object($cron)) {
 			$return['state'] = 'nok';
 			return $return;
-		}
-		foreach (eqLogic::byType('Freebox_OS') as $Equipement) {
-			if ($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0) {
-				$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
-				if (!is_object($cron) || !$cron->running()) {
-					$return['state'] = 'nok';
-					return $return;
-				}
-			}
 		}
 		return $return;
 	}
@@ -55,11 +63,6 @@ class Freebox_OS extends eqLogic
 		}
 		$cron->start();
 		$cron->run();
-		foreach (eqLogic::byType('Freebox_OS') as $Equipement) {
-			if ($Equipement->getIsEnable() && count($Equipement->getCmd()) > 0) {
-				$Equipement->CreateDemon();
-			}
-		}
 	}
 	public static function deamon_stop()
 	{
@@ -68,41 +71,17 @@ class Freebox_OS extends eqLogic
 			$cron->stop();
 			$cron->remove();
 		}
-		foreach (eqLogic::byType('Freebox_OS') as $Equipement) {
-			$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $Equipement->getId()));
-			if (is_object($cron)) {
-				$cron->stop();
-				$cron->remove();
-			}
-		}
-		$FreeboxAPI = new FreeboxAPI();
-		$FreeboxAPI->close_session();
+		$Free_API = new Free_API();
+		$Free_API->close_session();
 	}
-	private function CreateDemon()
-	{
-		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $this->getId()));
-		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('Freebox_OS');
-			$cron->setFunction('RefreshInformation');
-			$cron->setOption(array('Freebox_id' => $this->getId()));
-			$cron->setEnable(1);
-			$cron->setDeamon(1);
-			$cron->setSchedule('* * * * *');
-			$cron->setTimeout('1');
-			$cron->save();
-		}
-		$cron->start();
-		$cron->run();
-		return $cron;
-	}
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		if (!is_object($EqLogic)) {
+			$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
-			$EqLogic->setObject_id(null);
+			if ($defaultRoom) $EqLogic->setObject_id($defaultRoom);
 			$EqLogic->setEqType_name('Freebox_OS');
 			$EqLogic->setIsEnable(1);
 			$EqLogic->setIsVisible(0);
@@ -110,71 +89,48 @@ class Freebox_OS extends eqLogic
 			if ($category != null) {
 				$EqLogic->setcategory($category, 1);
 			}
-			$EqLogic->setConfiguration('waite', '300');
+			$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
+		if ($EqLogic->getConfiguration('autorefresh') == null && $tiles != true && $EqLogic->getLogicalId() != 'disk') {
+			$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+		} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getLogicalId() == 'disk') {
+			$EqLogic->setConfiguration('autorefresh', '1 * * * *');
+		}
 		if ($tiles == true) {
 			$EqLogic->setConfiguration('type', $eq_type);
 			$EqLogic->setConfiguration('action', $eq_action);
+			if ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player' && $EqLogic->getConfiguration('type', $eq_type) != 'alarm_remote') {
+				$EqLogic->setConfiguration('autorefresh', '* * * * *');
+			} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) == 'alarm_remote') {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			} else {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			}
+
+			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
+				$EqLogic->setConfiguration('action', $logicalID_equip);
+			}
 		}
 		$EqLogic->save();
 		return $EqLogic;
 	}
 	public static function templateWidget()
 	{
-		// Template pour le wifi action
-		$return = array('action' => array('other' => array()));
-		$return['action']['other']['Wifi'] = array(
-			'template' => 'tmplicon',
-			'display' => array(
-				'#icon#' => '<i class=\'icon_blue icon fas fa-wifi\'></i>',
-			),
-			'replace' => array(
-				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
-				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-times\'></i>',
-				'#_time_widget_#' => '1'
-			)
-		);
-
-		// Template pour le wifi info
-		$return['info']['binary']['Wifi'] = array(
-			'template' => 'tmplicon',
-			'display' => array(
-				'#icon#' => '<i class=\'icon_blue icon fas fa-wifi\'></i>',
-			),
-			'replace' => array(
-				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
-				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-times\'></i>',
-				'#_time_widget_#' => '1'
-			)
-		);
-
-		// Template pour l'état de l'alarme'
-		$return['info']['string']['Alarme Freebox'] = array(
-			'template' => 'tmplmultistate',
-			'replace' => array('#_time_widget_#' => '1'),
-			'test' => array(
-				array('operation' => "#value# == 'idle'", 'state_light' => '<i class=\'icon_green icon jeedom-lock-ouvert\'></i>'),
-				array('operation' => "#value# == 'alarm2_armed'", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
-				array('operation' => "#value# == 'alarm1_armed'", 'state_light' => '<i class=\'icon_red icon jeedom-lock-ferme\'></i>'),
-				array('operation' => "#value# == 'alarm_1_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
-				array('operation' => "#value# == 'alarm_2_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
-				array('operation' => "#value# == 'alarm1_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
-				array('operation' => "#value# == 'alarm2_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
-				array('operation' => "#value# == 'alert'", 'state_light' => '<i class=\'icon_red icon jeedom-alerte2\'></i>')
-			)
-		);
-		return $return;
+		return Free_Template::getTemplate();
 	}
-	public static function addReseau()
+	public static function addnetwork()
 	{
-		$FreeboxAPI = new FreeboxAPI();
-		$Reseau = self::AddEqLogic('Réseau', 'Reseau', 'multimedia', false, null, null);
+
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+		$Free_API = new Free_API();
+
+		$network = self::AddEqLogic($logicalinfo['networkName'], $logicalinfo['networkID'], 'default', false, null, null);
 		log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
-		foreach ($FreeboxAPI->getReseau() as $Equipement) {
+		foreach ($Free_API->universal_get('network') as $Equipement) {
 			if ($Equipement['primary_name'] != '') {
-				$Command = $Reseau->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				$Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
 				$Command->setConfiguration('host_type', $Equipement['host_type']);
 				if (isset($Equipement['l3connectivities'])) {
 					foreach ($Equipement['l3connectivities'] as $Ip) {
@@ -187,6 +143,12 @@ class Freebox_OS extends eqLogic
 						}
 					}
 				}
+				if (isset($Equipement['l2ident'])) {
+					$ident = $Equipement['l2ident'];
+					if ($ident['type'] == 'mac_address') {
+						$Command->setConfiguration('mac_address', $ident['id']);
+					}
+				}
 				if ($Command->execCmd() != $Equipement['active']) {
 					$Command->setCollectDate(date('Y-m-d H:i:s'));
 					$Command->setConfiguration('doNotRepeatEvent', 1);
@@ -196,10 +158,12 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-	public static function addHomeAdapters()
+	public static function addhomeadapters()
 	{
-		$FreeboxAPI = new FreeboxAPI();
-		$HomeAdapters = self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+		$Free_API = new Free_API();
+
+		$homeadapters = self::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$templatecore_V4 = null;
@@ -207,22 +171,175 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
-		foreach ($FreeboxAPI->getHomeAdapters() as $Equipement) {
+		foreach ($Free_API->universal_get('homeadapters') as $Equipement) {
 			if ($Equipement['label'] != '') {
-				$HomeAdapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+				$homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
 				if ($Equipement['status'] == 'active') {
-					$HomeAdapters_value = 1;
+					$homeadapters_value = 1;
 				} else {
-					$HomeAdapters_value = 0;
+					$homeadapters_value = 0;
 				}
-				$HomeAdapters->checkAndUpdateCmd($Equipement['id'], $HomeAdapters_value);
+				$homeadapters->checkAndUpdateCmd($Equipement['id'], $homeadapters_value);
 			}
+		}
+	}
+	public static function addPlayer()
+	{
+		$Free_API = new Free_API();
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
+			$TemplatePlayer = null;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$TemplatePlayer = 'Freebox_OS::Player';
+		};
+
+		$result = $Free_API->universal_get('player');
+		foreach ($result as $Equipement) {
+			log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $Equipement['device_name'] . ' -- Id : ' . $Equipement['id']);
+			if ($Equipement['id'] != null) {
+				$player = self::AddEqLogic($Equipement['device_name'], 'player_' . $Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id']);
+				log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id : player_' . $Equipement['id'] . ' -- freeID : ' . $Equipement['id']);
+			}
+			$player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
+			$player->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
+			$player->AddCommand('Modèle', 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);
+			$player->AddCommand('Version', 'api_version', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
+			$player->AddCommand('API Disponible', 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
+			$player->AddCommand('Disponible sur le réseau', 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
+			$player->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
+
+			Free_Refresh::RefreshInformation($player->getId());
+		}
+	}
+	public static function addsystem()
+	{
+		$Free_API = new Free_API();
+
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+		$system = self::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
+			$Template4G = null;
+			$templatecore_V4 = null;
+			$icontemp = 'fas fa-thermometer-half';
+			$iconfan = 'fas fa-fan';
+			$icone4Gon = 'fas fa-broadcast-tower';
+			$icone4Goff = 'fas fa-broadcast-tower';
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$Template4G = 'Freebox_OS::4G';
+			$templatecore_V4  = 'core::';
+			$icontemp = 'fas fa-thermometer-half icon_blue';
+			$iconfan = 'fas fa-fan icon_blue';
+			$icone4Gon = 'fas fa-broadcast-tower icon_green';
+			$icone4Goff = 'fas fa-broadcast-tower icon_red';
+		};
+		$boucle_num = 1; // 1 = sensors - 2 = fans - 3 = extension
+		$_order = 6;
+		while ($boucle_num <= 3) {
+			if ($boucle_num == 1) {
+				$boucle_update = 'sensors';
+			} else if ($boucle_num == 2) {
+				$boucle_update = 'fans';
+			} else if ($boucle_num == 3) {
+				$boucle_update = 'expansions';
+			}
+			log::add('Freebox_OS', 'debug', '│──────────> Boucle pour Update : ' . $boucle_update);
+			foreach ($Free_API->universal_get('system', null, $boucle_update) as $Equipement) {
+				$icon = null;
+				$_max = 'default';
+				$_min = 'default';
+				$_unit = null;
+				$_name = $Equipement['name'];
+				$_id = $Equipement['id'];
+				$_value = $Equipement['value'];
+				$_type = 'numeric';
+				$IsVisible = 1;
+				$_iconname = true;
+				if (strpos($_id, 'temp') !== FALSE) {
+					$_unit = '°C';
+					$_max = 100;
+					$_min = '0';
+					$icon = $icontemp;
+					$link_logicalId = 'sensors';
+				} else if (strpos($_id, 'fan') !== FALSE) {
+					$_unit = 'tr/min';
+					$_max = 5000;
+					$_min = '0';
+					$icon = $iconfan;
+					$link_logicalId = 'fans';
+				} else if ($boucle_num = 3) {
+					$_iconname = null;
+					$_type = 'binary';
+					$_id = $Equipement['slot'];
+					$_name = 'Slot ' . $Equipement['slot'] . ' - ' . $Equipement['type'];
+					$IsVisible = '0';
+					$_value = $Equipement['present'];
+					$link_logicalId = 'expansions';
+				}
+				log::add('Freebox_OS', 'debug', '│ Name : ' . $_name . ' -- id : ' . $_id . ' -- value : ' . $_value . ' -- unité : ' . $_unit . ' -- type : ' . $_type);
+				if ($_name != '') {
+
+					$system->AddCommand($_name, $_id, 'info', $_type, $templatecore_V4 . 'line', $_unit, null, $IsVisible, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, $_order, 0, false, true, null, $_iconname);
+
+					$system->checkAndUpdateCmd($_id, $_value);
+					if ($Equipement['type'] == 'dsl_lte') {
+						// Début ajout 4G
+						$_4G = $system->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 32, '0', false, 'never', null, true);
+						$system->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icone4Gon, 1, 'default', 'default', 33, '0', false, false, null, true);
+						$system->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icone4Goff, 0, 'default', 'default', 34, '0', false, false, null, true);
+					}
+					$_order++;
+				}
+			}
+			$boucle_num++;
+		}
+	}
+	public static function addparental()
+	{
+		$Free_API = new Free_API();
+		if (version_compare(jeedom::version(), "4", "<")) {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+			$templatecore_V4 = null;
+		} else {
+			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+			$templatecore_V4  = 'core::';
+		};
+		foreach ($Free_API->universal_get('parentalprofile') as $Equipement) {
+			log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
+			if (version_compare(jeedom::version(), "4", "<")) {
+				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+				$Templateparent = null;
+				$iconeparent_allowed = 'fas fa-user-check';
+				$iconeparent_denied = 'fas fa-user-lock';
+				$iconeparent_webonly = 'fas fa-user-shield';
+			} else {
+				log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+				$Templateparent = 'Freebox_OS::Parental';
+				$iconeparent_allowed = 'fas fa-user-check icon_green';
+				$iconeparent_denied = 'fas fa-user-lock icon_red';
+				$iconeparent_webonly = 'fas fa-user-shield icon_orange';
+			};
+
+			$category = 'default';
+			$Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
+
+			$parental = self::AddEqLogic($Equipement['name'], 'parental_' . $Equipement['id'], $category, true, 'parental', null, $Equipement['id']);
+			$StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, null, true);
+			$parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_allowed, 0, 'default', 'default', 2, '0', false, false, null, true);
+			$parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconeparent_denied, 0, 'default', 'default', 3, '0', false, false, null, true);
+			$parental->AddCommand('Bloquer Temporairement', 'tempDenied', 'action', 'select', null, null, null, 1, '', '', '', '', 0, 'default', 'default', 4, '0', false, false, '', true);
+			log::add('Freebox_OS', 'debug', '└─────────');
 		}
 	}
 	public static function addTiles()
 	{
-		$FreeboxAPI = new FreeboxAPI();
-		self::AddEqLogic('Home Adapters', 'HomeAdapters', 'default', false, null, null);
+		$Free_API = new Free_API();
+
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+
+		self::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$templatecore_V4 = null;
@@ -230,7 +347,7 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
-		foreach ($FreeboxAPI->getTiles() as $Equipement) {
+		foreach ($Free_API->universal_get('tiles') as $Equipement) {
 			if ($Equipement['type'] != 'camera') {
 				if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {
 					$category = 'security';
@@ -283,34 +400,50 @@ class Freebox_OS extends eqLogic
 							$generic_type = null;
 							$icon = null;
 							$order = null;
-							$Link_I_store = 'default';
+							$Link_I = 'default';
 							$IsVisible = 1;
+							$_iconname = '0';
+							$_home_mode_set = null;
 							if ($Command['name'] == 'up') {
 								$generic_type = 'FLAP_UP';
 								$icon = 'fas fa-arrow-up';
+								$Link_I = $Link_I_store;
 								$order = 2;
 							} elseif ($Command['name'] == 'stop') {
 								$generic_type = 'FLAP_STOP';
 								$icon = 'fas fa-stop';
+								$Link_I = $Link_I_store;
 								$order = 3;
 							} elseif ($Command['name'] == 'down') {
 								$generic_type = 'FLAP_DOWN';
 								$icon = 'fas fa-arrow-down';
+								$Link_I = $Link_I_store;
 								$order = 4;
-							} elseif ($Command['name'] == 'alarm1') {
+							} elseif ($Command['name'] == 'alarm1' && $Equipement['type'] = 'alarm_control') {
+								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon jeedom-lock-ferme icon_red';
+								$Link_I = $Link_I_ALARM;
+								$_iconname = 1;
 								$order = 6;
-							} elseif ($Command['name'] == 'alarm2') {
+								$_home_mode_set = 'SetModeAbsent';
+							} elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
+								$generic_type = 'ALARM_SET_MODE';
 								$icon = 'icon nature-night2 icon_red';
+								$Link_I = $Link_I_ALARM;
+								$_iconname = 1;
 								$order = 7;
-							} elseif ($Command['name'] == 'off') {
+								$_home_mode_set = 'SetModeNuit';
+							} elseif ($Command['name'] == 'off' && $Equipement['type'] = 'alarm_control') {
+								$generic_type = 'ALARM_RELEASED';
 								$icon = 'icon jeedom-lock-ouvert icon_green';
+								$Link_I = $Link_I_ALARM_ENABLE;
+								$_iconname = 1;
 								$order = 8;
 							} elseif ($Command['name'] == 'skip') {
 								$IsVisible = 0;
 								$order = 9;
 							}
-							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_store, $Link_I_store, 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
+							$action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, null, $_iconname, $_home_mode_set);
 							break;
 						case "int":
 							foreach (str_split($Command['ui']['access']) as $access) {
@@ -321,8 +454,11 @@ class Freebox_OS extends eqLogic
 								$_max = 'default';
 								$IsVisible = 1;
 								$IsVisible_I = '0';
+								$IsHistorized = '0';
 								$name = $Command['label'];
 								$link_logicalId = 'default';
+								$icon = null;
+								$generic_type_I = null;
 								if ($access == "r") {
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
@@ -333,7 +469,7 @@ class Freebox_OS extends eqLogic
 										$_min = '0';
 										$_max = 100;
 									} elseif ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-										$Templatecore_A = $templatecore_V4 . 'light';
+										$Templatecore_A = 'default'; //$templatecore_V4 . 'light';
 										$_min = '0';
 										$_max = 255;
 										$generic_type = 'LIGHT_SET_COLOR';
@@ -346,22 +482,33 @@ class Freebox_OS extends eqLogic
 										$generic_type = 'LIGHT_SLIDER';
 										$generic_type_I = 'LIGHT_STATE';
 										$link_logicalId = $Command['ep_id'];
+									} elseif ($Equipement['type'] == "alarm_remote" && $Command['name'] == 'pushed') {
+										$Templatecore = 'Freebox_OS::Télécommande Freebox';
+										$_min = '0';
+										$_max = $Command['ui']['range'][3];
+										$IsVisible_I = 1;
+										$IsHistorized = 1;
 									} elseif ($Command['name'] == "battery_warning") {
 										$generic_type_I = 'BATTERY';
+										$icon = 'fas fa-battery-full';
 										$name = 'Batterie';
 									}
 									if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-										if ($Equipement['action'] != 'intensity_picker' && $Equipement['action'] != 'color_picker') {
-											$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, 0, false);
-											$Link_I_light = $infoCmd;
-										}
-										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max, 'default', 2, 0, false);
+										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $binaireID);
+
+										$_cmd = $Tile->getCmd("info", 0);
+
+
+										$Link_I_light = $infoCmd;
+										$_slider = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max,  2, $IsHistorized, false, false);
+										$_slider->setConfiguration("binaryID", $_cmd->getID());
+										$_slider->save();
 									} else {
-										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max, 'default', null, 0, false);
+										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null);
 									}
 
 									if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
-										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, 'default', null, 0, false);
+										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
 									}
 									$label_sup = null;
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
@@ -380,7 +527,7 @@ class Freebox_OS extends eqLogic
 								}
 								if ($access == "w") {
 									if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker") {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', null, 0, false, false, null);
 									}
 								}
 							}
@@ -426,7 +573,7 @@ class Freebox_OS extends eqLogic
 										$invertBinary = 0;
 									}
 
-									$infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default', 'default', $order, 0, false);
+									$infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default',  $order, 0, false, true, null);
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 									if ($Equipement['action'] == 'store') {
 										$Link_I_store = $infoCmd;
@@ -436,8 +583,8 @@ class Freebox_OS extends eqLogic
 										$Link_I_store = 'default';
 									}
 									if ($Type_command == 'PB') {
-										$Tile->AddCommand('On', 'PB_On', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_ON', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 1, 'default', 'default', 'default', 3, 0, false);
-										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_OFF', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 0, 'default', 'default', 'default', 4, 0, false);
+										$Tile->AddCommand('On', 'PB_On', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_ON', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 1, 'default', 'default', 3, 0, false, false, null);
+										$Tile->AddCommand('Off', 'PB_Off', 'action', 'other', $Templatecore, $Command['ui']['unit'], 'LIGHT_OFF', $IsVisible_PB, $Link_I_light, $Command['ep_id'], $invertBinary, null, 0, 'default', 'default', 4, 0, false, false, null);
 									}
 
 									$label_sup = null;
@@ -447,7 +594,7 @@ class Freebox_OS extends eqLogic
 								}
 								if ($access == "w") {
 									if ($Type_command != 'PB') {
-										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false);
+										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'other', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', 'default', null, 0, false, false, null);
 									}
 								}
 							}
@@ -458,11 +605,14 @@ class Freebox_OS extends eqLogic
 								$Templatecore = null;
 								$order = null;
 								$icon = null;
+								$generic_type = null;
 								if ($Command['name'] == "pin") {
 									$IsVisible = 0;
 								}
 								if ($Command['name'] == "state" && $Equipement['type'] == 'alarm_control') {
 									$Templatecore = 'Freebox_OS::Alarme Freebox';
+									$order = 4;
+									$IsVisible = 0;
 								} elseif ($Command['name'] == "error") {
 									$order = 10;
 									$icon = 'icon fas fa-exclamation-triangle icon_red';
@@ -471,12 +621,21 @@ class Freebox_OS extends eqLogic
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
+									$info = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'info', 'string', $Templatecore, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', $order, 0, false, true, null);
+									$Link_I_ALARM = $info;
+									if ($Command['name'] == "state" && $Equipement['type'] == 'alarm_control') {
+										log::add('Freebox_OS', 'debug', '│──────────> Ajout commande spécifique pour Homebridge');
+										$ALARM_ENABLE = $Tile->AddCommand('Actif', 'ALARM_enable', 'info', 'binary', 'core::lock', null, 'ALARM_ENABLE_STATE', 1, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 1, 1, false, true, null);
+										$Link_I_ALARM_ENABLE = $ALARM_ENABLE;
+										$Tile->AddCommand('Statut', 'ALARM_state', 'info', 'binary', 'core::alert', null, 'ALARM_STATE', 1, 'default', $Command['ep_id'], 1, null, 0, 'default', 'default',  2, 1, false, true, null);
+										$Tile->AddCommand('Mode', 'ALARM_mode', 'info', 'string', null, null, 'ALARM_MODE', 1, 'default', $Command['ep_id'], 0, null, 0, 'default', 'default', 3, 1, false, true, null);
+										log::add('Freebox_OS', 'debug', '│──────────> Fin Ajout commande spécifique pour Homebridge');
+									}
 									$Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
 								}
 								$label_sup = null;
 								if ($access == "w") {
-									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', 'default', $order, 0, false);
+									$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'message', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, $icon, 0, 'default', 'default', $order, 0, false, false, null);
 								}
 							}
 							break;
@@ -490,8 +649,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $link_IA = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
@@ -519,18 +677,9 @@ class Freebox_OS extends eqLogic
 			if ($unite != null && $SubType == 'numeric') {
 				$Command->setUnite($unite);
 			}
-			if ($generic_type != null) {
-				$Command->setGeneric_type($generic_type);
-			}
-
 			$Command->setIsVisible($IsVisible);
+			$Command->setIsHistorized($IsHistorized);
 
-			if (is_object($link_I) && $Type == 'action') {
-				$Command->setValue($link_I->getId());
-			}
-			if ($link_logicalId != 'default' && $Type == 'action') {
-				$Command->setconfiguration('logicalId', $link_logicalId);
-			}
 			if ($invertBinary != null && $SubType == 'binary') {
 				$Command->setdisplay('invertBinary', 1);
 			}
@@ -540,28 +689,50 @@ class Freebox_OS extends eqLogic
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
 			}
-
-			$Command->setIsHistorized($IsHistorized);
-
-			if ($link_logicalId != 'default' && $Type == 'action') {
-				$Command->setconfiguration('logicalId', $link_logicalId);
+			if ($_iconname != null) {
+				$Command->setdisplay('showIconAndNamedashboard', 1);
 			}
 
 			$Command->save();
 		}
+		if ($generic_type != null) {
+			$Command->setGeneric_type($generic_type);
+		}
+		if ($_logicalId_slider != null) { // logical Id spécial Slider
+			$Command->setConfiguration('logicalId_slider', $link_I);
+		}
 
+		if ($_home_mode_set != null) { // Compatibilité Homebridge
+			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
+			$this->save(true);
+			if ($_home_mode_set == 'SetModeAbsent') {
+				$this->setConfiguration('SetModePresent', "NOT");
+			} else {
+				$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
+			}
+			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
+		}
+		if ($repeatevent == true && $Type == 'info') {
+			$Command->setconfiguration('repeatEventManagement', 'never');
+			log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
+		}
 		if ($valuemin != 'default') {
 			$Command->setconfiguration('minValue', $valuemin);
 		}
 		if ($valuemax != 'default') {
 			$Command->setconfiguration('maxValue', $valuemax);
 		}
-		if ($link_IA  != 'default' && $Type == 'action') {
-			$Command->setValue($link_IA);
+		if (is_object($link_I) && $Type == 'action') {
+			$Command->setValue($link_I->getId());
+		}
+		if ($link_logicalId != 'default') {
+			$Command->setconfiguration('logicalId', $link_logicalId);
 		}
 		if ($_order != null) {
 			$Command->setOrder($_order);
 		}
+
+		// Forçage pour mettre à jour l'affichage // Option en cas de Update Plugin
 		if ($forceIcone_widget == true) {
 			if ($icon != null) {
 				$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');
@@ -575,6 +746,10 @@ class Freebox_OS extends eqLogic
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
 			}
+		}
+
+		if ($_logicalId == "tempDenied") {
+			$Command->setConfiguration('listValue', '1800|30 minutes;3600|1 heure;7200|2 heure');
 		}
 		$Command->save();
 
@@ -593,8 +768,10 @@ class Freebox_OS extends eqLogic
 	}
 	public static function CreateArchi()
 	{
-		self::AddEqLogic('Réseau', 'Reseau', 'default', false, null, null);
-		self::AddEqLogic('Disque Dur', 'Disque', 'default', false, null, null);
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+
+		self::AddEqLogic($logicalinfo['networkName'], $logicalinfo['networkID'], 'default', false, null, null);
+		self::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$templatecore_V4 = null;
@@ -602,8 +779,8 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
-		// ADSL
-		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ADSL');
+		// ADSL - Réeseau
+		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Réseau');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$updateiconeADSL = false;
@@ -611,70 +788,64 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$updateiconeADSL = false;
 		};
-		$ADSL = self::AddEqLogic('ADSL', 'ADSL', 'default', false, null, null);
-		$ADSL->AddCommand('Freebox rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeADSL);
-		$ADSL->AddCommand('Freebox state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeADSL);
+		$Connexion = self::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null);
+		$Connexion->AddCommand('rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeADSL, true);
+		$Connexion->AddCommand('state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeADSL, true);
 		log::add('Freebox_OS', 'debug', '└─────────');
-		// System
+		// system
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$iconeUpdate = 'fas fa-download';
 			$iconeReboot = 'fas fa-sync';
-			$iconetemp = 'fas fa-thermometer-half';
-			$iconefan = 'fas fa-fan';
 			$updateiconeSystem = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$iconeUpdate = 'fas fa-download icon_blue';
 			$iconeReboot = 'fas fa-sync icon_red';
-			$iconetemp = 'fas fa-thermometer-half icon_blue';
-			$iconefan = 'fas fa-fan icon_blue';
 			$updateiconeSystem = false;
 		};
-		$System = self::AddEqLogic('Système', 'System', 'default', false, null, null);
-		$System->AddCommand('Update', 'update', 'action', 'other', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeUpdate, 0, 'default', 'default', 'default', 11, '0', $updateiconeSystem);
-		$System->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default', 'default', 12, '0', $updateiconeSystem);
-		$System->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeSystem);
-		$System->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeSystem);
-		$System->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeSystem);
-		$System->AddCommand('board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeSystem);
-		$System->AddCommand('serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeSystem);
-		$System->AddCommand('Vitesse ventilateur', 'fan_rpm', 'info', 'numeric', $templatecore_V4 . 'line', 'tr/min', null, 1, 'default', 'default', 0, $iconefan, 0, "0", 5000, 'default', 6, '0', $updateiconeSystem);
-		$System->AddCommand('temp cpub', 'temp_cpub', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 7, '0', $updateiconeSystem);
-		$System->AddCommand('temp cpum', 'temp_cpum', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 8, '0', $updateiconeSystem);
-		$System->AddCommand('temp sw', 'temp_sw', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $iconetemp, 0, "0", 100, 'default', 9, '0', $updateiconeSystem);
-		$System->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 10, '0', $updateiconeSystem);
-
+		$system = self::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
+		$system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default',  31, '0', $updateiconeSystem, false);
+		$system->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateiconeSystem, true);
+		$system->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeSystem, true);
+		$system->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeSystem, true);
+		$system->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeSystem, true);
+		$system->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeSystem, true);
 		log::add('Freebox_OS', 'debug', '└─────────');
+
 		//Wifi
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Wifi');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-			$TemplateWifiStatut = 'Freebox_OS::Freebox_OS_Wifi';
 			$TemplateWifiOnOFF = 'Freebox_OS::Freebox_OS::Wifi';
-			$iconeWfiOn = 'fas fa-wifi';
-			$iconeWfiOff = 'fas fa-times';
+			$iconeWifiOn = 'fas fa-wifi';
+			$iconeWifiOff = 'fas fa-times';
+			$iconeWifiPlanningOn = 'fas fa-calendar-alt';
+			$iconeWifiPlanningOff = 'fas fa-calendar-times';
 			$updateiconeWifi = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-			$TemplateWifiStatut = 'Freebox_OS::Wifi';
 			$TemplateWifiOnOFF = 'Freebox_OS::Wifi';
-			$iconeWfiOn = 'fas fa-wifi icon_green';
-			$iconeWfiOff = 'fas fa-times icon_red';
+			$TemplateWifiPlanningOnOFF = 'Freebox_OS::Planning Wifi';
+			$iconeWifiOn = 'fas fa-wifi icon_green';
+			$iconeWifiOff = 'fas fa-times icon_red';
+			$iconeWifiPlanningOn = 'fas fa-calendar-alt icon_green';
+			$iconeWifiPlanningOff = 'fas fa-calendar-times icon_red';
 			$updateiconeWifi = false;
 		};
-		$Wifi = self::AddEqLogic('Wifi', 'Wifi', 'default', false, null, null);
-		$StatusWifi = $Wifi->AddCommand('Status du wifi', 'wifiStatut', "info", 'binary', $TemplateWifiStatut, null, null, 0, '', '', '', '', 0, 'default', 'default', 'default', 1, '0', $updateiconeWifi);
-		$link_IA = $StatusWifi->getId();
-		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $link_IA, 'wifiStatut', 0, $iconeWfiOn, 0, 'default', 'default', $link_IA, 3, '0', $updateiconeWifi);
-		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, null, 1, $link_IA, 'wifiStatut', 0, $iconeWfiOff, 0, 'default', 'default', $link_IA, 4, '0', $updateiconeWifi);
-		$Wifi->AddCommand('Active Désactive le wifi', 'wifiOnOff', 'action', 'other', null, null, null, 0, $link_IA, 'wifiStatut', 0, null, 0, 'default', 'default', $link_IA, 2, '0', $updateiconeWifi);
-
+		$Wifi = self::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null);
+		$StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateiconeWifi, true);
+		$Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconeWifiOn, 0, 'default', 'default', 4, '0', $updateiconeWifi, false);
+		$Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconeWifiOff, 0, 'default', 'default', 5, '0', $updateiconeWifi, false);
+		// Planification Wifi
+		$PlanningWifi = $Wifi->AddCommand('Etat Planning', 'wifiPlanning', "info", 'binary', null, null, null, 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateiconeWifi, true);
+		$Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOn, 0, 'default', 'default', 6, '0', $updateiconeWifi, false);
+		$Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOff, 0, 'default', 'default', 7, '0', $updateiconeWifi, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Phone
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléphone');
@@ -695,15 +866,15 @@ class Freebox_OS extends eqLogic
 			$iconePasses = 'icon techno-phone2 icon_green';
 			$updateiconePhone = false;
 		};
-		$Phone = self::AddEqLogic('Téléphone', 'Phone', 'default', false, null, null);
-		$Phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default', 'default', 1, '0', $updateiconePhone);
-		$Phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 'default', 2, '0', $updateiconePhone);
-		$Phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default', 'default', 3, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default', 'default', 6, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 'default', 7, '0', $updateiconePhone);
-		$Phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default', 'default', 8, '0', $updateiconePhone);
-		$Phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 'default', 4, '0', $updateiconePhone);
-		$Phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 'default', 5, '0', $updateiconePhone);
+		$phone = self::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null);
+		$phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default',  1, '0', $updateiconePhone, true);
+		$phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 2, '0', $updateiconePhone, true);
+		$phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  3, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default',  6, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 7, '0', $updateiconePhone, true);
+		$phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
+		$phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
+		$phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Downloads
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');
@@ -718,21 +889,21 @@ class Freebox_OS extends eqLogic
 			$iconeDownloadsOff = 'fas fa-stop icon_red';
 			$updateiconeDownloads = false;
 		};
-		$Downloads = self::AddEqLogic('Téléchargements', 'Downloads', 'multimedia', false, null, null);
-		$Downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 2, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 3, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 4, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 5, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 7, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 8, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 9, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 10, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 11, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 12, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOn, 0, 'default', 'default', 'default', 13, '0', $updateiconeDownloads);
-		$Downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOff, 0, 'default', 'default', 'default', 14, '0', $updateiconeDownloads);
+		$downloads = self::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null);
+		$downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  7, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  8, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Nombre de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  9, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 11, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mo/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  12, '0', $updateiconeDownloads, true);
+		$downloads->AddCommand('Start DL', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOn, 0, 'default', 'default',  13, '0', $updateiconeDownloads, false);
+		$downloads->AddCommand('Stop DL', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOff, 0, 'default', 'default',  14, '0', $updateiconeDownloads, false);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		// AirPlay
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : AirPlay');
@@ -747,49 +918,56 @@ class Freebox_OS extends eqLogic
 			$iconeAirPlayOff = 'fas fa-stop icon_red';
 			$updateiconeAirPlay = false;
 		};
-		$AirPlay = self::AddEqLogic('AirPlay', 'AirPlay', 'multimedia', false, null, null);
-		$AirPlay->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 1, '0', false);
-		$AirPlay->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 'default', 2, '0', $updateiconeAirPlay);
-		$AirPlay->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 'default', 3, '0', $updateiconeAirPlay);
+		$Airmedia = self::AddEqLogic($logicalinfo['airmediaName'], $logicalinfo['airmediaID'], 'multimedia', false, null, null);
+		$Airmedia->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
+		$Airmedia->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 2, '0', $updateiconeAirPlay, false);
+		$Airmedia->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 3, '0', $updateiconeAirPlay, false);
+		log::add('Freebox_OS', 'debug', '└─────────');
+		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Player');
+		self::addPlayer();
 		log::add('Freebox_OS', 'debug', '└─────────');
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
-			$FreeboxAPI = new FreeboxAPI();
-			$FreeboxAPI->disques();
-			$FreeboxAPI->wifi();
-			$FreeboxAPI->system();
-			$FreeboxAPI->adslStats();
-			$FreeboxAPI->nb_appel_absence();
-			$FreeboxAPI->DownloadStats();
-			self::addReseau();
-			self::addTiles();
-			self::addHomeAdapters();
+			$Free_API = new Free_API();
+			$Free_API->disk();
+			$Free_API->universal_get();
+			$Free_API->universal_get('download_stats');
+			$Free_API->universal_get('planning');
+			$Free_API->universal_get('system', null, 4);
+			//$Free_API->universal_get('4G');
+			//download_stats
+			$Free_API->connexion_stats();
+			$Free_API->nb_appel_absence();
 		}
 	}
 	public function preSave()
 	{
 		switch ($this->getLogicalId()) {
 			case 'AirPlay':
-				$FreeboxAPI = new FreeboxAPI();
+				$Free_API = new Free_API();
 				$parametre["enabled"] = $this->getIsEnable();
 				$parametre["password"] = $this->getConfiguration('password');
-				$FreeboxAPI->airmediaConfig($parametre);
+				$Free_API->airmedia('config', $parametre);
 				break;
 		}
 		if ($this->getConfiguration('waite') == '') {
 			$this->setConfiguration('waite', 300);
 		}
 	}
+	public function preUpdate()
+	{
+		if (!$this->getIsEnable()) return;
+
+		if ($this->getConfiguration('autorefresh') == '') {
+			throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide', __FILE__));
+			log::add(__CLASS__, 'error', '│ Configuration : Temps de rafraichissement (cron) : ' . $this->getConfiguration('autorefresh'));
+		}
+	}
 	public function postSave()
 	{
 		if ($this->getIsEnable()) {
-			$this->CreateDemon();
-		} else {
-			$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation', array('Freebox_id' => $this->getId()));
-			if (is_object($cron)) {
-				$cron->stop();
-				$cron->remove();
-			}
+			Free_Refresh::RefreshInformation($this->getId());
 		}
+
 		$refresh = $this->getCmd(null, 'refresh');
 		if (!is_object($refresh)) {
 			$refresh = new Freebox_OSCmd();
@@ -804,454 +982,128 @@ class Freebox_OS extends eqLogic
 	}
 	public static function RefreshToken()
 	{
-		$FreeboxAPI = new FreeboxAPI();
-		$FreeboxAPI->close_session();
-		if ($FreeboxAPI->getFreeboxOpenSession() === false) self::deamon_stop();
+		$Free_API = new Free_API();
+		$Free_API->close_session();
+		if ($Free_API->getFreeboxOpenSession() === false) self::deamon_stop();
 	}
-	public static function RefreshInformation($_option)
+	public static function getlogicalinfo()
 	{
-		$FreeboxAPI = new FreeboxAPI();
-		$Equipement = eqlogic::byId($_option['Freebox_id']);
-		if (is_object($Equipement) && $Equipement->getIsEnable()) {
-			while (true) {
-				switch ($Equipement->getLogicalId()) {
-					case 'AirPlay':
-						break;
-					case 'ADSL':
-						$result = $FreeboxAPI->adslStats();
-						if ($result != false) {
-							foreach ($Equipement->getCmd('info') as $Command) {
-								if (is_object($Command)) {
-									switch ($Command->getLogicalId()) {
-										case "rate_down":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rate_down']);
-											break;
-										case "rate_up":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rate_up']);
-											break;
-										case "bandwidth_up":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_up']);
-											break;
-										case "bandwidth_down":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_down']);
-											break;
-										case "media":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['media']);
-											break;
-										case "state":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
-											break;
-									}
-								}
-							}
-						}
-						break;
-					case 'Downloads':
-						$result = $FreeboxAPI->DownloadStats();
-						if ($result != false) {
-							foreach ($Equipement->getCmd('info') as $Command) {
-								if (is_object($Command)) {
-									switch ($Command->getLogicalId()) {
-										case "nb_tasks":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
-											break;
-										case "nb_tasks_downloading":
-											$return = $result[''];
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_downloading']);
-											break;
-										case "nb_tasks_done":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_done']);
-											break;
-										case "rx_rate":
-											$result = $result['rx_rate'];
-											if (function_exists('bcdiv'))
-												$result = bcdiv($result, 1048576, 2);
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-											break;
-										case "tx_rate":
-											$result = $result['tx_rate'];
-											if (function_exists('bcdiv'))
-												$result = bcdiv($result, 1048576, 2);
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-											break;
-										case "nb_tasks_active":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_active']);
-											break;
-										case "nb_tasks_stopped":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_stopped']);
-											break;
-										case "nb_tasks_queued":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_queued']);
-											break;
-										case "nb_tasks_repairing":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_repairing']);
-											break;
-										case "nb_tasks_extracting":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_extracting']);
-											break;
-										case "nb_tasks_error":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_error']);
-											break;
-										case "nb_tasks_checking":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_checking']);
-											break;
-									}
-								}
-							}
-						}
-						break;
-					case 'System':
-						foreach ($Equipement->getCmd('info') as $Command) {
-							if (is_object($Command)) {
-								$result = $FreeboxAPI->system();
-								switch ($Command->getLogicalId()) {
-									case "mac":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
-										break;
-									case "fan_rpm":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['fan_rpm']);
-										break;
-									case "temp_sw":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_sw']);
-										break;
-									case "uptime":
-										$result = $result['uptime'];
-										$result = str_replace(' heure ', 'h ', $result);
-										$result = str_replace(' heures ', 'h ', $result);
-										$result = str_replace(' minute ', 'min ', $result);
-										$result = str_replace(' minutes ', 'min ', $result);
-										$result = str_replace(' secondes', 's', $result);
-										$result = str_replace(' seconde', 's', $result);
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-										break;
-									case "board_name":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
-										break;
-									case "temp_cpub":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpub']);
-										break;
-									case "temp_cpum":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_cpum']);
-										break;
-									case "serial":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);
-										break;
-									case "firmware_version":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
-										break;
-								}
-							}
-						}
-						break;
-					case 'Wifi':
-						foreach ($Equipement->getCmd('info') as $Command) {
-							if (is_object($Command)) {
-								$result = $FreeboxAPI->wifi();
-								switch ($Command->getLogicalId()) {
-									case "wifiStatut":
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-										break;
-								}
-							}
-						}
-						break;
-					case 'Disque':
-						foreach ($Equipement->getCmd('info') as $Command) {
-							if (is_object($Command)) {
-								$result = $FreeboxAPI->getdisque($Command->getLogicalId());
-								if ($result != false) {
-									$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-								}
-							}
-						}
-						break;
-					case 'Phone':
-						$result = $FreeboxAPI->nb_appel_absence();
-						if ($result != false) {
-							foreach ($Equipement->getCmd('info') as $Command) {
-								if (is_object($Command)) {
-									switch ($Command->getLogicalId()) {
-										case "nbAppelsManquee":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['missed']);
-											break;
-										case "nbAppelRecus":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['accepted']);
-											break;
-										case "nbAppelPasse":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['outgoing']);
-											break;
-										case "listAppelsManquee":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_missed']);
-											break;
-										case "listAppelsRecus":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_accepted']);
-											break;
-										case "listAppelsPasse":
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_outgoing']);
-											break;
-									}
-								}
-							}
-						}
-						break;
-					case 'Reseau':
-						foreach ($Equipement->getCmd('info') as $Command) {
-							if (is_object($Command)) {
-								$result = $FreeboxAPI->ReseauPing($Command->getLogicalId());
-								if (!$result['success']) {
-									if ($result['error_code'] == "internal_error") {
-										$Command->remove();
-									}
-								} else {
-									if (isset($result['result']['l3connectivities'])) {
-										foreach ($result['result']['l3connectivities'] as $Ip) {
-											if ($Ip['active']) {
-												if ($Ip['af'] == 'ipv4') {
-													$Command->setConfiguration('IPV4', $Ip['addr']);
-												} else {
-													$Command->setConfiguration('IPV6', $Ip['addr']);
-												}
-											}
-										}
-									}
-									$Command->setConfiguration('host_type', $result['result']['host_type']);
-									$Command->save();
-									if (isset($result['result']['active'])) {
-										if ($result['result']['active'] == 'true') {
-											$Command->setOrder($Command->getOrder() % 1000);
-											$Command->save();
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), true);
-										} else {
-											$Command->setOrder($Command->getOrder() % 1000 + 1000);
-											$Command->save();
-											$Equipement->checkAndUpdateCmd($Command->getLogicalId(), false);
-										}
-									} else {
-										$Equipement->checkAndUpdateCmd($Command->getLogicalId(), false);
-									}
-								}
-							}
-						}
-						break;
-					case 'HomeAdapters':
-						foreach ($Equipement->getCmd('info') as $Command) {
-							$result = $FreeboxAPI->getHomeAdapterStatus($Command->getLogicalId());
-							if ($result != false) {
-								if ($result['status'] == 'active') {
-									$HomeAdapters_value = 1;
-								} else {
-									$HomeAdapters_value = 0;
-								}
-								$Equipement->checkAndUpdateCmd($Command->getLogicalId(), $HomeAdapters_value);
-							}
-						}
-						break;
-					default:
-						$results = $FreeboxAPI->getTile($Equipement->getLogicalId());
-						if ($results != false) {
-							foreach ($results as $result) {
-								foreach ($result['data'] as $data) {
-									if (!$Equipement->getIsEnable()) break;
-									$cmd = $Equipement->getCmd('info', $data['ep_id']);
+		return array(
+			'4GID' => '4G',
+			'4GName' => '4G',
+			'airmediaID' => 'airmedia',
+			'airmediaName' => 'Air Média',
+			'connexionID' => 'connexion',
+			'connexionName' => 'Freebox Débits',
+			'diskID' => 'disk',
+			'diskName' => 'Disque Dur',
+			'downloadsID' => 'downloads',
+			'downloadsName' => 'Téléchargements',
+			'homeadaptersID' => 'homeadapters',
+			'homeadaptersName' => 'Home Adapters',
+			'networkID' => 'network',
+			'networkName' => 'Appareils connectés',
+			'phoneID' => 'phone',
+			'phoneName' => 'Téléphone',
+			'systemID' => 'system',
+			'systemName' => 'Système',
+			'wifiID' => 'wifi',
+			'wifiName' => 'Wifi'
+		);
+	}
+	public static function updateLogicalID($_version, $_update = false)
+	{
+		$eqLogics = eqLogic::byType('Freebox_OS');
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+		log::add('Freebox_OS', 'debug', '┌───────── Fonction updateLogicalID : Start Update');
+		foreach ($eqLogics as $eqLogic) {
 
-									if (!is_object($cmd)) break;
+			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
 
-									switch ($cmd->getSubType()) {
-										case 'numeric':
-											if ($cmd->getConfiguration('inverse')) {
-												$_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
-											} else {
-												$_value = $data['value'];
-											}
-											break;
-										case 'string':
-											$_value = $data['value'];
-											break;
-										case 'binary':
-											if ($cmd->getConfiguration('inverse')) {
-												$_value = !$data['value'];
-											} else {
-												$_value = $data['value'];
-											}
-											break;
-									}
-									$Equipement->checkAndUpdateCmd($data['ep_id'], $_value);
-								}
-							}
-						}
-						break;
-				}
-				if ($Equipement->getConfiguration('waite') == '') {
-					sleep(300);
-				} else {
-					sleep($Equipement->getConfiguration('waite'));
-				}
+			$eqName = $eqLogic->getName();
+
+			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId());
+			switch ($eqLogic->getLogicalId()) {
+				case 'ADSL':
+				case 'connexion':
+					$eqLogic->setLogicalId($logicalinfo['connexionID']);
+					$eqLogic->setName($logicalinfo['connexionName']);
+					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update logicalID : "' . $logicalinfo['connexionID'] . '" et Update name : "' . $logicalinfo['connexionName'] . '"');
+					break;
+				case 'AirPlay':
+				case 'airmedia':
+				case '':
+					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
+					$eqLogic->setName($logicalinfo['airmediaName']);
+					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
+					break;
+				case 'Disque':
+				case 'Disques':
+					$eqLogic->setLogicalId($logicalinfo['diskID']);
+					$eqLogic->setName($logicalinfo['diskName']);
+					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['diskID']);
+					break;
+				case 'Reseau':
+				case 'reseau':
+					$eqLogic->setLogicalId($logicalinfo['networkID']);
+					$eqLogic->setName($logicalinfo['networkName']);
+					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['networkID']);
+					break;
+				case 'System':
+					$eqLogic->setLogicalId($logicalinfo['systemID']);
+					$eqLogic->setName($logicalinfo['systemName']);
+					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['systemID']);
+					break;
+				case 'Downloads':
+					$eqLogic->setLogicalId($logicalinfo['downloadsID']);
+					$eqLogic->setName($logicalinfo['downloadsName']);
+					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['downloadsID']);
+					break;
+				case 'Phone':
+					$eqLogic->setLogicalId($logicalinfo['phoneID']);
+					$eqLogic->setName($logicalinfo['phoneName']);
+					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['phoneID']);
+					break;
+				case 'Wifi':
+				case 'wifi':
+					$eqLogic->setLogicalId($logicalinfo['wifiID']);
+					$eqLogic->setName($logicalinfo['wifiName']);
+					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['wifiID']);
+					break;
+				case 'HomeAdapters':
+				case 'Home Adapters':
+				case 'Homeadapters':
+					$eqLogic->setLogicalId($logicalinfo['homeadaptersID']);
+					$eqLogic->setName($logicalinfo['homeadaptersName']);
+					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['homeadaptersID']);
+					break;
 			}
+
+			if (!$_update) $eqLogic->setName($eqName);
+			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update V' . $_version);
+			$eqLogic->save(true);
+			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update save');
 		}
-	}
-	public static function dependancy_info()
-	{
-		$return = array();
-		$return['log'] = 'Freebox_OS_update';
-		$return['progress_file'] = '/tmp/compilation_Freebox_OS_in_progress';
-		if (exec('dpkg -s netcat | grep -c "Status: install"') == 1) {
-			$return['state'] = 'ok';
-		} else {
-			$return['state'] = 'nok';
-		}
-		return $return;
-	}
-	public static function dependancy_install()
-	{
-		if (file_exists('/tmp/compilation_Freebox_OS_in_progress')) {
-			return;
-		}
-		log::remove('Freebox_OS_update');
-		$cmd = 'sudo /bin/bash ' . dirname(__FILE__) . '/../../ressources/install.sh';
-		$cmd .= ' >> ' . log::getPathToLog('Freebox_OS_update') . ' 2>&1 &';
-		exec($cmd);
+		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 }
+
 class Freebox_OSCmd extends cmd
 {
-	/*public function dontRemoveCmd(){
-		return true;
-	}*/
 	public function execute($_options = array())
 	{
-		log::add('Freebox_OS', 'debug', '>───────── Connexion sur la freebox pour mise à jour de : ' . $this->getName());
-		$FreeboxAPI = new FreeboxAPI();
-		switch ($this->getEqLogic()->getLogicalId()) {
-			case 'ADSL':
-				break;
-			case 'Downloads':
-				$result = $FreeboxAPI->DownloadStats();
-				if ($result != false) {
-					switch ($this->getLogicalId()) {
-						case "stop_dl":
-							$FreeboxAPI->Downloads(0);
-							break;
-						case "start_dl":
-							$FreeboxAPI->Downloads(1);
-							break;
-					}
-				}
-				break;
-			case 'System':
-				$result = $FreeboxAPI->system();
-				switch ($this->getLogicalId()) {
-					case "reboot":
-						$FreeboxAPI->reboot();
-						break;
-					case "update":
-						$FreeboxAPI->UpdateSystem();
-						break;
-				}
-				break;
-			case 'Wifi':
-				$result = $FreeboxAPI->wifi();
-				switch ($this->getLogicalId()) {
-					case "wifiOnOff":
-						if ($result == true) {
-							$FreeboxAPI->wifiPUT(0);
-						} else {
-							$FreeboxAPI->wifiPUT(1);
-						}
-						break;
-					case 'wifiOn':
-						$FreeboxAPI->wifiPUT(1);
-						break;
-					case 'wifiOff':
-						$FreeboxAPI->wifiPUT(0);
-						break;
-				}
-				break;
-			case 'Phone':
-				$result = $FreeboxAPI->nb_appel_absence();
-				if ($result != false) {
-					switch ($this->getLogicalId()) {
-						case "sonnerieDectOn":
-							$FreeboxAPI->ringtone_on();
-							break;
-						case "sonnerieDectOff":
-							$FreeboxAPI->ringtone_off();
-							break;
-					}
-				}
-				break;
-			case 'AirPlay':
-				$receivers = $this->getEqLogic()->getCmd(null, "ActualAirmedia");
-				if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
-					log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
-					break;
-				}
-				$Parameter["media_type"] = $_options['titre'];
-				$Parameter["media"] = $_options['message'];
-				$Parameter["password"] = $this->getConfiguration('password');
-				switch ($this->getLogicalId()) {
-					case "airmediastart":
-						log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
-						$Parameter["action"] = "start";
-						$return = $FreeboxAPI->AirMediaAction($receivers->execCmd(), $Parameter);
-						break;
-					case "airmediastop":
-						$Parameter["action"] = "stop";
-						$return = $FreeboxAPI->AirMediaAction($receivers->execCmd(), $Parameter);
-						break;
-				}
-				break;
-			default:
-				$logicalId = $this->getLogicalId();
-				switch ($this->getSubType()) {
-					case 'slider':
-						if ($this->getConfiguration('inverse')) {
-							$parametre['value'] = ($this->getConfiguration('maxValue') - $this->getConfiguration('minValue')) - $_options['slider'];
-						} else {
-							$parametre['value'] = (int) $_options['slider'];
-						}
-						$parametre['value_type'] = 'int';
-						break;
-					case 'color':
-						$parametre['value'] = $_options['color'];
-						$parametre['value_type'] = '';
-						break;
-					case 'message':
-						$parametre['value'] = $_options['message'];
-						$parametre['value_type'] = 'void';
-						break;
-					case 'select':
-						$parametre['value'] = $_options['select'];
-						$parametre['value_type'] = 'void';
-						break;
-					default:
-						$parametre['value_type'] = 'bool';
+		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
+		$logicalId = $this->getLogicalId();
+		$logicalId_type = $this->getSubType();
+		$logicalId_value = $this->getvalue();
+		$logicalId_name = $this->getName();
+		$logicalId_conf = $this->getConfiguration('logicalId');
+		$logicalId_eq = $this->getEqLogic();
 
-						if ($this->getConfiguration('logicalId') >= 0 && ($this->getLogicalId() == 'PB_On' || $this->getLogicalId() == 'PB_Off')) {
-							log::add('Freebox_OS', 'debug', '│ Parametrage spécifique BP ON/OFF ' . $logicalId);
-							$logicalId = $this->getConfiguration('logicalId');
-							if ($this->getLogicalId() == 'PB_On') {
-								$parametre['value'] = true;
-							} else {
-								$parametre['value'] = false;
-							}
-
-							break;
-						} else {
-							$logicalId = $this->getLogicalId();
-							$parametre['value'] = true;
-							$Listener = cmd::byId(str_replace('#', '', $this->getValue()));
-
-							if (is_object($Listener)) {
-								$parametre['value'] = $Listener->execCmd();
-							}
-							if ($this->getConfiguration('inverse')) {
-								$parametre['value'] = !$parametre['value'];
-							}
-						}
-						break;
-				}
-				$FreeboxAPI->setTile($this->getEqLogic()->getLogicalId(), $logicalId, $parametre);
-				break;
+		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
+		if ($logicalId_value != null) {
+			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
 		}
+		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 	}
 }

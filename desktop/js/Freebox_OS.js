@@ -46,7 +46,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 });
 $('.MaFreebox').on('click', function () {
 	$('#md_modal').dialog({
-		title: "{{Parametre Freebox}}",
+		title: "{{Paramètres de la Freebox}}",
 		height: 700,
 		width: 850
 	});
@@ -75,7 +75,38 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès. Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
+				level: 'success'
+
+			});
+			window.location.reload();
+		}
+	});
+
+});
+$('.eqLogicAction[data-action=control_parental]').on('click', function () {
+	$('#div_alert').showAlert({
+		message: '{{Recherche <b>Contrôle Parental</b>}}',
+		level: 'warning'
+	});
+	$.ajax({
+		type: 'POST',
+		async: true,
+		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		data: {
+			action: 'SearchParental'
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			$('#div_alert').showAlert({
+				message: '{{Erreur recherche <b>Contrôle Parental</b>}}',
+				level: 'danger'
+			});
+		},
+		success: function (data) {
+			$('#div_alert').showAlert({
+				message: "{{Opération réalisée avec succès.Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -107,7 +138,7 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 		},
 		success: function (data) {
 			$('#div_alert').showAlert({
-				message: "{{Opération réalisée avec succès. Appuyez sur F5 si votre écran ne s'est pas actualisé}}",
+				message: "{{Opération réalisée avec succès. Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
 			});
@@ -117,6 +148,10 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 
 });
 $('.Equipement').on('click', function () {
+	$('#div_alert').showAlert({
+		message: '{{Recherche des <b>commandes</b>}}',
+		level: 'warning'
+	});
 	$.ajax({
 		type: 'POST',
 		async: false,
@@ -126,67 +161,63 @@ $('.Equipement').on('click', function () {
 		},
 		dataType: 'json',
 		global: false,
-		error: function (request, status, error) {},
+		error: function (request, status, error) {
+			$('#div_alert').showAlert({
+				message: '{{Erreur recherche des <b>commandes</b>}}',
+				level: 'danger'
+			});
+
+		},
 		success: function (data) {
+			$('#div_alert').showAlert({
+				message: "{{Opération réalisée avec succès.}}",
+				level: 'success'
+
+			});
 			location.reload();
 		}
 	});
 });
+
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', function () {
+	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
+	if ($icon != '' && $icon != null)
+		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
+});
+
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function () {
+	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
+	if ($icon != '' && $icon != null)
+		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
+});
+  
 
 function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
 	}
 	var inverse = $('<span>');
-	switch ($('.eqLogicAttr[data-l1key=logicalId]').val()) {
+	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+	switch (template) {
+		case 'airmedia':
+		case 'airplay':
+		case 'connexion':
+		case 'downloads':
+		case 'parental':
+		case 'phone':
+		case 'player':
+		case 'wifi':
+			$('.Equipement').hide();
+			$('.Add_Equipement').hide();
+			$('.Equipement_tiles').hide();
+			break;
+		case 'disk':
 		case 'Home Adapters':
-			$('.Equipement').show();
-			$('.Equipement_tiles').hide();
-			$('.Add_Equipement').hide();
-			break;
 		case 'HomeAdapters':
+		case 'homeadapters':
+		case 'network':
+		case 'system':
 			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Reseau':
-			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Disque':
-			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			var inverse = $('<span>');
-			break;
-		case 'System':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Wifi':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'ADSL':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'AirPlay':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Downloads':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
-		case 'Phone':
-			$('.Equipement').hide();
 			$('.Add_Equipement').hide();
 			$('.Equipement_tiles').hide();
 			break;

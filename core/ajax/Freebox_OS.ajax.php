@@ -87,12 +87,9 @@ try {
 			ajax::success($Free_API->PortForwarding(init('id'), "get"));
 			break;
 		case 'WakeOnLAN':
-			$Command = cmd::byId(init('id'));
-			if (is_object($Command)) {
-				$Mac = str_replace('ether-', '', $Command->getLogicalId());
-				ajax::success($Free_API->universal_put($Mac, 'WakeOnLAN', null, null, null));
-			}
-			ajax::success(false);
+			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
+			log::add('Freebox_OS', 'debug', 'Mac = '.$Mac);
+			ajax::success($Free_API->universal_put($Mac, 'WakeOnLAN', null, null, null));
 			break;
 		case 'get_airmediareceivers':
 			ajax::success($Free_API->airmedia('receivers', null, null));

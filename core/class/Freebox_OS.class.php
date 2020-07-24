@@ -143,6 +143,14 @@ class Freebox_OS extends eqLogic
 						}
 					}
 				}
+				if (isset($Equipement['l2ident'])) {
+					foreach ($Equipement['l2ident'] as $ident) {
+						if ($ident['type'] == 'mac_address') {
+							log::add('Freebox_OS', 'debug', 'identID = ' . $ident['id']);
+							$Command->setConfiguration('mac_address', $ident['id']);
+						}
+					}
+				}
 				if ($Command->execCmd() != $Equipement['active']) {
 					$Command->setCollectDate(date('Y-m-d H:i:s'));
 					$Command->setConfiguration('doNotRepeatEvent', 1);

@@ -372,13 +372,13 @@ class Free_API
 		}
 	}
 
-	public function WakeOnLAN($Mac)
+	/*public function WakeOnLAN($Mac)
 	{
 		$return = $this->fetch('/api/v8/lan/wol/pub/', array("mac" => $Mac, "password" => ""), "POST");
 		if ($return === false)
 			return false;
 		return $return['success'];
-	}
+	}*/
 	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options)
 	{
 		$fonction = "PUT";

@@ -541,7 +541,7 @@ class Free_API
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
 			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
-				$this->universal_put(null, 'reboot');
+				$this->universal_put(null, 'reboot', null, null, null);
 		} catch (Exception $e) {
 			log::add('Freebox_OS', 'error', '[FreeboxUpdatesystem]' . $e->getCode());
 		}

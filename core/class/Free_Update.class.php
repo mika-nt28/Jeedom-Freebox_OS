@@ -187,9 +187,7 @@ class Free_Update
                     $parametre['value'] = (int) $_options['slider'];
                 }
                 $parametre['value_type'] = 'int';
-                log::add('Freebox_OS', 'debug', '│ TEST : avant changement ' . $parametre['value']);
-                $cmd = cmd::byid($_cmd->getConfiguration('logicalId'));
-                log::add('Freebox_OS', 'debug', '│ TEST : 1 : ' . $_cmd->getConfiguration('logicalId'));
+                $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
 
                 if ($cmd !== false) {
 
@@ -238,8 +236,6 @@ class Free_Update
                 break;
         }
         log::add('Freebox_OS', 'debug', '│ TEST : avant action   ' . $_execute);
-        //if ($_execute == 1) 
-
-        $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
+        if ($_execute == 1) $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
     }
 }

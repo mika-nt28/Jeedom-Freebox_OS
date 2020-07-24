@@ -537,7 +537,7 @@ class Free_API
 
 			$system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
 			$Command = $system->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  null, '0', false, true);
-			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise a jours du serveur');
+			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise à jour du serveur');
 			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
 			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
 			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))

@@ -222,8 +222,8 @@ class Free_Update
                         $parametre['value'] = !$parametre['value'];
                     }
                 }
-                $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
                 break;
         }
+        $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
     }
 }

@@ -488,6 +488,7 @@ class Freebox_OS extends eqLogic
 										$name = 'Batterie';
 									}
 									if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
+										//Voir pour ce pb => JAG 
 										if ($Equipement['action'] != 'intensity_picker' && $Equipement['action'] != 'color_picker') {
 											$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $Equipement['type']);
 											$Link_I_light = $infoCmd;

@@ -780,7 +780,7 @@ class Freebox_OS extends eqLogic
 			$templatecore_V4  = 'core::';
 		};
 		// ADSL - Réeseau
-		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Réseau');
+		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Connexions');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$updateiconeADSL = false;
@@ -926,6 +926,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Player');
 		self::addPlayer();
 		log::add('Freebox_OS', 'debug', '└─────────');
+
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 			$Free_API = new Free_API();
 			$Free_API->disk();

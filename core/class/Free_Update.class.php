@@ -195,6 +195,7 @@ class Free_Update
                 $parametre['value_type'] = 'int';
                 $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
 
+                // action =(intensity_picker  or color_picker) et type =(light)
                 if ($cmd !== false) {
                     if ($cmd->getValue() === false) {
                         $_execute = 0;

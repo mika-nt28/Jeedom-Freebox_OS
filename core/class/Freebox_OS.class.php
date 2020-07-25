@@ -463,8 +463,9 @@ class Freebox_OS extends eqLogic
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									if ($Equipement['action'] == "store_slider") {
-										$generic_type = 'FLAP_STATE';
+									if ($Equipement['action'] == "store_slider" && $Command['name'] == 'position') {
+										$generic_type_I = 'FLAP_STATE';
+										$generic_type = 'FLAP_SLIDER';
 										$Templatecore = $templatecore_V4 . 'shutter';
 										$_min = '0';
 										$_max = 100;
@@ -493,6 +494,11 @@ class Freebox_OS extends eqLogic
 										$icon = 'fas fa-battery-full';
 										$name = 'Batterie';
 									}
+									if ($Equipement['action'] != "store_slider" && $Command['name'] == 'position') {
+										$_name_I = $label_sup . $name;
+									} else {
+										$_name_I = 'Etat ouverture volet';
+									}
 									if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
 										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $binaireID);
 
@@ -504,10 +510,10 @@ class Freebox_OS extends eqLogic
 										$_slider->setConfiguration("binaryID", $_cmd->getID());
 										$_slider->save();
 									} else {
-										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null);
+										$infoCmd = $Tile->AddCommand($_name_I, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null);
 									}
 
-									if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+									if (($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') || ($Equipement['action'] == "store_slider" && $Command['name'] == 'position')) {
 										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
 									}
 									$label_sup = null;
@@ -526,7 +532,7 @@ class Freebox_OS extends eqLogic
 									}
 								}
 								if ($access == "w") {
-									if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker") {
+									if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker" && $Equipement['action'] == "store_slider" && $Command['name'] == 'position') {
 										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', null, 0, false, false, null);
 									}
 								}
@@ -780,7 +786,7 @@ class Freebox_OS extends eqLogic
 			$templatecore_V4  = 'core::';
 		};
 		// ADSL - Réeseau
-		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Réseau');
+		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Connexions');
 		if (version_compare(jeedom::version(), "4", "<")) {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
 			$updateiconeADSL = false;
@@ -856,6 +862,8 @@ class Freebox_OS extends eqLogic
 			$iconeManquee = 'icon techno-phone1';
 			$iconeRecus = 'icon techno-phone3';
 			$iconePasses = 'ficon techno-phone2';
+			$iconeDell_call = 'fas fa-magic';
+			$iconeRead_call = 'fab fa-readme';
 			$updateiconePhone = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
@@ -864,6 +872,8 @@ class Freebox_OS extends eqLogic
 			$iconeManquee = 'icon techno-phone1 icon_red';
 			$iconeRecus = 'icon techno-phone3 icon_blue';
 			$iconePasses = 'icon techno-phone2 icon_green';
+			$iconeDell_call = 'fas fa-magic icon_red';
+			$iconeRead_call = 'fab fa-readme icon_blue';
 			$updateiconePhone = false;
 		};
 		$phone = self::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null);
@@ -875,6 +885,8 @@ class Freebox_OS extends eqLogic
 		$phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
 		$phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
 		$phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
+		$phone->AddCommand('Vider le journal d appels', 'phone_dell_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeDell_call, 0, 'default', 'default', 9, '0', $updateiconePhone, false, null, true);
+		$phone->AddCommand('Tout marquer comme lu', 'phone_read_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeRead_call, 0, 'default', 'default', 10, '0', $updateiconePhone, false, null, true);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Downloads
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');
@@ -926,6 +938,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Player');
 		self::addPlayer();
 		log::add('Freebox_OS', 'debug', '└─────────');
+
 		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
 			$Free_API = new Free_API();
 			$Free_API->disk();
@@ -1101,9 +1114,7 @@ class Freebox_OSCmd extends cmd
 		$logicalId_eq = $this->getEqLogic();
 
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
-		if ($logicalId_value != null) {
-			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
-		}
+
 		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 	}
 }

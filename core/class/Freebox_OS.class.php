@@ -1108,9 +1108,7 @@ class Freebox_OSCmd extends cmd
 		$logicalId_eq = $this->getEqLogic();
 
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
-		if ($logicalId_value != null) {
-			log::add('Freebox_OS', 'debug', '│ Commande liée  : ' . $logicalId_value);
-		}
+
 		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 	}
 }

@@ -148,7 +148,7 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
                             break;
                         case "nb_tasks_downloading":
-                            $result = $result[''];
+                            $result = $result['nb_tasks_downloading'];
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_downloading']);
                             break;
                         case "nb_tasks_done":
@@ -445,7 +445,8 @@ class Free_Refresh
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function refresh_player($Equipement, $Free_API) {
+    private static function refresh_player($Equipement, $Free_API)
+    {
 
         $results_playerID = $Free_API->universal_get('player_ID', $Equipement->getConfiguration('action'));
         $results_players = $Free_API->universal_get('player', $Equipement->getConfiguration('action'));
@@ -474,6 +475,5 @@ class Free_Refresh
         }
 
         if ($cmd_powerState) $Equipement->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $results_playerID['power_state']);
-
     }
 }

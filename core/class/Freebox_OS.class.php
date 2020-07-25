@@ -463,8 +463,9 @@ class Freebox_OS extends eqLogic
 									if ($Command['ui']['access'] == "rw") {
 										$label_sup = 'Etat ';
 									}
-									if ($Equipement['action'] == "store_slider") {
-										$generic_type = 'FLAP_STATE';
+									if ($Equipement['action'] == "store_slider" && $Command['name'] == 'position') {
+										$generic_type_I = 'FLAP_STATE';
+										$generic_type = 'FLAP_SLIDER';
 										$Templatecore = $templatecore_V4 . 'shutter';
 										$_min = '0';
 										$_max = 100;
@@ -493,6 +494,11 @@ class Freebox_OS extends eqLogic
 										$icon = 'fas fa-battery-full';
 										$name = 'Batterie';
 									}
+									if ($Equipement['action'] != "store_slider" && $Command['name'] == 'position') {
+										$_name_I = $label_sup . $name;
+									} else {
+										$_name_I = 'Etat ouverture volet';
+									}
 									if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
 										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $binaireID);
 
@@ -504,10 +510,10 @@ class Freebox_OS extends eqLogic
 										$_slider->setConfiguration("binaryID", $_cmd->getID());
 										$_slider->save();
 									} else {
-										$infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null);
+										$infoCmd = $Tile->AddCommand($_name_I, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null);
 									}
 
-									if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+									if (($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') || ($Equipement['action'] == "store_slider" && $Command['name'] == 'position')) {
 										$Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
 									}
 									$label_sup = null;
@@ -526,7 +532,7 @@ class Freebox_OS extends eqLogic
 									}
 								}
 								if ($access == "w") {
-									if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker") {
+									if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker" && $Equipement['action'] == "store_slider" && $Command['name'] == 'position') {
 										$action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', null, 0, false, false, null);
 									}
 								}

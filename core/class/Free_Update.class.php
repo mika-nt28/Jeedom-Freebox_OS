@@ -193,12 +193,16 @@ class Free_Update
                     $parametre['value'] = (int) $_options['slider'];
                 }
                 $parametre['value_type'] = 'int';
-                $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
 
-                // action =(intensity_picker  or color_picker) et type =(light)
-                if ($cmd !== false) {
-                    if ($cmd->getValue() === false) {
-                        $_execute = 0;
+                $action = $logicalId_eq->getConfiguration('action');
+                $type = $logicalId_eq->getConfiguration('type');
+                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action ' . $action);
+                if ($action == 'intensity_picker' || $action == 'color_picker') {
+                    $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
+                    if ($cmd !== false) {
+                        if ($cmd->execCmd() == 0) {
+                            $_execute = 0;
+                        }
                     }
                 }
                 log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);

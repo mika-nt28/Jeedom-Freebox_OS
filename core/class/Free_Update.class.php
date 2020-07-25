@@ -128,6 +128,12 @@ class Free_Update
                 case "sonnerieDectOff":
                     $Free_API->ringtone('OFF');
                     break;
+                case "phone_dell_call":
+                    $Free_API->universal_put(null, 'phone_dell_call', null, null, null);
+                    break;
+                case "phone_read_call":
+                    $Free_API->universal_put(null, 'phone_read_call', null, null, null);
+                    break;
             }
         }
     }

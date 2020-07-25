@@ -409,6 +409,14 @@ class Free_API
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
 				break;
+			case 'phone_dell_call':
+				$config = 'api/v8/call/log/delete_all';
+				$fonction = "POST";
+				break;
+			case 'phone_read_call':
+				$config = 'api/v8/call/log/mark_all_as_read';
+				$fonction = "POST";
+				break;
 			case 'reboot':
 				$config = 'api/v8/system/reboot';
 				$fonction = "POST";
@@ -447,7 +455,7 @@ class Free_API
 			$return = $this->fetch('/' . $config, array("mac" => $id, "password" => ""), $fonction);
 		} else if ($update == 'set_tiles') {
 			$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
-		} else if ($update == 'reboot') {
+		} else if ($update == 'reboot' || $update == 'phone_dell_call' || $update == 'phone_read_call') {
 			$return = $this->fetch('/' . $config . '/', null, $fonction);
 		} else {
 			if ($config_log != null) {
@@ -545,39 +553,39 @@ class Free_API
 		$listNumber_missed = null;
 		$listNumber_accepted = null;
 		$listNumber_outgoing = null;
-		$pre_check_con = $this->fetch('/api/v8/call/log/');
-		if ($pre_check_con === false)
+		$result = $this->fetch('/api/v8/call/log/');
+		if ($result === false)
 			return false;
-		if ($pre_check_con['success']) {
+		if ($result['success']) {
 			$timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-			if (isset($pre_check_con['result'])) {
-				$nb_call = count($pre_check_con['result']);
+			if (isset($result['result'])) {
+				$nb_call = count($result['result']);
 
 				$cptAppel_outgoing = 0;
 				$cptAppel_missed = 0;
 				$cptAppel_accepted = 0;
 				for ($k = 0; $k < $nb_call; $k++) {
-					$jour = $pre_check_con['result'][$k]['datetime'];
+					$jour = $result['result'][$k]['datetime'];
 
-					$time = date('H:i', $pre_check_con['result'][$k]['datetime']);
+					$time = date('H:i', $result['result'][$k]['datetime']);
 					if ($timestampToday <= $jour) {
-						if ($pre_check_con['result'][$k]['name'] == $pre_check_con['result'][$k]['number']) {
+						if ($result['result'][$k]['name'] == $result['result'][$k]['number']) {
 							$name = "N.C.";
 						} else {
-							$name = $pre_check_con['result'][$k]['name'];
+							$name = $result['result'][$k]['name'];
 						}
 
-						if ($pre_check_con['result'][$k]['type'] == 'missed') {
+						if ($result['result'][$k]['type'] == 'missed') {
 							$cptAppel_missed++;
-							$listNumber_missed .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
+							$listNumber_missed .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
 						}
-						if ($pre_check_con['result'][$k]['type'] == 'accepted') {
+						if ($result['result'][$k]['type'] == 'accepted') {
 							$cptAppel_accepted++;
-							$listNumber_accepted .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
+							$listNumber_accepted .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
 						}
-						if ($pre_check_con['result'][$k]['type'] == 'outgoing') {
+						if ($result['result'][$k]['type'] == 'outgoing') {
 							$cptAppel_outgoing++;
-							$listNumber_outgoing .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
+							$listNumber_outgoing .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
 						}
 					}
 				}

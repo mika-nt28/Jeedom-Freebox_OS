@@ -856,6 +856,8 @@ class Freebox_OS extends eqLogic
 			$iconeManquee = 'icon techno-phone1';
 			$iconeRecus = 'icon techno-phone3';
 			$iconePasses = 'ficon techno-phone2';
+			$iconeDell_call = 'fas fa-magic';
+			$iconeRead_call = 'fab fa-readme';
 			$updateiconePhone = false;
 		} else {
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
@@ -864,6 +866,8 @@ class Freebox_OS extends eqLogic
 			$iconeManquee = 'icon techno-phone1 icon_red';
 			$iconeRecus = 'icon techno-phone3 icon_blue';
 			$iconePasses = 'icon techno-phone2 icon_green';
+			$iconeDell_call = 'fas fa-magic icon_red';
+			$iconeRead_call = 'fab fa-readme icon_blue';
 			$updateiconePhone = false;
 		};
 		$phone = self::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null);
@@ -875,6 +879,8 @@ class Freebox_OS extends eqLogic
 		$phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
 		$phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
 		$phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
+		$phone->AddCommand('Vider le journal d appels', 'phone_dell_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeDell_call, 0, 'default', 'default', 9, '0', $updateiconePhone, false, null, true);
+		$phone->AddCommand('Tout marquer comme lu', 'phone_read_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeRead_call, 0, 'default', 'default', 10, '0', $updateiconePhone, false, null, true);
 		log::add('Freebox_OS', 'debug', '└─────────');
 		//Downloads
 		log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');

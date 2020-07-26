@@ -245,7 +245,7 @@ class Free_API
 				$logicalinfo = Freebox_OS::getlogicalinfo();
 				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 
-				$command = $disk->AddCommand('Occupation [' . $disks['type'] . '] - ' . $disks['id'], $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false);
+				$command = $disk->AddCommand('Occupation [' . $disks['type'] . '] - ' . $disks['id'], $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false, false, 'never', null, true);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
 			}
@@ -393,6 +393,12 @@ class Free_API
 					$jsontestprofile['override'] = true;
 					$jsontestprofile['override_mode'] = "denied";
 				} else if ($parametre == "tempDenied") {
+					/*$_cmd = $this->getvalue();
+					log::add('Freebox_OS', 'debug', '└─────────' . $_cmd);
+
+					if ($cmd != null) {
+						log::add('Freebox_OS', 'debug', '└─────────');
+					}*/
 					$date = new DateTime();
 					$timestamp = $date->getTimestamp();
 					$jsontestprofile['override_until'] = $timestamp + $_options['select'];

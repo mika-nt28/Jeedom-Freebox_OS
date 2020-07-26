@@ -600,9 +600,6 @@ class Freebox_OS extends eqLogic
 				$Free_API->airmedia('config', $parametre);
 				break;
 		}
-		if ($this->getConfiguration('waite') == '') {
-			$this->setConfiguration('waite', 300);
-		}
 	}
 	public function preUpdate()
 	{

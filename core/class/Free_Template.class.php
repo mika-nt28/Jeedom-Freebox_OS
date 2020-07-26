@@ -66,7 +66,7 @@ class Free_Template
 		// Template pour l'état du contrôle Parental'
 		$return['info']['string']['Parental'] = array(
 			'template' => 'tmplmultistate',
-			'replace' => array('#_time_widget_#' => '0'),
+			'replace' => array('#_time_widget_#' => '1'),
 			'test' => array(
 				array('operation' => "#value# == 'allowed'", 'state_light' => '<i class=\'icon_green icon fas fa-user-check\'></i>'),
 				array('operation' => "#value# == 'denied'", 'state_light' => '<i class=\'icon_red icon fas fa-user-lock\'></i>'),

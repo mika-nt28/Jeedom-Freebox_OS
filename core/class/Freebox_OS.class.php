@@ -557,7 +557,7 @@ class Freebox_OS extends eqLogic
 		}
 
 		if ($_logicalId == "tempDenied") {
-			$Command->setConfiguration('listValue', '1800|30 minutes;3600|1 heure;7200|2 heure');
+			$Command->setConfiguration('listValue', '1800|30 minutes;3600|1 heure;7200|2 heures');
 		}
 		$Command->save();
 

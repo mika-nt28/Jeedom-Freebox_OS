@@ -153,7 +153,6 @@ class Freebox_OS extends eqLogic
 					} else {
 						$_autorefresh = '* * * * *';
 					}
-					log::add('Freebox_OS', 'debug', '│ AUTOREFRESH' . $_autorefresh);
 				} elseif ($Equipement['type'] == 'light') {
 					$category = 'light';
 				} elseif ($Equipement['action'] == 'store' || $Equipement['action'] == 'store_slider') {

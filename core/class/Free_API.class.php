@@ -335,6 +335,9 @@ class Free_API
 					$total_bytes = $result['result']['partitions'][0]['total_bytes'];
 					$used_bytes = $result['result']['partitions'][0]['used_bytes'];
 					break;
+				case 'network_ping':
+					return $result;
+					break;
 				case 'planning':
 					if ($result['result']['use_planning']) {
 						$value = 1;

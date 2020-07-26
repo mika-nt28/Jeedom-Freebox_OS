@@ -50,8 +50,7 @@ class Free_Update
 
                 break;
             case 'parental':
-                $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options);
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
                 break;
             case 'phone':
                 Free_Update::update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -116,7 +115,17 @@ class Free_Update
             }
         }
     }
+    private static function update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
+    {
+        $cmd = cmd::byid($_cmd->getvalue());
 
+        if ($cmd !== false) {
+            log::add('Freebox_OS', 'debug', '│ Test : ' . $cmd->execCmd());
+            $_status = $cmd->execCmd();
+        }
+        $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);
+        Free_Refresh::RefreshInformation($logicalId_eq->getId());
+    }
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         $result = $Free_API->nb_appel_absence();

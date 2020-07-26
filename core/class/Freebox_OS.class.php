@@ -89,6 +89,7 @@ class Freebox_OS extends eqLogic
 			if ($category != null) {
 				$EqLogic->setcategory($category, 1);
 			}
+
 			if ($_autorefresh != null) {
 				$EqLogic->setConfiguration('autorefresh', $_autorefresh);
 			} else {
@@ -97,15 +98,17 @@ class Freebox_OS extends eqLogic
 			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
-		if ($EqLogic->getConfiguration('autorefresh') == null && $tiles != true && $EqLogic->getLogicalId() != 'disk') {
-			$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
-		} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getLogicalId() == 'disk') {
-			$EqLogic->setConfiguration('autorefresh', '1 * * * *');
+		if ($_autorefresh == null) {
+			if ($EqLogic->getConfiguration('autorefresh') == null && $tiles != true && $EqLogic->getLogicalId() != 'disk') {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getLogicalId() == 'disk') {
+				$EqLogic->setConfiguration('autorefresh', '1 * * * *');
+			}
 		}
 		if ($tiles == true) {
 			$EqLogic->setConfiguration('type', $eq_type);
 			$EqLogic->setConfiguration('action', $eq_action);
-			if ($_autorefresh != null) {
+			if ($_autorefresh == null) {
 				if ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player' && $EqLogic->getConfiguration('type', $eq_type) != 'alarm_remote') {
 					$EqLogic->setConfiguration('autorefresh', '* * * * *');
 				} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) == 'alarm_remote') {
@@ -150,6 +153,7 @@ class Freebox_OS extends eqLogic
 					} else {
 						$_autorefresh = '* * * * *';
 					}
+					log::add('Freebox_OS', 'debug', '│ AUTOREFRESH' . $_autorefresh);
 				} elseif ($Equipement['type'] == 'light') {
 					$category = 'light';
 				} elseif ($Equipement['action'] == 'store' || $Equipement['action'] == 'store_slider') {

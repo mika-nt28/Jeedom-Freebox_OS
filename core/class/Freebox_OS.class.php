@@ -139,10 +139,17 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
 			$templatecore_V4  = 'core::';
 		};
+
 		foreach ($Free_API->universal_get('tiles') as $Equipement) {
+			$_autorefresh = '*/5 * * * *';
 			if ($Equipement['type'] != 'camera') {
 				if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {
 					$category = 'security';
+					if ($Equipement['type'] == 'alarm_remote') {
+						$_autorefresh = '*/5 * * * *';
+					} else {
+						$_autorefresh = '* * * * *';
+					}
 				} elseif ($Equipement['type'] == 'light') {
 					$category = 'light';
 				} elseif ($Equipement['action'] == 'store' || $Equipement['action'] == 'store_slider') {
@@ -153,9 +160,9 @@ class Freebox_OS extends eqLogic
 
 				$Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
 				if (isset($Equipement['label'])) {
-					$Tile = self::AddEqLogic($Equipement['label'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action']);
+					$Tile = self::AddEqLogic($Equipement['label'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh);
 				} else {
-					$Tile = self::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action']);
+					$Tile = self::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh);
 				}
 			}
 			foreach ($Equipement['data'] as $Command) {

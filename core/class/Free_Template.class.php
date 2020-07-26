@@ -18,12 +18,14 @@
 /* * ***************************Includes********************************* */
 require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
-class Free_Template {
+class Free_Template
+{
 
-    public static function getTemplate() {
+	public static function getTemplate()
+	{
 		//log::add('Freebox_OS', 'debug', '>───────── Get Template');
 
-        // Template pour le wifi action
+		// Template pour le wifi action
 		$return = array('action' => array('other' => array()));
 		$return['action']['other']['Wifi'] = array(
 			'template' => 'tmplicon',
@@ -106,7 +108,7 @@ class Free_Template {
 				array('operation' => "#value# == 3", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
 				array('operation' => "#value# == 1", 'state_light' => '<i class=\'icon_red icon jeedom-lock-ferme\'></i>')
 			)
-        );
-        return $return;
-    }
+		);
+		return $return;
+	}
 }

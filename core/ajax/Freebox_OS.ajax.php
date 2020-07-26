@@ -62,19 +62,19 @@ try {
 			ajax::success($Free_API->ask_track_authorization());
 			break;
 		case 'Searchhomeadapters':
-			Freebox_OS::addhomeadapters();
+			Free_CreateEq::createEq('homeadapters_SP');
 			ajax::success(true);
 			break;
 		case 'SearchParental':
-			Freebox_OS::addparental();
+			Free_CreateEq::createEq('parental');
 			ajax::success(true);
 			break;
 		case 'Searchnetwork':
-			Freebox_OS::addnetwork();
+			Free_CreateEq::createEq('network');
 			ajax::success(true);
 			break;
 		case 'Searchsystem':
-			Freebox_OS::addsystem();
+			Free_CreateEq::createEq('system');
 			ajax::success(true);
 			break;
 		case 'Searchdisk':

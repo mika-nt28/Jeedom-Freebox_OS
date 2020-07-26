@@ -372,7 +372,7 @@ class Free_API
 		}
 	}
 
-	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options)
+	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status = null)
 	{
 		$fonction = "PUT";
 		$config_log = null;
@@ -397,7 +397,11 @@ class Free_API
 					$timestamp = $date->getTimestamp();
 					$jsontestprofile['override_until'] = $timestamp + $_options['select'];
 					$jsontestprofile['override'] = true;
-					$jsontestprofile['override_mode'] = "denied";
+					if ($_status == 'denied') {
+						$jsontestprofile['override_mode'] = "allowed";
+					} else {
+						$jsontestprofile['override_mode'] = "denied";
+					}
 				} else {
 					$jsontestprofile['override'] = false;
 				}

@@ -235,6 +235,7 @@ class Free_Refresh
             if (is_object($Command)) {
                 $result = $Free_API->universal_get('network_ping', $Command->getLogicalId());
                 if (!$result['success']) {
+                    log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
                     if ($result['error_code'] == "internal_error") {
                         $Command->remove();
                         $Command->save(true);
@@ -253,14 +254,17 @@ class Free_Refresh
                     }
                     $Command->setConfiguration('host_type', $result['result']['host_type']);
                     $Command->save();
+
                     if (isset($result['result']['active'])) {
                         if ($result['result']['active'] == 'true') {
                             $Command->setOrder($Command->getOrder() % 1000);
                             $Command->save();
+                            log::add('Freebox_OS', 'debug', '>───────── ' . $Command->getLogicalId() . ' : true ');
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), true);
                         } else {
                             $Command->setOrder($Command->getOrder() % 1000 + 1000);
                             $Command->save();
+                            log::add('Freebox_OS', 'debug', '>───────── ' . $Command->getLogicalId() . ' : false ');
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), false);
                         }
                     } else {

@@ -94,7 +94,7 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $updateiconeADSL = false;
         };
-        $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/5 * * * *');
+        $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
         $Connexion->AddCommand('rate down', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeADSL, true);
         $Connexion->AddCommand('rate up', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeADSL, true);
         $Connexion->AddCommand('bandwidth up', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeADSL, true);
@@ -106,7 +106,7 @@ class Free_CreateEq
     private static function createEq_disk($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Disques');
-        Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '0 * * * *');
+        Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -128,7 +128,7 @@ class Free_CreateEq
             $iconeDownloadsOff = 'fas fa-stop icon_red';
             $updateiconeDownloads = false;
         };
-        $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '0 * * * *');
+        $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $downloads->AddCommand('Nombre de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateiconeDownloads, true);
         $downloads->AddCommand('Nombre de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeDownloads, true);
         $downloads->AddCommand('Nombre de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateiconeDownloads, true);
@@ -150,14 +150,14 @@ class Free_CreateEq
     private static function createEq_homeadapters($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Home Adapters');
-        Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '0 * * * *');
+        Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     public static function createEq_homeadapters_SP($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
 
-        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '0 * * * *');
+        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
 
         foreach ($Free_API->universal_get('homeadapters') as $Equipement) {
             if ($Equipement['label'] != '') {
@@ -322,7 +322,7 @@ class Free_CreateEq
             $iconeReboot = 'fas fa-sync icon_red';
             $updateiconeSystem = false;
         };
-        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/5 * * * *');
+        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
         $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeReboot, 0, 'default', 'default',  31, '0', $updateiconeSystem, false);
         $system->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateiconeSystem, true);
         $system->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateiconeSystem, true);
@@ -336,7 +336,7 @@ class Free_CreateEq
     {
         $Free_API = new Free_API();
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Système spécifique');
-        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/5 * * * *');
+        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
             $Template4G = null;

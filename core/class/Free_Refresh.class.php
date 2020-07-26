@@ -148,11 +148,16 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
                             break;
                         case "nb_tasks_downloading":
-                            $result = $result['nb_tasks_downloading'];
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_downloading']);
                             break;
                         case "nb_tasks_done":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_done']);
+                            break;
+                        case "nb_rss":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_rss']);
+                            break;
+                        case "nb_rss_items_unread":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_rss_items_unread']);
                             break;
                         case "rx_rate":
                             $result = $result['rx_rate'];

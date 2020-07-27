@@ -44,6 +44,7 @@ class Free_Refresh
                         if (is_object($Command)) {
                             $result = $Free_API->universal_get('disk', $Command->getLogicalId());
                             if ($result != false) {
+                                log::add('Freebox_OS', 'debug', '>───────── Occupation du disque : ' . $result . '%');
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                             }
                         }

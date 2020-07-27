@@ -272,6 +272,14 @@ class Free_API
 			case 'homeadapters_status':
 				$config = 'api/v8/home/adapters/' . $id;
 				break;
+			case 'notification':
+				$config = 'api/v8/notif/targets';
+				$config_log = 'Liste des notifications';
+				break;
+			case 'notification_ID':
+				$config = 'api/v8/notif/targets/' . $id;
+				$config_log = 'Etat des notifications';
+				break;
 			case 'parental':
 				$config = 'api/v8/network_control';
 				$config_log = 'Etat Contrôle Parental';
@@ -384,6 +392,9 @@ class Free_API
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Mise à jour de : Activation 4G';
 				$config_commande = 'enabled';
+				break;
+			case 'notification_ID':
+				$config = 'api/v8/notif/targets/' . $id;
 				break;
 			case 'parental':
 				$config_log = 'Mise à jour du : Contrôle Parental';

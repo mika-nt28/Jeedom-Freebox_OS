@@ -396,6 +396,10 @@ class Free_API
 			case 'notification_ID':
 				$config = 'api/v8/notif/targets/' . $id;
 				break;
+			case 'notification_DELETE_ID':
+				$config = 'api/v8/notif/targets/' . $id;
+				$fonction = "DELETE";
+				break;
 			case 'parental':
 				$config_log = 'Mise à jour du : Contrôle Parental';
 				$config_commande = 'parental';

@@ -59,6 +59,8 @@ class Free_CreateEq
                 Free_CreateEq::createEq_player($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
+                // TEST
+                Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -310,6 +312,13 @@ class Free_CreateEq
                 $Command->save();
             }
         }
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_notification($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Notification');
+        $Free_API = new Free_API();
+        $Free_API->universal_get('notification', null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_system($logicalinfo, $templatecore_V4)

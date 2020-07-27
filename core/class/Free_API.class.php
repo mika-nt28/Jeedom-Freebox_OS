@@ -240,12 +240,12 @@ class Free_API
 				$used_bytes = $disks['partitions'][0]['used_bytes'];
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
-				log::add('Freebox_OS', 'debug', '│ Occupation [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
+				log::add('Freebox_OS', 'debug', '│ Disque  [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 
 				$logicalinfo = Freebox_OS::getlogicalinfo();
 				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 
-				$command = $disk->AddCommand('Occupation [' . $disks['type'] . '] - ' . $disks['id'], $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false, false, 'never', null, true);
+				$command = $disk->AddCommand('Disque - ' . $disks['type']  . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false, false, 'never', null, true);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
 			}
@@ -271,6 +271,14 @@ class Free_API
 				break;
 			case 'homeadapters_status':
 				$config = 'api/v8/home/adapters/' . $id;
+				break;
+			case 'notification':
+				$config = 'api/v8/notif/targets';
+				$config_log = 'Liste des notifications';
+				break;
+			case 'notification_ID':
+				$config = 'api/v8/notif/targets/' . $id;
+				$config_log = 'Etat des notifications';
 				break;
 			case 'parental':
 				$config = 'api/v8/network_control';
@@ -334,6 +342,7 @@ class Free_API
 				case 'disk':
 					$total_bytes = $result['result']['partitions'][0]['total_bytes'];
 					$used_bytes = $result['result']['partitions'][0]['used_bytes'];
+					$value = round($used_bytes / $total_bytes * 100, 2);
 					break;
 				case 'network_ping':
 					return $result;
@@ -365,11 +374,7 @@ class Free_API
 			} else if ($config_log != null && $id != null) {
 				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
 			}
-			if ($update == 'disks') {
-				return round($used_bytes / $total_bytes * 100, 2);
-			} else {
-				return $value;
-			}
+			return $value;
 		} else {
 			return false;
 		}
@@ -384,6 +389,13 @@ class Free_API
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Mise à jour de : Activation 4G';
 				$config_commande = 'enabled';
+				break;
+			case 'notification_ID':
+				$config = 'api/v8/notif/targets/' . $id;
+				break;
+			case 'notification_DELETE_ID':
+				$config = 'api/v8/notif/targets/' . $id;
+				$fonction = "DELETE";
 				break;
 			case 'parental':
 				$config_log = 'Mise à jour du : Contrôle Parental';

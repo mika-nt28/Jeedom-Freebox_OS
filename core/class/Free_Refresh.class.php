@@ -148,11 +148,16 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
                             break;
                         case "nb_tasks_downloading":
-                            $result = $result[''];
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_downloading']);
                             break;
                         case "nb_tasks_done":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_done']);
+                            break;
+                        case "nb_rss":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_rss']);
+                            break;
+                        case "nb_rss_items_unread":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_rss_items_unread']);
                             break;
                         case "rx_rate":
                             $result = $result['rx_rate'];
@@ -230,6 +235,7 @@ class Free_Refresh
             if (is_object($Command)) {
                 $result = $Free_API->universal_get('network_ping', $Command->getLogicalId());
                 if (!$result['success']) {
+                    log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
                     if ($result['error_code'] == "internal_error") {
                         $Command->remove();
                         $Command->save(true);
@@ -248,14 +254,17 @@ class Free_Refresh
                     }
                     $Command->setConfiguration('host_type', $result['result']['host_type']);
                     $Command->save();
+
                     if (isset($result['result']['active'])) {
                         if ($result['result']['active'] == 'true') {
                             $Command->setOrder($Command->getOrder() % 1000);
                             $Command->save();
+                            log::add('Freebox_OS', 'debug', '>───────── ' . $Command->getLogicalId() . ' : true ');
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), true);
                         } else {
                             $Command->setOrder($Command->getOrder() % 1000 + 1000);
                             $Command->save();
+                            log::add('Freebox_OS', 'debug', '>───────── ' . $Command->getLogicalId() . ' : false ');
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), false);
                         }
                     } else {
@@ -445,7 +454,8 @@ class Free_Refresh
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function refresh_player($Equipement, $Free_API) {
+    private static function refresh_player($Equipement, $Free_API)
+    {
 
         $results_playerID = $Free_API->universal_get('player_ID', $Equipement->getConfiguration('action'));
         $results_players = $Free_API->universal_get('player', $Equipement->getConfiguration('action'));
@@ -474,6 +484,5 @@ class Free_Refresh
         }
 
         if ($cmd_powerState) $Equipement->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $results_playerID['power_state']);
-
     }
 }

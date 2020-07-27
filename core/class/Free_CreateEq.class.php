@@ -60,7 +60,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
-                Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
+                // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 break;
         }
     }

@@ -28,7 +28,7 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 3/5 : Update nouveautés + corrections commandes');
 
 		while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
-		$cron->remove();
+			$cron->remove();
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
@@ -52,8 +52,8 @@ function Freebox_OS_update()
 			UpdateLogicId($eqLogic, 'nb_tasks_stopped', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'nb_tasks_done', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'nb_tasks_downloading', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'rx_rate', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'tx_rate', '', 'numeric'); // Correction sous Type 20200616
+			UpdateLogicId($eqLogic, 'rx_rate', '', 'numeric', 'Ko/s'); // Correction sous Type 20200616
+			UpdateLogicId($eqLogic, 'tx_rate', '', 'numeric', 'Ko/s'); // Correction sous Type 20200616
 		}
 		log::add('Freebox_OS', 'debug', '│ Etape 4/5 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);
@@ -80,7 +80,7 @@ function Freebox_OS_remove()
 		$cron->remove();
 }
 
-function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
+function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = null)
 {
 	//  Fonction update commande (Changement equipement, changement sous type)
 	$cmd = $eqLogic->getCmd(null, $from);
@@ -92,6 +92,10 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
 		//Update sous type
 		if ($SubType != null) {
 			$cmd->setSubType($SubType);
+		}
+		//Update sous type
+		if ($unite != null) {
+			$cmd->setUnite($unite);
 		}
 		$cmd->save();
 	}

@@ -311,6 +311,9 @@ class Free_API
 			case 'system':
 				$config = 'api/v8/system';
 				break;
+			case 'switch':
+				$config = 'api/v8/switch/status';
+				break;
 			case 'tiles':
 				$config = 'api/v8/home/tileset/all';
 				break;

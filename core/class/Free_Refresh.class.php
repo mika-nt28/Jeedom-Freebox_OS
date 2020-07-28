@@ -164,12 +164,14 @@ class Free_Refresh
                             $result = $result['rx_rate'];
                             if (function_exists('bcdiv'))
                                 $result = bcdiv($result, 1048576, 2);
+                            $result = $result / 1000;
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                             break;
                         case "tx_rate":
                             $result = $result['tx_rate'];
                             if (function_exists('bcdiv'))
                                 $result = bcdiv($result, 1048576, 2);
+                            $result = $result / 1000;
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                             break;
                         case "nb_tasks_active":

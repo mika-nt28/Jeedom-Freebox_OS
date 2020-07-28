@@ -245,7 +245,7 @@ class Free_API
 				$logicalinfo = Freebox_OS::getlogicalinfo();
 				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 
-				$command = $disk->AddCommand('Disque - ' . $disks['type']  . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false, false, 'never', null, true);
+				$command = $disk->AddCommand('Occupation du disque - ' . $disks['type']  . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false, false, 'never', null, true);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
 			}

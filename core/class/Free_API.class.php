@@ -240,12 +240,12 @@ class Free_API
 				$used_bytes = $disks['partitions'][0]['used_bytes'];
 				$value = round($used_bytes / $total_bytes * 100, 2);
 				log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
-				log::add('Freebox_OS', 'debug', '│ Occupation [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
+				log::add('Freebox_OS', 'debug', '│ Disque  [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 
 				$logicalinfo = Freebox_OS::getlogicalinfo();
 				$disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 
-				$command = $disk->AddCommand('Occupation [' . $disks['type'] . '] - ' . $disks['id'], $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false);
+				$command = $disk->AddCommand('Occupation du disque - ' . $disks['type']  . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100,  null, '0', false, false, 'never', null, true);
 				$command->event($value);
 				log::add('Freebox_OS', 'debug', '└─────────');
 			}
@@ -271,6 +271,14 @@ class Free_API
 				break;
 			case 'homeadapters_status':
 				$config = 'api/v8/home/adapters/' . $id;
+				break;
+			case 'notification':
+				$config = 'api/v8/notif/targets';
+				$config_log = 'Liste des notifications';
+				break;
+			case 'notification_ID':
+				$config = 'api/v8/notif/targets/' . $id;
+				$config_log = 'Etat des notifications';
 				break;
 			case 'parental':
 				$config = 'api/v8/network_control';
@@ -334,6 +342,10 @@ class Free_API
 				case 'disk':
 					$total_bytes = $result['result']['partitions'][0]['total_bytes'];
 					$used_bytes = $result['result']['partitions'][0]['used_bytes'];
+					$value = round($used_bytes / $total_bytes * 100, 2);
+					break;
+				case 'network_ping':
+					return $result;
 					break;
 				case 'planning':
 					if ($result['result']['use_planning']) {
@@ -362,17 +374,13 @@ class Free_API
 			} else if ($config_log != null && $id != null) {
 				log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
 			}
-			if ($update == 'disks') {
-				return round($used_bytes / $total_bytes * 100, 2);
-			} else {
-				return $value;
-			}
+			return $value;
 		} else {
 			return false;
 		}
 	}
 
-	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options)
+	public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status = null)
 	{
 		$fonction = "PUT";
 		$config_log = null;
@@ -381,6 +389,13 @@ class Free_API
 				$config = 'api/v8/connection/lte/config';
 				$config_log = 'Mise à jour de : Activation 4G';
 				$config_commande = 'enabled';
+				break;
+			case 'notification_ID':
+				$config = 'api/v8/notif/targets/' . $id;
+				break;
+			case 'notification_DELETE_ID':
+				$config = 'api/v8/notif/targets/' . $id;
+				$fonction = "DELETE";
 				break;
 			case 'parental':
 				$config_log = 'Mise à jour du : Contrôle Parental';
@@ -397,7 +412,11 @@ class Free_API
 					$timestamp = $date->getTimestamp();
 					$jsontestprofile['override_until'] = $timestamp + $_options['select'];
 					$jsontestprofile['override'] = true;
-					$jsontestprofile['override_mode'] = "denied";
+					if ($_status == 'denied') {
+						$jsontestprofile['override_mode'] = "allowed";
+					} else {
+						$jsontestprofile['override_mode'] = "denied";
+					}
 				} else {
 					$jsontestprofile['override'] = false;
 				}
@@ -408,6 +427,14 @@ class Free_API
 				$config = 'api/v8/wifi/planning';
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
+				break;
+			case 'phone_dell_call':
+				$config = 'api/v8/call/log/delete_all';
+				$fonction = "POST";
+				break;
+			case 'phone_read_call':
+				$config = 'api/v8/call/log/mark_all_as_read';
+				$fonction = "POST";
 				break;
 			case 'reboot':
 				$config = 'api/v8/system/reboot';
@@ -447,7 +474,7 @@ class Free_API
 			$return = $this->fetch('/' . $config, array("mac" => $id, "password" => ""), $fonction);
 		} else if ($update == 'set_tiles') {
 			$return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
-		} else if ($update == 'reboot') {
+		} else if ($update == 'reboot' || $update == 'phone_dell_call' || $update == 'phone_read_call') {
 			$return = $this->fetch('/' . $config . '/', null, $fonction);
 		} else {
 			if ($config_log != null) {
@@ -523,61 +550,44 @@ class Free_API
 			return false;
 	}
 
-	/*public function Updatesystem()
-	{
-		try {
-			$logicalinfo = Freebox_OS::getlogicalinfo();
-
-			$system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null);
-			$Command = $system->AddCommand('Update', 'update', 'action', 'other', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  null, '0', false, true);
-			log::add('Freebox_OS', 'debug', '│ Vérification d\'une mise à jour du serveur');
-			$firmwareOnline = file_get_contents("http://dev.freebox.fr/blog/?cat=5");
-			preg_match_all('|<h1><a href=".*">Mise à jour du Freebox Server (.*)</a></h1>|U', $firmwareOnline, $parseFreeDev, PREG_PATTERN_ORDER);
-			if (intval($Command->execCmd()) < intval($parseFreeDev[1][0]))
-				$this->universal_put(null, 'reboot', null, null, null);
-		} catch (Exception $e) {
-			log::add('Freebox_OS', 'error', '[FreeboxUpdatesystem]' . $e->getCode());
-		}
-	}*/
-
 	public function nb_appel_absence()
 	{
 		$listNumber_missed = null;
 		$listNumber_accepted = null;
 		$listNumber_outgoing = null;
-		$pre_check_con = $this->fetch('/api/v8/call/log/');
-		if ($pre_check_con === false)
+		$result = $this->fetch('/api/v8/call/log/');
+		if ($result === false)
 			return false;
-		if ($pre_check_con['success']) {
+		if ($result['success']) {
 			$timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
-			if (isset($pre_check_con['result'])) {
-				$nb_call = count($pre_check_con['result']);
+			if (isset($result['result'])) {
+				$nb_call = count($result['result']);
 
 				$cptAppel_outgoing = 0;
 				$cptAppel_missed = 0;
 				$cptAppel_accepted = 0;
 				for ($k = 0; $k < $nb_call; $k++) {
-					$jour = $pre_check_con['result'][$k]['datetime'];
+					$jour = $result['result'][$k]['datetime'];
 
-					$time = date('H:i', $pre_check_con['result'][$k]['datetime']);
+					$time = date('H:i', $result['result'][$k]['datetime']);
 					if ($timestampToday <= $jour) {
-						if ($pre_check_con['result'][$k]['name'] == $pre_check_con['result'][$k]['number']) {
+						if ($result['result'][$k]['name'] == $result['result'][$k]['number']) {
 							$name = "N.C.";
 						} else {
-							$name = $pre_check_con['result'][$k]['name'];
+							$name = $result['result'][$k]['name'];
 						}
 
-						if ($pre_check_con['result'][$k]['type'] == 'missed') {
+						if ($result['result'][$k]['type'] == 'missed') {
 							$cptAppel_missed++;
-							$listNumber_missed .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
+							$listNumber_missed .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
 						}
-						if ($pre_check_con['result'][$k]['type'] == 'accepted') {
+						if ($result['result'][$k]['type'] == 'accepted') {
 							$cptAppel_accepted++;
-							$listNumber_accepted .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
+							$listNumber_accepted .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
 						}
-						if ($pre_check_con['result'][$k]['type'] == 'outgoing') {
+						if ($result['result'][$k]['type'] == 'outgoing') {
 							$cptAppel_outgoing++;
-							$listNumber_outgoing .= $pre_check_con['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $pre_check_con['result'][$k]['duration'] . "s" . "\r\n";
+							$listNumber_outgoing .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
 						}
 					}
 				}

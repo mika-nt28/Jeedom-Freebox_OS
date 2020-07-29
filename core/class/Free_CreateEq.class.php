@@ -61,6 +61,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
+                // Free_CreateEq::createEq_wifi_wps($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -103,6 +104,8 @@ class Free_CreateEq
         $Connexion->AddCommand('bandwidth down', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateiconeADSL, true);
         $Connexion->AddCommand('media', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateiconeADSL, true);
         $Connexion->AddCommand('state', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateiconeADSL, true);
+        $Connexion->AddCommand('IPv4', 'ipv4', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  7, '0', $updateiconeADSL, true);
+        $Connexion->AddCommand('IPv6', 'ipv6', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  8, '0', $updateiconeADSL, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_disk($logicalinfo, $templatecore_V4)
@@ -457,6 +460,13 @@ class Free_CreateEq
         $PlanningWifi = $Wifi->AddCommand('Etat Planning', 'wifiPlanning', "info", 'binary', null, null, null, 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateiconeWifi, true);
         $Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOn, 0, 'default', 'default', 6, '0', $updateiconeWifi, false);
         $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOff, 0, 'default', 'default', 7, '0', $updateiconeWifi, false);
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_wifi_wps($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Wifi WPS');
+        $Free_API = new Free_API();
+        $Free_API->universal_get('wifi_wps', null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 }

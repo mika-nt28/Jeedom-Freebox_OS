@@ -52,21 +52,21 @@ function AskTrackAuthorization() {
 				switch (data.result.result.status) {
 					case "unknown":
 						$('#div_alert').showAlert({
-							message: "l'application p'as pas validé à temps, merci de re-sauvgarder",
+							message: "l'application n'a été pas validé à temps, merci de re-sauvgarder",
 							level: 'danger'
 						});
 						break;
 
 					case "pending":
 						$('#div_alert').showAlert({
-							message: "L'application n'as toujours pas été validée sur la Freebox Server",
+							message: "L'application n'a été toujours pas été validée sur la Freebox Server",
 							level: 'danger'
 						});
 						break;
 
 					case "timeout":
 						$('#div_alert').showAlert({
-							message: "l'application p'as pas validé à temps, merci de re-sauvgarder",
+							message: "l'application n'a été pas validé à temps, merci de re-sauvgarder",
 							level: 'danger'
 						});
 						break;

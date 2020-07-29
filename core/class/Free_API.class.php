@@ -325,6 +325,10 @@ class Free_API
 				$config = 'api/v8/wifi/config';
 				$config_log = 'Etat du Wifi';
 				break;
+			case 'wifi_wps':
+				$config = 'api/v8/wifi/wps/config';
+				$config_log = 'Etat du Wifi WPS';
+				break;
 			case 'PortForwarding':
 				$config = '/api/v8/fw/redir/';
 				$config_log = 'Redirection de port';
@@ -452,6 +456,11 @@ class Free_API
 				$config = 'api/v8/wifi/config';
 				$config_commande = 'enabled';
 				$config_log = 'Mise à jour de : Etat du Wifi';
+				break;
+			case 'wifi_wps':
+				$config = 'api/v8/wifi/wps/config';
+				$config_commande = 'enabled';
+				$config_log = 'Mise à jour de : Etat du Wifi WPS';
 				break;
 			case 'set_tiles':
 				if ($id != null) {

@@ -139,6 +139,16 @@ class Free_API
 			log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] ' . $content);
 			$result = json_decode($content, true);
 			if ($result == null) return false;
+			if (!$result['success']) {
+			    if ($result['error_code'] == "insufficient_rights") {
+                    log::add('Freebox_OS', 'error', 'Erreur Droit : '.$result['msg']);
+                    return false;
+                }
+			    else {
+                    log::add('Freebox_OS', 'error', 'Erreur Autre : '.$result['msg']);
+                    return false;
+			    }
+            }
 			log::add('Freebox_OS', 'debug', '└─────────');
 			return $result;
 		} catch (Exception $e) {

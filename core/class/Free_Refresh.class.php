@@ -115,35 +115,27 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "bandwidth_down":
-                            log::add('Freebox_OS', 'debug', '>───────── TEST DW : ' . $result['bandwidth_down']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_down']);
                             break;
                         case "bandwidth_up":
-                            log::add('Freebox_OS', 'debug', '>───────── TEST UP : ' . $result['bandwidth_up']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_up']);
                             break;
                         case "ipv4":
-                            log::add('Freebox_OS', 'debug', '>───────── TEST ip4 : ' . $result['ipv4']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ipv4']);
                             break;
                         case "ipv6":
-                            log::add('Freebox_OS', 'debug', '>───────── TEST ip6 : ' . $result['ipv6']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ipv6']);
                             break;
                         case "media":
-                            log::add('Freebox_OS', 'debug', '>───────── TEST media : ' . $result['media']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['media']);
                             break;
                         case "rate_down":
-                            log::add('Freebox_OS', 'debug', '>───────── TEST rate_down : ' . $result['rate_down']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rate_down']);
                             break;
                         case "rate_up":
-                            log::add('Freebox_OS', 'debug', '>───────── TEST rate_up : ' . $result['rate_up']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rate_up']);
                             break;
                         case "state":
-                            log::add('Freebox_OS', 'debug', '>───────── TEST state : ' . $result['state']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
                             break;
                     }

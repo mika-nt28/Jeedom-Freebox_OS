@@ -1,0 +1,17 @@
+{
+  "success":true,
+  "result": {
+    "type":"rfc2684",
+    "rate_down":7640,
+    "bytes_up":3492301703,
+    "ipv4_port_range":[32768,49151],
+    "rate_up":74820,
+    "bandwidth_up":829580,
+    "ipv6":"2a01:e0a:32a:1560::1",
+    "bandwidth_down":6590000,
+    "media":"xdsl",
+    "state":"up",
+    "bytes_down":5318077197,
+    "ipv4":"91.172.168.85"
+  }
+}

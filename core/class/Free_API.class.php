@@ -555,7 +555,9 @@ class Free_API
 				'bandwidth_up' 	=> round($adslRateJson['result']['bandwidth_up'] / 1000000, 2),
 				'bandwidth_down' => round($adslRateJson['result']['bandwidth_down'] / 1000000, 2),
 				'media'			=> $adslRateJson['result']['media'],
-				'state' 		=> $adslRateJson['result']['state']
+				'state' 		=> $adslRateJson['result']['state'],
+                'ipv6' 		=> $adslRateJson['result']['ipv6'],
+                'ipv4' 		=> $adslRateJson['result']['ipv4']
 			);
 			return $retourFbx;
 		} else

@@ -128,7 +128,6 @@ class Free_Update
         $cmd = cmd::byid($_cmd->getvalue());
 
         if ($cmd !== false) {
-            log::add('Freebox_OS', 'debug', '│ Test : ' . $cmd->execCmd());
             $_status = $cmd->execCmd();
         }
         $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);

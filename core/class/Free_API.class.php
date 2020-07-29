@@ -139,6 +139,16 @@ class Free_API
 			log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] ' . $content);
 			$result = json_decode($content, true);
 			if ($result == null) return false;
+			if (!$result['success']) {
+			    if ($result['error_code'] == "insufficient_rights") {
+                    log::add('Freebox_OS', 'error', 'Erreur Droit : '.$result['msg']);
+                    return false;
+                }
+			    else {
+                    log::add('Freebox_OS', 'error', 'Erreur Autre : '.$result['msg']);
+                    return false;
+			    }
+            }
 			log::add('Freebox_OS', 'debug', '└─────────');
 			return $result;
 		} catch (Exception $e) {
@@ -325,6 +335,10 @@ class Free_API
 				$config = 'api/v8/wifi/config';
 				$config_log = 'Etat du Wifi';
 				break;
+			case 'wifi_wps':
+				$config = 'api/v8/wifi/wps/config';
+				$config_log = 'Etat du Wifi WPS';
+				break;
 			case 'PortForwarding':
 				$config = '/api/v8/fw/redir/';
 				$config_log = 'Redirection de port';
@@ -453,6 +467,11 @@ class Free_API
 				$config_commande = 'enabled';
 				$config_log = 'Mise à jour de : Etat du Wifi';
 				break;
+			case 'wifi_wps':
+				$config = 'api/v8/wifi/wps/config';
+				$config_commande = 'enabled';
+				$config_log = 'Mise à jour de : Etat du Wifi WPS';
+				break;
 			case 'set_tiles':
 				if ($id != null) {
 					$id = $id . '/';
@@ -546,7 +565,9 @@ class Free_API
 				'bandwidth_up' 	=> round($adslRateJson['result']['bandwidth_up'] / 1000000, 2),
 				'bandwidth_down' => round($adslRateJson['result']['bandwidth_down'] / 1000000, 2),
 				'media'			=> $adslRateJson['result']['media'],
-				'state' 		=> $adslRateJson['result']['state']
+				'state' 		=> $adslRateJson['result']['state'],
+                'ipv6' 		=> $adslRateJson['result']['ipv6'],
+                'ipv4' 		=> $adslRateJson['result']['ipv4']
 			);
 			return $retourFbx;
 		} else

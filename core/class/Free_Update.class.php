@@ -99,11 +99,11 @@ class Free_Update
             case "airmediastart":
                 log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
                 $Parameter["action"] = "start";
-                $return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
+                $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
                 break;
             case "airmediastop":
                 $Parameter["action"] = "stop";
-                $return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
+                $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
                 break;
         }
     }

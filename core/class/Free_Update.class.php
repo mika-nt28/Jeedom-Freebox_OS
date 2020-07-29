@@ -53,7 +53,9 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'parental':
-                Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
@@ -97,11 +99,11 @@ class Free_Update
             case "airmediastart":
                 log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
                 $Parameter["action"] = "start";
-                $return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
+                $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
                 break;
             case "airmediastop":
                 $Parameter["action"] = "stop";
-                $return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
+                $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
                 break;
         }
     }
@@ -130,6 +132,7 @@ class Free_Update
             $_status = $cmd->execCmd();
         }
         $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);
+        Free_Refresh::RefreshInformation($logicalId_eq->getId());
     }
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {

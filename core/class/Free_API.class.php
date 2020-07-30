@@ -140,15 +140,14 @@ class Free_API
 			$result = json_decode($content, true);
 			if ($result == null) return false;
 			if (!$result['success']) {
-			    if ($result['error_code'] == "insufficient_rights") {
-                    log::add('Freebox_OS', 'error', 'Erreur Droit : '.$result['msg']);
-                    return false;
-                }
-			    else {
-                    log::add('Freebox_OS', 'error', 'Erreur Autre : '.$result['msg']);
-                    return false;
-			    }
-            }
+				if ($result['error_code'] == "insufficient_rights") {
+					log::add('Freebox_OS', 'error', 'Erreur Droit : ' . $result['msg']);
+					return false;
+				} else {
+					log::add('Freebox_OS', 'error', 'Erreur Autre : ' . $result['msg']);
+					return false;
+				}
+			}
 			log::add('Freebox_OS', 'debug', '└─────────');
 			return $result;
 		} catch (Exception $e) {
@@ -549,25 +548,26 @@ class Free_API
 
 	public function connexion_stats()
 	{
-		$adslRateJson = $this->fetch('/api/v8/connection/');
-		if ($adslRateJson === false)
+		$result = $this->fetch('/api/v8/connection/');
+		if ($result === false)
 			return false;
-		if ($adslRateJson['success']) {
-			$vdslRateJson = $this->fetch('/api/v8/connection/xdsl/');
-			if ($vdslRateJson === false)
-				return false;
-			if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
-				$adslRateJson['result']['media'] = $vdslRateJson['result']['status']['modulation'];
-
+		if ($result['success']) {
+			if ($result['result']['media'] != 'ftth') {
+				$vdslRateJson = $this->fetch('/api/v8/connection/xdsl/');
+				if ($vdslRateJson === false)
+					return false;
+				if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
+					$result['result']['media'] = $vdslRateJson['result']['status']['modulation'];
+			}
 			$retourFbx = array(
-				'rate_down' 	=> round($adslRateJson['result']['rate_down'] / 1024, 2),
-				'rate_up' 		=> round($adslRateJson['result']['rate_up'] / 1024, 2),
-				'bandwidth_up' 	=> round($adslRateJson['result']['bandwidth_up'] / 1000000, 2),
-				'bandwidth_down' => round($adslRateJson['result']['bandwidth_down'] / 1000000, 2),
-				'media'			=> $adslRateJson['result']['media'],
-				'state' 		=> $adslRateJson['result']['state'],
-                'ipv6' 		=> $adslRateJson['result']['ipv6'],
-                'ipv4' 		=> $adslRateJson['result']['ipv4']
+				'rate_down' 	=> round($result['result']['rate_down'] / 1024, 2),
+				'rate_up' 		=> round($result['result']['rate_up'] / 1024, 2),
+				'bandwidth_up' 	=> round($result['result']['bandwidth_up'] / 1000000, 2),
+				'bandwidth_down' => round($result['result']['bandwidth_down'] / 1000000, 2),
+				'media'			=> $result['result']['media'],
+				'state' 		=> $result['result']['state'],
+				'ipv6' 		=> $result['result']['ipv6'],
+				'ipv4' 		=> $result['result']['ipv4']
 			);
 			return $retourFbx;
 		} else

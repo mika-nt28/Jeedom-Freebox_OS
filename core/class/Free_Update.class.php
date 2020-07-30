@@ -221,22 +221,18 @@ class Free_Update
                         }
                     }
                 }
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
             case 'color':
                 $parametre['value'] = $_options['color'];
                 $parametre['value_type'] = '';
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
             case 'message':
                 $parametre['value'] = $_options['message'];
                 $parametre['value_type'] = 'void';
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
             case 'select':
                 $parametre['value'] = $_options['select'];
                 $parametre['value_type'] = 'void';
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
             default:
                 $parametre['value_type'] = 'bool';
@@ -261,7 +257,6 @@ class Free_Update
                         $parametre['value'] = !$parametre['value'];
                     }
                 }
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
         }
         if ($logicalId != 'refresh') {

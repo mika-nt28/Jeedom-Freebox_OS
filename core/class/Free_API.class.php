@@ -141,10 +141,13 @@ class Free_API
 			if ($result == null) return false;
 			if (!$result['success']) {
 				if ($result['error_code'] == "insufficient_rights") {
-					log::add('Freebox_OS', 'error', 'Erreur Droit : ' . $result['msg']);
+					log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
+					return false;
+				} else if ($result['error_code'] == "auth_required" || $result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token' || $result['error_code'] == 'denied_from_external_ip' || $result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
+					log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
 					return false;
 				} else {
-					log::add('Freebox_OS', 'error', 'Erreur Autre : ' . $result['msg']);
+					log::add('Freebox_OS', 'error', 'Erreur : ' . $result['msg']);
 					return false;
 				}
 			}

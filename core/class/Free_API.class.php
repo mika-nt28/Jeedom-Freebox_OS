@@ -146,8 +146,8 @@ class Free_API
 				} else if ($result['error_code'] == "auth_required" || $result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token' || $result['error_code'] == 'denied_from_external_ip' || $result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
 					log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
 					return false;
-				} else {
-					log::add('Freebox_OS', 'error', 'Erreur : ' . $result['msg']);
+				} else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited' || $result['error_code'] == 'internal_error') {
+					log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $result['msg']);
 					return false;
 				}
 			}

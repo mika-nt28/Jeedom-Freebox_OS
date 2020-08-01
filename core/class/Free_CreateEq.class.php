@@ -47,8 +47,6 @@ class Free_CreateEq
             case 'system':
                 Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
                 break;
-
-
             default:
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);

@@ -61,6 +61,25 @@ try {
 		case 'ask_track_authorization':
 			ajax::success($Free_API->ask_track_authorization());
 			break;
+		case 'Searchhomeadapters':
+			Free_CreateEq::createEq('homeadapters_SP');
+			ajax::success(true);
+			break;
+		case 'SearchParental':
+			Free_CreateEq::createEq('parental');
+			ajax::success(true);
+			break;
+		case 'Searchnetwork':
+			Free_CreateEq::createEq('network');
+			ajax::success(true);
+			break;
+		case 'Searchsystem':
+			Free_CreateEq::createEq('system');
+			ajax::success(true);
+			break;
+		case 'Searchdisk':
+			ajax::success($Free_API->disk());
+			break;
 		case 'AddPortForwarding':
 			ajax::success($Free_API->PortForwarding(init('id'), "put", init('enabled')));
 			break;
@@ -84,51 +103,14 @@ try {
 			ajax::success(false);
 			break;
 		case 'SearchTile':
+			//Freebox_OS::updateLogicalID(1);
 			Freebox_OS::addTiles();
 			ajax::success(true);
 			break;
 		case 'SearchArchi':
+			//Freebox_OS::updateLogicalID(1);
 			Freebox_OS::CreateArchi();
 			ajax::success(true);
-			break;
-		case 'Searchairmedia':
-			Free_CreateEq::createEq('airmedia');
-			ajax::success(true);
-			break;
-		case 'Searchconnexion':
-			Free_CreateEq::createEq('connexion');
-			ajax::success(true);
-			break;
-		case 'Searchdownloads':
-			Free_CreateEq::createEq('downloads');
-			ajax::success(true);
-			break;
-		case 'Searchhomeadapters':
-			Free_CreateTil::createTil('homeadapters_SP');
-			ajax::success(true);
-			break;
-		case 'SearchParental':
-			Free_CreateEq::createEq('parental');
-			ajax::success(true);
-			break;
-		case 'Searchnetwork':
-			Free_CreateEq::createEq('network');
-			ajax::success(true);
-			break;
-		case 'Searchphone':
-			Free_CreateEq::createEq('phone');
-			ajax::success(true);
-			break;
-		case 'Searchsystem':
-			Free_CreateEq::createEq('system');
-			ajax::success(true);
-			break;
-		case 'Searchwifi':
-			Free_CreateEq::createEq('wifi');
-			ajax::success(true);
-			break;
-		case 'Searchdisk':
-			ajax::success($Free_API->disk());
 			break;
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));

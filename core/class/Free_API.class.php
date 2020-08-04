@@ -107,7 +107,7 @@ class Free_API
 			log::add('Freebox_OS', 'error', '[FreeboxOpenSession]' . $e->getCode());
 		}
 	}
-	public function fetch($api_url, $params = array(), $method = 'GET', $update_log = false)
+	public function fetch($api_url, $params = array(), $method = 'GET', $log_update = false, $log_createeq = false)
 	{
 		try {
 			$session_token = cache::byKey('Freebox_OS::SessionToken');
@@ -115,8 +115,13 @@ class Free_API
 				sleep(1);
 				$session_token = cache::byKey('Freebox_OS::SessionToken');
 			}
-			if ($update_log == false) {
-				log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour');
+			if ($log_createeq != null) {
+				$type_log = 'Freebox_OS - ' . $log_createeq;
+			} else {
+				$type_log = 'Freebox_OS';
+			}
+			if ($log_update == false) {
+				log::add($type_log, 'debug', '┌───────── Début de Mise à jour');
 			};
 			log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] Connexion ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
 			$ch = curl_init();

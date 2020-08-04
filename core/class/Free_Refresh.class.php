@@ -324,12 +324,6 @@ class Free_Refresh
                             case "mac":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
                                 break;
-                            case "fan_rpm":
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['fan_rpm']);
-                                break;
-                            case "temp_sw":
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['temp_sw']);
-                                break;
                             case "uptime":
                                 $result = $result['uptime'];
                                 $result = str_replace(' heure ', 'h ', $result);

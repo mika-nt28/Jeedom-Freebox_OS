@@ -42,7 +42,6 @@ function AskTrackAuthorization() {
 			handleAjaxError(request, status, error);
 		},
 		success: function (data) {
-			//console.log(data);
 			if (!data.result.success) {
 				$('#div_alert').showAlert({
 					message: data.result.msg,
@@ -76,7 +75,6 @@ function AskTrackAuthorization() {
 							message: "{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}r",
 							level: 'success'
 						});
-						//console.log("Accès Granted !");
 						TryAPI();
 						break;
 
@@ -110,8 +108,6 @@ function TryAPI() {
 			handleAjaxError(request, status, error);
 		},
 		success: function (data) {
-			//console.log(data);
-			//var fbxRetour= JSON.parse(data.result);
 			if (!data.result) {
 				$('#div_alert').showAlert({
 					message: "Problème d'enregistrement avec l'API.",
@@ -119,7 +115,6 @@ function TryAPI() {
 				});
 				return;
 			} else {
-				//console.log("Test de L'API ... :");
 				var messageOut = "L’application est validée et peut être utilisée. La configuration est terminée.<br>";
 				messageOut += "Il faut modifier les droits d’accès pour l’application dans l’OS de la Freebox afin d’avoir accès à toute ces fonctionnalités.<br>";
 				messageOut += "Suivre les infos indiquées dans le paragraphe « Appairage » de la documentation du plugin.<br>";

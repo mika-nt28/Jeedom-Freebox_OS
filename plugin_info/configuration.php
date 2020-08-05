@@ -42,7 +42,7 @@ if (!isConnect()) {
 		<div class="form-group">
 			<label class="col-md-3 control-label">{{L'appairage doit être lancé après une sauvegarde des paramètres pour leurs prises en compte.}}</label>
 			<div class="col-md-3">
-				<a class="btn btn-primary FreeboxAppaire"><i class="fas fa-rss"></i> {{Appairage}}</a>
+				<a class="btn btn-sm btn-info FreeboxAppaire"><i class="fas fa-rss"></i> {{Appairage}}</a>
 			</div>
 		</div>
 		</br></br>

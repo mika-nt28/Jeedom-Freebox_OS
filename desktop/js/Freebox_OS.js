@@ -52,6 +52,14 @@ $('.MaFreebox').on('click', function () {
 	});
 	$('#md_modal').load('index.php?v=d&modal=MaFreebox&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
 });
+$('.authentification').on('click', function () {
+	$('#md_modal').dialog({
+		title: "{{authentification Freebox}}",
+		height: 700,
+		width: 850
+	});
+	$('#md_modal').load('index.php?v=d&modal=authentification&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
+});
 
 $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 	$('#div_alert').showAlert({
@@ -190,41 +198,27 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', functi
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 });
-  
+
 
 function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
 	}
-	var inverse = $('<span>');
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
 	switch (template) {
 		case 'airmedia':
-		case 'airplay':
 		case 'connexion':
-		case 'downloads':
-		case 'parental':
-		case 'phone':
-		case 'player':
-		case 'wifi':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
 		case 'disk':
-		case 'Home Adapters':
-		case 'HomeAdapters':
+		case 'downloads':
 		case 'homeadapters':
 		case 'network':
 		case 'system':
+		case 'wifi':
+		case 'phone':
 			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
 			break;
 		default:
 			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').show();
 			break;
 	}
 	if (!isset(_cmd)) {

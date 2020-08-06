@@ -139,6 +139,18 @@ class Free_API
 			log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] ' . $content);
 			$result = json_decode($content, true);
 			if ($result == null) return false;
+			if (!$result['success']) {
+				if ($result['error_code'] == "insufficient_rights") {
+					log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
+					return false;
+				} else if ($result['error_code'] == "auth_required" || $result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token' || $result['error_code'] == 'denied_from_external_ip' || $result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
+					log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
+					return false;
+				} else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited' || $result['error_code'] == 'internal_error') {
+					log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $result['msg']);
+					return false;
+				}
+			}
 			log::add('Freebox_OS', 'debug', '└─────────');
 			return $result;
 		} catch (Exception $e) {
@@ -311,6 +323,9 @@ class Free_API
 			case 'system':
 				$config = 'api/v8/system';
 				break;
+			case 'switch':
+				$config = 'api/v8/switch/status';
+				break;
 			case 'tiles':
 				$config = 'api/v8/home/tileset/all';
 				break;
@@ -321,6 +336,10 @@ class Free_API
 			case 'wifi':
 				$config = 'api/v8/wifi/config';
 				$config_log = 'Etat du Wifi';
+				break;
+			case 'wifi_wps':
+				$config = 'api/v8/wifi/wps/config';
+				$config_log = 'Etat du Wifi WPS';
 				break;
 			case 'PortForwarding':
 				$config = '/api/v8/fw/redir/';
@@ -450,6 +469,11 @@ class Free_API
 				$config_commande = 'enabled';
 				$config_log = 'Mise à jour de : Etat du Wifi';
 				break;
+			case 'wifi_wps':
+				$config = 'api/v8/wifi/wps/config';
+				$config_commande = 'enabled';
+				$config_log = 'Mise à jour de : Etat du Wifi WPS';
+				break;
 			case 'set_tiles':
 				if ($id != null) {
 					$id = $id . '/';
@@ -527,23 +551,26 @@ class Free_API
 
 	public function connexion_stats()
 	{
-		$adslRateJson = $this->fetch('/api/v8/connection/');
-		if ($adslRateJson === false)
+		$result = $this->fetch('/api/v8/connection/');
+		if ($result === false)
 			return false;
-		if ($adslRateJson['success']) {
-			$vdslRateJson = $this->fetch('/api/v8/connection/xdsl/');
-			if ($vdslRateJson === false)
-				return false;
-			if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
-				$adslRateJson['result']['media'] = $vdslRateJson['result']['status']['modulation'];
-
+		if ($result['success']) {
+			if ($result['result']['media'] != 'ftth') {
+				$vdslRateJson = $this->fetch('/api/v8/connection/xdsl/');
+				if ($vdslRateJson === false)
+					return false;
+				if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
+					$result['result']['media'] = $vdslRateJson['result']['status']['modulation'];
+			}
 			$retourFbx = array(
-				'rate_down' 	=> round($adslRateJson['result']['rate_down'] / 1024, 2),
-				'rate_up' 		=> round($adslRateJson['result']['rate_up'] / 1024, 2),
-				'bandwidth_up' 	=> round($adslRateJson['result']['bandwidth_up'] / 1000000, 2),
-				'bandwidth_down' => round($adslRateJson['result']['bandwidth_down'] / 1000000, 2),
-				'media'			=> $adslRateJson['result']['media'],
-				'state' 		=> $adslRateJson['result']['state']
+				'rate_down' 	=> round($result['result']['rate_down'] / 1024, 2),
+				'rate_up' 		=> round($result['result']['rate_up'] / 1024, 2),
+				'bandwidth_up' 	=> round($result['result']['bandwidth_up'] / 1000000, 2),
+				'bandwidth_down' => round($result['result']['bandwidth_down'] / 1000000, 2),
+				'media'			=> $result['result']['media'],
+				'state' 		=> $result['result']['state'],
+				'ipv6' 		=> $result['result']['ipv6'],
+				'ipv4' 		=> $result['result']['ipv4']
 			);
 			return $retourFbx;
 		} else

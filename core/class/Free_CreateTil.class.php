@@ -33,11 +33,6 @@ class Free_CreateTil
                 $templatecore_V4  = 'core::';
             };
             switch ($create) {
-                case 'all':
-                    Free_CreateTil::createTil_homeadapters($logicalinfo, $templatecore_V4);
-                    Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
-                    Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
-                    break;
                 case 'box':
                     Free_CreateTil::createTil_Box();
                     break;

@@ -52,33 +52,37 @@ function AskTrackAuthorization() {
 				switch (data.result.result.status) {
 					case "unknown":
 						$('#div_alert').showAlert({
-							message: "l'application p'as pas validé à temps, merci de re-sauvgarder",
+							message: "{{Vous n\'avez pas validé à temps, il faut vous cliquer sur sauvegarder pour relancer l\'association. Merci}}",
 							level: 'danger'
 						});
 						break;
 
 					case "pending":
 						$('#div_alert').showAlert({
-							message: "L'application n'as toujours pas été validée sur la Freebox Server",
-							level: 'danger'
+							message: "{{Vous n\'avez toujours pas validé l'application sur la Freebox}}",
+							level: 'warning'
 						});
 						break;
 
 					case "timeout":
 						$('#div_alert').showAlert({
-							message: "l'application p'as pas validé à temps, merci de re-sauvgarder",
+							message: "{{Vous n\'avez pas validé à temps, il faut vous cliquer sur sauvegarder pour relancer l\'association. Merci}}",
 							level: 'danger'
 						});
 						break;
 
 					case "granted":
+						$('#div_alert').showAlert({
+							message: "{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}r",
+							level: 'success'
+						});
 						//console.log("Accès Granted !");
 						TryAPI();
 						break;
 
 					case "denied":
 						$('#div_alert').showAlert({
-							message: "La demande d'autorisation a été refusée, merci de cliquer sur : Appairage",
+							message: "{{Vous avez refusé, il faut vous cliquer sur sur Appairagee pour relancer l\'association. Merci}}",
 							level: 'danger'
 						});
 						break;

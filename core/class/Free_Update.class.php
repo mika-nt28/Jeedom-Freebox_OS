@@ -23,9 +23,10 @@ class Free_Update
 
     public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $_cmd)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
-        log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
-
+        if ($logicalId != 'refresh') {
+            log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
+            log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
+        }
         $Free_API = new Free_API();
         if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player') {
             $update = $logicalId_eq->getconfiguration('type');
@@ -39,26 +40,33 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'connexion':
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'disk':
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'downloads':
                 Free_Update::update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'homeadapters':
-
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'parental':
-                Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                }
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
                 Free_Update::update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'player':
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'network':
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'system':
                 Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -91,11 +99,11 @@ class Free_Update
             case "airmediastart":
                 log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
                 $Parameter["action"] = "start";
-                $return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
+                $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
                 break;
             case "airmediastop":
                 $Parameter["action"] = "stop";
-                $return = $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
+                $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
                 break;
         }
     }
@@ -120,7 +128,6 @@ class Free_Update
         $cmd = cmd::byid($_cmd->getvalue());
 
         if ($cmd !== false) {
-            log::add('Freebox_OS', 'debug', '│ Test : ' . $cmd->execCmd());
             $_status = $cmd->execCmd();
         }
         $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);
@@ -214,22 +221,18 @@ class Free_Update
                         }
                     }
                 }
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
             case 'color':
                 $parametre['value'] = $_options['color'];
                 $parametre['value_type'] = '';
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
             case 'message':
                 $parametre['value'] = $_options['message'];
                 $parametre['value_type'] = 'void';
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
             case 'select':
                 $parametre['value'] = $_options['select'];
                 $parametre['value_type'] = 'void';
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
             default:
                 $parametre['value_type'] = 'bool';
@@ -254,9 +257,10 @@ class Free_Update
                         $parametre['value'] = !$parametre['value'];
                     }
                 }
-                log::add('Freebox_OS', 'debug', '│ Action de type : ' . $logicalId_type);
                 break;
         }
-        if ($_execute == 1) $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
+        if ($logicalId != 'refresh') {
+            if ($_execute == 1) $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
+        }
     }
 }

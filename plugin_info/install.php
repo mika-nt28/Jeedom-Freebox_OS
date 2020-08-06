@@ -28,7 +28,7 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 3/5 : Update nouveautés + corrections commandes');
 
 		while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
-		$cron->remove();
+			$cron->remove();
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
@@ -38,11 +38,6 @@ function Freebox_OS_update()
 				UpdateLogicId($eqLogic, 'wifiOn', $link_IA); // Amélioration 20200616
 				UpdateLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200616
 			}
-			UpdateLogicId($eqLogic, 'fan_rpm', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'temp_cpub', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'temp_cpum', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'temp_sw', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'nb_tasks_active', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'nb_tasks_extracting', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'nb_tasks_repairing', '', 'numeric'); // Correction sous Type 20200616
@@ -52,8 +47,8 @@ function Freebox_OS_update()
 			UpdateLogicId($eqLogic, 'nb_tasks_stopped', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'nb_tasks_done', '', 'numeric'); // Correction sous Type 20200616
 			UpdateLogicId($eqLogic, 'nb_tasks_downloading', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'rx_rate', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'tx_rate', '', 'numeric'); // Correction sous Type 20200616
+			UpdateLogicId($eqLogic, 'rx_rate', '', 'numeric', 'Ko/s', '#value# / 1000', '2'); // Correction sous Type 20200728
+			UpdateLogicId($eqLogic, 'tx_rate', '', 'numeric', 'Ko/s', '#value# / 1000', '2'); // Correction sous Type 20200728
 		}
 		log::add('Freebox_OS', 'debug', '│ Etape 4/5 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);
@@ -80,7 +75,7 @@ function Freebox_OS_remove()
 		$cron->remove();
 }
 
-function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
+function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = null, $_calculValueOffset = null, $_historizeRound = null)
 {
 	//  Fonction update commande (Changement equipement, changement sous type)
 	$cmd = $eqLogic->getCmd(null, $from);
@@ -92,6 +87,16 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
 		//Update sous type
 		if ($SubType != null) {
 			$cmd->setSubType($SubType);
+		}
+		//Update unité
+		if ($unite != null) {
+			$cmd->setUnite($unite);
+		}
+
+		// Calcul valeur => pour le download 
+		if ($_calculValueOffset != null) {
+			$cmd->setConfiguration('calculValueOffset', $_calculValueOffset);
+			$cmd->setConfiguration('historizeRound', $_historizeRound);
 		}
 		$cmd->save();
 	}

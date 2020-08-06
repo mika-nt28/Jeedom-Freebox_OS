@@ -114,26 +114,20 @@ class Free_Refresh
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
-                        case "bandwidth_down":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_down']);
-                            break;
-                        case "bandwidth_up":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_up']);
-                            break;
-                        case "ipv4":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ipv4']);
-                            break;
-                        case "ipv6":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ipv6']);
-                            break;
-                        case "media":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['media']);
-                            break;
                         case "rate_down":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rate_down']);
                             break;
                         case "rate_up":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rate_up']);
+                            break;
+                        case "bandwidth_up":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_up']);
+                            break;
+                        case "bandwidth_down":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_down']);
+                            break;
+                        case "media":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['media']);
                             break;
                         case "state":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);

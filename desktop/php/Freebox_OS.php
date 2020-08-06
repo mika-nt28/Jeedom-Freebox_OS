@@ -143,7 +143,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			}
 			?>
 		</div>
-		<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parentals}}</legend>
+		<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parental}}</legend>
 		<div class="eqLogicThumbnailContainer">
 			<?php
 			$status = 0;

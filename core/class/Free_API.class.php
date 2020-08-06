@@ -107,7 +107,7 @@ class Free_API
 			log::add('Freebox_OS', 'error', '[FreeboxOpenSession]' . $e->getCode());
 		}
 	}
-	public function fetch($api_url, $params = array(), $method = 'GET', $update_log = false)
+	public function fetch($api_url, $params = array(), $method = 'GET', $log_update = false, $log_createeq = false)
 	{
 		try {
 			$session_token = cache::byKey('Freebox_OS::SessionToken');
@@ -115,8 +115,13 @@ class Free_API
 				sleep(1);
 				$session_token = cache::byKey('Freebox_OS::SessionToken');
 			}
-			if ($update_log == false) {
-				log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour');
+			if ($log_createeq != null) {
+				$type_log = 'Freebox_OS - ' . $log_createeq;
+			} else {
+				$type_log = 'Freebox_OS';
+			}
+			if ($log_update == false) {
+				log::add($type_log, 'debug', '┌───────── Début de Mise à jour');
 			};
 			log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] Connexion ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
 			$ch = curl_init();
@@ -140,7 +145,7 @@ class Free_API
 			$result = json_decode($content, true);
 			if ($result == null) return false;
 			if (!$result['success']) {
-				if ($result['error_code'] == "insufficient_rights") {
+				if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
 					log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
 					return false;
 				} else if ($result['error_code'] == "auth_required" || $result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token' || $result['error_code'] == 'denied_from_external_ip' || $result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
@@ -267,6 +272,8 @@ class Free_API
 	public function universal_get($update = 'wifi', $id = null, $boucle = 4)
 	{
 		$config_log = null;
+		$fonction = "GET";
+		$Parameter = null;
 		switch ($update) {
 			case '4G':
 				$config = 'api/v8/connection/lte/config';
@@ -337,6 +344,9 @@ class Free_API
 				$config = 'api/v8/wifi/config';
 				$config_log = 'Etat du Wifi';
 				break;
+			case 'wifi_guest':
+				$config = 'api/v8/wifi/custom_key';
+				break;
 			case 'wifi_wps':
 				$config = 'api/v8/wifi/wps/config';
 				$config_log = 'Etat du Wifi WPS';
@@ -346,7 +356,7 @@ class Free_API
 				$config_log = 'Redirection de port';
 		}
 
-		$result = $this->fetch('/' . $config);
+		$result = $this->fetch('/' . $config, $Parameter, $fonction);
 		if ($result === false) {
 			return false;
 		}

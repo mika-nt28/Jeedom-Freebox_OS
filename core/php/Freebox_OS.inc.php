@@ -29,3 +29,4 @@ include_file('core', 'Free_Template', 'class', 'Freebox_OS');
 include_file('core', 'Free_Refresh', 'class', 'Freebox_OS');
 include_file('core', 'Free_Update', 'class', 'Freebox_OS');
 include_file('core', 'Free_CreateEq', 'class', 'Freebox_OS');
+include_file('core', 'Free_CreateTil', 'class', 'Freebox_OS');

@@ -25,18 +25,19 @@ class Free_CreateEq
     {
         $logicalinfo = Freebox_OS::getlogicalinfo();
         if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application Fonction spéciale le core V3 ');
             $templatecore_V4 = null;
         } else {
-            log::add('Freebox_OS', 'debug', '│ Application Fonction spéciale le core V4');
             $templatecore_V4  = 'core::';
         };
         switch ($create) {
-            case 'homeadapters':
-                Free_CreateEq::createEq_homeadapters($logicalinfo, $templatecore_V4);
+            case 'airmedia':
+                Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
                 break;
-            case 'homeadapters_SP':
-                Free_CreateEq::createEq_homeadapters_SP($logicalinfo, $templatecore_V4);
+            case 'connexion':
+                Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
+                break;
+            case 'downloads':
+                Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
                 break;
             case 'parental':
                 Free_CreateEq::createEq_parental($logicalinfo, $templatecore_V4);
@@ -44,8 +45,14 @@ class Free_CreateEq
             case 'network':
                 Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4);
                 break;
+            case 'phone':
+                Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
+                break;
             case 'system':
                 Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
+                break;
+            case 'wifi':
+                Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 break;
             default:
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
@@ -60,6 +67,7 @@ class Free_CreateEq
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 // Free_CreateEq::createEq_wifi_wps($logicalinfo, $templatecore_V4);
+                // Free_CreateEq::createEq_wifi_guest($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -150,30 +158,7 @@ class Free_CreateEq
         //$downloads->AddCommand('Nombre de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  16, '0', $updateiconeDownloads, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_homeadapters($logicalinfo, $templatecore_V4)
-    {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Home Adapters');
-        Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
-        log::add('Freebox_OS', 'debug', '└─────────');
-    }
-    public static function createEq_homeadapters_SP($logicalinfo, $templatecore_V4)
-    {
-        $Free_API = new Free_API();
 
-        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
-
-        foreach ($Free_API->universal_get('homeadapters') as $Equipement) {
-            if ($Equipement['label'] != '') {
-                $homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
-                if ($Equipement['status'] == 'active') {
-                    $homeadapters_value = 1;
-                } else {
-                    $homeadapters_value = 0;
-                }
-                $homeadapters->checkAndUpdateCmd($Equipement['id'], $homeadapters_value);
-            }
-        }
-    }
     private static function createEq_parental($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
@@ -258,7 +243,7 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $Equipement['device_name'] . ' -- Id : ' . $Equipement['id']);
             if ($Equipement['id'] != null) {
                 $player = Freebox_OS::AddEqLogic($Equipement['device_name'], 'player_' . $Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id'], '*/5 * * * *');
-                log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id : player_' . $Equipement['id'] . ' -- freeID : ' . $Equipement['id']);
+                log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id : player_' . $Equipement['id'] . ' -- FREE-ID : ' . $Equipement['id']);
             }
             $player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
             $player->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
@@ -458,6 +443,13 @@ class Free_CreateEq
         $PlanningWifi = $Wifi->AddCommand('Etat Planning', 'wifiPlanning', "info", 'binary', null, null, null, 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateiconeWifi, true);
         $Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOn, 0, 'default', 'default', 6, '0', $updateiconeWifi, false);
         $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOff, 0, 'default', 'default', 7, '0', $updateiconeWifi, false);
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_wifi_guest($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Wifi GUEST');
+        $Free_API = new Free_API();
+        $Free_API->universal_get('wifi_guest', null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_wifi_wps($logicalinfo, $templatecore_V4)

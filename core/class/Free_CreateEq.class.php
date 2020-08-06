@@ -68,7 +68,6 @@ class Free_CreateEq
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 // Free_CreateEq::createEq_wifi_wps($logicalinfo, $templatecore_V4);
                 // Free_CreateEq::createEq_wifi_guest($logicalinfo, $templatecore_V4);
-                // Free_CreateEq::permission();
                 break;
         }
     }
@@ -458,14 +457,6 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Wifi WPS');
         $Free_API = new Free_API();
         $Free_API->universal_get('wifi_wps', null, null);
-        log::add('Freebox_OS', 'debug', '└─────────');
-    }
-
-    private static function permission()
-    {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : DROIT');
-        $Free_API = new Free_API();
-        $Free_API->universal_get('permission', null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 }

@@ -310,12 +310,6 @@ class Free_API
 			case 'parentalprofile':
 				$config = 'api/v8/profile';
 				break;
-			case 'permission':
-				$config = 'api/v8/login/session/';
-				$Parameter["app_id"] = 'fr.freebox.testapp';
-				$Parameter["password"] = 'd4da8517c2c25b1b145f2e5ba91bd0589fc0053d';
-				$fonction = "POST";
-				break;
 			case 'planning':
 				$config = 'api/v8/wifi/planning';
 				$config_log = 'Etat du Planning du Wifi';

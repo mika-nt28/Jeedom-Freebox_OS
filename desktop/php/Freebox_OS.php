@@ -36,11 +36,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<br>
 				<span>{{Paramètres de la Freebox}}</span>
 			</div>
-			<div class="cursor authentification logoWarning">
-				<i class="fas fa-rss"></i>
-				<br>
-				<span>{{Appairage}}</span>
-			</div>
 		</div>
 		<div class="input-group" style="margin:5px;">
 			<input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
@@ -148,7 +143,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			}
 			?>
 		</div>
-		<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parentaux}}</legend>
+		<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parental}}</legend>
 		<div class="eqLogicThumbnailContainer">
 			<?php
 			$status = 0;
@@ -176,7 +171,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 	<div class="col-xs-12 eqLogic" style="display: none;">
 		<div class="input-group pull-right" style="display:inline-flex">
 			<span class="input-group-btn">
-				<a class="btn btn-default btn-sm eqLogicAction roundedLeft" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a><a class="btn btn-sm btn-info eqLogicAction Equipement"><i class="fas fa-search"></i> {{Recherche des équipements supplémentaires}}</a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a><a class="btn btn-danger btn-sm eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
+				<a class="btn btn-default btn-sm eqLogicAction roundedLeft" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a><a class="btn btn-danger btn-sm eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
 			</span>
 		</div>
 		<ul class="nav nav-tabs" role="tablist">
@@ -282,6 +277,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 						</div>
+						<div class="form-group Equipement">
+							<label class="col-sm-2 control-label">{{Recherche des équipements}}</label>
+							<div class="col-sm-9">
+								<a class="btn btn-primary eqLogicAction"><i class="fas fa-search"></i> {{Recherche}}</a>
+							</div>
+						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{logicalId équipement}}
 								<sup><i class="fas fa-question-circle" title="{{logicalId de l'équipement Freebox}}"></i></sup>
@@ -290,7 +291,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="logicalID"></span>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group Equipement_tiles">
 							<label class="col-sm-2 control-label">{{Type d'équipement}}
 								<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
 							</label>
@@ -298,7 +299,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="type"></span>
 							</div>
 						</div>
-						<div class="form-group">
+						<div class="form-group Equipement_tiles">
 							<label class="col-sm-2 control-label">{{Type d'actions de l'équipement}}
 								<sup><i class="fas fa-question-circle" title="{{Type action Freebox}}"></i></sup>
 							</label>
@@ -312,7 +313,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				</form>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="commandtab">
-
+				<a class="btn btn-sm cmdAction pull-right Add_Equipement" data-action="add" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une info}}</a>
 				<br /><br />
 				<table id="table_cmd" class="table table-bordered table-condensed">
 					<thead>

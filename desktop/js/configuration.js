@@ -17,7 +17,7 @@ $('.FreeboxAppaire').on('click', function () {
 					level: 'danger'
 				});
 				if (data.result.error_code == "new_apps_denied")
-					$('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>De nouveau, cliquez sur <b>Etape 1</b>");
+					$('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.free.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>De nouveau, cliquez sur <b>Etape 1</b>");
 				return;
 			} else {
 				sendToBdd(data.result);
@@ -42,6 +42,7 @@ function AskTrackAuthorization() {
 			handleAjaxError(request, status, error);
 		},
 		success: function (data) {
+			//console.log(data);
 			if (!data.result.success) {
 				$('#div_alert').showAlert({
 					message: data.result.msg,
@@ -51,36 +52,33 @@ function AskTrackAuthorization() {
 				switch (data.result.result.status) {
 					case "unknown":
 						$('#div_alert').showAlert({
-							message: "{{Vous n\'avez pas validé à temps, il faut vous cliquer sur sauvegarder pour relancer l\'association. Merci}}",
+							message: "l'application p'as pas validé à temps, merci de re-sauvgarder",
 							level: 'danger'
 						});
 						break;
 
 					case "pending":
 						$('#div_alert').showAlert({
-							message: "{{Vous n\'avez toujours pas validé l'application sur la Freebox}}",
-							level: 'warning'
+							message: "L'application n'as toujours pas été validée sur la Freebox Server",
+							level: 'danger'
 						});
 						break;
 
 					case "timeout":
 						$('#div_alert').showAlert({
-							message: "{{Vous n\'avez pas validé à temps, il faut vous cliquer sur sauvegarder pour relancer l\'association. Merci}}",
+							message: "l'application p'as pas validé à temps, merci de re-sauvgarder",
 							level: 'danger'
 						});
 						break;
 
 					case "granted":
-						$('#div_alert').showAlert({
-							message: "{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}r",
-							level: 'success'
-						});
+						//console.log("Accès Granted !");
 						TryAPI();
 						break;
 
 					case "denied":
 						$('#div_alert').showAlert({
-							message: "{{Vous avez refusé, il faut vous cliquer sur sur Appairagee pour relancer l\'association. Merci}}",
+							message: "La demande d'autorisation a été refusée, merci de cliquer sur : Appairage",
 							level: 'danger'
 						});
 						break;
@@ -108,6 +106,8 @@ function TryAPI() {
 			handleAjaxError(request, status, error);
 		},
 		success: function (data) {
+			//console.log(data);
+			//var fbxRetour= JSON.parse(data.result);
 			if (!data.result) {
 				$('#div_alert').showAlert({
 					message: "Problème d'enregistrement avec l'API.",
@@ -115,6 +115,7 @@ function TryAPI() {
 				});
 				return;
 			} else {
+				//console.log("Test de L'API ... :");
 				var messageOut = "L’application est validée et peut être utilisée. La configuration est terminée.<br>";
 				messageOut += "Il faut modifier les droits d’accès pour l’application dans l’OS de la Freebox afin d’avoir accès à toute ces fonctionnalités.<br>";
 				messageOut += "Suivre les infos indiquées dans le paragraphe « Appairage » de la documentation du plugin.<br>";

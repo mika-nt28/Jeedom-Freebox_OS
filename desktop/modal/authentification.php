@@ -173,7 +173,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
     </div>
 
     <div class="Freebox_OS_Display end" style="display:none;">
-      <center><i class="fa fa-check" style="font-size: 10em;"></i></center>
+      <center><i class="fas fa-check" style="font-size: 10em;"></i></center>
       <br />
       <img class="img-responsive center-block" src="core/img/logo-jeedom-freebox-grand-nom-couleur.png" height="500" width="500" />
       <center>

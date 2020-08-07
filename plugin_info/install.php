@@ -2,7 +2,6 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function Freebox_OS_install()
 {
-	//Freebox_OS::CreateArchi(); // Fonction désactiver 20200623
 }
 function Freebox_OS_update()
 {
@@ -59,7 +58,7 @@ function Freebox_OS_update()
 			$eq->save();
 		}*/
 		//log::add('Freebox_OS', 'debug', '│ Etape 5/5 : Mise à jour de l\'ensemble des composants Freebox Hors Tiles');
-		//Freebox_OS::CreateArchi(); //relance Update composant Freebox
+
 		/*resave eqLogics for new cmd: */
 		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oublier pas de lancer les deux Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {

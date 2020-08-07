@@ -151,15 +151,12 @@ class Freebox_OS extends eqLogic
 		$EqLogic->save();
 		return $EqLogic;
 	}
+
 	public static function templateWidget()
 	{
 		return Free_Template::getTemplate();
 	}
-	public static function addTiles()
-	{
-		Free_CreateTil::createTil('homeadapters');
-		Free_CreateTil::createTil();
-	}
+
 	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
@@ -279,22 +276,6 @@ class Freebox_OS extends eqLogic
 			$refresh->save();
 		}
 		return $Command;
-	}
-	public static function CreateArchi()
-	{
-
-		Free_CreateEq::createEq();
-
-		if (config::byKey('FREEBOX_SERVER_TRACK_ID') != '') {
-			$Free_API = new Free_API();
-			/*$Free_API->disk();
-			$Free_API->universal_get();
-			$Free_API->universal_get('download_stats');
-			$Free_API->universal_get('planning');
-			$Free_API->universal_get('system', null, 4);
-			$Free_API->connexion_stats();
-			$Free_API->nb_appel_absence();*/
-		}
 	}
 	/*     * *********************Méthodes d'instance************************* */
 	public function preInsert()

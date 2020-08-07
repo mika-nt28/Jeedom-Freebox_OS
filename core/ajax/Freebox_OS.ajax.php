@@ -84,11 +84,12 @@ try {
 			ajax::success(false);
 			break;
 		case 'SearchTile':
-			Freebox_OS::addTiles();
+			Free_CreateTil::createTil('homeadapters');
+			Free_CreateTil::createTil();
 			ajax::success(true);
 			break;
 		case 'SearchArchi':
-			Freebox_OS::CreateArchi();
+			Free_CreateEq::createEq();
 			ajax::success(true);
 			break;
 		case 'Searchairmedia':

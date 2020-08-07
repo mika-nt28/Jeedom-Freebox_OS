@@ -54,7 +54,7 @@ $('.MaFreebox').on('click', function () {
 });
 $('.authentification').on('click', function () {
 	$('#md_modal').dialog({
-		title: "{{authentification Freebox}}",
+		title: "{{Authentification Freebox}}",
 		height: 700,
 		width: 850
 	});

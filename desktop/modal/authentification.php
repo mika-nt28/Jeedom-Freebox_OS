@@ -246,7 +246,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
       progress(60);
     } else if ($(this).attr('data-href') == 'end') {
       progress(100);
-      good();
+      //good();
     }
     $(this).attr('data-display', 1);
   });

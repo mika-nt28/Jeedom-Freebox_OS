@@ -169,9 +169,9 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
             <div class="caption">
               <h4>{{Mes Equipements}}</h4>
               <p></p>
-              <p class="text-center"><a class="btn btn-info bt_eqlogic_standard">{{Scan des équipements standards}} <i class="fas fa-bullseye"></i></a></p>
+              <p class="text-center"><a class="btn bt_eqlogic_standard">{{Scan des équipements standards }} <i class="fas fa-bullseye logoPrimary"></i></a></p>
               <p></p>
-              <p>{{Ici vous scanner les équipements système de la Freebox}}</p>
+              <p>{{Ici vous scannez les équipements <b>systèmes</b> de la Freebox}}</p>
             </div>
           </div>
         </div>
@@ -180,9 +180,9 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
             <div class="caption">
               <h4>{{Mes Contrôles parentaux}}</h4>
               <p></p>
-              <p class="text-center"><a class="btn btn-info bt_eqlogic_control_parental">{{Scan des Contrôles parentaux}} <i class="fas fa-user-shield"></i></a></p>
+              <p class="text-center"><a class="btn bt_eqlogic_control_parental">{{Scan des Contrôles parentaux }} <i class="fas fa-user-shield logoPrimary"></i></a></p>
               <p></p>
-              <p>{{Ici vous scanner les contrôles parentaux présents dans la Freebox}}</p>
+              <p>{{Ici vous scannez les <b>contrôles parentaux</b> présents dans la Freebox}}</p>
             </div>
           </div>
         </div>
@@ -191,9 +191,10 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
             <div class="caption">
               <h4>{{Mes Equipements Home - Tiles}}</h4>
               <p></p>
-              <p class="text-center"><a class="btn btn-info bt_eqlogic_tiles">{{Scan des Tiles}} <i class="fas fa-search"></i></a></p>
+              <p class="text-center"><a class="btn bt_eqlogic_tiles">{{Scan des Tiles }} <i class="fas fa-search logoPrimary"></i></a></p>
               <p></p>
-              <p>{{Ici vous scanner les équipements de type Home et Tiles (Maison). Uniquement sur la Freebox Delta}}</p>
+              <p>{{Ici vous scannez les équipements de type <b>Home et Tiles</b> (Maison).}}</p>
+              <p><i>{{Uniquement sur la Freebox Delta}}</i></p>
             </div>
           </div>
         </div>

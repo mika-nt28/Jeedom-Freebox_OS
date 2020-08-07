@@ -27,7 +27,7 @@ config::save('FREEBOX_SERVER_APP_NAME', config::byKey('product_name'), 'Freebox_
 config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freebox_OS');
 
 ?>
-<div id="div_AlertJeeasyInclude"></div>
+<div id="div_Alert_Freebox_Include"></div>
 <div class="row row-overflow">
   <div class="col-lg-2">
     <div class="bs-sidebar">
@@ -42,7 +42,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
     </div>
   </div>
 
-  <div class="col-lg-10" id="div_jeeasyIncludeDisplay">
+  <div class="col-lg-10" id="div_Freebox_IncludeDisplay">
     <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
     <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
     <br /><br />
@@ -171,7 +171,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
               <p></p>
               <p class="text-center"><a class="btn btn-info bt_eqlogic_standard">{{Scan des équipements standards}} <i class="fas fa-bullseye"></i></a></p>
               <p></p>
-              <p>{{Cette partie vous permet de scanner les équipements système de la Freebox}}</p>
+              <p>{{Ici vous scanner les équipements système de la Freebox}}</p>
             </div>
           </div>
         </div>
@@ -182,7 +182,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
               <p></p>
               <p class="text-center"><a class="btn btn-info bt_eqlogic_control_parental">{{Scan des Contrôles parentaux}} <i class="fas fa-user-shield"></i></a></p>
               <p></p>
-              <p>{{Cette partie vous permet de scanner les contrôles parentaux présents dans la Freebox}}</p>
+              <p>{{Ici vous scanner les contrôles parentaux présents dans la Freebox}}</p>
             </div>
           </div>
         </div>
@@ -193,7 +193,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
               <p></p>
               <p class="text-center"><a class="btn btn-info bt_eqlogic_tiles">{{Scan des Tiles}} <i class="fas fa-search"></i></a></p>
               <p></p>
-              <p>{{Cette partie vous permet de scanner les équipements de type Home et Tiles (Maison). Uniquement sur la Freebox Delta}}</p>
+              <p>{{Ici vous scanner les équipements de type Home et Tiles (Maison). Uniquement sur la Freebox Delta}}</p>
             </div>
           </div>
         </div>

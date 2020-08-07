@@ -50,7 +50,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
       <center><i class="fab fa-ello" style="font-size: 10em;"></i></center>
       <br />
       <center>
-        <div class="alert alert-info">{{Nous allons commencer l'authentification sur la Freebox}}</div>
+        <div class="alert alert-info">{{Bienvenue, nous allons commencer l'authentification sur la Freebox}}</div>
       </center>
       <center>{{Cliquez sur suivant pour commencer}}</center>
       <br />
@@ -161,15 +161,49 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
       <br />
       <center>
         <div class="alert alert-info">{{Cette partie vous permet de rechercher les différents équipements sur votre freebox}}</div>
-
-        <center><a class="btn bt_eqlogic_standard">{{Scan des équipements standards}} <i class="fas fa-bullseye"></i></a> <a class="btn bt_eqlogic_tiles">{{Scan des Tiles}} <i class="fas fa-search"></i></a> <a class="btn bt_eqlogic_control_parental">{{Scan des Contrôles parental}} <i class="fas fa-user-shield"></i></a></center>
-        <br />
-      </center>
-      <center>
-        <div class="alert alert-info">{{Puis une fois les scans éffectués, cliquez simplement sur le bouton suivant ci-dessous}}</div>
       </center>
       <br />
-      <center><a class="btn btn-sm btn-success bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a></center>
+      <div>
+        <div id="colonne1">
+          <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/system.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+            <div class="caption">
+              <h4>{{Mes Equipements}}</h4>
+              <p></p>
+              <p class="text-center"><a class="btn btn-info bt_eqlogic_standard">{{Scan des équipements standards}} <i class="fas fa-bullseye"></i></a></p>
+              <p></p>
+              <p>{{Cette partie vous permet de scanner les équipements système de la Freebox}}</p>
+            </div>
+          </div>
+        </div>
+        <div id="colonne2">
+          <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/parental.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+            <div class="caption">
+              <h4>{{Mes Contrôles parentaux}}</h4>
+              <p></p>
+              <p class="text-center"><a class="btn btn-info bt_eqlogic_control_parental">{{Scan des Contrôles parentaux}} <i class="fas fa-user-shield"></i></a></p>
+              <p></p>
+              <p>{{Cette partie vous permet de scanner les contrôles parentaux présents dans la Freebox}}</p>
+            </div>
+          </div>
+        </div>
+        <div id="centre">
+          <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+            <div class="caption">
+              <h4>{{Mes Equipements Home - Tiles}}</h4>
+              <p></p>
+              <p class="text-center"><a class="btn btn-info bt_eqlogic_tiles">{{Scan des Tiles}} <i class="fas fa-search"></i></a></p>
+              <p></p>
+              <p>{{Cette partie vous permet de scanner les équipements de type Home et Tiles (Maison). Uniquement sur la Freebox Delta}}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+      <br />
+      <div>
+        <center>
+          <div class="alert alert-info">{{Une fois les scans effectués, cliquez simplement sur le bouton suivant}}</div>
+        </center>
+      </div>
     </div>
 
     <div class="Freebox_OS_Display end" style="display:none;">
@@ -459,3 +493,25 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
     $('#div_progressbar').html(ProgressPourcent + '%');
   }
 </script>
+<style>
+  div#colonne1 {
+    float: left;
+    width: 300px;
+    margin-right: 120px;
+
+  }
+
+  div#colonne2 {
+    float: right;
+    width: 300px;
+    margin-left: 120px;
+    margin-right: 30px;
+
+  }
+
+  div#centre {
+    width: 300px;
+    overflow: hidden;
+
+  }
+</style>

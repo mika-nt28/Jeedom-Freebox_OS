@@ -146,6 +146,10 @@ try {
             config::save('defaultParentObject', init('track_id'), 'Categorie');
             ajax::success(true);
             break;
+        case 'GetSessionData':
+            Freebox_OS::deamon_start();
+            ajax::success($Free_API->getFreeboxOpenSessionData());
+            break;
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	/*     * *********Catch exeption*************** */

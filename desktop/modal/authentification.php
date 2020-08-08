@@ -50,6 +50,14 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
     </div>
 
     <div class="col-lg-10" id="div_Freebox_IncludeDisplay">
+        <div class="col-md-12 text-center">
+            <div id="contenuTextSpan" class="progress">
+                <div class="progress-bar progress-bar-striped progress-bar-animated active" id="div_progressbar"
+                     role="progressbar" style="width: 0; height:20px;" aria-valuenow="0" aria-valuemin="0"
+                     aria-valuemax="100">0%
+                </div>
+            </div>
+        </div>
         <div class="Freebox_OS_Display home">
             <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i
                         class="fas fa-angle-double-right"></i></a>
@@ -149,10 +157,13 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 <h3 class="textFreebox">{{}}</h3>
             </center>
             <center>
-                <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connecter cliqué sur le button si dessous, sinon faite suivant}}</div>
+                <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connecter cliqué sur
+                    le button si dessous, sinon faite suivant}}
+                </div>
             </center>
             <br/>
-            <center><a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement authentification}}</a></center>
+            <center><a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement authentification}}</a>
+            </center>
         </div>
 
         <div class="Freebox_OS_Display rights" style="display:none;">
@@ -183,9 +194,80 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                     suivant ci-dessous}}
                 </div>
             </center>
+            <table id="table_packages" class="table table-condensed">
+                <thead>
+                <tr>
+                    <th style="width: 120px">Nom</th>
+                    <th style="width: 70px">Status</th>
+                    <th>Description</th>
+                    <th style="width: 120px">Nom</th>
+                    <th style="width: 70px">Status</th>
+                    <th>Description</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr>
+                    <td>Calls</td>
+                    <td id="calls" class="alert-danger">NOK</td>
+                    <td>Permission Appel</td>
+                    <td>Player</td>
+                    <td id="player" class="alert-danger">NOK</td>
+                    <td>Permission Player</td>
+                </tr>
+                <tr>
+                    <td>Camera</td>
+                    <td id="camera" class="alert-danger">NOK</td>
+                    <td>Permission Cammera</td>
+                    <td>Profile</td>
+                    <td id="profile" class="alert-danger">NOK</td>
+                    <td>Permission Profile</td>
+                </tr>
+                <tr>
+                    <td>Contacts</td>
+                    <td id="contacts" class="alert-danger">NOK</td>
+                    <td>Permission Contacts</td>
+                    <td>PVR</td>
+                    <td id="pvr" class="alert-danger">NOK</td>
+                    <td>Permission PVR</td>
+                </tr>
+                <tr>
+                    <td>Download</td>
+                    <td id="downloader" class="alert-danger">NOK</td>
+                    <td>Permission Download</td>
+                    <td>Settings</td>
+                    <td id="settings" class="alert-danger">NOK</td>
+                    <td>Permission Setting</td>
+                </tr>
+                <tr>
+                    <td>Explorer</td>
+                    <td id="explorer" class="alert-danger">NOK</td>
+                    <td>Permission Explorer</td>
+                    <td>TV</td>
+                    <td id="tv" class="alert-danger">NOK</td>
+                    <td>Permission TV</td>
+                </tr>
+                <tr>
+                    <td>Home</td>
+                    <td id="home" class="alert-danger">NOK</td>
+                    <td>Permission Home</td>
+                    <td>VM</td>
+                    <td id="vm" class="alert-danger">NOK</td>
+                    <td>Permission VM</td>
+                </tr>
+                <tr>
+                    <td>Parental</td>
+                    <td id="parental" class="alert-danger">NOK</td>
+                    <td>Permission Parental</td>
+                    <td>WDO</td>
+                    <td id="wdo" class="alert-danger">NOK</td>
+                    <td>Permission WDO</td>
+                </tr>
+                </tbody>
+            </table>
             <br/>
-            <center><a class="btn btn-sm btn-success bt_Freebox_OS_Next">{{Suivant}} <i
-                            class="fas fa-angle-double-right"></i></a></center>
+            <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Verification
+                    des droits}}</a></center>
+            <br/>
         </div>
 
         <div class="Freebox_OS_Display scan" style="display:none;">
@@ -270,15 +352,6 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 <div class="alert alert-info Freebox_OK">{{Authentification réussi}}</div>
             </center>
 
-        </div>
-        <br/><br/>
-        <div class="col-md-12 text-center">
-            <div id="contenuTextSpan" class="progress">
-                <div class="progress-bar progress-bar-striped progress-bar-animated active" id="div_progressbar"
-                     role="progressbar" style="width: 0; height:20px;" aria-valuenow="0" aria-valuemin="0"
-                     aria-valuemax="100">0%
-                </div>
-            </div>
         </div>
 
     </div>

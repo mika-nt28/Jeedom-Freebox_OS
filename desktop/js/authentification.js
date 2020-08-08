@@ -2,7 +2,7 @@ progress(0);
 eqLogic_id = null;
 
 $('.bt_Freebox_OS_Next').off('click').on('click', function () {
-    $('.li_Freebox_OS_Summary.active').next().click();
+    updateMenu($('.li_Freebox_OS_Summary.active').next());
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':
@@ -17,6 +17,7 @@ $('.bt_Freebox_OS_Next').off('click').on('click', function () {
             break;
         case 'rights':
             progress(70);
+            GetSessionData();
             break;
         case 'scan':
             progress(80);
@@ -28,7 +29,7 @@ $('.bt_Freebox_OS_Next').off('click').on('click', function () {
 });
 
 $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
-    $('.li_Freebox_OS_Summary.active').prev().click();
+    updateMenu($('.li_Freebox_OS_Summary.active').prev());
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':
@@ -43,6 +44,7 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
             break;
         case 'rights':
             progress(70);
+            GetSessionData();
             break;
         case 'scan':
             progress(80);
@@ -68,37 +70,6 @@ $('.bt_eqlogic_control_parental').on('click', function () {
     progress(90);
 });
 
-$('.li_Freebox_OS_Summary').off('click').on('click', function () {
-    $('.li_Freebox_OS_Summary.active').removeClass('active');
-    $(this).addClass('active');
-    $('.Freebox_OS_Display').hide();
-    $('.Freebox_OS_Display.' + $(this).attr('data-href')).show();
-
-    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
-        case 'home':
-            progress(0);
-            break;
-        case 'setting':
-            progress(15);
-            GetSetting();
-            break;
-        case 'authentification':
-            progress(25);
-            break;
-        case 'rights':
-            progress(50);
-            break;
-        case 'scan':
-            progress(70);
-            break;
-        case 'end':
-            progress(100);
-            break;
-    }
-
-    $(this).attr('data-display', 1);
-});
-
 $('.bt_Freebox_OS_Save').on('click', function () {
 
     ip = $('#imput_freeboxIP').val();
@@ -110,6 +81,17 @@ $('.bt_Freebox_OS_Save').on('click', function () {
 $('.bt_Freebox_Autorisation').on('click', function () {
     autorisationFreebox();
 });
+
+$('.bt_Freebox_droitVerif').on('click', function () {
+    GetSessionData();
+});
+
+function updateMenu(objectclass) {
+    $('.li_Freebox_OS_Summary.active').removeClass('active');
+    $(objectclass).addClass('active');
+    $('.Freebox_OS_Display').hide();
+    $('.Freebox_OS_Display.' + $(objectclass).attr('data-href')).show();
+};
 
 function autorisationFreebox() {
     $.ajax({
@@ -123,7 +105,6 @@ function autorisationFreebox() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            console.log(data)
             if (!data.result.success) {
                 $('#div_alert').showAlert({
                     message: data.result.msg,
@@ -241,7 +222,6 @@ function AskTrackAuthorization() {
                 handleAjaxError(request, status, error);
             },
             success: function (data) {
-                console.log(data)
                 if (!data.result.success) {
                     $('#div_alert').showAlert({
                         message: data.result.msg,
@@ -366,4 +346,79 @@ function SetSetting(ip, VersionAPP, Categorie) {
             GetSetting();
         }
     });
+}
+
+function GetSessionData() {
+
+    $('.textFreebox').hide();
+    $('.bt_Freebox_OS_Next').hide();
+    $('.bt_Freebox_OS_Previous').hide();
+    $('.Freebox_OK').hide();
+    $('.Freebox_OK_NEXT').hide();
+    $('.bt_Freebox_droitVerif').show();
+
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "GetSessionData",
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            console.log(data)
+            if (data.result.success) {
+                var permissions = data.result.result.permissions;
+                UpdateStatus("calls", permissions.calls);
+                UpdateStatus("camera", permissions.camera);
+                UpdateStatus("contacts", permissions.contacts);
+                UpdateStatus("downloader", permissions.downloader);
+                UpdateStatus("explorer", permissions.explorer);
+                UpdateStatus("home", permissions.home);
+                UpdateStatus("parental", permissions.parental);
+                UpdateStatus("player", permissions.player);
+                UpdateStatus("profile", permissions.profile);
+                UpdateStatus("pvr", permissions.pvr);
+                UpdateStatus("settings", permissions.settings);
+                UpdateStatus("tv", permissions.tv);
+                UpdateStatus("vm", permissions.vm);
+                UpdateStatus("wdo", permissions.wdo);
+
+                if (permissions.calls
+                    && permissions.camera
+                    && permissions.downloader
+                    && permissions.home
+                    && permissions.parental
+                    && permissions.player
+                    && permissions.profile
+                    && permissions.settings
+                    && permissions.tv) {
+
+                    $('.textFreebox').show();
+                    $('.bt_Freebox_OS_Next').show();
+                    $('.bt_Freebox_OS_Previous').show();
+                    $('.Freebox_OK').show();
+                    $('.Freebox_OK_NEXT').show();
+                    $('.bt_Freebox_droitVerif').hide();
+
+                    progress(75);
+                }
+            }
+        }
+    });
+}
+
+function UpdateStatus(item, index) {
+
+    if (index == true) {
+        document.getElementById(item).classList.add('alert-success');
+        document.getElementById(item).classList.remove('alert-danger');
+        document.getElementById(item).innerHTML = "OK";
+    } else {
+        document.getElementById(item).classList.add('alert-danger');
+        document.getElementById(item).classList.remove('alert-success');
+        document.getElementById(item).innerHTML = "NOK";
+    }
 }

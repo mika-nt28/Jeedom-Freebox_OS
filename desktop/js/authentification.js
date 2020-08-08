@@ -123,6 +123,7 @@ function autorisationFreebox() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
+            console.log(data)
             if (!data.result.success) {
                 $('#div_alert').showAlert({
                     message: data.result.msg,
@@ -221,23 +222,26 @@ function sendToBdd(jsonParser) {
 }
 
 function AskTrackAuthorization() {
-    $('.textFreebox').hide();
-    $('.bt_Freebox_OS_Next').hide();
-    $('.bt_Freebox_OS_Previous').hide();
-    $('.Freebox_OK').hide();
-    $('.Freebox_OK_NEXT').hide();
-    $.ajax({
-        type: "POST",
-        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
-        data: {
-            action: "ask_track_authorization",
-        },
-        dataType: 'json',
-        error: function (request, status, error) {
-            handleAjaxError(request, status, error);
-        },
-        success: function (data) {
-            if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "authentification") {
+    if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "authentification") {
+
+        $('.textFreebox').hide();
+        $('.bt_Freebox_OS_Next').hide();
+        $('.bt_Freebox_OS_Previous').hide();
+        $('.Freebox_OK').hide();
+        $('.Freebox_OK_NEXT').hide();
+
+        $.ajax({
+            type: "POST",
+            url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+            data: {
+                action: "ask_track_authorization",
+            },
+            dataType: 'json',
+            error: function (request, status, error) {
+                handleAjaxError(request, status, error);
+            },
+            success: function (data) {
+                console.log(data)
                 if (!data.result.success) {
                     $('#div_alert').showAlert({
                         message: data.result.msg,
@@ -284,15 +288,15 @@ function AskTrackAuthorization() {
                             break;
                     }
                 }
-            } else {
-                $('.textFreebox').show();
-                $('.bt_Freebox_OS_Next').show();
-                $('.bt_Freebox_OS_Previous').show();
-                $('.Freebox_OK').show();
-                $('.Freebox_OK_NEXT').show();
             }
-        }
-    });
+        });
+    } else {
+        $('.textFreebox').show();
+        $('.bt_Freebox_OS_Next').show();
+        $('.bt_Freebox_OS_Previous').show();
+        $('.Freebox_OK').show();
+        $('.Freebox_OK_NEXT').show();
+    }
 }
 
 function Good() {

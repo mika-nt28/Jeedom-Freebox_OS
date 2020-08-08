@@ -132,6 +132,20 @@ try {
 		case 'Searchdisk':
 			ajax::success($Free_API->disk());
 			break;
+        case 'GetSetting':
+            $result = array(
+                "ip"=>config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'),
+                "VersionAPP"=>config::byKey('FREEBOX_SERVER_APP_VERSION', 'Freebox_OS'),
+                "Categorie"=>config::byKey('defaultParentObject', 'Freebox_OS')
+            );
+            ajax::success($result);
+            break;
+        case 'SetSetting':
+            config::save('FREEBOX_SERVER_IP', init('ip'), 'Freebox_OS');
+            config::save('FREEBOX_SERVER_APP_VERSION', init('VersionAPP'), 'Freebox_OS');
+            config::save('defaultParentObject', init('track_id'), 'Categorie');
+            ajax::success(true);
+            break;
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	/*     * *********Catch exeption*************** */

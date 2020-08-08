@@ -457,6 +457,16 @@ class Free_API
 				$config_log = 'Mise à jour : Planning du Wifi';
 				$config_commande = 'use_planning';
 				break;
+			case 'player_ID_ctrl':
+				$config = 'api/v8/player/' . $id . '/api/v6/control/mediactrl';
+				$config_log = 'Traitement de la Mise à jour de l\'id ';
+				$fonction = "POST";
+				break;
+			case 'player_ID_open':
+				$config = 'api/v8/player/' . $id . '/api/v6/control/open';
+				$config_log = 'Traitement de la Mise à jour de l\'id ';
+				$fonction = "POST";
+				break;
 			case 'phone_dell_call':
 				$config = 'api/v8/call/log/delete_all';
 				$fonction = "POST";

@@ -43,21 +43,22 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
   </div>
 
   <div class="col-lg-10" id="div_Freebox_IncludeDisplay">
-    <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-    <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
-    <br /><br />
     <div class="Freebox_OS_Display home">
+      <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+      <br /><br />
       <center><i class="fab fa-ello" style="font-size: 10em;"></i></center>
       <br />
       <center>
         <div class="alert alert-info">{{Bienvenue, nous allons commencer l'authentification sur la Freebox}}</div>
       </center>
       <center>{{Cliquez sur suivant pour commencer}}</center>
-      <br />
-      <center><a class="btn btn-sm btn-success bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a></center>
     </div>
 
     <div class="Freebox_OS_Display setting" style="display:none;">
+      <a class="btn btn-sm btn-success pull-left bt_Freebox_OS_Save"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
+      <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+      <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+      <br /><br />
       <center><i class="fas fa-cogs" style="font-size: 10em;"></i></center>
       <br />
       <center>
@@ -113,13 +114,16 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
 
       </center>
       <center>
-        <div class="alert alert-info">{{Puis une fois validé, cliquez simplement sur le bouton suivant ci-dessous}}</div>
+        <div class="alert alert-info">{{Puis une fois validé, cliquez sur le bouton Sauvegarder}}</div>
       </center>
       <br />
-      <center><a class="btn btn-sm btn-success bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a></center>
+      <center><a class="btn btn-success bt_Freebox_OS_Save"><i class="fas fa-save"></i> {{Sauvegarder}}</a></center>
     </div>
 
     <div class="Freebox_OS_Display authentification" style="display:none;">
+      <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+      <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+      <br /><br />
       <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/authentification.jpg" height="600" width="600" />
       <br />
 
@@ -135,6 +139,9 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
     </div>
 
     <div class="Freebox_OS_Display rights" style="display:none;">
+      <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+      <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+      <br /><br />
       <center><i class="fas fa-balance-scale-right" style="font-size: 5em;"></i></center>
       <br />
       <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/modification_droit.png" height="500" width="500" />
@@ -157,6 +164,9 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
     </div>
 
     <div class="Freebox_OS_Display scan" style="display:none;">
+      <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+      <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+      <br /><br />
       <center><i class="fas fa-search-plus" style="font-size: 10em;"></i></center>
       <br />
       <center>
@@ -187,7 +197,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
           </div>
         </div>
         <div id="centre">
-          <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+          <div class="thumbnail" style="box-shadow: 2px 2px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
             <div class="caption">
               <h4>{{Mes Equipements Home - Tiles}}</h4>
               <p></p>
@@ -261,6 +271,8 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
       progress(50);
     } else if ($(this).attr('data-href') == 'scan') {
       progress(60);
+    } else if ($(this).attr('data-href') == 'home') {
+      $('.bt_Freebox_OS_Previous').hide();
     } else {
       progress(100);
     }
@@ -275,11 +287,19 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
       $('.bt_Freebox_OS_Next').hide();
       $('.bt_Freebox_OS_Previous').hide();
       autorisationFreebox()
+    } else if ($(this).attr('data-href') == 'home') {
+      $('.bt_Freebox_OS_Previous').hide();
     } else if ($(this).attr('data-href') == 'rights') {
+      $('.bt_Freebox_OS_Next').show();
+      $('.bt_Freebox_OS_Previous').show();
       progress(50);
     } else if ($(this).attr('data-href') == 'scan') {
+      $('.bt_Freebox_OS_Next').show();
+      $('.bt_Freebox_OS_Previous').show();
       progress(60);
     } else if ($(this).attr('data-href') == 'end') {
+      $('.bt_Freebox_OS_Next').show();
+      $('.bt_Freebox_OS_Previous').hide();
       progress(100);
       //good();
     }
@@ -498,14 +518,14 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
   div#colonne1 {
     float: left;
     width: 300px;
-    margin-right: 120px;
+    margin-right: 150px;
 
   }
 
   div#colonne2 {
     float: right;
     width: 300px;
-    margin-left: 120px;
+    margin-left: 100px;
     margin-right: 30px;
 
   }
@@ -513,6 +533,8 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
   div#centre {
     width: 300px;
     overflow: hidden;
+    margin-right: 5px;
+    margin-left: 5px;
 
   }
 </style>

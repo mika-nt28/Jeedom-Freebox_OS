@@ -1,9 +1,10 @@
 progress(0);
 eqLogic_id = null;
+
 $('.bt_Freebox_OS_Next').off('click').on('click', function () {
     $('.li_Freebox_OS_Summary.active').next().click();
 
-    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')){
+    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':
             progress(0);
             break;
@@ -15,10 +16,10 @@ $('.bt_Freebox_OS_Next').off('click').on('click', function () {
             progress(25);
             break;
         case 'rights':
-            progress(50);
+            progress(70);
             break;
         case 'scan':
-            progress(70);
+            progress(80);
             break;
         case 'end':
             progress(100);
@@ -29,7 +30,7 @@ $('.bt_Freebox_OS_Next').off('click').on('click', function () {
 $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
     $('.li_Freebox_OS_Summary.active').prev().click();
 
-    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')){
+    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':
             progress(0);
             break;
@@ -41,10 +42,10 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
             progress(25);
             break;
         case 'rights':
-            progress(50);
+            progress(70);
             break;
         case 'scan':
-            progress(70);
+            progress(80);
             break;
         case 'end':
             progress(100);
@@ -73,7 +74,7 @@ $('.li_Freebox_OS_Summary').off('click').on('click', function () {
     $('.Freebox_OS_Display').hide();
     $('.Freebox_OS_Display.' + $(this).attr('data-href')).show();
 
-    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')){
+    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':
             progress(0);
             break;
@@ -101,9 +102,13 @@ $('.li_Freebox_OS_Summary').off('click').on('click', function () {
 $('.bt_Freebox_OS_Save').on('click', function () {
 
     ip = $('#imput_freeboxIP').val();
-    VersionAPP= $('#imput_freeAppVersion').val();
-    Categorie= $('#sel_catego').val();
+    VersionAPP = $('#imput_freeAppVersion').val();
+    Categorie = $('#sel_catego').val();
     SetSetting(ip, VersionAPP, Categorie);
+});
+
+$('.bt_Freebox_Autorisation').on('click', function () {
+    autorisationFreebox();
 });
 
 function autorisationFreebox() {
@@ -221,7 +226,6 @@ function AskTrackAuthorization() {
     $('.bt_Freebox_OS_Previous').hide();
     $('.Freebox_OK').hide();
     $('.Freebox_OK_NEXT').hide();
-    progress(40);
     $.ajax({
         type: "POST",
         url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
@@ -233,51 +237,59 @@ function AskTrackAuthorization() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            if (!data.result.success) {
-                $('#div_alert').showAlert({
-                    message: data.result.msg,
-                    level: 'danger'
-                });
+            if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "authentification") {
+                if (!data.result.success) {
+                    $('#div_alert').showAlert({
+                        message: data.result.msg,
+                        level: 'danger'
+                    });
+                } else {
+                    $('.textFreebox').show();
+                    $('.bt_Freebox_OS_Next').show();
+                    $('.bt_Freebox_OS_Previous').show();
+                    switch (data.result.result.status) {
+
+                        case "unknown":
+                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
+                            Good();
+                            progress(-1);
+                            break;
+                        case "pending":
+                            setTimeout(AskTrackAuthorization, 3000);
+                            break;
+                        case "timeout":
+                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
+                            Good();
+                            progress(-1);
+                            break;
+                        case "granted":
+                            $('.textFreebox').text('{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}');
+                            $('.Freebox_OK').show();
+                            $('.Freebox_OK_NEXT').show();
+                            $('.Freebox_OS_Display.' + $(this).attr('rights')).show();
+                            progress(60);
+                            break;
+
+                        case "denied":
+                            $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'association. Merci}}');
+                            progress(-1);
+                            Good();
+                            break;
+                        default:
+                            $('#div_alert').showAlert({
+                                message: "REST OK : track_authorization -> Error 4 : Inconnue",
+                                level: 'danger'
+                            });
+                            Good();
+                            break;
+                    }
+                }
             } else {
                 $('.textFreebox').show();
                 $('.bt_Freebox_OS_Next').show();
                 $('.bt_Freebox_OS_Previous').show();
-                switch (data.result.result.status) {
-
-                    case "unknown":
-                        $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
-                        Good();
-                        progress(-1);
-                        break;
-                    case "pending":
-                        setTimeout(AskTrackAuthorization, 3000);
-                        break;
-                    case "timeout":
-                        $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
-                        Good();
-                        progress(-1);
-                        break;
-                    case "granted":
-                        $('.textFreebox').text('{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}');
-                        $('.Freebox_OK').show();
-                        $('.Freebox_OK_NEXT').show();
-                        $('.Freebox_OS_Display.' + $(this).attr('rights')).show();
-                        progress(60);
-                        break;
-
-                    case "denied":
-                        $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'association. Merci}}');
-                        progress(-1);
-                        Good();
-                        break;
-                    default:
-                        $('#div_alert').showAlert({
-                            message: "REST OK : track_authorization -> Error 4 : Inconnue",
-                            level: 'danger'
-                        });
-                        Good();
-                        break;
-                }
+                $('.Freebox_OK').show();
+                $('.Freebox_OK_NEXT').show();
             }
         }
     });

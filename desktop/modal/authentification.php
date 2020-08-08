@@ -149,11 +149,10 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 <h3 class="textFreebox">{{}}</h3>
             </center>
             <center>
-                <div class="alert alert-info Freebox_OK">{{Cliquez simplement sur le bouton suivant ci-dessous}}</div>
+                <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connecter cliqué sur le button si dessous, sinon faite suivant}}</div>
             </center>
             <br/>
-            <center><a class="btn btn-sm btn-success bt_Freebox_OS_Next">{{Suivant}} <i
-                            class="fas fa-angle-double-right"></i></a></center>
+            <center><a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement authentification}}</a></center>
         </div>
 
         <div class="Freebox_OS_Display rights" style="display:none;">

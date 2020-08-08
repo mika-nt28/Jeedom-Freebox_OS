@@ -131,7 +131,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
 
             </center>
             <center>
-                <div class="alert alert-info">{{Puis une fois validé, cliquez sur le bouton Sauvegarder}}</div>
+                <div class="alert alert-info">{{Une fois validé, cliquez sur le bouton Sauvegarder}}</div>
             </center>
         </div>
 
@@ -178,8 +178,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 </div>
             </center>
             <center>
-                <div class="alert alert-info">{{Puis une fois les droits modifiés, cliquez simplement sur le bouton
-                    suivant ci-dessous}}
+                <div class="alert alert-info">{{Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant}}
                 </div>
             </center>
             <table id="table_packages" class="table table-condensed">
@@ -195,67 +194,66 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 </thead>
                 <tbody>
                     <tr>
-                        <td>Calls</td>
-                        <td id="calls" class="alert-danger">NOK</td>
-                        <td>Permission Appel</td>
-                        <td>Player</td>
-                        <td id="player" class="alert-danger">NOK</td>
-                        <td>Permission Player</td>
-                    </tr>
-                    <tr>
-                        <td>Camera</td>
-                        <td id="camera" class="alert-danger">NOK</td>
-                        <td>Permission Cammera</td>
-                        <td>Profile</td>
-                        <td id="profile" class="alert-danger">NOK</td>
-                        <td>Permission Profile</td>
-                    </tr>
-                    <tr>
-                        <td>Contacts</td>
-                        <td id="contacts" class="alert-danger">NOK</td>
-                        <td>Permission Contacts</td>
-                        <td>PVR</td>
-                        <td id="pvr" class="alert-danger">NOK</td>
-                        <td>Permission PVR</td>
-                    </tr>
-                    <tr>
-                        <td>Download</td>
-                        <td id="downloader" class="alert-danger">NOK</td>
-                        <td>Permission Download</td>
-                        <td>Settings</td>
-                        <td id="settings" class="alert-danger">NOK</td>
-                        <td>Permission Setting</td>
+                        <td>Parental</td>
+                        <td id="parental" class="alert-danger">NOK</td>
+                        <td>Accès au contrôle parental (obsolète)</td>
+                        <td>TV</td>
+                        <td id="tv" class="alert-danger">NOK</td>
+                        <td>Accès au guide TV</td>
                     </tr>
                     <tr>
                         <td>Explorer</td>
                         <td id="explorer" class="alert-danger">NOK</td>
-                        <td>Permission Explorer</td>
-                        <td>TV</td>
-                        <td id="tv" class="alert-danger">NOK</td>
-                        <td>Permission TV</td>
+                        <td>Accès aux fichiers de la Freebox</td>
+                        <td>Contacts</td>
+                        <td id="contacts" class="alert-danger">NOK</td>
+                        <td>Accès à la base de contacts de la Freebox</td>
+                    </tr>
+                    <tr>
+                        <td>WDO</td>
+                        <td id="wdo" class="alert-danger">NOK</td>
+                        <td>Provisionnement des équipements</td>
+                        <td>Camera</td>
+                        <td id="camera" class="alert-danger">NOK</td>
+                        <td>Accès aux caméras</td>
+                    </tr>
+                    <tr>
+                        <td>Profile</td>
+                        <td id="profile" class="alert-danger">NOK</td>
+                        <td>Gestion des profils utilisateur</td>
+                        <td>Player</td>
+                        <td id="player" class="alert-danger">NOK</td>
+                        <td>Contrôle du Freebox Player</td>
+                    </tr>
+                    <tr>
+                        <td>Settings</td>
+                        <td id="settings" class="alert-danger">NOK</td>
+                        <td>Modification des réglages de la Freebox</td>
+                        <td>Calls</td>
+                        <td id="calls" class="alert-danger">NOK</td>
+                        <td>Accès au journal d'appels</td>
                     </tr>
                     <tr>
                         <td>Home</td>
                         <td id="home" class="alert-danger">NOK</td>
-                        <td>Permission Home</td>
-                        <td>VM</td>
-                        <td id="vm" class="alert-danger">NOK</td>
-                        <td>Permission VM</td>
+                        <td>Gestion de l'alarme et maison connectée</td>
+                        <td>PVR</td>
+                        <td id="pvr" class="alert-danger">NOK</td>
+                        <td>Programmation des enregistrements</td>
                     </tr>
                     <tr>
-                        <td>Parental</td>
-                        <td id="parental" class="alert-danger">NOK</td>
-                        <td>Permission Parental</td>
-                        <td>WDO</td>
-                        <td id="wdo" class="alert-danger">NOK</td>
-                        <td>Permission WDO</td>
+                        <td>VM</td>
+                        <td id="vm" class="alert-danger">NOK</td>
+                        <td>Contrôle de la VM</td>
+                        <td>Download</td>
+                        <td id="downloader" class="alert-danger">NOK</td>
+                        <td>Accès au gestionnaire de téléchargements</td>
                     </tr>
                 </tbody>
             </table>
             <br />
-            <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Verification
-                    des droits}}</a></center>
-            <br />
+            <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i>
+                </a> </center> <br />
         </div>
 
         <div class="Freebox_OS_Display scan" style="display:none;">
@@ -266,8 +264,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
             <center><i class="fas fa-search-plus" style="font-size: 10em;"></i></center>
             <br />
             <center>
-                <div class="alert alert-info">{{Cette partie vous permet de rechercher les différents équipements sur
-                    votre freebox}}
+                <div class="alert alert-info">{{Cette partie vous permet de rechercher les différents équipements de votre freebox}}
                 </div>
             </center>
             <br />

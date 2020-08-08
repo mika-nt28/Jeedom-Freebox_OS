@@ -390,11 +390,9 @@ function GetSessionData() {
                     permissions.camera &&
                     permissions.downloader &&
                     permissions.home &&
-                    permissions.parental &&
                     permissions.player &&
                     permissions.profile &&
-                    permissions.settings &&
-                    permissions.tv) {
+                    permissions.settings) {
 
                     $('.textFreebox').show();
                     $('.bt_Freebox_OS_Next').show();

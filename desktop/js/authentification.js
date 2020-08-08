@@ -43,11 +43,11 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
             progress(25);
             break;
         case 'rights':
-            progress(70);
+            progress(50);
             GetSessionData();
             break;
         case 'scan':
-            progress(80);
+            progress(60);
             break;
         case 'end':
             progress(100);
@@ -57,17 +57,17 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
 
 $('.bt_eqlogic_standard').on('click', function () {
     SearchArchi();
-    progress(70);
+    progress(85);
 });
 
 $('.bt_eqlogic_tiles').on('click', function () {
     SearchTile();
-    progress(80);
+    progress(90);
 });
 
 $('.bt_eqlogic_control_parental').on('click', function () {
     SearchParental();
-    progress(90);
+    progress(95);
 });
 
 $('.bt_Freebox_OS_Save').on('click', function () {
@@ -386,15 +386,15 @@ function GetSessionData() {
                 UpdateStatus("vm", permissions.vm);
                 UpdateStatus("wdo", permissions.wdo);
 
-                if (permissions.calls
-                    && permissions.camera
-                    && permissions.downloader
-                    && permissions.home
-                    && permissions.parental
-                    && permissions.player
-                    && permissions.profile
-                    && permissions.settings
-                    && permissions.tv) {
+                if (permissions.calls &&
+                    permissions.camera &&
+                    permissions.downloader &&
+                    permissions.home &&
+                    permissions.parental &&
+                    permissions.player &&
+                    permissions.profile &&
+                    permissions.settings &&
+                    permissions.tv) {
 
                     $('.textFreebox').show();
                     $('.bt_Freebox_OS_Next').show();

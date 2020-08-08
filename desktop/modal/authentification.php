@@ -152,14 +152,14 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 </div>
             </center>
             <br />
-            <center><a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement authentification}}</a>
+            <center>
+                <a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement authentification}} <i class="fas fa-exclamation-circle"></i></a>
             </center>
         </div>
 
         <div class="Freebox_OS_Display rights" style="display:none;">
             <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i>
-                {{Précédent}}</a>
+            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
             <br /><br />
             <center><i class="fas fa-balance-scale-right" style="font-size: 5em;"></i></center>
             <br />

@@ -325,7 +325,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 <div class="alert alert-success">{{Bravo !!!}}</div>
             </center>
             <center>
-                <div class="alert alert-info Freebox_OK">{{Authentification réussi}}</div>
+                <div class="alert alert-info Freebox_OK">{{Authentification réussi, Vous pouvez fermer cette fenêtre}}</div>
             </center>
 
         </div>
@@ -340,21 +340,21 @@ include_file('desktop', 'authentification', 'js', 'Freebox_OS');
 <style>
     div#colonne1 {
         float: left;
-        width: 300px;
-        margin-right: 150px;
+        width: 280px;
+        margin-right: 130px;
 
     }
 
     div#colonne2 {
         float: right;
-        width: 300px;
+        width: 280px;
         margin-left: 100px;
-        margin-right: 30px;
+        margin-right: 5px;
 
     }
 
     div#centre {
-        width: 300px;
+        width: 280px;
         overflow: hidden;
         margin-right: 5px;
         margin-left: 5px;

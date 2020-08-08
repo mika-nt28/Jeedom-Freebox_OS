@@ -61,7 +61,6 @@ class Free_CreateEq
                 Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_player($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
@@ -224,37 +223,6 @@ class Free_CreateEq
         $phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
         $phone->AddCommand('Vider le journal d appels', 'phone_dell_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeDell_call, 0, 'default', 'default', 9, '0', $updateiconePhone, false, null, true);
         $phone->AddCommand('Tout marquer comme lu', 'phone_read_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeRead_call, 0, 'default', 'default', 10, '0', $updateiconePhone, false, null, true);
-        log::add('Freebox_OS', 'debug', '└─────────');
-    }
-    private static function createEq_player($logicalinfo, $templatecore_V4)
-    {
-        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Player');
-        $Free_API = new Free_API();
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
-            $TemplatePlayer = null;
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $TemplatePlayer = 'Freebox_OS::Player';
-        };
-
-        $result = $Free_API->universal_get('player');
-        foreach ($result as $Equipement) {
-            log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $Equipement['device_name'] . ' -- Id : ' . $Equipement['id']);
-            if ($Equipement['id'] != null) {
-                $player = Freebox_OS::AddEqLogic($Equipement['device_name'], 'player_' . $Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id'], '*/5 * * * *');
-                log::add('Freebox_OS', 'debug', '│ Nom : ' . $Equipement['device_name'] . ' -- id : player_' . $Equipement['id'] . ' -- FREE-ID : ' . $Equipement['id']);
-            }
-            $player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
-            $player->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
-            $player->AddCommand('Modèle', 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);
-            $player->AddCommand('Version', 'api_version', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
-            $player->AddCommand('API Disponible', 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
-            $player->AddCommand('Disponible sur le réseau', 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
-            $player->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
-
-            Free_Refresh::RefreshInformation($player->getId());
-        }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_network($logicalinfo, $templatecore_V4)

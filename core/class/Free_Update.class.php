@@ -63,6 +63,9 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'player':
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'network':
@@ -132,6 +135,11 @@ class Free_Update
         }
         $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);
         Free_Refresh::RefreshInformation($logicalId_eq->getId());
+    }
+    private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
+    {
+
+        $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
     }
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {

@@ -90,6 +90,7 @@ try {
 			break;
 		case 'SearchArchi':
 			Free_CreateEq::createEq();
+			Free_CreateTV::createTV();
 			ajax::success(true);
 			break;
 		case 'Searchairmedia':

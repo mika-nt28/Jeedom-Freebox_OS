@@ -124,7 +124,8 @@ class Free_CreateTil
                         $parameter['name'] = $Command['label'];
                         $parameter['id'] = $Command['ep_id'];
                         $parameter['url'] = $Command['value'];
-                        log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name']);
+                        $parameter['room'] = $Equipement['group']['label'];
+                        log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
                         log::add('Freebox_OS', 'debug', '│ Id : ' . $parameter['id']);
                         log::add('Freebox_OS', 'debug', '│ URL : ' . $parameter['url']);
                         log::add('Freebox_OS', 'debug', '└─────────');

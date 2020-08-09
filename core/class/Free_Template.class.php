@@ -20,12 +20,9 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_Template
 {
-
 	public static function getTemplate()
 	{
-		//log::add('Freebox_OS', 'debug', '>───────── Get Template');
-
-		// Template pour le wifi action
+		// Template pour le Wifi (action)
 		$return = array('action' => array('other' => array()));
 		$return['action']['other']['Wifi'] = array(
 			'template' => 'tmplicon',
@@ -39,7 +36,7 @@ class Free_Template
 			)
 		);
 
-		// Template pour le planning action
+		// Template pour le planning Wifi (action)
 		$return['action']['other']['Planning Wifi'] = array(
 			'template' => 'tmplicon',
 			'display' => array(
@@ -51,7 +48,7 @@ class Free_Template
 				'#_time_widget_#' => '1'
 			)
 		);
-		// Template pour le 4G action
+		// Template pour le 4G (action)
 		$return['action']['other']['4G'] = array(
 			'template' => 'tmplicon',
 			'display' => array(
@@ -63,7 +60,7 @@ class Free_Template
 				'#_time_widget_#' => '1'
 			)
 		);
-		// Template pour l'état du contrôle Parental'
+		// Template pour l'état du contrôle Parental' (info)
 		$return['info']['string']['Parental'] = array(
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),
@@ -73,7 +70,7 @@ class Free_Template
 				array('operation' => "#value# == 'webonly'", 'state_light' => '<i class=\'icon_orange icon fas fa-user-shield\'></i>')
 			)
 		);
-		// Template pour l'état du contrôle Player'
+		// Template pour l'état du contrôle Player' (info)
 		$return['info']['string']['Player'] = array(
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),
@@ -83,7 +80,7 @@ class Free_Template
 				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_orange icon fas fa-question\'></i>')
 			)
 		);
-		// Template pour l'état de l'alarme'
+		// Template pour l'état de l'alarme' (info)
 		$return['info']['string']['Alarme Freebox'] = array(
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),
@@ -98,7 +95,7 @@ class Free_Template
 				array('operation' => "#value# == 'alert'", 'state_light' => '<i class=\'icon_red icon jeedom-alerte2\'></i>')
 			)
 		);
-		// Template pour l'état de l'alarme'
+		// Template pour l'état de l'alarme' (info)
 		$return['info']['numeric']['Télécommande Freebox'] = array(
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),

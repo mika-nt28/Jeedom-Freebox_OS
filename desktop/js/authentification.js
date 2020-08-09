@@ -111,7 +111,7 @@ function autorisationFreebox() {
                     level: 'danger'
                 });
                 if (data.result.error_code == "new_apps_denied")
-                    $('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>De nouveau, cliquez sur <b>Etape 1</b>");
+                    $('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>Relancer l'authentification");
                 return;
             } else {
                 sendToBdd(data.result);
@@ -234,15 +234,16 @@ function AskTrackAuthorization() {
                     switch (data.result.result.status) {
 
                         case "unknown":
-                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
                             Good();
                             progress(-1);
                             break;
                         case "pending":
+                            $('.textFreebox').text('{{Vous n\'avez pas encore validé l\'application sur la Freebox.}}');
                             setTimeout(AskTrackAuthorization, 3000);
                             break;
                         case "timeout":
-                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'authentification. Merci}}');
                             Good();
                             progress(-1);
                             break;
@@ -255,7 +256,7 @@ function AskTrackAuthorization() {
                             break;
 
                         case "denied":
-                            $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'authentification. Merci}}');
                             progress(-1);
                             Good();
                             break;

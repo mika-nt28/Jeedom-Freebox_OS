@@ -20,14 +20,12 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_CreateTil
 {
-
     public static function createTil($create = 'default')
     {
         $Type_box = Free_CreateTil::createTil_Box();
         if ($Type_box == 'OK') {
             $logicalinfo = Freebox_OS::getlogicalinfo();
             if (version_compare(jeedom::version(), "4", "<")) {
-
                 $templatecore_V4 = null;
             } else {
                 $templatecore_V4  = 'core::';

@@ -133,12 +133,14 @@ class Free_CreateTil
                     }
                     if (!is_object($Tile)) continue;
                     log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
+                    log::add('Freebox_OS', 'debug', '│ Pièce : ' . $Equipement['group']['label']);
                     $Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
                     $Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
                     log::add('Freebox_OS', 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
                     log::add('Freebox_OS', 'debug', '│ Type (eq) : ' . $Equipement['type'] . ' -- Action (eq): ' . $Equipement['action']);
                     log::add('Freebox_OS', 'debug', '│ Index : ' . $Command['ep_id'] . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
                     log::add('Freebox_OS', 'debug', '│ Valeur actuelle : ' . $Command['value'] . ' ' . $Command['ui']['unit']);
+                    log::add('Freebox_OS', 'debug', '│ Pièce : ' . $Equipement['group']['label']);
                     log::add('Freebox_OS', 'debug', '│ Range : ' . $Command['ui']['range'][0] . '-' . $Command['ui']['range'][1] . '-' . $Command['ui']['range'][2] . '-' . $Command['ui']['range'][3] . $Command['ui']['range'][4] . '-' . $Command['ui']['range'][5] . '-' . $Command['ui']['range'][6] . ' -- Range color : ' . $Command['ui']['icon_color_range'][0] . '-' . $Command['ui']['icon_color_range'][1]);
                     switch ($Command['value_type']) {
                         case "void":

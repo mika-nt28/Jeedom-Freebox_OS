@@ -87,13 +87,13 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 <form class="form-horizontal">
                     <fieldset>
                         <div class="form-group">
-                            <label class="col-md-5 control-label">{{IP Freebox}}</label>
+                            <label class="col-md-5 control-label">{{IP Freebox :}}</label>
                             <div class="col-md-4">
                                 <input id="imput_freeboxIP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_IP" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-5 control-label">{{Version de l'application Freebox serveur}}</label>
+                            <label class="col-md-5 control-label">{{Version de l'application Freebox serveur :}}</label>
                             <div class="col-md-4">
                                 <input id="imput_freeAppVersion" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_VERSION" />
                             </div>
@@ -342,7 +342,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 <div class="alert alert-success">{{Bravo !!!}}</div>
             </center>
             <center>
-                <div class="alert alert-info Freebox_OK">{{Authentification réussi, Vous pouvez fermer cette fenêtre}}</div>
+                <div class="alert alert-info Freebox_OK">{{Authentification réussie, Vous pouvez fermer cette fenêtre}}</div>
             </center>
 
         </div>

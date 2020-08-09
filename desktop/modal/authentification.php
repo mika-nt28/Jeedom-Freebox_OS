@@ -162,7 +162,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
 
                 <br />
 
-                <a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement authentification}} <i class="fas fa-exclamation-circle"></i></a>
+                <a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement de l'authentification}} <i class="fas fa-exclamation-circle"></i></a>
             </center>
         </div>
 
@@ -226,28 +226,28 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                             <td>WDO</td>
                             <td id="wdo" class="alert-danger">NOK</td>
                             <td>Provisionnement des équipements</td>
-                            <td>Camera</td>
+                            <td><b>Camera</b></td>
                             <td id="camera" class="alert-danger">NOK</td>
                             <td>Accès aux caméras</td>
                         </tr>
                         <tr>
-                            <td>Profile</td>
+                            <td><b>Profile</b></td>
                             <td id="profile" class="alert-danger">NOK</td>
                             <td>Gestion des profils utilisateur</td>
-                            <td>Player</td>
+                            <td><b>Player</b></td>
                             <td id="player" class="alert-danger">NOK</td>
                             <td>Contrôle du Freebox Player</td>
                         </tr>
                         <tr>
-                            <td>Settings</td>
+                            <td><b>Settings</b></td>
                             <td id="settings" class="alert-danger">NOK</td>
                             <td>Modification des réglages de la Freebox</td>
-                            <td>Calls</td>
+                            <td><b>Calls</b></td>
                             <td id="calls" class="alert-danger">NOK</td>
                             <td>Accès au journal d'appels</td>
                         </tr>
                         <tr>
-                            <td>Home</td>
+                            <td><b>Home</b></td>
                             <td id="home" class="alert-danger">NOK</td>
                             <td>Gestion de l'alarme et maison connectée</td>
                             <td>PVR</td>
@@ -258,7 +258,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                             <td>VM</td>
                             <td id="vm" class="alert-danger">NOK</td>
                             <td>Contrôle de la VM</td>
-                            <td>Download</td>
+                            <td><b>Download</b></td>
                             <td id="downloader" class="alert-danger">NOK</td>
                             <td>Accès au gestionnaire de téléchargements</td>
                         </tr>

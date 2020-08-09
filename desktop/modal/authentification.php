@@ -56,11 +56,14 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
             </div>
         </div>
         <div class="Freebox_OS_Display home">
-            <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-            <br /><br />
-            <center><i class="fab fa-ello" style="font-size: 10em;"></i></center>
-            <br />
+            <div>
+                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+            </div>
+            <br /><br /> <br />
+            <BR>
             <center>
+                <center><i class="fab fa-ello" style="font-size: 8em;"></i></center>
+                <br />
                 <div class="alert alert-info">{{Bienvenue, nous allons commencer l'authentification sur la Freebox}}
                 </div>
             </center>
@@ -68,27 +71,29 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
         </div>
 
         <div class="Freebox_OS_Display setting" style="display:none;">
-            <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i>
-                {{Précédent}}</a>
-            <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
-            <br /><br />
-            <center><i class="fas fa-cogs" style="font-size: 10em;"></i></center>
-            <br />
+            <div height=350px>
+                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
+            </div>
+            <br /><br /> <br />
+            <BR>
             <center>
+                <center><i class="fas fa-cogs" style="font-size: 8em;"></i></center>
+                <br />
                 <div class="alert alert-info">{{C'est partie, lançons nous. Pour commencer nous allons valider les
                     réglages}}
                 </div>
                 <form class="form-horizontal">
                     <fieldset>
                         <div class="form-group">
-                            <label class="col-md-5 control-label">{{IP Freebox}}</label>
+                            <label class="col-md-5 control-label">{{IP Freebox :}}</label>
                             <div class="col-md-4">
                                 <input id="imput_freeboxIP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_IP" />
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-5 control-label">{{Version de l'application Freebox serveur}}</label>
+                            <label class="col-md-5 control-label">{{Version de l'application Freebox serveur :}}</label>
                             <div class="col-md-4">
                                 <input id="imput_freeAppVersion" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_VERSION" />
                             </div>
@@ -136,188 +141,200 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
         </div>
 
         <div class="Freebox_OS_Display authentification" style="display:none;">
-            <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i>
-                {{Précédent}}</a>
-            <br /><br />
-            <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/authentification.jpg" height="600" width="600" />
-            <br />
+            <div>
+                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+            </div>
+            <br /><br /> <br />
+            <BR>
+            <center>
+                <center><i class="fas fa-rss" style="font-size: 8em;"></i></center>
+                <br />
+                <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/authentification.jpg" height="550" width="550" />
+                <br />
 
-            <br />
-            <center>
+                <br />
+
                 <h3 class="textFreebox">{{}}</h3>
-            </center>
-            <center>
+
                 <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connectée, cliquez sur le bouton si dessous, sinon cliquez sur suivant}}
                 </div>
-            </center>
-            <br />
-            <center>
+
+                <br />
+
                 <a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement authentification}} <i class="fas fa-exclamation-circle"></i></a>
             </center>
         </div>
 
         <div class="Freebox_OS_Display rights" style="display:none;">
-            <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
-            <br /><br />
-            <center><i class="fas fa-balance-scale-right" style="font-size: 5em;"></i></center>
-            <br />
-            <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/modification_droit.png" height="500" width="500" />
-            <br />
-            <center>
-                <div class="alert alert-info">{{Se connecter à l’interface de la Freebox puis ouvrir les paramètres de
-                    la Freebox}}
-                    <br>
-                    {{Ensuite Ouvrir la gestion des accès de la Freebox (ce réglage se trouve dans le mode avancé)}}
-                    <br>
-                    {{Cliquer sur l’onglet Applications et dans la liste, choisir l’Application déclarée lors de
-                    l’installation du Plugin (par défaut : Jeedom Core)}}
-                    <br>
-                    {{Cocher les cases comme ci-dessus et cliquer sur les boutons OK}}
-                </div>
-            </center>
-            <center>
-                <div class="alert alert-info">{{Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant}}
-                </div>
-            </center>
-            <table id="table_packages" class="table table-condensed">
-                <thead>
-                    <tr>
-                        <th style="width: 120px">Nom</th>
-                        <th style="width: 70px">Status</th>
-                        <th>Description</th>
-                        <th style="width: 120px">Nom</th>
-                        <th style="width: 70px">Status</th>
-                        <th>Description</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr>
-                        <td>Parental</td>
-                        <td id="parental" class="alert-danger">NOK</td>
-                        <td>Accès au contrôle parental (obsolète)</td>
-                        <td>TV</td>
-                        <td id="tv" class="alert-danger">NOK</td>
-                        <td>Accès au guide TV</td>
-                    </tr>
-                    <tr>
-                        <td>Explorer</td>
-                        <td id="explorer" class="alert-danger">NOK</td>
-                        <td>Accès aux fichiers de la Freebox</td>
-                        <td>Contacts</td>
-                        <td id="contacts" class="alert-danger">NOK</td>
-                        <td>Accès à la base de contacts de la Freebox</td>
-                    </tr>
-                    <tr>
-                        <td>WDO</td>
-                        <td id="wdo" class="alert-danger">NOK</td>
-                        <td>Provisionnement des équipements</td>
-                        <td>Camera</td>
-                        <td id="camera" class="alert-danger">NOK</td>
-                        <td>Accès aux caméras</td>
-                    </tr>
-                    <tr>
-                        <td>Profile</td>
-                        <td id="profile" class="alert-danger">NOK</td>
-                        <td>Gestion des profils utilisateur</td>
-                        <td>Player</td>
-                        <td id="player" class="alert-danger">NOK</td>
-                        <td>Contrôle du Freebox Player</td>
-                    </tr>
-                    <tr>
-                        <td>Settings</td>
-                        <td id="settings" class="alert-danger">NOK</td>
-                        <td>Modification des réglages de la Freebox</td>
-                        <td>Calls</td>
-                        <td id="calls" class="alert-danger">NOK</td>
-                        <td>Accès au journal d'appels</td>
-                    </tr>
-                    <tr>
-                        <td>Home</td>
-                        <td id="home" class="alert-danger">NOK</td>
-                        <td>Gestion de l'alarme et maison connectée</td>
-                        <td>PVR</td>
-                        <td id="pvr" class="alert-danger">NOK</td>
-                        <td>Programmation des enregistrements</td>
-                    </tr>
-                    <tr>
-                        <td>VM</td>
-                        <td id="vm" class="alert-danger">NOK</td>
-                        <td>Contrôle de la VM</td>
-                        <td>Download</td>
-                        <td id="downloader" class="alert-danger">NOK</td>
-                        <td>Accès au gestionnaire de téléchargements</td>
-                    </tr>
-                </tbody>
-            </table>
-            <br />
-            <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i>
-                </a> </center> <br />
-        </div>
-
-        <div class="Freebox_OS_Display scan" style="display:none;">
-            <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i>
-                {{Précédent}}</a>
-            <br /><br />
-            <center><i class="fas fa-search-plus" style="font-size: 10em;"></i></center>
-            <br />
-            <center>
-                <div class="alert alert-info">{{Cette partie vous permet de rechercher les différents équipements de votre freebox}}
-                </div>
-            </center>
-            <br />
             <div>
-                <div id="colonne1">
-                    <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/system.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
-                        <div class="caption">
-                            <h4>{{Mes Equipements}}</h4>
-                            <p></p>
-                            <p class="text-center"><a class="btn bt_eqlogic_standard">{{Scan des équipements standards
-                                    }} <i class="fas fa-bullseye logoPrimary"></i></a></p>
-                            <p></p>
-                            <p>{{Ici vous scannez les équipements <b>systèmes</b> de la Freebox}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="colonne2">
-                    <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/parental.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
-                        <div class="caption">
-                            <h4>{{Mes Contrôles parentaux}}</h4>
-                            <p></p>
-                            <p class="text-center"><a class="btn bt_eqlogic_control_parental">{{Scan des Contrôles
-                                    parentaux }} <i class="fas fa-user-shield logoPrimary"></i></a></p>
-                            <p></p>
-                            <p>{{Ici vous scannez les <b>contrôles parentaux</b> présents dans la Freebox}}</p>
-                        </div>
-                    </div>
-                </div>
-                <div id="centre">
-                    <div class="thumbnail" style="box-shadow: 2px 2px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
-                        <div class="caption">
-                            <h4>{{Mes Equipements Home - Tiles}}</h4>
-                            <p></p>
-                            <p class="text-center"><a class="btn bt_eqlogic_tiles">{{Scan des Tiles }} <i class="fas fa-search logoPrimary"></i></a></p>
-                            <p></p>
-                            <p>{{Ici vous scannez les équipements de type <b>Home et Tiles</b> (Maison).}}</p>
-                            <p><i>{{Uniquement sur la Freebox Delta}}</i></p>
-                        </div>
-                    </div>
-                </div>
+                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
             </div>
-            <br />
-            <div>
+            <br /><br /> <br />
+            <BR>
+            <center>
+                <center><i class="fas fa-balance-scale-right" style="font-size: 5em;"></i></center>
+                <br />
+                <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/modification_droit.png" height="450" width="450" />
+                <br />
                 <center>
-                    <div class="alert alert-info">{{Une fois les scans effectués, cliquez simplement sur le bouton
-                        suivant}}
+                    <div class="alert alert-info">{{Se connecter à l’interface de la Freebox puis ouvrir les paramètres de
+                    la Freebox}}
+                        <br>
+                        {{Ensuite Ouvrir la gestion des accès de la Freebox (ce réglage se trouve dans le mode avancé)}}
+                        <br>
+                        {{Cliquer sur l’onglet Applications et dans la liste, choisir l’Application déclarée lors de
+                    l’installation du Plugin (par défaut : Jeedom Core)}}
+                        <br>
+                        {{Cocher les cases comme ci-dessus et cliquer sur les boutons OK}}
                     </div>
                 </center>
+                <center>
+                    <div class="alert alert-info">{{Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant}}
+                    </div>
+                </center>
+                <table id="table_packages" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="width: 120px">Nom</th>
+                            <th style="width: 70px">Status</th>
+                            <th>Description</th>
+                            <th style="width: 120px">Nom</th>
+                            <th style="width: 70px">Status</th>
+                            <th>Description</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Parental</td>
+                            <td id="parental" class="alert-danger">NOK</td>
+                            <td>Accès au contrôle parental (obsolète)</td>
+                            <td>TV</td>
+                            <td id="tv" class="alert-danger">NOK</td>
+                            <td>Accès au guide TV</td>
+                        </tr>
+                        <tr>
+                            <td>Explorer</td>
+                            <td id="explorer" class="alert-danger">NOK</td>
+                            <td>Accès aux fichiers de la Freebox</td>
+                            <td>Contacts</td>
+                            <td id="contacts" class="alert-danger">NOK</td>
+                            <td>Accès à la base de contacts de la Freebox</td>
+                        </tr>
+                        <tr>
+                            <td>WDO</td>
+                            <td id="wdo" class="alert-danger">NOK</td>
+                            <td>Provisionnement des équipements</td>
+                            <td>Camera</td>
+                            <td id="camera" class="alert-danger">NOK</td>
+                            <td>Accès aux caméras</td>
+                        </tr>
+                        <tr>
+                            <td>Profile</td>
+                            <td id="profile" class="alert-danger">NOK</td>
+                            <td>Gestion des profils utilisateur</td>
+                            <td>Player</td>
+                            <td id="player" class="alert-danger">NOK</td>
+                            <td>Contrôle du Freebox Player</td>
+                        </tr>
+                        <tr>
+                            <td>Settings</td>
+                            <td id="settings" class="alert-danger">NOK</td>
+                            <td>Modification des réglages de la Freebox</td>
+                            <td>Calls</td>
+                            <td id="calls" class="alert-danger">NOK</td>
+                            <td>Accès au journal d'appels</td>
+                        </tr>
+                        <tr>
+                            <td>Home</td>
+                            <td id="home" class="alert-danger">NOK</td>
+                            <td>Gestion de l'alarme et maison connectée</td>
+                            <td>PVR</td>
+                            <td id="pvr" class="alert-danger">NOK</td>
+                            <td>Programmation des enregistrements</td>
+                        </tr>
+                        <tr>
+                            <td>VM</td>
+                            <td id="vm" class="alert-danger">NOK</td>
+                            <td>Contrôle de la VM</td>
+                            <td>Download</td>
+                            <td id="downloader" class="alert-danger">NOK</td>
+                            <td>Accès au gestionnaire de téléchargements</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a></center>
+                <br />
+            </center>
+        </div>
+        <div class="Freebox_OS_Display scan" style="display:none;">
+            <div>
+                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
             </div>
+            <br /><br /> <br />
+            <BR>
+            <center>
+                <center><i class="fas fa-search-plus" style="font-size: 8em;"></i></center>
+                <br />
+
+                <div class="alert alert-info">{{Cette partie vous permet de rechercher les différents équipements de votre freebox}}
+                </div>
+
+                <br />
+                <div>
+                    <div id="colonne1">
+                        <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/system.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+                            <div class="caption">
+                                <h4>{{Mes Equipements}}</h4>
+                                <p></p>
+                                <p class="text-center"><a class="btn bt_eqlogic_standard">{{Scan des équipements standards
+                                    }} <i class="fas fa-bullseye logoPrimary"></i></a></p>
+                                <p></p>
+                                <p>{{Ici vous scannez les équipements <b>systèmes</b> de la Freebox}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="colonne2">
+                        <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/parental.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+                            <div class="caption">
+                                <h4>{{Mes Contrôles parentaux}}</h4>
+                                <p></p>
+                                <p class="text-center"><a class="btn bt_eqlogic_control_parental">{{Scan des Contrôles
+                                    parentaux }} <i class="fas fa-user-shield logoPrimary"></i></a></p>
+                                <p></p>
+                                <p>{{Ici vous scannez les <b>contrôles parentaux</b> présents dans la Freebox}}</p>
+                            </div>
+                        </div>
+                    </div>
+                    <div id="centre">
+                        <div class="thumbnail" style="box-shadow: 2px 2px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+                            <div class="caption">
+                                <h4>{{Mes Equipements Home - Tiles}}</h4>
+                                <p></p>
+                                <p class="text-center"><a class="btn bt_eqlogic_tiles">{{Scan des Tiles }} <i class="fas fa-search logoPrimary"></i></a></p>
+                                <p></p>
+                                <p>{{Ici vous scannez les équipements de type <b>Home et Tiles</b> (Maison).}}</p>
+                                <p><i>{{Uniquement sur la Freebox Delta}}</i></p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <br />
+                <div>
+                    <center>
+                        <div class="alert alert-info">{{Une fois les scans effectués, cliquez simplement sur le bouton
+                        suivant}}
+                        </div>
+                    </center>
+                </div>
+            </center>
         </div>
 
         <div class="Freebox_OS_Display end" style="display:none;">
-            <center><i class="fas fa-check" style="font-size: 10em;"></i></center>
+            <center><i class="fas fa-check" style="font-size: 8em;"></i></center>
             <br />
             <img class="img-responsive center-block" src="core/img/logo-jeedom-freebox-grand-nom-couleur.png" height="500" width="500" />
             <center>
@@ -325,7 +342,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                 <div class="alert alert-success">{{Bravo !!!}}</div>
             </center>
             <center>
-                <div class="alert alert-info Freebox_OK">{{Authentification réussi, Vous pouvez fermer cette fenêtre}}</div>
+                <div class="alert alert-info Freebox_OK">{{Authentification réussie, Vous pouvez fermer cette fenêtre}}</div>
             </center>
 
         </div>

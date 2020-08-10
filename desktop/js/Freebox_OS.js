@@ -39,6 +39,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 						message: "{{La caméra (<b>" + camera.name + "</b>) a été ajoutée avec succès}}",
 						level: 'success'
 					});
+					window.location.reload();
 				}
 			});
 		}

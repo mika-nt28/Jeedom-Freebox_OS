@@ -27,7 +27,6 @@ try {
 
 				if ($defaultRoom) $EqLogic->setObject_id($defaultRoom);
 
-
 				$EqLogic->setEqType_name('camera');
 				$EqLogic->setIsEnable(1);
 				$EqLogic->setIsVisible(0);
@@ -153,7 +152,6 @@ try {
 				"LogLevel" => log::getLogLevel('Freebox_OS')
 			);
 			ajax::success($result);
-
 			break;
 		case 'SetSetting':
 			config::save('FREEBOX_SERVER_IP', init('ip'), 'Freebox_OS');

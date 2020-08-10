@@ -271,7 +271,7 @@ class Free_CreateTil
                                             log::add('Freebox_OS', 'debug', '│ Valeur Batterie : ' . $Command['value']);
                                             $Tile->batteryStatus($Command['value']);
                                         } else {
-                                            log::add('Freebox_OS', 'debug', '│ Valeur de Batterie  Nulle : ' . $Command['value']);
+                                            log::add('Freebox_OS', 'debug', '│ La valeur de la batterie est nulle ' . $Command['value']);
                                             log::add('Freebox_OS', 'debug', '│ PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
                                         }
                                     }

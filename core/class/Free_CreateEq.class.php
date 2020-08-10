@@ -20,7 +20,6 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_CreateEq
 {
-
     public static function createEq($create = 'default')
     {
         $logicalinfo = Freebox_OS::getlogicalinfo();
@@ -93,7 +92,6 @@ class Free_CreateEq
 
     private static function createEq_connexion($logicalinfo, $templatecore_V4)
     {
-
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : connexions');
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
@@ -120,10 +118,6 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_disk_SP($logicalinfo, $templatecore_V4)
-    {
-        // VOIR SI ON MET LA FONCTION DISK QUI SE TROUVE DANS FREE_API => public function disk()
-    }
     private static function createEq_download($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléchargements');

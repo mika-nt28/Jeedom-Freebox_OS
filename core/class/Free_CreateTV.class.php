@@ -20,7 +20,6 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_CreateTV
 {
-
     public static function createTV($create = 'default')
     {
         $logicalinfo = Freebox_OS::getlogicalinfo();

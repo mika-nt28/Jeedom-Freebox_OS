@@ -86,6 +86,10 @@ $('.bt_Freebox_droitVerif').on('click', function () {
     GetSessionData();
 });
 
+$('.bt_Freebox_OS_ResetConfig').on('click', function () {
+    SetDefaultSetting();
+});
+
 function updateMenu(objectclass) {
     $('.li_Freebox_OS_Summary.active').removeClass('active');
     $(objectclass).addClass('active');
@@ -111,7 +115,7 @@ function autorisationFreebox() {
                     level: 'danger'
                 });
                 if (data.result.error_code == "new_apps_denied")
-                    $('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>De nouveau, cliquez sur <b>Etape 1</b>");
+                    $('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>Relancer l'authentification");
                 return;
             } else {
                 sendToBdd(data.result);
@@ -234,15 +238,16 @@ function AskTrackAuthorization() {
                     switch (data.result.result.status) {
 
                         case "unknown":
-                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
                             Good();
                             progress(-1);
                             break;
                         case "pending":
+                            $('.textFreebox').text('{{Vous n\'avez pas encore validé l\'application sur la Freebox.}}');
                             setTimeout(AskTrackAuthorization, 3000);
                             break;
                         case "timeout":
-                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'authentification. Merci}}');
                             Good();
                             progress(-1);
                             break;
@@ -255,7 +260,7 @@ function AskTrackAuthorization() {
                             break;
 
                         case "denied":
-                            $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'authentification. Merci}}');
                             progress(-1);
                             Good();
                             break;
@@ -323,7 +328,23 @@ function GetSetting() {
         success: function (data) {
             $('#imput_freeboxIP').val(data.result.ip);
             $('#imput_freeAppVersion').val(data.result.VersionAPP);
+            $('#imput_freeNameAPP').val(data.result.NameAPP);
+            $('#imput_IdApp').val(data.result.IdApp);
+            $('#imput_DeviceName').val(data.result.DeviceName);
             $('#sel_catego').val(data.result.Categorie);
+            if (data.result.LogLevel == 100) {
+                var debugHides = document.getElementsByClassName('debugFreeOS');
+                for(var i = 0; i < debugHides.length; i++) {
+                    var debugHide = debugHides[i];
+                    debugHide.classList.remove("debugHide");
+                }
+            } else {
+                var debugShows = document.getElementsByClassName('debugFreeOS');
+                for(var i = 0; i < debugShows.length; i++) {
+                    var debugShow = debugShows[i];
+                    debugShow.classList.add("debugHide");
+                }
+            }
         }
     });
 }
@@ -337,6 +358,23 @@ function SetSetting(ip, VersionAPP, Categorie) {
             ip: ip,
             VersionAPP: VersionAPP,
             Categorie: Categorie,
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            GetSetting();
+        }
+    });
+}
+
+function SetDefaultSetting() {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "resetSetting",
         },
         dataType: 'json',
         error: function (request, status, error) {

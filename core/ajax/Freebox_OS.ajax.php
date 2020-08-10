@@ -174,6 +174,10 @@ try {
             config::save('FREEBOX_SERVER_DEVICE_NAME',config::byKey("name"), 'Freebox_OS');
             ajax::success(true);
             break;
+        case 'sendToBdd':
+            config::save('FREEBOX_SERVER_TRACK_ID', init('track_id'), 'Freebox_OS');
+            config::save('FREEBOX_SERVER_APP_TOKEN', init('app_token'), 'Freebox_OS');
+            ajax::success(true);
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	/*     * *********Catch exeption*************** */

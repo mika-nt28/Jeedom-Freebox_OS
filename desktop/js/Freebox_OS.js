@@ -21,6 +21,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 					action: 'createCamera',
 					name: camera.name,
 					id: camera.id,
+					room: camera.room,
 					url: camera.url
 				},
 				dataType: 'json',

@@ -100,7 +100,7 @@ class Freebox_OS extends eqLogic
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null, $_autorefresh = null)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null, $_autorefresh = null, $_Room = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		if (!is_object($EqLogic)) {

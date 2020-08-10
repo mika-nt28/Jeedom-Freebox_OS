@@ -169,7 +169,7 @@ try {
 
             config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
             config::save('FREEBOX_SERVER_APP_VERSION',"v5.0.0", 'Freebox_OS');
-            config::save('FREEBOX_SERVER_APP_NAME',"Plugin Freebox OS For Jeedom", 'Freebox_OS');
+            config::save('FREEBOX_SERVER_APP_NAME',"Plugin Freebox OS", 'Freebox_OS');
             config::save('FREEBOX_SERVER_APP_ID',"plugin.freebox.jeedom", 'Freebox_OS');
             config::save('FREEBOX_SERVER_DEVICE_NAME',config::byKey("name"), 'Freebox_OS');
             ajax::success(true);

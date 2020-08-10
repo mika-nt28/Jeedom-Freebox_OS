@@ -21,6 +21,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 					action: 'createCamera',
 					name: camera.name,
 					id: camera.id,
+					room: camera.room,
 					url: camera.url
 				},
 				dataType: 'json',
@@ -38,6 +39,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 						message: "{{La caméra (<b>" + camera.name + "</b>) a été ajoutée avec succès}}",
 						level: 'success'
 					});
+					window.location.reload();
 				}
 			});
 		}

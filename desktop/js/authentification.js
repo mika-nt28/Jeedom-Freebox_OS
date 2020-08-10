@@ -86,6 +86,10 @@ $('.bt_Freebox_droitVerif').on('click', function () {
     GetSessionData();
 });
 
+$('.bt_Freebox_OS_ResetConfig').on('click', function () {
+    SetDefaultSetting();
+});
+
 function updateMenu(objectclass) {
     $('.li_Freebox_OS_Summary.active').removeClass('active');
     $(objectclass).addClass('active');
@@ -323,7 +327,23 @@ function GetSetting() {
         success: function (data) {
             $('#imput_freeboxIP').val(data.result.ip);
             $('#imput_freeAppVersion').val(data.result.VersionAPP);
+            $('#imput_freeNameAPP').val(data.result.NameAPP);
+            $('#imput_IdApp').val(data.result.IdApp);
+            $('#imput_DeviceName').val(data.result.DeviceName);
             $('#sel_catego').val(data.result.Categorie);
+            if (data.result.LogLevel == 100) {
+                var debugHides = document.getElementsByClassName('debugFreeOS');
+                for(var i = 0; i < debugHides.length; i++) {
+                    var debugHide = debugHides[i];
+                    debugHide.classList.remove("debugHide");
+                }
+            } else {
+                var debugShows = document.getElementsByClassName('debugFreeOS');
+                for(var i = 0; i < debugShows.length; i++) {
+                    var debugShow = debugShows[i];
+                    debugShow.classList.add("debugHide");
+                }
+            }
         }
     });
 }
@@ -337,6 +357,23 @@ function SetSetting(ip, VersionAPP, Categorie) {
             ip: ip,
             VersionAPP: VersionAPP,
             Categorie: Categorie,
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            GetSetting();
+        }
+    });
+}
+
+function SetDefaultSetting() {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "resetSetting",
         },
         dataType: 'json',
         error: function (request, status, error) {

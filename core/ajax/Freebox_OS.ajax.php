@@ -136,19 +136,33 @@ try {
             $result = array(
                 "ip"=>config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'),
                 "VersionAPP"=>config::byKey('FREEBOX_SERVER_APP_VERSION', 'Freebox_OS'),
-                "Categorie"=>config::byKey('defaultParentObject', 'Freebox_OS')
+                "NameAPP"=>config::byKey('FREEBOX_SERVER_APP_NAME', 'Freebox_OS'),
+                "IdApp"=>config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS'),
+                "DeviceName"=>config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'),
+                "Categorie"=>config::byKey('defaultParentObject', 'Freebox_OS', "auccun"),
+                "LogLevel"=>log::getLogLevel('Freebox_OS')
             );
             ajax::success($result);
+
             break;
         case 'SetSetting':
             config::save('FREEBOX_SERVER_IP', init('ip'), 'Freebox_OS');
             config::save('FREEBOX_SERVER_APP_VERSION', init('VersionAPP'), 'Freebox_OS');
-            config::save('defaultParentObject', init('track_id'), 'Categorie');
+            config::save('defaultParentObject', init('track_id'));
             ajax::success(true);
             break;
         case 'GetSessionData':
             Freebox_OS::deamon_start();
             ajax::success($Free_API->getFreeboxOpenSessionData());
+            break;
+        case 'resetSetting':
+
+            config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
+            config::save('FREEBOX_SERVER_APP_VERSION',"v5.0.0", 'Freebox_OS');
+            config::save('FREEBOX_SERVER_APP_NAME',"Plugin Freebox OS For Jeedom", 'Freebox_OS');
+            config::save('FREEBOX_SERVER_APP_ID',"plugin.freebox.jeedom", 'Freebox_OS');
+            config::save('FREEBOX_SERVER_DEVICE_NAME',config::byKey("name"), 'Freebox_OS');
+            ajax::success(true);
             break;
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));

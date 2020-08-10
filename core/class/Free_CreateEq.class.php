@@ -122,7 +122,7 @@ class Free_CreateEq
 
     private static function createEq_disk_SP($logicalinfo, $templatecore_V4)
     {
-        // VOIR SI ON MET LA FONCTION DISK QUI SE TROUVE DANS FREE_API => public function disk()
+         //VOIR SI ON MET LA FONCTION DISK QUI SE TROUVE DANS FREE_API => public function disk()
     }
     private static function createEq_download($logicalinfo, $templatecore_V4)
     {

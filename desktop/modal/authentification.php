@@ -24,9 +24,6 @@ include_file('core', 'authentification', 'php');
 if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
-config::save('FREEBOX_SERVER_APP_NAME', config::byKey('product_name'), 'Freebox_OS');
-config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freebox_OS');
-
 ?>
 <div id="div_Alert_Freebox_Include"></div>
 <div class="row row-overflow">
@@ -72,6 +69,7 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
             <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i>
                 {{Précédent}}</a>
             <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
+            <a class="btn btn-sm btn-danger pull-right bt_Freebox_OS_ResetConfig"><i class="fas fa-trash"></i> Reset Configuration</a>
             <br /><br />
             <center><i class="fas fa-cogs" style="font-size: 10em;"></i></center>
             <br />
@@ -87,10 +85,28 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                                 <input id="imput_freeboxIP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_IP" />
                             </div>
                         </div>
-                        <div class="form-group">
+                        <div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Version de l'application Freebox serveur}}</label>
                             <div class="col-md-4">
                                 <input id="imput_freeAppVersion" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_VERSION" />
+                            </div>
+                        </div>
+                        <div class="form-group debugFreeOS debugHide">
+                            <label class="col-md-5 control-label">{{Nom de l'application Freebox serveur}}</label>
+                            <div class="col-md-4">
+                                <input id="imput_freeNameAPP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_NAME" disabled/>
+                            </div>
+                        </div>
+                        <div class="form-group debugFreeOS debugHide">
+                            <label class="col-md-5 control-label">{{Id de l'application Freebox serveur}}</label>
+                            <div class="col-md-4">
+                                <input id="imput_IdApp" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_ID" disabled/>
+                            </div>
+                        </div>
+                        <div class="form-group debugFreeOS debugHide">
+                            <label class="col-md-5 control-label">{{Nom de l'équipement connecté}}</label>
+                            <div class="col-md-4">
+                                <input id="imput_DeviceName" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" disabled/>
                             </div>
                         </div>
                         <div class="form-group">
@@ -107,24 +123,6 @@ config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('product_name'), 'Freeb
                                 </select>
                             </div>
                         </div>
-                        <!--<div class="form-group">
-                            <label class="col-md-3 control-label">{{Id de l'application Freebox serveur}}</label>
-                            <div class="col-md-3">
-                              <input type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_ID" />
-                            </div>
-                          </div>
-                          <div class="form-group">
-                            <label class="col-md-3 control-label">{{Nom de l'application Freebox serveur}}</label>
-                            <div class="col-md-3">
-                              <input type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_NAME" />
-                            </div>
-                          </div>
-                          div class="form-group">
-                            <label class="col-md-3 control-label">{{Nom de l'équipement connecté}}</label>
-                            <div class="col-md-3">
-                              <input type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" />
-                            </div>
-                          </div>-->
                         <br />
                     </fieldset>
                 </form>
@@ -362,5 +360,10 @@ include_file('desktop', 'authentification', 'js', 'Freebox_OS');
         margin-right: 5px;
         margin-left: 5px;
 
+    }
+
+    .debugHide {
+        display: none;
+        visibility: hidden;
     }
 </style>

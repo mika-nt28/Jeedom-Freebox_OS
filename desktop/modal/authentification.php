@@ -73,9 +73,8 @@ if (!isConnect('admin')) {
                 {{Précédent}}</a>
             <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
             <a class="btn btn-sm btn-danger pull-right bt_Freebox_OS_ResetConfig"><i class="fas fa-trash"></i> Reset Configuration</a>
-            <br /><br />
-            <center><i class="fas fa-cogs" style="font-size: 10em;"></i></center>
-            <br />
+            <br /><br /> <br />
+            <BR>
             <center>
                 <center><i class="fas fa-cogs" style="font-size: 8em;"></i></center>
                 <br />
@@ -99,19 +98,19 @@ if (!isConnect('admin')) {
                         <div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Nom de l'application Freebox serveur}}</label>
                             <div class="col-md-4">
-                                <input id="imput_freeNameAPP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_NAME" disabled/>
+                                <input id="imput_freeNameAPP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_NAME" disabled />
                             </div>
                         </div>
                         <div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Id de l'application Freebox serveur}}</label>
                             <div class="col-md-4">
-                                <input id="imput_IdApp" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_ID" disabled/>
+                                <input id="imput_IdApp" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_ID" disabled />
                             </div>
                         </div>
                         <div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Nom de l'équipement connecté}}</label>
                             <div class="col-md-4">
-                                <input id="imput_DeviceName" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" disabled/>
+                                <input id="imput_DeviceName" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" disabled />
                             </div>
                         </div>
                         <div class="form-group">

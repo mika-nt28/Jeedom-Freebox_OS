@@ -20,14 +20,12 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_CreateTil
 {
-
     public static function createTil($create = 'default')
     {
         $Type_box = Free_CreateTil::createTil_Box();
         if ($Type_box == 'OK') {
             $logicalinfo = Freebox_OS::getlogicalinfo();
             if (version_compare(jeedom::version(), "4", "<")) {
-
                 $templatecore_V4 = null;
             } else {
                 $templatecore_V4  = 'core::';
@@ -108,9 +106,9 @@ class Free_CreateTil
 
                 $Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
                 if (isset($Equipement['label'])) {
-                    $Tile = Freebox_OS::AddEqLogic($Equipement['label'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh);
+                    $Tile = Freebox_OS::AddEqLogic($Equipement['label'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $Equipement['group']['label']);
                 } else {
-                    $Tile = Freebox_OS::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh);
+                    $Tile = Freebox_OS::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $Equipement['group']['label']);
                 }
             }
             foreach ($Equipement['data'] as $Command) {
@@ -125,8 +123,9 @@ class Free_CreateTil
                     if ($Equipement['type'] == 'camera' && method_exists('camera', 'getUrl')) {
                         $parameter['name'] = $Command['label'];
                         $parameter['id'] = $Command['ep_id'];
+                        $parameter['room'] = $Equipement['group']['label'];
                         $parameter['url'] = $Command['value'];
-                        log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name']);
+                        log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
                         log::add('Freebox_OS', 'debug', '│ Id : ' . $parameter['id']);
                         log::add('Freebox_OS', 'debug', '│ URL : ' . $parameter['url']);
                         log::add('Freebox_OS', 'debug', '└─────────');
@@ -134,7 +133,7 @@ class Free_CreateTil
                         continue;
                     }
                     if (!is_object($Tile)) continue;
-                    log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
+                    log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' -- Pièce : ' . $Equipement['group']['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
                     $Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
                     $Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
                     log::add('Freebox_OS', 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
@@ -272,7 +271,7 @@ class Free_CreateTil
                                             log::add('Freebox_OS', 'debug', '│ Valeur Batterie : ' . $Command['value']);
                                             $Tile->batteryStatus($Command['value']);
                                         } else {
-                                            log::add('Freebox_OS', 'debug', '│ Valeur de Batterie  Nulle : ' . $Command['value']);
+                                            log::add('Freebox_OS', 'debug', '│ La valeur de la batterie est nulle ' . $Command['value']);
                                             log::add('Freebox_OS', 'debug', '│ PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
                                         }
                                     }

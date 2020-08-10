@@ -43,11 +43,11 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
             progress(25);
             break;
         case 'rights':
-            progress(70);
+            progress(50);
             GetSessionData();
             break;
         case 'scan':
-            progress(80);
+            progress(60);
             break;
         case 'end':
             progress(100);
@@ -57,17 +57,17 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
 
 $('.bt_eqlogic_standard').on('click', function () {
     SearchArchi();
-    progress(70);
+    progress(85);
 });
 
 $('.bt_eqlogic_tiles').on('click', function () {
     SearchTile();
-    progress(80);
+    progress(90);
 });
 
 $('.bt_eqlogic_control_parental').on('click', function () {
     SearchParental();
-    progress(90);
+    progress(95);
 });
 
 $('.bt_Freebox_OS_Save').on('click', function () {
@@ -115,7 +115,7 @@ function autorisationFreebox() {
                     level: 'danger'
                 });
                 if (data.result.error_code == "new_apps_denied")
-                    $('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>De nouveau, cliquez sur <b>Etape 1</b>");
+                    $('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>Relancer l'authentification");
                 return;
             } else {
                 sendToBdd(data.result);
@@ -238,15 +238,16 @@ function AskTrackAuthorization() {
                     switch (data.result.result.status) {
 
                         case "unknown":
-                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
                             Good();
                             progress(-1);
                             break;
                         case "pending":
+                            $('.textFreebox').text('{{Vous n\'avez pas encore validé l\'application sur la Freebox.}}');
                             setTimeout(AskTrackAuthorization, 3000);
                             break;
                         case "timeout":
-                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'authentification. Merci}}');
                             Good();
                             progress(-1);
                             break;
@@ -259,7 +260,7 @@ function AskTrackAuthorization() {
                             break;
 
                         case "denied":
-                            $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'association. Merci}}');
+                            $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'authentification. Merci}}');
                             progress(-1);
                             Good();
                             break;
@@ -423,15 +424,13 @@ function GetSessionData() {
                 UpdateStatus("vm", permissions.vm);
                 UpdateStatus("wdo", permissions.wdo);
 
-                if (permissions.calls
-                    && permissions.camera
-                    && permissions.downloader
-                    && permissions.home
-                    && permissions.parental
-                    && permissions.player
-                    && permissions.profile
-                    && permissions.settings
-                    && permissions.tv) {
+                if (permissions.calls &&
+                    permissions.camera &&
+                    permissions.downloader &&
+                    permissions.home &&
+                    permissions.player &&
+                    permissions.profile &&
+                    permissions.settings) {
 
                     $('.textFreebox').show();
                     $('.bt_Freebox_OS_Next').show();

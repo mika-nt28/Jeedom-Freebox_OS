@@ -20,7 +20,6 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_Refresh
 {
-
     public static function RefreshInformation($_freeboxID)
     {
         $Free_API = new Free_API();

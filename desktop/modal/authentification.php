@@ -374,4 +374,10 @@ include_file('desktop', 'authentification', 'js', 'Freebox_OS');
         margin-left: 5px;
 
     }
+
+    .debugHide {
+        display: none;
+        visibility: hidden;
+    }
+
 </style>

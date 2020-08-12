@@ -278,6 +278,8 @@ if (!isConnect('admin')) {
                 <br />
                 <center>
                     <div class="alert alert-info">{{Cette partie vous permet de lier les pièces de la Freebox avec les Objets de Jeedom}}
+                        <br>
+                        <i>{{Uniquement sur la Freebox Delta}}</i>
                     </div>
                 </center>
 
@@ -297,7 +299,7 @@ if (!isConnect('admin')) {
                 </table>
                 <br />
                 <center>
-                    <div class="alert alert-info">{{Une fois validé, cliquez sur le bouton Sauvegarder}}</div>
+                    <div class="alert alert-info">{{Une fois lié, cliquez sur le bouton Sauvegarder}}</div>
                 </center>
                 <br />
             </center>

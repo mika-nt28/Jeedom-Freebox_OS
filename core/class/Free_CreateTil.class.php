@@ -40,6 +40,9 @@ class Free_CreateTil
                 case 'homeadapters_SP':
                     Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
                     break;
+                case 'Tiles_group':
+                    Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);
+                    break;
                 default:
                     Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
                     break;
@@ -399,5 +402,10 @@ class Free_CreateTil
                 }
             }
         }
+    }
+    public static function createTil_Group($logicalinfo, $templatecore_V4)
+    {
+        $Free_API = new Free_API();
+        $Free_API->universal_get('tiles');
     }
 }

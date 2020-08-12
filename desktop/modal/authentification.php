@@ -30,15 +30,12 @@ if (!isConnect('admin')) {
     <div class="col-lg-2">
         <div class="bs-sidebar">
             <ul class="nav nav-list bs-sidenav">
-                <li class="cursor li_Freebox_OS_Summary active" data-href="home"><a><i class="fab fa-ello"></i>
-                        {{Accueil}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="setting"><a><i class="fas fa-cogs"></i> {{Réglages}}</a>
-                </li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="authentification"><a><i class="fas fa-rss"></i>
-                        {{Authentification}}</a></li>
+                <li class="cursor li_Freebox_OS_Summary active" data-href="home"><a><i class="fab fa-ello"></i> {{Accueil}}</a></li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="setting"><a><i class="fas fa-cogs"></i> {{Réglages}}</a></li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="authentification"><a><i class="fas fa-rss"></i> {{Authentification}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="rights"><a><i class="fas fa-balance-scale-right"></i> {{Droits}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="scan"><a><i class="fas fa-search-plus"></i> {{Scan
-                        des équipements}}</a></li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="room"><a><i class="fas fa-arrows-alt-h"></i> {{Objects}}</a></li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="scan"><a><i class="fas fa-search-plus"></i> {{Scan des équipements}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="end"><a><i class="fas fa-check"></i> {{Fin}}</a>
                 </li>
             </ul>
@@ -194,75 +191,114 @@ if (!isConnect('admin')) {
                 <table id="table_packages" class="table table-condensed">
                     <thead>
                         <tr>
-                            <th style="width: 120px">Nom</th>
-                            <th style="width: 70px">Status</th>
-                            <th>Description</th>
-                            <th style="width: 120px">Nom</th>
-                            <th style="width: 70px">Status</th>
-                            <th>Description</th>
+                            <th style="width: 120px">{Nom}}</th>
+                            <th style="width: 70px">{Status}}</th>
+                            <th>{{Description}}</th>
+                            <th style="width: 120px">{{Nom</th>
+                            <th style="width: 70px">{{Status}}</th>
+                            <th>{{Description}}</th>
                         </tr>
                     </thead>
                     <tbody>
                         <tr>
                             <td>Parental</td>
                             <td id="parental" class="alert-danger">NOK</td>
-                            <td>Accès au contrôle parental (obsolète)</td>
+                            <td>{{Accès au contrôle parental (obsolète}})</td>
                             <td>TV</td>
                             <td id="tv" class="alert-danger">NOK</td>
-                            <td>Accès au guide TV</td>
+                            <td>{{Accès au guide TV}}</td>
                         </tr>
                         <tr>
                             <td>Explorer</td>
                             <td id="explorer" class="alert-danger">NOK</td>
-                            <td>Accès aux fichiers de la Freebox</td>
+                            <td>{{Accès aux fichiers de la Freebox}}</td>
                             <td>Contacts</td>
                             <td id="contacts" class="alert-danger">NOK</td>
-                            <td>Accès à la base de contacts de la Freebox</td>
+                            <td>{{Accès à la base de contacts de la Freebox}}</td>
                         </tr>
                         <tr>
                             <td>WDO</td>
                             <td id="wdo" class="alert-danger">NOK</td>
-                            <td>Provisionnement des équipements</td>
+                            <td>{{Provisionnement des équipements}}</td>
                             <td><b>Camera</b></td>
                             <td id="camera" class="alert-danger">NOK</td>
-                            <td>Accès aux caméras</td>
+                            <td>{{Accès aux caméras}}</td>
                         </tr>
                         <tr>
                             <td><b>Profile</b></td>
                             <td id="profile" class="alert-danger">NOK</td>
-                            <td>Gestion des profils utilisateur</td>
+                            <td>{{Gestion des profils utilisateur}}</td>
                             <td><b>Player</b></td>
                             <td id="player" class="alert-danger">NOK</td>
-                            <td>Contrôle du Freebox Player</td>
+                            <td>{{Contrôle du Freebox Player}}</td>
                         </tr>
                         <tr>
                             <td><b>Settings</b></td>
                             <td id="settings" class="alert-danger">NOK</td>
-                            <td>Modification des réglages de la Freebox</td>
+                            <td>{{Modification des réglages de la Freebox}}</td>
                             <td><b>Calls</b></td>
                             <td id="calls" class="alert-danger">NOK</td>
-                            <td>Accès au journal d'appels</td>
+                            <td>{{Accès au journal d'appels}}</td>
                         </tr>
                         <tr>
                             <td><b>Home</b></td>
                             <td id="home" class="alert-danger">NOK</td>
-                            <td>Gestion de l'alarme et maison connectée</td>
+                            <td>{{Gestion de l'alarme et maison connectée}}</td>
                             <td>PVR</td>
                             <td id="pvr" class="alert-danger">NOK</td>
-                            <td>Programmation des enregistrements</td>
+                            <td>{{Programmation des enregistrements}}</td>
                         </tr>
                         <tr>
                             <td>VM</td>
                             <td id="vm" class="alert-danger">NOK</td>
-                            <td>Contrôle de la VM</td>
+                            <td>{{Contrôle de la VM</td>
                             <td><b>Download</b></td>
                             <td id="downloader" class="alert-danger">NOK</td>
-                            <td>Accès au gestionnaire de téléchargements</td>
+                            <td>{{Accès au gestionnaire de téléchargements}}</td>
                         </tr>
                     </tbody>
                 </table>
                 <br />
                 <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a></center>
+                <br />
+            </center>
+        </div>
+
+        <div class="Freebox_OS_Display room" style="display:none;">
+            <div>
+                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save_room"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
+            </div>
+            <br /><br /> <br />
+            <BR>
+            <center>
+                <center><i class="fas fa-arrows-alt-h" style="font-size: 5em;"></i></center>
+                <br />
+                <br />
+                <center>
+                    <div class="alert alert-info">{{Cette partie vous permet de lier les pièces de la Freebox avec les Objets de Jeedom}}
+                    </div>
+                </center>
+
+                <table id="table_room" class="table table-condensed">
+                    <thead>
+                        <tr>
+                            <th style="width: 320px">{{Pièce Freebox}}</th>
+                            <th>{{Objects Jeedom}}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Piece</td>
+                            <td>Gestion de l'alarme et maison connectée}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <br />
+                <center>
+                    <div class="alert alert-info">{{Une fois validé, cliquez sur le bouton Sauvegarder}}</div>
+                </center>
                 <br />
             </center>
         </div>
@@ -379,5 +415,4 @@ include_file('desktop', 'authentification', 'js', 'Freebox_OS');
         display: none;
         visibility: hidden;
     }
-
 </style>

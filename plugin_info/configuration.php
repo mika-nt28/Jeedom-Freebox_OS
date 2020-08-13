@@ -6,9 +6,10 @@ if (!isConnect()) {
 	die();
 }
 ?>
+<!--
 <form class="form-horizontal">
 	<fieldset>
-		<!--<div class="form-group">
+		<div class="form-group">
 			<label class="col-md-3 control-label">{{IP Freebox}}</label>
 			<div class="col-md-3">
 				<input type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_IP" />
@@ -58,7 +59,9 @@ if (!isConnect()) {
 					?>
 				</select>
 			</div>
-		</div>-->
+		</div>
 	</fieldset>
 </form>
-<?php include_file('desktop', 'configuration', 'js', 'Freebox_OS'); ?>
+<?php //include_file('desktop', 'configuration', 'js', 'Freebox_OS'); ?>
+-->
+

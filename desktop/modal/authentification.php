@@ -191,10 +191,10 @@ if (!isConnect('admin')) {
                 <table id="table_packages" class="table table-condensed">
                     <thead>
                         <tr>
-                            <th style="width: 120px">{Nom}}</th>
-                            <th style="width: 70px">{Status}}</th>
+                            <th style="width: 120px">{{Nom}}</th>
+                            <th style="width: 70px">{{Status}}</th>
                             <th>{{Description}}</th>
-                            <th style="width: 120px">{{Nom</th>
+                            <th style="width: 120px">{{Nom}}</th>
                             <th style="width: 70px">{{Status}}</th>
                             <th>{{Description}}</th>
                         </tr>
@@ -292,8 +292,8 @@ if (!isConnect('admin')) {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Piece</td>
-                            <td>Gestion de l'alarme et maison connectée}}</td>
+                            <td>{{Piece}}</td>
+                            <td>{{Gestion de l'alarme et maison connectée}}</td>
                         </tr>
                     </tbody>
                 </table>

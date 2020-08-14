@@ -246,7 +246,7 @@ class Free_CreateTil
                                     if ($Equipement['action'] != "store_slider" && $Command['name'] != 'position') {
                                         $_name_I = $label_sup . $name;
                                     } else {
-                                        $_name_I = 'Etat ouverture volet';
+                                        $_name_I = 'Etat volet';
                                     }
                                     if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
                                         $infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $binaireID);

@@ -100,6 +100,15 @@ class Freebox_OS extends eqLogic
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}
+
+	public static function resetConfig() {
+        config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
+        config::save('FREEBOX_SERVER_APP_VERSION', "v5.0.0", 'Freebox_OS');
+        config::save('FREEBOX_SERVER_APP_NAME', "Plugin Freebox OS", 'Freebox_OS');
+        config::save('FREEBOX_SERVER_APP_ID', "plugin.freebox.jeedom", 'Freebox_OS');
+        config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
+    }
+
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null, $_autorefresh = null, $_Room = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');

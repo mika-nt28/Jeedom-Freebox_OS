@@ -146,7 +146,7 @@ class Free_API
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
             if ($log_createeq != null) {
-                $type_log = 'Freebox_OS_' . $log_createeq;
+                $type_log = 'Freebox_OS' . $log_createeq;
             } else {
                 $type_log = 'Freebox_OS';
             }

@@ -47,7 +47,7 @@ function Freebox_OS_update()
 		Freebox_OS::updateLogicalID(1, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 5/5 : Sauvegarde de l\'ensemble des équipements');
 
-		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oublier pas de lancer les trois Scans afin de bénéficier des nouveautés');
+		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oublier pas de lancer les 3 Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {
 		$e = print_r($e, 1);
 		log::add('Freebox_OS', 'error', 'Freebox_OS update ERROR : ' . $e);

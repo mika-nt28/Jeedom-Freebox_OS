@@ -6,6 +6,7 @@ if (!isConnect()) {
 	die();
 }
 ?>
+<center><label class="col-md-10 control-label">{{L'authentification sur la Freebox se fait désormais depuis l'interface du Plugin}}</label></center>
 <!--
 <form class="form-horizontal">
 	<fieldset>
@@ -62,6 +63,6 @@ if (!isConnect()) {
 		</div>
 	</fieldset>
 </form>
-<?php //include_file('desktop', 'configuration', 'js', 'Freebox_OS'); ?>
+<?php //include_file('desktop', 'configuration', 'js', 'Freebox_OS'); 
+?>
 -->
-

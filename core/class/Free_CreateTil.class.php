@@ -34,6 +34,9 @@ class Free_CreateTil
                 case 'box':
                     Free_CreateTil::createTil_Box();
                     break;
+                case 'camera':
+                    Free_CreateTil::createTil_Camera();
+                    break;
                 case 'homeadapters':
                     Free_CreateTil::createTil_homeadapters($logicalinfo, $templatecore_V4);
                     break;
@@ -62,9 +65,56 @@ class Free_CreateTil
         }
         return $Type_box;
     }
-    public static function createTil_camera()
+    public static function createTil_Camera()
     {
-        // Voir si on déplace la caméra ICI
+        $EqLogic = eqLogic::byLogicalId(init('id'), 'camera');
+        if (!is_object($EqLogic)) {
+            $defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+            $url = explode('@', explode('://', init('url'))[1]);
+            $room = init('room');
+            log::add('Freebox_OS', 'debug', '┌───────── Création de la caméra : ' . init('name'));
+            $username = explode(':', $url[0])[0];
+            $password = explode(':', $url[0])[1];
+
+            $adresse = explode(':', explode('/', $url[1])[0]);
+            $ip = $adresse[0];
+            $port = $adresse[1];
+            $EqLogic = new camera();
+            $EqLogic->setName(init('name'));
+            $EqLogic->setLogicalId(init('id'));
+
+            if ($defaultRoom) $EqLogic->setObject_id($defaultRoom);
+
+            $EqLogic->setEqType_name('camera');
+            $EqLogic->setIsEnable(1);
+            $EqLogic->setIsVisible(0);
+            $EqLogic->setconfiguration("protocole", "http");
+            $EqLogic->setconfiguration("ip", $ip);
+            $EqLogic->setconfiguration("port", $port);
+            log::add('Freebox_OS', 'debug', '│ IP : ' . $ip . ' - Port : ' . $port);
+            $EqLogic->setconfiguration("username", $username);
+            $EqLogic->setconfiguration("password", $password);
+            $EqLogic->setconfiguration("videoFramerate", 15);
+            $EqLogic->setconfiguration("device", "rocketcam");
+            $URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
+            $EqLogic->setconfiguration("urlStream", $URL_snaphot);
+            $URLrtsp = init('url');
+            $URLrtsp = str_replace($username, "#username#", $URLrtsp);
+            $URLrtsp = str_replace($password, "#password#", $URLrtsp);
+            $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
+            $EqLogic->save();
+        }
+        // Changement URL
+        $URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
+        $EqLogic->setconfiguration("urlStream", $URL_snaphot);
+        $URLrtsp = init('url');
+        //$URLrtsp = str_replace("rtsp", "http", $URLrtsp);
+        //$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
+        //$URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
+        $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
+        log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp . ' - URL de snaphot : ' . $URL_snaphot);
+        $EqLogic->save();
+        log::add('Freebox_OS', 'debug', '└─────────');
     }
 
     public static function createTil_Group($logicalinfo, $templatecore_V4)

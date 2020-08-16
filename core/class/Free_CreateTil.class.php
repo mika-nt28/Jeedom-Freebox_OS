@@ -170,11 +170,7 @@ class Free_CreateTil
                 }
 
                 $Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
-                if (isset($Equipement['label'])) {
-                    $Tile = Freebox_OS::AddEqLogic($Equipement['label'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $Equipement['group']['label']);
-                } else {
-                    $Tile = Freebox_OS::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $Equipement['group']['label']);
-                }
+                $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] == '' ? $Equipement['label'] : $Equipement['type']), $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $Equipement['group']['label']);
             }
             foreach ($Equipement['data'] as $Command) {
                 if ($Command['label'] != '') {

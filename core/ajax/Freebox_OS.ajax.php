@@ -41,27 +41,23 @@ try {
 				$URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
 				$EqLogic->setconfiguration("urlStream", $URL_snaphot);
 				$URLrtsp = init('url');
-				//$URLrtsp = str_replace("http", "rtsp", $URLrtsp);
-				//$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
-				//$URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
 				$URLrtsp = str_replace($username, "#username#", $URLrtsp);
 				$URLrtsp = str_replace($password, "#password#", $URLrtsp);
 				$EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
 				$EqLogic->save();
-
-				// Changement URL
-				$URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
-				$EqLogic->setconfiguration("urlStream", $URL_snaphot);
-				$URLrtsp = init('url');
-				$URLrtsp = str_replace("rtsp", "http", $URLrtsp);
-				//$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
-				//$URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
-				log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp . ' - URL de snaphot : ' . $URL_snaphot);
-				$URLrtsp = str_replace($username, "#username#", $URLrtsp);
-				$URLrtsp = str_replace($password, "#password#", $URLrtsp);
-				$EqLogic->save();
-				log::add('Freebox_OS', 'debug', '└─────────');
 			}
+			// Changement URL
+			$URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
+			$EqLogic->setconfiguration("urlStream", $URL_snaphot);
+			$URLrtsp = init('url');
+			//$URLrtsp = str_replace("rtsp", "http", $URLrtsp);
+			//$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
+			//$URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
+			$EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
+			log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp . ' - URL de snaphot : ' . $URL_snaphot);
+			$EqLogic->save();
+			log::add('Freebox_OS', 'debug', '└─────────');
+
 			ajax::success(true);
 			break;
 		case 'connect':
@@ -163,8 +159,8 @@ try {
 			Freebox_OS::deamon_start();
 			ajax::success($Free_API->getFreeboxOpenSessionData());
 			break;
-        case 'resetSetting':
-            Freebox_OS::resetConfig();
+		case 'resetSetting':
+			Freebox_OS::resetConfig();
 			ajax::success(true);
 			break;
 		case 'sendToBdd':

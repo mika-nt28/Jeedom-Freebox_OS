@@ -62,6 +62,17 @@ class Free_CreateTil
         }
         return $Type_box;
     }
+    public static function createTil_camera()
+    {
+        // Voir si on déplace la caméra ICI
+    }
+
+    public static function createTil_Group($logicalinfo, $templatecore_V4)
+    {
+        $Free_API = new Free_API();
+        $Free_API->universal_get('tiles');
+    }
+
     private static function createTil_homeadapters($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Home Adapters');
@@ -125,7 +136,7 @@ class Free_CreateTil
                     $icon = null;
                     if ($Equipement['type'] == 'camera' && method_exists('camera', 'getUrl')) {
                         $parameter['name'] = $Command['label'];
-                        $parameter['id'] = $Command['ep_id'];
+                        $parameter['id'] = 'FreeboxCamera_' . $Command['ep_id'];
                         $parameter['room'] = $Equipement['group']['label'];
                         $parameter['url'] = $Command['value'];
                         log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
@@ -402,10 +413,5 @@ class Free_CreateTil
                 }
             }
         }
-    }
-    public static function createTil_Group($logicalinfo, $templatecore_V4)
-    {
-        $Free_API = new Free_API();
-        $Free_API->universal_get('tiles');
     }
 }

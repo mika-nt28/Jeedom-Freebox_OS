@@ -23,6 +23,7 @@ class Free_CreateTil
     public static function createTil($create = 'default')
     {
         $Type_box = Free_CreateTil::createTil_Box();
+        $WebcamOK = false;
         if ($Type_box == 'OK') {
             $logicalinfo = Freebox_OS::getlogicalinfo();
             if (version_compare(jeedom::version(), "4", "<")) {
@@ -47,12 +48,14 @@ class Free_CreateTil
                     Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);
                     break;
                 default:
-                    Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
+                    $WebcamOK = Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
                     break;
             }
         } else {
             log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
         }
+
+        return $WebcamOK;
     }
     private static function createTil_Box()
     {
@@ -151,6 +154,7 @@ class Free_CreateTil
     private static function createTil_Tiles($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
+        $WebcamOKAll = false;
         foreach ($Free_API->universal_get('tiles') as $Equipement) {
             $_autorefresh = '*/5 * * * *';
             if ($Equipement['type'] != 'camera') {
@@ -198,6 +202,7 @@ class Free_CreateTil
                         };
                         if ($WebcamOK == false) {
                             event::add('Freebox_OS::camera', json_encode($parameter));
+                            $WebcamOKAll = true;
                         }
                         log::add('Freebox_OS', 'debug', '└─────────');
                         continue;
@@ -469,6 +474,6 @@ class Free_CreateTil
                 }
             }
         }
-        return $WebcamOK;
+        return $WebcamOKAll;
     }
 }

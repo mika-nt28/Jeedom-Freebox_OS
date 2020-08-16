@@ -42,8 +42,8 @@ try {
 			break;
 		case 'SearchTile':
 			Free_CreateTil::createTil('homeadapters');
-			Free_CreateTil::createTil();
-			ajax::success(true);
+			$result = Free_CreateTil::createTil();
+			ajax::success($result);
 			break;
 		case 'SearchArchi':
 			Free_CreateEq::createEq();

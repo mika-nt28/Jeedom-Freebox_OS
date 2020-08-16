@@ -469,5 +469,6 @@ class Free_CreateTil
                 }
             }
         }
+        return $WebcamOK;
     }
 }

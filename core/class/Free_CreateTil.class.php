@@ -88,6 +88,7 @@ class Free_CreateTil
             $EqLogic->setEqType_name('camera');
             $EqLogic->setIsEnable(1);
             $EqLogic->setIsVisible(0);
+            $EqLogic->setcategory('security', 1);
             $EqLogic->setconfiguration("protocole", "http");
             $EqLogic->setconfiguration("ip", $ip);
             $EqLogic->setconfiguration("port", $port);
@@ -185,6 +186,7 @@ class Free_CreateTil
                     $IsVisible = 1;
                     $icon = null;
                     if ($Equipement['type'] == 'camera' && method_exists('camera', 'getUrl')) {
+                        $_eqLogic == $Equipement['type'];
                         $parameter['name'] = $Command['label'];
                         $parameter['id'] = 'FreeboxCamera_' . $Command['ep_id'];
                         $parameter['room'] = $Equipement['group']['label'];
@@ -192,8 +194,16 @@ class Free_CreateTil
                         log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
                         log::add('Freebox_OS', 'debug', '│ Id : ' . $parameter['id']);
                         log::add('Freebox_OS', 'debug', '│ URL : ' . $parameter['url']);
+
+                        $WebcamOK = false;
+                        foreach (eqLogic::byLogicalId($parameter['id'], 'camera', true) as $_eqLogic) {
+                            $WebcamOK = 1;
+                            log::add('Freebox_OS', 'debug', '│ La caméra a déjà été créée ');
+                        };
+                        if ($WebcamOK == false) {
+                            event::add('Freebox_OS::camera', json_encode($parameter));
+                        }
                         log::add('Freebox_OS', 'debug', '└─────────');
-                        event::add('Freebox_OS::camera', json_encode($parameter));
                         continue;
                     }
                     if (!is_object($Tile)) continue;

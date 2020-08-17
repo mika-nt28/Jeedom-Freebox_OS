@@ -34,7 +34,7 @@ if (!isConnect('admin')) {
                 <li class="cursor li_Freebox_OS_Summary" data-href="setting"><a><i class="fas fa-cogs"></i> {{Réglages}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="authentification"><a><i class="fas fa-rss"></i> {{Authentification}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="rights"><a><i class="fas fa-balance-scale-right"></i> {{Droits}}</a></li>
-                <!-- <li class="cursor li_Freebox_OS_Summary" data-href="room"><a><i class="fas fa-arrows-alt-h"></i> {{Objects}}</a></li>-->
+                <li class="cursor li_Freebox_OS_Summary" data-href="room"><a><i class="far fa-object-group"></i> {{Objects}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="scan"><a><i class="fas fa-search-plus"></i> {{Scan des équipements}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="end"><a><i class="fas fa-check"></i> {{Fin}}</a>
                 </li>
@@ -273,11 +273,37 @@ if (!isConnect('admin')) {
             <br /><br /> <br />
             <BR>
             <center>
-                <center><i class="fas fa-arrows-alt-h" style="font-size: 5em;"></i></center>
+                <center><i class="far fa-object-group" style="font-size: 5em;"></i></center>
                 <br />
                 <br />
                 <center>
                     <div class="alert alert-info">{{Cette partie vous permet de lier les pièces de la Freebox avec les Objets de Jeedom}}
+                        <br>
+                        <i>{{Ici pour les équipements systèmes et contrôle parental}}</i>
+                    </div>
+                </center>
+                <br />
+                <form class="form-horizontal">
+                    <fieldset>
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">{{Ajouter automatiquement les équipements détectés
+                                dans :}}</label>
+                            <div class="col-md-4">
+                                <select id="sel_catego" class="configKey form-control" data-l1key="defaultParentObject">
+                                    <option value="">{{Aucune}}</option>
+                                    <?php
+                                    foreach (jeeObject::all() as $object) {
+                                        echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                                    }
+                                    ?>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+                </form>
+                <br />
+                <center>
+                    <div class="alert alert-info">{{Cette partie vous permet de lier les pièces de la Freebox des équipements tiles avec les Objets de Jeedom}}
                         <br>
                         <i>{{Uniquement sur la Freebox Delta}}</i>
                     </div>

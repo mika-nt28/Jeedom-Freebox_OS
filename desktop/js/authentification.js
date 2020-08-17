@@ -16,7 +16,11 @@ $('.bt_Freebox_OS_Next').off('click').on('click', function () {
             progress(25);
             break;
         case 'rights':
-            progress(70);
+            progress(50);
+            GetSessionData();
+            break;
+        case 'room':
+            progress(75);
             GetSessionData();
             break;
         case 'scan':
@@ -46,8 +50,12 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
             progress(50);
             GetSessionData();
             break;
+        case 'room':
+            progress(75);
+            GetSessionData();
+            break;
         case 'scan':
-            progress(60);
+            progress(80);
             break;
         case 'end':
             progress(100);
@@ -71,6 +79,13 @@ $('.bt_eqlogic_control_parental').on('click', function () {
 });
 
 $('.bt_Freebox_OS_Save').on('click', function () {
+
+    ip = $('#imput_freeboxIP').val();
+    VersionAPP = $('#imput_freeAppVersion').val();
+    Categorie = $('#sel_catego').val();
+    SetSetting(ip, VersionAPP, Categorie);
+});
+$('.bt_Freebox_OS_Save_room').on('click', function () {
 
     ip = $('#imput_freeboxIP').val();
     VersionAPP = $('#imput_freeAppVersion').val();
@@ -334,13 +349,13 @@ function GetSetting() {
             $('#sel_catego').val(data.result.Categorie);
             if (data.result.LogLevel == 100) {
                 var debugHides = document.getElementsByClassName('debugFreeOS');
-                for(var i = 0; i < debugHides.length; i++) {
+                for (var i = 0; i < debugHides.length; i++) {
                     var debugHide = debugHides[i];
                     debugHide.classList.remove("debugHide");
                 }
             } else {
                 var debugShows = document.getElementsByClassName('debugFreeOS');
-                for(var i = 0; i < debugShows.length; i++) {
+                for (var i = 0; i < debugShows.length; i++) {
                     var debugShow = debugShows[i];
                     debugShow.classList.add("debugHide");
                 }
@@ -439,7 +454,7 @@ function GetSessionData() {
                     $('.Freebox_OK_NEXT').show();
                     $('.bt_Freebox_droitVerif').hide();
 
-                    progress(75);
+                    progress(65);
                 }
             }
         }

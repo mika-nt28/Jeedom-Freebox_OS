@@ -104,7 +104,7 @@ if (!isConnect('admin')) {
                                 <input id="imput_IdApp" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_ID" disabled />
                             </div>
                         </div>
-                        <div class="form-group debugFreeOS debugHide">
+                        <div class="form-group">
                             <label class="col-md-5 control-label">{{Nom de l'équipement connecté}}</label>
                             <div class="col-md-4">
                                 <input id="imput_DeviceName" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" disabled />

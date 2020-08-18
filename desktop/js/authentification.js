@@ -17,11 +17,11 @@ $('.bt_Freebox_OS_Next').off('click').on('click', function () {
             break;
         case 'rights':
             progress(50);
+            GetBox();
             GetSessionData();
             break;
         case 'room':
             progress(75);
-            GetSessionData();
             break;
         case 'scan':
             progress(80);
@@ -48,11 +48,11 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
             break;
         case 'rights':
             progress(50);
+            GetBox();
             GetSessionData();
             break;
         case 'room':
             progress(75);
-            GetSessionData();
             break;
         case 'scan':
             progress(80);
@@ -80,17 +80,18 @@ $('.bt_eqlogic_control_parental').on('click', function () {
 
 $('.bt_Freebox_OS_Save').on('click', function () {
 
-    ip = $('#imput_freeboxIP').val();
-    VersionAPP = $('#imput_freeAppVersion').val();
+    ip = $('#input_freeboxIP').val();
+    VersionAPP = $('#input_freeAppVersion').val();
     Categorie = $('#sel_catego').val();
     SetSetting(ip, VersionAPP, Categorie);
 });
 $('.bt_Freebox_OS_Save_room').on('click', function () {
 
-    ip = $('#imput_freeboxIP').val();
-    VersionAPP = $('#imput_freeAppVersion').val();
-    Categorie = $('#sel_catego').val();
-    SetSetting(ip, VersionAPP, Categorie);
+    // A FAIRE
+    /* ip = $('#input_freeboxIP').val();
+     VersionAPP = $('#input_freeAppVersion').val();
+     Categorie = $('#sel_catego').val();
+     SetSetting(ip, VersionAPP, Categorie);*/
 });
 
 $('.bt_Freebox_Autorisation').on('click', function () {
@@ -98,6 +99,7 @@ $('.bt_Freebox_Autorisation').on('click', function () {
 });
 
 $('.bt_Freebox_droitVerif').on('click', function () {
+    GetBox();
     GetSessionData();
 });
 
@@ -341,11 +343,11 @@ function GetSetting() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            $('#imput_freeboxIP').val(data.result.ip);
-            $('#imput_freeAppVersion').val(data.result.VersionAPP);
-            $('#imput_freeNameAPP').val(data.result.NameAPP);
-            $('#imput_IdApp').val(data.result.IdApp);
-            $('#imput_DeviceName').val(data.result.DeviceName);
+            $('#input_freeboxIP').val(data.result.ip);
+            $('#input_freeAppVersion').val(data.result.VersionAPP);
+            $('#input_freeNameAPP').val(data.result.NameAPP);
+            $('#input_IdApp').val(data.result.IdApp);
+            $('#input_DeviceName').val(data.result.DeviceName);
             $('#sel_catego').val(data.result.Categorie);
             if (data.result.LogLevel == 100) {
                 var debugHides = document.getElementsByClassName('debugFreeOS');
@@ -421,7 +423,6 @@ function GetSessionData() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            console.log(data)
             if (data.result.success) {
                 var permissions = data.result.result.permissions;
                 UpdateStatus("calls", permissions.calls);
@@ -457,6 +458,28 @@ function GetSessionData() {
                     progress(65);
                 }
             }
+        }
+    });
+}
+
+function GetBox() {
+
+
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "GetBox",
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            //console.log(data)
+            /* $('#input_typefreebox_name').val(data.result.Type_box_name);
+             $('#input_typefreebox_box').val(data.result.Type_box);
+             $('#input_typefreebox_tiles').val(data.result.Type_box_tiles);*/
         }
     });
 }

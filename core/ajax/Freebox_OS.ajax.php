@@ -89,6 +89,15 @@ try {
 		case 'Searchdisk':
 			ajax::success($Free_API->disk());
 			break;
+		case 'GetBox':
+			Free_CreateTil::createTil('box');
+			$result = array(
+				"Type_box" => config::byKey('TYPE_FREEBOX', 'Freebox_OS'),
+				"Type_box_name" => config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'),
+				"Type_box_tiles" => config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS')
+			);
+			ajax::success($result);
+			break;
 		case 'GetSetting':
 			$result = array(
 				"ip" => config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'),

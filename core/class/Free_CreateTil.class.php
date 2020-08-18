@@ -22,7 +22,11 @@ class Free_CreateTil
 {
     public static function createTil($create = 'default')
     {
-        $Type_box = Free_CreateTil::createTil_Box();
+
+        if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == '') {
+            Free_CreateTil::createTil_modelBox();
+        }
+        $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         $WebcamOK = false;
         if ($Type_box == 'OK') {
             $logicalinfo = Freebox_OS::getlogicalinfo();
@@ -33,7 +37,7 @@ class Free_CreateTil
             };
             switch ($create) {
                 case 'box':
-                    Free_CreateTil::createTil_Box();
+                    Free_CreateTil::createTil_modelBox();
                     break;
                 case 'camera':
                     Free_CreateTil::createTil_Camera();
@@ -52,12 +56,20 @@ class Free_CreateTil
                     break;
             }
         } else {
-            log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
+            if ($create == 'box') {
+                Free_CreateTil::createTil_modelBox();
+                $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
+            }
+            if ($Type_box == 'OK') {
+                log::add('Freebox_OS', 'error', 'Votre Box prend en charge cette fonctionnalité de Tiles, merci de relancer le scan');
+            } else {
+                log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
+            }
         }
 
         return $WebcamOK;
     }
-    private static function createTil_Box()
+    private static function createTil_modelBox()
     {
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('system', null, null);
@@ -66,6 +78,9 @@ class Free_CreateTil
         } else {
             $Type_box = 'NOK';
         }
+        config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
+        config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
+        config::save('TYPE_FREEBOX_TILES', $Type_box, 'Freebox_OS');
         return $Type_box;
     }
     public static function createTil_Camera()

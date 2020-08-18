@@ -83,31 +83,31 @@ if (!isConnect('admin')) {
                         <div class="form-group">
                             <label class="col-md-5 control-label">{{IP Freebox :}}</label>
                             <div class="col-md-4">
-                                <input id="imput_freeboxIP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_IP" />
+                                <input id="input_freeboxIP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_IP" />
                             </div>
                         </div>
                         <div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Version de l'application Freebox serveur :}}</label>
                             <div class="col-md-4">
-                                <input id="imput_freeAppVersion" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_VERSION" />
+                                <input id="input_freeAppVersion" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_VERSION" />
                             </div>
                         </div>
                         <div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Nom de l'application Freebox serveur}}</label>
                             <div class="col-md-4">
-                                <input id="imput_freeNameAPP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_NAME" disabled />
+                                <input id="input_freeNameAPP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_NAME" disabled />
                             </div>
                         </div>
                         <div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Id de l'application Freebox serveur}}</label>
                             <div class="col-md-4">
-                                <input id="imput_IdApp" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_ID" disabled />
+                                <input id="input_IdApp" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_ID" disabled />
                             </div>
                         </div>
                         <div class="form-group">
                             <label class="col-md-5 control-label">{{Nom de l'équipement connecté}}</label>
                             <div class="col-md-4">
-                                <input id="imput_DeviceName" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" disabled />
+                                <input id="input_DeviceName" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" disabled />
                             </div>
                         </div>
                         <div class="form-group">
@@ -275,32 +275,6 @@ if (!isConnect('admin')) {
             <center>
                 <center><i class="far fa-object-group" style="font-size: 5em;"></i></center>
                 <br />
-                <br />
-                <center>
-                    <div class="alert alert-info">{{Cette partie vous permet de lier les pièces de la Freebox avec les Objets de Jeedom}}
-                        <br>
-                        <i>{{Ici pour les équipements systèmes et contrôle parental}}</i>
-                    </div>
-                </center>
-                <br />
-                <form class="form-horizontal">
-                    <fieldset>
-                        <div class="form-group">
-                            <label class="col-md-5 control-label">{{Ajouter automatiquement les équipements détectés
-                                dans :}}</label>
-                            <div class="col-md-4">
-                                <select id="sel_catego" class="configKey form-control" data-l1key="defaultParentObject">
-                                    <option value="">{{Aucune}}</option>
-                                    <?php
-                                    foreach (jeeObject::all() as $object) {
-                                        echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-                                    }
-                                    ?>
-                                </select>
-                            </div>
-                        </div>
-                    </fieldset>
-                </form>
                 <br />
                 <center>
                     <div class="alert alert-info">{{Cette partie vous permet de lier les pièces de la Freebox des équipements tiles avec les Objets de Jeedom}}

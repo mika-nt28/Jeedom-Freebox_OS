@@ -118,14 +118,13 @@ class Free_CreateTil
             $URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
             $EqLogic->setconfiguration("urlStream", $URL_snaphot);
             $URLrtsp = init('url');
+            $URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
             $URLrtsp = str_replace($username, "#username#", $URLrtsp);
             $URLrtsp = str_replace($password, "#password#", $URLrtsp);
             $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
             $EqLogic->save();
         }
         // Changement URL
-        $URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
-        $EqLogic->setconfiguration("urlStream", $URL_snaphot);
         $URLrtsp = init('url');
         //$URLrtsp = str_replace("rtsp", "http", $URLrtsp);
         //$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
@@ -210,7 +209,6 @@ class Free_CreateTil
                         $parameter['url'] = $Command['value'];
                         log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
                         log::add('Freebox_OS', 'debug', '│ Id : ' . $parameter['id']);
-                        log::add('Freebox_OS', 'debug', '│ URL : ' . $parameter['url']);
 
                         $WebcamOK = false;
                         foreach (eqLogic::byLogicalId($parameter['id'], 'camera', true) as $_eqLogic) {

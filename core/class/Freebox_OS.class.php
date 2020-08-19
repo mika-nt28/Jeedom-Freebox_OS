@@ -117,7 +117,11 @@ class Freebox_OS extends eqLogic
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		if (!is_object($EqLogic)) {
-			$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+			if ($_Room == null) {
+				$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+			} else {
+				$defaultRoom = $_Room;
+			}
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
 			if ($defaultRoom) $EqLogic->setObject_id($defaultRoom);

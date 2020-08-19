@@ -31,11 +31,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<br>
 				<span>{{Configuration}}</span>
 			</div>
-			<div class="cursor MaFreebox logoSecondary">
-				<i class="fas fa-sitemap"></i>
-				<br>
-				<span>{{Paramètres de la Freebox}}</span>
-			</div>
 			<div class="cursor authentification logoWarning">
 				<i class="fas fa-rss"></i>
 				<br>
@@ -323,7 +318,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<th style="width: 350px;">{{Min/Max - Unité}}</th>
 							<th>{{Paramètres}}</th>
 							<th style="width: 250px;">{{Options}}</th>
-
 						</tr>
 					</thead>
 					<tbody></tbody>

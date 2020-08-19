@@ -152,7 +152,9 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 				level: 'success'
 
 			});
-			//window.location.reload();
+			if (!data.result) {
+				window.location.reload();
+			}
 		}
 	});
 

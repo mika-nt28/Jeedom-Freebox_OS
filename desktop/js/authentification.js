@@ -85,14 +85,7 @@ $('.bt_Freebox_OS_Save').on('click', function () {
     Categorie = $('#sel_catego').val();
     SetSetting(ip, VersionAPP, Categorie);
 });
-$('.bt_Freebox_OS_Save_room').on('click', function () {
 
-    // A FAIRE
-    /* ip = $('#input_freeboxIP').val();
-     VersionAPP = $('#input_freeAppVersion').val();
-     Categorie = $('#sel_catego').val();
-     SetSetting(ip, VersionAPP, Categorie);*/
-});
 
 $('.bt_Freebox_Autorisation').on('click', function () {
     autorisationFreebox();
@@ -106,6 +99,19 @@ $('.bt_Freebox_droitVerif').on('click', function () {
 $('.bt_Freebox_OS_ResetConfig').on('click', function () {
     SetDefaultSetting();
 });
+
+$('.bt_Freebox_room').on('click', function () {
+    SearchTile_Group();
+});
+$('.bt_Freebox_OS_Save_room').on('click', function () {
+
+    // A FAIRE
+    /* ip = $('#input_freeboxIP').val();
+     VersionAPP = $('#input_freeAppVersion').val();
+     Categorie = $('#sel_catego').val();
+     SetSetting(ip, VersionAPP, Categorie);*/
+});
+
 
 function updateMenu(objectclass) {
     $('.li_Freebox_OS_Summary.active').removeClass('active');
@@ -168,6 +174,23 @@ function SearchTile() {
         url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
         data: {
             action: "SearchTile",
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+
+        }
+    });
+}
+
+function SearchTile_Group() {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "SearchTile_group",
         },
         dataType: 'json',
         error: function (request, status, error) {

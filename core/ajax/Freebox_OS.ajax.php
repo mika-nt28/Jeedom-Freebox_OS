@@ -45,6 +45,10 @@ try {
 			$result = Free_CreateTil::createTil();
 			ajax::success($result);
 			break;
+		case 'SearchTile_group':
+			Free_CreateTil::createTil('Tiles_group');
+			ajax::success($result);
+			break;
 		case 'SearchArchi':
 			Free_CreateEq::createEq();
 			Free_CreateTV::createTV();

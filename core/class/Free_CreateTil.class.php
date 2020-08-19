@@ -196,7 +196,7 @@ class Free_CreateTil
                 } else {
                     $category = 'default';
                 }
-
+                Free_CreateTil::getPiece($Equipement['group']['label']);
                 $Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
                 $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] == '' ? $Equipement['label'] : $Equipement['type']), $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $Equipement['group']['label']);
             }
@@ -500,7 +500,8 @@ class Free_CreateTil
         return $WebcamOKAll;
     }
 
-    private static function getPiece($pieceName) {
+    private static function getPiece($pieceName)
+    {
         $config = config::bykey('FREEBOX_PIECE', 'Freebox_OS', "null");
         if ($config = "null") return 0;
 

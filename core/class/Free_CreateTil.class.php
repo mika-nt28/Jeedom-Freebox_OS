@@ -499,4 +499,12 @@ class Free_CreateTil
         }
         return $WebcamOKAll;
     }
+
+    private static function getPiece($pieceName) {
+        $config = config::bykey('FREEBOX_PIECE', 'Freebox_OS', "null");
+        if ($config = "null") return 0;
+
+        $result = $config[$pieceName];
+        return $result;
+    }
 }

@@ -197,7 +197,6 @@ class Free_CreateTil
                     $category = 'default';
                 }
                 $room = Free_CreateTil::getPiece($Equipement['group']['label']);
-                log::add('Freebox_OS', 'debug', '│ ROOM ID : ' . $room);
                 $Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
                 $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $Equipement['type']), $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $room);
             }
@@ -504,9 +503,7 @@ class Free_CreateTil
     private static function getPiece($pieceName)
     {
         $config = config::bykey('FREEBOX_PIECE', 'Freebox_OS', "null");
-        log::add('Freebox_OS', 'debug', '│ CONFIG : ' . $config);
         if ($config == "null") return "null";
-
         $result = $config[$pieceName];
         return $result;
     }

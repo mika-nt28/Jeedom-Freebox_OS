@@ -144,9 +144,9 @@ class Free_CreateTil
 
     private static function createTil_homeadapters($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Home Adapters');
+        log::add('Freebox_OS', 'debug', '>───────── Création équipement : Home Adapters');
         Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
-        log::add('Freebox_OS', 'debug', '└─────────');
+        //log::add('Freebox_OS', 'debug', '└─────────');
     }
     public static function createTil_homeadapters_SP($logicalinfo, $templatecore_V4)
     {

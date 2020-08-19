@@ -298,7 +298,7 @@ if (!isConnect('admin')) {
                     </tbody>
                 </table>
                 <br />
-                <center><a id="bt_Freebox_room" class="btn btn-sm btn-warning bt_Freebox_room">{{Recherche des piéces}} <i class="far fa-object-group"></i></a></center>
+                <center><a id="bt_Freebox_room" class="btn btn-sm btn-warning bt_Freebox_room">{{Recherche des pièces}} <i class="far fa-object-group"></i></a></center>
                 <br />
                 <br />
                 <center>

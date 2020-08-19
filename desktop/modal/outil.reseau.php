@@ -6,7 +6,7 @@ if (!isConnect('admin')) {
 <form class="form-horizontal">
     <fieldset>
         <ul class="nav nav-tabs expertModeVisible" role="tablist">
-            <li class="active"><a href="#PortForwarding" role="tab" data-toggle="tab">{{Géstion des ports}}</a></li>
+            <li class="active"><a href="#PortForwarding" role="tab" data-toggle="tab">{{Gestion des ports}}</a></li>
             <li><a href="#WakeOnLAN" role="tab" data-toggle="tab">{{Wake on LAN}}</a></li>
         </ul>
         <div class="tab-content">
@@ -34,7 +34,7 @@ if (!isConnect('admin')) {
             <div class="tab-pane" id="WakeOnLAN">
                 <br />
                 <legend>Wake on LAN</legend>
-                <a class="btn btn-success lanEqLogic" data-action="wakeonlan"><i class="fas fa-check-circle"></i> {{Reveiller}}</a>
+                <a class="btn btn-success lanEqLogic" data-action="wakeonlan"><i class="fas fa-check-circle"></i> {{Réveiller}}</a>
             </div>
         </div>
     </fieldset>

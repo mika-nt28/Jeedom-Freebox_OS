@@ -199,7 +199,7 @@ class Free_CreateTil
                 $room = Free_CreateTil::getPiece($Equipement['group']['label']);
                 log::add('Freebox_OS', 'debug', '│ ROOM ID : ' . $room);
                 $Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
-                $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] == '' ? $Equipement['label'] : $Equipement['type']), $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $room);
+                $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $Equipement['type']), $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $room);
             }
             foreach ($Equipement['data'] as $Command) {
                 if ($Command['label'] != '') {
@@ -505,7 +505,7 @@ class Free_CreateTil
     {
         $config = config::bykey('FREEBOX_PIECE', 'Freebox_OS', "null");
         log::add('Freebox_OS', 'debug', '│ CONFIG : ' . $config);
-        if ($config == "null") return 0;
+        if ($config == "null") return "null";
 
         $result = $config[$pieceName];
         return $result;

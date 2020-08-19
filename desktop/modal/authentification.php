@@ -291,14 +291,8 @@ if (!isConnect('admin')) {
                         </tr>
                     </thead>
                     <tbody>
-                        <tr>
-                            <td>{{Piece}}</td>
-                            <td>{{Gestion de l'alarme et maison connectée}}</td>
-                        </tr>
                     </tbody>
                 </table>
-                <br />
-                <center><a id="bt_Freebox_room" class="btn btn-sm btn-warning bt_Freebox_room">{{Recherche des pièces}} <i class="far fa-object-group"></i></a></center>
                 <br />
                 <br />
                 <center>

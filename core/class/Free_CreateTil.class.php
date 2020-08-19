@@ -27,7 +27,6 @@ class Free_CreateTil
             Free_CreateTil::createTil_modelBox();
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
-        $WebcamOK = false;
         if ($Type_box == 'OK') {
             $logicalinfo = Freebox_OS::getlogicalinfo();
             if (version_compare(jeedom::version(), "4", "<")) {
@@ -49,10 +48,10 @@ class Free_CreateTil
                     Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
                     break;
                 case 'Tiles_group':
-                    Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);
+                    $result = Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);
                     break;
                 default:
-                    $WebcamOK = Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
+                    $result = Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
                     break;
             }
         } else {
@@ -67,7 +66,7 @@ class Free_CreateTil
             }
         }
 
-        return $WebcamOK;
+        return $result;
     }
     private static function createTil_modelBox()
     {
@@ -140,7 +139,16 @@ class Free_CreateTil
     public static function createTil_Group($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
-        $Free_API->universal_get('tiles');
+        $tiles = $Free_API->universal_get('tiles');
+        $result = [];
+        foreach ($tiles as $tile) {
+            $group = $tile['group']['label'];
+            if ($group == "" || $group === null) continue;
+            if (!in_array($group, $result)) {
+                array_push($result, $group);
+            }
+        }
+        return $result;
     }
 
     private static function createTil_homeadapters($logicalinfo, $templatecore_V4)

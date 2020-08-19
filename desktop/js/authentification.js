@@ -2,65 +2,11 @@ progress(0);
 eqLogic_id = null;
 
 $('.bt_Freebox_OS_Next').off('click').on('click', function () {
-    updateMenu($('.li_Freebox_OS_Summary.active').next());
-
-    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
-        case 'home':
-            progress(0);
-            break;
-        case 'setting':
-            progress(15);
-            GetSetting();
-            break;
-        case 'authentification':
-            progress(25);
-            break;
-        case 'rights':
-            progress(50);
-            GetBox();
-            GetSessionData();
-            break;
-        case 'room':
-            progress(75);
-            break;
-        case 'scan':
-            progress(80);
-            break;
-        case 'end':
-            progress(100);
-            break;
-    }
+    funNext();
 });
 
 $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
-    updateMenu($('.li_Freebox_OS_Summary.active').prev());
-
-    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
-        case 'home':
-            progress(0);
-            break;
-        case 'setting':
-            progress(15);
-            GetSetting();
-            break;
-        case 'authentification':
-            progress(25);
-            break;
-        case 'rights':
-            progress(50);
-            GetBox();
-            GetSessionData();
-            break;
-        case 'room':
-            progress(75);
-            break;
-        case 'scan':
-            progress(80);
-            break;
-        case 'end':
-            progress(100);
-            break;
-    }
+    funPrev();
 });
 
 $('.bt_eqlogic_standard').on('click', function () {
@@ -92,7 +38,6 @@ $('.bt_Freebox_Autorisation').on('click', function () {
 });
 
 $('.bt_Freebox_droitVerif').on('click', function () {
-    GetBox();
     GetSessionData();
 });
 
@@ -100,16 +45,8 @@ $('.bt_Freebox_OS_ResetConfig').on('click', function () {
     SetDefaultSetting();
 });
 
-$('.bt_Freebox_room').on('click', function () {
-    SearchTile_Group();
-});
 $('.bt_Freebox_OS_Save_room').on('click', function () {
-
-    // A FAIRE
-    /* ip = $('#input_freeboxIP').val();
-     VersionAPP = $('#input_freeAppVersion').val();
-     Categorie = $('#sel_catego').val();
-     SetSetting(ip, VersionAPP, Categorie);*/
+    SaveTitelRoom();
 });
 
 
@@ -118,7 +55,7 @@ function updateMenu(objectclass) {
     $(objectclass).addClass('active');
     $('.Freebox_OS_Display').hide();
     $('.Freebox_OS_Display.' + $(objectclass).attr('data-href')).show();
-};
+}
 
 function autorisationFreebox() {
     $.ajax({
@@ -197,7 +134,21 @@ function SearchTile_Group() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-
+            pieces = data.result.piece;
+            object = data.result.objects;
+            $("#table_room tr").remove();
+            for (var i = 0; i < pieces.length; i++) {
+                var piece = pieces[i];
+                var tr = '<tr class="piece">';
+                    tr += '<td>';
+                    tr += '<input class="titleRoomAttr form-control" data-l1key="PieceName" value="'+piece+'" disabled/>';
+                    tr += '</td>';
+                    tr += '<td><select id="'+piece+'" class="titleRoomAttr form-control" data-l1key="object_id">'+object+'</td>';
+                    tr += '</tr>';
+                $('#table_room tbody').append(tr);
+                value = data.result.config[piece];
+                $('#'+piece).val(value);
+            }
         }
     });
 }
@@ -485,9 +436,7 @@ function GetSessionData() {
     });
 }
 
-function GetBox() {
-
-
+function getBox(type) {
     $.ajax({
         type: "POST",
         url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
@@ -499,10 +448,18 @@ function GetBox() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            //console.log(data)
-            /* $('#input_typefreebox_name').val(data.result.Type_box_name);
-             $('#input_typefreebox_box').val(data.result.Type_box);
-             $('#input_typefreebox_tiles').val(data.result.Type_box_tiles);*/
+            result = data.result.Type_box_tiles;
+
+            if (result !== "OK") {
+                if (type == "next") {
+                    funNext();
+                } else {
+                    funPrev()
+                }
+
+            } else {
+                SearchTile_Group();
+            }
         }
     });
 }
@@ -517,5 +474,86 @@ function UpdateStatus(item, index) {
         document.getElementById(item).classList.add('alert-danger');
         document.getElementById(item).classList.remove('alert-success');
         document.getElementById(item).innerHTML = "NOK";
+    }
+}
+
+function SaveTitelRoom() {
+    titelRoomArrays = $('#table_room').find('.piece').getValues('.titleRoomAttr');
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "setRoomID",
+            data: titelRoomArrays
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            SearchTile_Group();
+        }
+    });
+}
+
+function funNext(){
+    updateMenu($('.li_Freebox_OS_Summary.active').next());
+
+    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
+        case 'home':
+            progress(0);
+            break;
+        case 'setting':
+            progress(15);
+            GetSetting();
+            break;
+        case 'authentification':
+            progress(25);
+            break;
+        case 'rights':
+            progress(50);
+            GetSessionData();
+            break;
+        case 'room':
+            progress(75);
+            getBox("next");
+            break;
+        case 'scan':
+            progress(80);
+            break;
+        case 'end':
+            progress(100);
+            break;
+    }
+}
+
+function funPrev() {
+    updateMenu($('.li_Freebox_OS_Summary.active').prev());
+
+    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
+        case 'home':
+            progress(0);
+            break;
+        case 'setting':
+            progress(15);
+            GetSetting();
+            break;
+        case 'authentification':
+            progress(25);
+            break;
+        case 'rights':
+            progress(50);
+            GetSessionData();
+            break;
+        case 'room':
+            progress(75);
+            getBox("prev");
+            break;
+        case 'scan':
+            progress(80);
+            break;
+        case 'end':
+            progress(100);
+            break;
     }
 }

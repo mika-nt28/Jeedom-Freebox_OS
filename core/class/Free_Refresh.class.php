@@ -242,9 +242,8 @@ class Free_Refresh
                 $result = $Free_API->universal_get('network_ping', $Command->getLogicalId());
                 if (!$result['success']) {
                     log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
-                    if ($result['error_code'] == "internal_error") {
+                    if ($result['error_code'] === "internal_error") {
                         $Command->remove();
-                        $Command->save(true);
                     }
                 } else {
                     if (isset($result['result']['l3connectivities'])) {

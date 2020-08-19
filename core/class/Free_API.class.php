@@ -436,7 +436,11 @@ class Free_API
             }
             return $value;
         } else {
-            return false;
+            if ($update == "network_ping") {
+                return $result;
+            } else {
+                return false;
+            }
         }
     }
 

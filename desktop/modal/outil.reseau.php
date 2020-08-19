@@ -6,7 +6,7 @@ if (!isConnect('admin')) {
 <form class="form-horizontal">
     <fieldset>
         <ul class="nav nav-tabs expertModeVisible" role="tablist">
-            <li class="active"><a href="#PortForwarding" role="tab" data-toggle="tab">{{Géstion des ports}}</a></li>
+            <li class="active"><a href="#PortForwarding" role="tab" data-toggle="tab">{{Gestion des ports}}</a></li>
             <li><a href="#WakeOnLAN" role="tab" data-toggle="tab">{{Wake on LAN}}</a></li>
         </ul>
         <div class="tab-content">
@@ -34,7 +34,7 @@ if (!isConnect('admin')) {
             <div class="tab-pane" id="WakeOnLAN">
                 <br />
                 <legend>Wake on LAN</legend>
-                <a class="btn btn-success lanEqLogic" data-action="wakeonlan"><i class="fas fa-check-circle"></i> {{Reveiller}}</a>
+                <a class="btn btn-success lanEqLogic" data-action="wakeonlan"><i class="fas fa-check-circle"></i> {{Réveiller}}</a>
             </div>
         </div>
     </fieldset>
@@ -121,29 +121,29 @@ if (!isConnect('admin')) {
             url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
             data: {
                 action: 'AddPortForwarding',
-                id:  $(this).closest('.redir').find('.redirPort[data-l1key=id]').val(),
+                id: $(this).closest('.redir').find('.redirPort[data-l1key=id]').val(),
                 enabled: $(this).closest('.redir').find('.redirPort[data-l1key=enabled]').val(),
             },
             dataType: 'json',
             global: false,
             error: function(request, status, error) {},
             success: function(data) {
-            if (data.state != 'ok') {
-                $('#div_alert').showAlert({
-                    message: data.result,
-                    level: 'danger'
-                });
-                return;
-            } else {
-                if (data.result == true) {
+                if (data.state != 'ok') {
                     $('#div_alert').showAlert({
-                    message: "Update rule successful",
-                    level: 'success'
-                });
-                } 
+                        message: data.result,
+                        level: 'danger'
+                    });
+                    return;
+                } else {
+                    if (data.result == true) {
+                        $('#div_alert').showAlert({
+                            message: "Update rule successful",
+                            level: 'success'
+                        });
+                    }
+                }
+
             }
-            
-        }
         });
     });
 </script>

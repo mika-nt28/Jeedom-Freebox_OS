@@ -45,6 +45,9 @@ class Freebox_OS extends eqLogic
 	{
 		log::add('Freebox_OS', 'debug', '================= CRON JOUR ' . ' ==================');
 		Free_CreateEq::createEq('network');
+		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			Free_CreateTil::createTil('homeadapters_SP');
+		}
 		log::add('Freebox_OS', 'debug', '================= FIN CRON JOUR ' . ' ==================');
 	}
 
@@ -100,11 +103,25 @@ class Freebox_OS extends eqLogic
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}
+
+	public static function resetConfig()
+	{
+		config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
+		config::save('FREEBOX_SERVER_APP_VERSION', "v5.0.0", 'Freebox_OS');
+		config::save('FREEBOX_SERVER_APP_NAME', "Plugin Freebox OS", 'Freebox_OS');
+		config::save('FREEBOX_SERVER_APP_ID', "plugin.freebox.jeedom", 'Freebox_OS');
+		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
+	}
+
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null, $_autorefresh = null, $_Room = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		if (!is_object($EqLogic)) {
-			$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+			if ($_Room == null) {
+				$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+			} else {
+				$defaultRoom = $_Room;
+			}
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
 			if ($defaultRoom) $EqLogic->setObject_id($defaultRoom);

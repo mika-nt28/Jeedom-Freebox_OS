@@ -2,57 +2,11 @@ progress(0);
 eqLogic_id = null;
 
 $('.bt_Freebox_OS_Next').off('click').on('click', function () {
-    updateMenu($('.li_Freebox_OS_Summary.active').next());
-
-    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
-        case 'home':
-            progress(0);
-            break;
-        case 'setting':
-            progress(15);
-            GetSetting();
-            break;
-        case 'authentification':
-            progress(25);
-            break;
-        case 'rights':
-            progress(70);
-            GetSessionData();
-            break;
-        case 'scan':
-            progress(80);
-            break;
-        case 'end':
-            progress(100);
-            break;
-    }
+    funNext();
 });
 
 $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
-    updateMenu($('.li_Freebox_OS_Summary.active').prev());
-
-    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
-        case 'home':
-            progress(0);
-            break;
-        case 'setting':
-            progress(15);
-            GetSetting();
-            break;
-        case 'authentification':
-            progress(25);
-            break;
-        case 'rights':
-            progress(50);
-            GetSessionData();
-            break;
-        case 'scan':
-            progress(60);
-            break;
-        case 'end':
-            progress(100);
-            break;
-    }
+    funPrev();
 });
 
 $('.bt_eqlogic_standard').on('click', function () {
@@ -72,11 +26,12 @@ $('.bt_eqlogic_control_parental').on('click', function () {
 
 $('.bt_Freebox_OS_Save').on('click', function () {
 
-    ip = $('#imput_freeboxIP').val();
-    VersionAPP = $('#imput_freeAppVersion').val();
+    ip = $('#input_freeboxIP').val();
+    VersionAPP = $('#input_freeAppVersion').val();
     Categorie = $('#sel_catego').val();
     SetSetting(ip, VersionAPP, Categorie);
 });
+
 
 $('.bt_Freebox_Autorisation').on('click', function () {
     autorisationFreebox();
@@ -90,12 +45,17 @@ $('.bt_Freebox_OS_ResetConfig').on('click', function () {
     SetDefaultSetting();
 });
 
+$('.bt_Freebox_OS_Save_room').on('click', function () {
+    SaveTitelRoom();
+});
+
+
 function updateMenu(objectclass) {
     $('.li_Freebox_OS_Summary.active').removeClass('active');
     $(objectclass).addClass('active');
     $('.Freebox_OS_Display').hide();
     $('.Freebox_OS_Display.' + $(objectclass).attr('data-href')).show();
-};
+}
 
 function autorisationFreebox() {
     $.ajax({
@@ -158,6 +118,37 @@ function SearchTile() {
         },
         success: function (data) {
 
+        }
+    });
+}
+
+function SearchTile_Group() {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "SearchTile_group",
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            pieces = data.result.piece;
+            object = data.result.objects;
+            $("#table_room tr").remove();
+            for (var i = 0; i < pieces.length; i++) {
+                var piece = pieces[i];
+                var tr = '<tr class="piece">';
+                    tr += '<td>';
+                    tr += '<input class="titleRoomAttr form-control" data-l1key="PieceName" value="'+piece+'" disabled/>';
+                    tr += '</td>';
+                    tr += '<td><select id="'+piece+'" class="titleRoomAttr form-control" data-l1key="object_id">'+object+'</td>';
+                    tr += '</tr>';
+                $('#table_room tbody').append(tr);
+                value = data.result.config[piece];
+                $('#'+piece).val(value);
+            }
         }
     });
 }
@@ -326,21 +317,21 @@ function GetSetting() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            $('#imput_freeboxIP').val(data.result.ip);
-            $('#imput_freeAppVersion').val(data.result.VersionAPP);
-            $('#imput_freeNameAPP').val(data.result.NameAPP);
-            $('#imput_IdApp').val(data.result.IdApp);
-            $('#imput_DeviceName').val(data.result.DeviceName);
+            $('#input_freeboxIP').val(data.result.ip);
+            $('#input_freeAppVersion').val(data.result.VersionAPP);
+            $('#input_freeNameAPP').val(data.result.NameAPP);
+            $('#input_IdApp').val(data.result.IdApp);
+            $('#input_DeviceName').val(data.result.DeviceName);
             $('#sel_catego').val(data.result.Categorie);
             if (data.result.LogLevel == 100) {
                 var debugHides = document.getElementsByClassName('debugFreeOS');
-                for(var i = 0; i < debugHides.length; i++) {
+                for (var i = 0; i < debugHides.length; i++) {
                     var debugHide = debugHides[i];
                     debugHide.classList.remove("debugHide");
                 }
             } else {
                 var debugShows = document.getElementsByClassName('debugFreeOS');
-                for(var i = 0; i < debugShows.length; i++) {
+                for (var i = 0; i < debugShows.length; i++) {
                     var debugShow = debugShows[i];
                     debugShow.classList.add("debugHide");
                 }
@@ -406,7 +397,6 @@ function GetSessionData() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            console.log(data)
             if (data.result.success) {
                 var permissions = data.result.result.permissions;
                 UpdateStatus("calls", permissions.calls);
@@ -439,8 +429,36 @@ function GetSessionData() {
                     $('.Freebox_OK_NEXT').show();
                     $('.bt_Freebox_droitVerif').hide();
 
-                    progress(75);
+                    progress(65);
                 }
+            }
+        }
+    });
+}
+
+function getBox(type) {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "GetBox",
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            result = data.result.Type_box_tiles;
+
+            if (result !== "OK") {
+                if (type == "next") {
+                    funNext();
+                } else {
+                    funPrev()
+                }
+
+            } else {
+                SearchTile_Group();
             }
         }
     });
@@ -456,5 +474,86 @@ function UpdateStatus(item, index) {
         document.getElementById(item).classList.add('alert-danger');
         document.getElementById(item).classList.remove('alert-success');
         document.getElementById(item).innerHTML = "NOK";
+    }
+}
+
+function SaveTitelRoom() {
+    titelRoomArrays = $('#table_room').find('.piece').getValues('.titleRoomAttr');
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "setRoomID",
+            data: titelRoomArrays
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            SearchTile_Group();
+        }
+    });
+}
+
+function funNext(){
+    updateMenu($('.li_Freebox_OS_Summary.active').next());
+
+    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
+        case 'home':
+            progress(0);
+            break;
+        case 'setting':
+            progress(15);
+            GetSetting();
+            break;
+        case 'authentification':
+            progress(25);
+            break;
+        case 'rights':
+            progress(50);
+            GetSessionData();
+            break;
+        case 'room':
+            progress(75);
+            getBox("next");
+            break;
+        case 'scan':
+            progress(80);
+            break;
+        case 'end':
+            progress(100);
+            break;
+    }
+}
+
+function funPrev() {
+    updateMenu($('.li_Freebox_OS_Summary.active').prev());
+
+    switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
+        case 'home':
+            progress(0);
+            break;
+        case 'setting':
+            progress(15);
+            GetSetting();
+            break;
+        case 'authentification':
+            progress(25);
+            break;
+        case 'rights':
+            progress(50);
+            GetSessionData();
+            break;
+        case 'room':
+            progress(75);
+            getBox("prev");
+            break;
+        case 'scan':
+            progress(80);
+            break;
+        case 'end':
+            progress(100);
+            break;
     }
 }

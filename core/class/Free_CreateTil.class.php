@@ -22,7 +22,11 @@ class Free_CreateTil
 {
     public static function createTil($create = 'default')
     {
-        $Type_box = Free_CreateTil::createTil_Box();
+
+        if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == '') {
+            Free_CreateTil::createTil_modelBox();
+        }
+        $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         if ($Type_box == 'OK') {
             $logicalinfo = Freebox_OS::getlogicalinfo();
             if (version_compare(jeedom::version(), "4", "<")) {
@@ -32,7 +36,10 @@ class Free_CreateTil
             };
             switch ($create) {
                 case 'box':
-                    Free_CreateTil::createTil_Box();
+                    Free_CreateTil::createTil_modelBox();
+                    break;
+                case 'camera':
+                    Free_CreateTil::createTil_Camera();
                     break;
                 case 'homeadapters':
                     Free_CreateTil::createTil_homeadapters($logicalinfo, $templatecore_V4);
@@ -40,15 +47,28 @@ class Free_CreateTil
                 case 'homeadapters_SP':
                     Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
                     break;
+                case 'Tiles_group':
+                    $result = Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);
+                    break;
                 default:
-                    Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
+                    $result = Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
                     break;
             }
         } else {
-            log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
+            if ($create == 'box') {
+                Free_CreateTil::createTil_modelBox();
+                $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
+            }
+            if ($Type_box == 'OK') {
+                log::add('Freebox_OS', 'error', 'Votre Box prend en charge cette fonctionnalité de Tiles, merci de relancer le scan');
+            } else {
+                log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
+            }
         }
+
+        return $result;
     }
-    private static function createTil_Box()
+    private static function createTil_modelBox()
     {
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('system', null, null);
@@ -57,13 +77,85 @@ class Free_CreateTil
         } else {
             $Type_box = 'NOK';
         }
+        config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
+        config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
+        config::save('TYPE_FREEBOX_TILES', $Type_box, 'Freebox_OS');
         return $Type_box;
     }
+    public static function createTil_Camera()
+    {
+        $EqLogic = eqLogic::byLogicalId(init('id'), 'camera');
+        if (!is_object($EqLogic)) {
+            $defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+            $url = explode('@', explode('://', init('url'))[1]);
+            $room = init('room');
+            log::add('Freebox_OS', 'debug', '┌───────── Création de la caméra : ' . init('name'));
+            $username = explode(':', $url[0])[0];
+            $password = explode(':', $url[0])[1];
+
+            $adresse = explode(':', explode('/', $url[1])[0]);
+            $ip = $adresse[0];
+            $port = $adresse[1];
+            $EqLogic = new camera();
+            $EqLogic->setName(init('name'));
+            $EqLogic->setLogicalId(init('id'));
+
+            if ($defaultRoom) $EqLogic->setObject_id($defaultRoom);
+
+            $EqLogic->setEqType_name('camera');
+            $EqLogic->setIsEnable(1);
+            $EqLogic->setIsVisible(0);
+            $EqLogic->setcategory('security', 1);
+            $EqLogic->setconfiguration("protocole", "http");
+            $EqLogic->setconfiguration("ip", $ip);
+            $EqLogic->setconfiguration("port", $port);
+            log::add('Freebox_OS', 'debug', '│ IP : ' . $ip . ' - Port : ' . $port);
+            $EqLogic->setconfiguration("username", $username);
+            $EqLogic->setconfiguration("password", $password);
+            $EqLogic->setconfiguration("videoFramerate", 15);
+            $EqLogic->setconfiguration("device", "rocketcam");
+            $URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
+            $EqLogic->setconfiguration("urlStream", $URL_snaphot);
+            $URLrtsp = init('url');
+            $URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
+            $URLrtsp = str_replace($username, "#username#", $URLrtsp);
+            $URLrtsp = str_replace($password, "#password#", $URLrtsp);
+            $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
+            $EqLogic->save();
+        }
+        // Changement URL
+        $URLrtsp = init('url');
+        //$URLrtsp = str_replace("rtsp", "http", $URLrtsp);
+        //$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
+        $URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
+        $URLrtsp = str_replace($password, "#password#", $URLrtsp);
+        $URLrtsp = str_replace($username, "#username#", $URLrtsp);
+        $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
+        log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp . ' - URL de snaphot : ' . $URL_snaphot);
+        $EqLogic->save();
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+
+    public static function createTil_Group($logicalinfo, $templatecore_V4)
+    {
+        $Free_API = new Free_API();
+        $tiles = $Free_API->universal_get('tiles');
+        $result = [];
+        foreach ($tiles as $tile) {
+            $group = $tile['group']['label'];
+            if ($group == "" || $group === null) continue;
+            if (!in_array($group, $result)) {
+                array_push($result, $group);
+            }
+        }
+        return $result;
+    }
+
     private static function createTil_homeadapters($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Home Adapters');
+        log::add('Freebox_OS', 'debug', '>───────── Création équipement : Home Adapters');
         Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
-        log::add('Freebox_OS', 'debug', '└─────────');
+        //log::add('Freebox_OS', 'debug', '└─────────');
     }
     public static function createTil_homeadapters_SP($logicalinfo, $templatecore_V4)
     {
@@ -86,6 +178,7 @@ class Free_CreateTil
     private static function createTil_Tiles($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
+        $WebcamOKAll = false;
         foreach ($Free_API->universal_get('tiles') as $Equipement) {
             $_autorefresh = '*/5 * * * *';
             if ($Equipement['type'] != 'camera') {
@@ -103,13 +196,9 @@ class Free_CreateTil
                 } else {
                     $category = 'default';
                 }
-
+                $room = Free_CreateTil::getPiece($Equipement['group']['label']);
                 $Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
-                if (isset($Equipement['label'])) {
-                    $Tile = Freebox_OS::AddEqLogic($Equipement['label'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $Equipement['group']['label']);
-                } else {
-                    $Tile = Freebox_OS::AddEqLogic($Equipement['type'], $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $Equipement['group']['label']);
-                }
+                $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $Equipement['type']), $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $room);
             }
             foreach ($Equipement['data'] as $Command) {
                 if ($Command['label'] != '') {
@@ -121,15 +210,24 @@ class Free_CreateTil
                     $IsVisible = 1;
                     $icon = null;
                     if ($Equipement['type'] == 'camera' && method_exists('camera', 'getUrl')) {
+                        $_eqLogic == $Equipement['type'];
                         $parameter['name'] = $Command['label'];
-                        $parameter['id'] = $Command['ep_id'];
+                        $parameter['id'] = 'FreeboxCamera_' . $Command['ep_id'];
                         $parameter['room'] = $Equipement['group']['label'];
                         $parameter['url'] = $Command['value'];
                         log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
                         log::add('Freebox_OS', 'debug', '│ Id : ' . $parameter['id']);
-                        log::add('Freebox_OS', 'debug', '│ URL : ' . $parameter['url']);
+
+                        $WebcamOK = false;
+                        foreach (eqLogic::byLogicalId($parameter['id'], 'camera', true) as $_eqLogic) {
+                            $WebcamOK = 1;
+                            log::add('Freebox_OS', 'debug', '│ La caméra a déjà été créée ');
+                        };
+                        if ($WebcamOK == false) {
+                            event::add('Freebox_OS::camera', json_encode($parameter));
+                            $WebcamOKAll = true;
+                        }
                         log::add('Freebox_OS', 'debug', '└─────────');
-                        event::add('Freebox_OS::camera', json_encode($parameter));
                         continue;
                     }
                     if (!is_object($Tile)) continue;
@@ -243,7 +341,7 @@ class Free_CreateTil
                                     if ($Equipement['action'] != "store_slider" && $Command['name'] != 'position') {
                                         $_name_I = $label_sup . $name;
                                     } else {
-                                        $_name_I = 'Etat ouverture volet';
+                                        $_name_I = 'Etat volet';
                                     }
                                     if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
                                         $infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $binaireID);
@@ -399,5 +497,14 @@ class Free_CreateTil
                 }
             }
         }
+        return $WebcamOKAll;
+    }
+
+    private static function getPiece($pieceName)
+    {
+        $config = config::bykey('FREEBOX_PIECE', 'Freebox_OS', "null");
+        if ($config == "null") return "null";
+        $result = $config[$pieceName];
+        return $result;
     }
 }

@@ -129,7 +129,9 @@ class Free_CreateTil
         $URLrtsp = init('url');
         //$URLrtsp = str_replace("rtsp", "http", $URLrtsp);
         //$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
-        //$URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
+        $URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
+        $URLrtsp = str_replace($password, "#password#", $URLrtsp);
+        $URLrtsp = str_replace($username, "#username#", $URLrtsp);
         $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
         log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp . ' - URL de snaphot : ' . $URL_snaphot);
         $EqLogic->save();

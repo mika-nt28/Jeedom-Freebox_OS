@@ -2,9 +2,13 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function Freebox_OS_install()
 {
+	updateConfig();
 }
 function Freebox_OS_update()
 {
+
+	updateConfig();
+
 	try {
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
@@ -37,30 +41,13 @@ function Freebox_OS_update()
 				UpdateLogicId($eqLogic, 'wifiOn', $link_IA); // Amélioration 20200616
 				UpdateLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200616
 			}
-			UpdateLogicId($eqLogic, 'nb_tasks_active', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks_extracting', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks_repairing', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks_checking', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks_queued', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks_error', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks_stopped', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks_done', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'nb_tasks_downloading', '', 'numeric'); // Correction sous Type 20200616
-			UpdateLogicId($eqLogic, 'rx_rate', '', 'numeric', 'Ko/s', '#value# / 1000', '2'); // Correction sous Type 20200728
-			UpdateLogicId($eqLogic, 'tx_rate', '', 'numeric', 'Ko/s', '#value# / 1000', '2'); // Correction sous Type 20200728
 		}
+
 		log::add('Freebox_OS', 'debug', '│ Etape 4/5 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 5/5 : Sauvegarde de l\'ensemble des équipements');
 
-		/*$eqs = eqLogic::byType('Freebox_OS');
-		foreach ($eqs as $eq) {
-			$eq->save();
-		}*/
-		//log::add('Freebox_OS', 'debug', '│ Etape 5/5 : Mise à jour de l\'ensemble des composants Freebox Hors Tiles');
-
-		/*resave eqLogics for new cmd: */
-		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oublier pas de lancer les deux Scans afin de bénéficier des nouveautés');
+		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oublier pas de lancer les 3 Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {
 		$e = print_r($e, 1);
 		log::add('Freebox_OS', 'error', 'Freebox_OS update ERROR : ' . $e);
@@ -87,19 +74,11 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = nu
 		if ($SubType != null) {
 			$cmd->setSubType($SubType);
 		}
-		//Update unité
-		if ($unite != null) {
-			$cmd->setUnite($unite);
-		}
 
-		// Calcul valeur => pour le download 
-		if ($_calculValueOffset != null) {
-			$cmd->setConfiguration('calculValueOffset', $_calculValueOffset);
-			$cmd->setConfiguration('historizeRound', $_historizeRound);
-		}
 		$cmd->save();
 	}
 }
+
 function removeLogicId($eqLogic, $from)
 {
 	//  suppression fonction
@@ -107,5 +86,20 @@ function removeLogicId($eqLogic, $from)
 	if (is_object($cmd)) {
 		$cmd->remove();
 		$cmd->save();
+	}
+}
+
+function updateConfig()
+{
+	config::save('FREEBOX_SERVER_IP', config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS', "mafreebox.freebox.fr"), 'Freebox_OS');
+	config::save('FREEBOX_SERVER_APP_VERSION', config::byKey('FREEBOX_SERVER_APP_VERSION', 'Freebox_OS', "v5.0.0"), 'Freebox_OS');
+	config::save('FREEBOX_SERVER_APP_NAME', config::byKey('FREEBOX_SERVER_APP_NAME', 'Freebox_OS', "Plugin Freebox OS"), 'Freebox_OS');
+	config::save('FREEBOX_SERVER_APP_ID', config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS', "plugin.freebox.jeedom"), 'Freebox_OS');
+	config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS', config::byKey("name")), 'Freebox_OS');
+
+	$version = 1;
+	if (config::byKey('FREEBOX_CONFIG_V', 'Freebox_OS', 0) != $version) {
+		Freebox_OS::resetConfig();
+		config::save('FREEBOX_CONFIG_V', $version, 'Freebox_OS');
 	}
 }

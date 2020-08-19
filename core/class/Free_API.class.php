@@ -146,7 +146,7 @@ class Free_API
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
             if ($log_createeq != null) {
-                $type_log = 'Freebox_OS - ' . $log_createeq;
+                $type_log = 'Freebox_OS' . $log_createeq;
             } else {
                 $type_log = 'Freebox_OS';
             }
@@ -181,7 +181,7 @@ class Free_API
                 } else if ($result['error_code'] == "auth_required" || $result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token' || $result['error_code'] == 'denied_from_external_ip' || $result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
                     log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
                     return false;
-                } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited' || $result['error_code'] == 'internal_error') {
+                } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                     log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $result['msg']);
                     return false;
                 }
@@ -436,7 +436,11 @@ class Free_API
             }
             return $value;
         } else {
-            return false;
+            if ($update == "network_ping") {
+                return $result;
+            } else {
+                return false;
+            }
         }
     }
 

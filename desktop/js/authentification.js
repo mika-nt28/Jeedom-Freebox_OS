@@ -32,7 +32,6 @@ $('.bt_Freebox_OS_Save').on('click', function () {
     SetSetting(ip, VersionAPP, Categorie);
 });
 
-
 $('.bt_Freebox_Autorisation').on('click', function () {
     autorisationFreebox();
 });
@@ -48,7 +47,6 @@ $('.bt_Freebox_OS_ResetConfig').on('click', function () {
 $('.bt_Freebox_OS_Save_room').on('click', function () {
     SaveTitelRoom();
 });
-
 
 function updateMenu(objectclass) {
     $('.li_Freebox_OS_Summary.active').removeClass('active');
@@ -137,17 +135,18 @@ function SearchTile_Group() {
             pieces = data.result.piece;
             object = data.result.objects;
             $("#table_room tr").remove();
+            $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièces Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");
             for (var i = 0; i < pieces.length; i++) {
                 var piece = pieces[i];
                 var tr = '<tr class="piece">';
-                    tr += '<td>';
-                    tr += '<input class="titleRoomAttr form-control" data-l1key="PieceName" value="'+piece+'" disabled/>';
-                    tr += '</td>';
-                    tr += '<td><select id="'+piece+'" class="titleRoomAttr form-control" data-l1key="object_id">'+object+'</td>';
-                    tr += '</tr>';
+                tr += '<td>';
+                tr += '<input class="titleRoomAttr form-control" data-l1key="PieceName" value="' + piece + '" disabled/>';
+                tr += '</td>';
+                tr += '<td><select id="' + piece + '" class="titleRoomAttr form-control" data-l1key="object_id">' + object + '</td>';
+                tr += '</tr>';
                 $('#table_room tbody').append(tr);
                 value = data.result.config[piece];
-                $('#'+piece).val(value);
+                $('#' + piece).val(value);
             }
         }
     });
@@ -496,7 +495,7 @@ function SaveTitelRoom() {
     });
 }
 
-function funNext(){
+function funNext() {
     updateMenu($('.li_Freebox_OS_Summary.active').next());
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {

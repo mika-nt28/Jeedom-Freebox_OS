@@ -293,7 +293,7 @@ class Free_API
                 $logicalinfo = Freebox_OS::getlogicalinfo();
                 $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 
-                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'Freebox_OS::Freebox_OS_Disque', '%', null, 1, 'default', 'default', 0, 'fas fa-save', 0, '0', 100, null, '0', false, false, 'never', null, true);
+                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd', 0, '0', 100, null, '0', false, false, 'never', null, true);
                 $command->event($value);
                 log::add('Freebox_OS', 'debug', '└─────────');
             }
@@ -644,9 +644,9 @@ class Free_API
             return false;
         if ($result['success']) {
             $timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+
             if (isset($result['result'])) {
                 $nb_call = count($result['result']);
-
                 $cptAppel_outgoing = 0;
                 $cptAppel_missed = 0;
                 $cptAppel_accepted = 0;
@@ -663,22 +663,22 @@ class Free_API
 
                         if ($result['result'][$k]['type'] == 'missed') {
                             $cptAppel_missed++;
-                            $listNumber_missed .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
+                            $listNumber_missed .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
                         }
                         if ($result['result'][$k]['type'] == 'accepted') {
                             $cptAppel_accepted++;
-                            $listNumber_accepted .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
+                            $listNumber_accepted .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
                         }
                         if ($result['result'][$k]['type'] == 'outgoing') {
                             $cptAppel_outgoing++;
-                            $listNumber_outgoing .= $result['result'][$k]['number'] . ": " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
+                            $listNumber_outgoing .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
                         }
                     }
                 }
                 $retourFbx = array('missed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'list_outgoing' => $listNumber_outgoing);
-            } else
+            } else {
                 $retourFbx = array('missed' => 0, 'list_missed' => "", 'accepted' => 0, 'list_accepted' => "", 'outgoing' => 0, 'list_outgoing' => "");
-
+            }
             return $retourFbx;
         } else
             return false;

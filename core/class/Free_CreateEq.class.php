@@ -190,8 +190,8 @@ class Free_CreateEq
             $iconmissed = 'icon techno-phone1';
             $iconaccepted = 'icon techno-phone3';
             $iconoutgoing = 'ficon techno-phone2';
-            $iconeDectOn = 'jeedom-bell';
-            $iconeDectOff = 'jeedom-no-bell';
+            //$iconeDectOn = 'jeedom-bell';
+            //$iconeDectOff = 'jeedom-no-bell';
             $iconeDell_call = 'fas fa-magic';
             $iconeRead_call = 'fab fa-readme';
             $updateiconePhone = false;
@@ -200,8 +200,8 @@ class Free_CreateEq
             $iconmissed = 'icon techno-phone1 icon_red';
             $iconaccepted = 'icon techno-phone3 icon_blue';
             $iconoutgoing = 'icon techno-phone2 icon_green';
-            $iconeDectOn = 'jeedom-bell icon_red';
-            $iconeDectOff = 'jeedom-no-bell icon_green';
+            //$iconeDectOn = 'jeedom-bell icon_red';
+            //$iconeDectOff = 'jeedom-no-bell icon_green';
             $iconeDell_call = 'fas fa-magic icon_red';
             $iconeRead_call = 'fab fa-readme icon_blue';
             $updateiconePhone = false;
@@ -383,7 +383,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Wifi');
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $TemplateWifiOnOFF = 'Freebox_OS::Freebox_OS::Wifi';
+            $TemplateWifiOnOFF = 'default';
             $iconeWifiOn = 'fas fa-wifi';
             $iconeWifiOff = 'fas fa-times';
             $iconeWifiPlanningOn = 'fas fa-calendar-alt';

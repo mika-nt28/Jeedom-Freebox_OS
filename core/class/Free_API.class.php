@@ -310,6 +310,9 @@ class Free_API
                 $config = 'api/v8/connection/lte/config';
                 $config_log = 'Etat 4G';
                 break;
+            case 'airmedia':
+                $config = 'api/v8/airmedia/receivers/';
+                break;
             case 'disk':
                 $config = 'api/v8/storage/disk/' . $id;
                 break;

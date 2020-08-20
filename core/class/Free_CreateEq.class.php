@@ -65,7 +65,7 @@ class Free_CreateEq
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 // Free_CreateEq::createEq_wifi_wps($logicalinfo, $templatecore_V4);
-                // Free_CreateEq::createEq_wifi_guest($logicalinfo, $templatecore_V4);
+                //Free_CreateEq::createEq_airmedia_sp($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -87,6 +87,13 @@ class Free_CreateEq
         $Airmedia->AddCommand('Player actuel AirMedia', 'ActualAirmedia', 'info', 'string', 'Freebox_OS::Freebox_OS_AirMedia_Recever', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
         $Airmedia->AddCommand('Start', 'airmediastart', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOn, 0, 'default', 'default', 2, '0', $updateiconeAirPlay, false);
         $Airmedia->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::Freebox_OS_AirMedia_Start', null, null, 1, 'default', 'default', 0, $iconeAirPlayOff, 0, 'default', 'default', 3, '0', $updateiconeAirPlay, false);
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_airmedia_sp($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : AIRMEDIA');
+        $Free_API = new Free_API();
+        $Free_API->universal_get('airmedia', null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

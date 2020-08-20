@@ -93,7 +93,10 @@ function removeLogicId($eqLogic, $from)
 	//  suppression fonction
 	$cmd = $eqLogic->getCmd(null, $from);
 	if (is_object($cmd)) {
-		$cmd->remove();
+		foreach ($eqLogic->getCmd() as $cmd) {
+			$cmd->remove();
+		}
+		//$cmd->remove();
 	}
 }
 

@@ -41,6 +41,7 @@ function Freebox_OS_update()
 				UpdateLogicId($eqLogic, 'wifiStatut'); // Amélioration 20200820
 			}
 			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
+			log::add('Freebox_OS', 'debug', '│ TEST A');
 			removeLogicId($eqLogic, 'port_forwarding'); // Amélioration 20200820
 			removeLogicId($eqLogic, 'nbAppelsManquee'); // Amélioration 20200820
 			removeLogicId($eqLogic, 'nbAppelRecus'); // Amélioration 20200820
@@ -90,6 +91,7 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = nu
 
 function removeLogicId($eqLogic, $from)
 {
+	log::add('Freebox_OS', 'debug', '│ TEST A');
 	//  suppression fonction
 	$cmd = $eqLogic->getCmd(null, $from);
 	if (is_object($cmd)) {

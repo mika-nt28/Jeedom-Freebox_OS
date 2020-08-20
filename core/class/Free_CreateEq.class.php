@@ -184,41 +184,43 @@ class Free_CreateEq
     }
     private static function createEq_phone($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Téléphone');
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['phoneName']);
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $iconeDectOn = 'jeedom-bell';
-            $iconeDectOff = 'jeedom-no-bell';
-            $iconeManquee = 'icon techno-phone1';
-            $iconeRecus = 'icon techno-phone3';
-            $iconePasses = 'ficon techno-phone2';
+            $iconmissed = 'icon techno-phone1';
+            $iconaccepted = 'icon techno-phone3';
+            $iconoutgoing = 'ficon techno-phone2';
+            //$iconeDectOn = 'jeedom-bell';
+            //$iconeDectOff = 'jeedom-no-bell';
             $iconeDell_call = 'fas fa-magic';
             $iconeRead_call = 'fab fa-readme';
             $updateiconePhone = false;
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconeDectOn = 'jeedom-bell icon_red';
-            $iconeDectOff = 'jeedom-no-bell icon_green';
-            $iconeManquee = 'icon techno-phone1 icon_red';
-            $iconeRecus = 'icon techno-phone3 icon_blue';
-            $iconePasses = 'icon techno-phone2 icon_green';
+            $iconmissed = 'icon techno-phone1 icon_red';
+            $iconaccepted = 'icon techno-phone3 icon_blue';
+            $iconoutgoing = 'icon techno-phone2 icon_green';
+            //$iconeDectOn = 'jeedom-bell icon_red';
+            //$iconeDectOff = 'jeedom-no-bell icon_green';
             $iconeDell_call = 'fas fa-magic icon_red';
             $iconeRead_call = 'fab fa-readme icon_blue';
             $updateiconePhone = false;
         };
         $phone = Freebox_OS::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null, null, '*/30 * * * *');
-        $phone->AddCommand('Nombre Appels Manqués', 'nbAppelsManquee', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 0, 'default', 'default',  1, '0', $updateiconePhone, true);
-        $phone->AddCommand('Nombre Appels Reçus', 'nbAppelRecus', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 2, '0', $updateiconePhone, true);
-        $phone->AddCommand('Nombre Appels Passés', 'nbAppelPasse', 'info', 'numeric', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  3, '0', $updateiconePhone, true);
-        $phone->AddCommand('Liste Appels Manqués', 'listAppelsManquee', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeManquee, 1, 'default', 'default',  6, '0', $updateiconePhone, true);
-        $phone->AddCommand('Liste Appels Reçus', 'listAppelsRecus', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeRecus, 0, 'default', 'default', 7, '0', $updateiconePhone, true);
-        $phone->AddCommand('Liste Appels Passés', 'listAppelsPasse', 'info', 'string', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconePasses, 0, 'default', 'default',  8, '0', $updateiconePhone, true);
-        $phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
-        $phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
+        $phone->AddCommand('Nombre Manqués', 'nbmissed', 'info', 'numeric', $templatecore_V4 . 'badge', null, null, 1, 'default', 'default', 0, $iconmissed, null, 'default', 'default',  1, '0', $updateiconePhone, true, false, true, null, null, null, null);
+        $phone->AddCommand('Liste Manqués', 'listmissed', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmissed, 1, 'default', 'default',  2, '0', $updateiconePhone, true, false, null, null, null, null, 'NONAME');
+        $phone->AddCommand('Nombre Reçus', 'nbaccepted', 'info', 'numeric', $templatecore_V4 . 'badge', null, null, 1, 'default', 'default', 0, $iconaccepted, null, 'default', 'default',  3, '0', $updateiconePhone, true, false, true, null, null, null, null);
+        $phone->AddCommand('Liste Reçus', 'listaccepted', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconaccepted, 1, 'default', 'default',  4, '0', $updateiconePhone, true, false, null, null, null, null, 'NONAME');
+        $phone->AddCommand('Nombre Emis', 'nboutgoing', 'info', 'numeric', $templatecore_V4 . 'badge', null, null, 1, 'default', 'default', 0, $iconoutgoing, null, 'default', 'default',  5, '0', $updateiconePhone, true, false, true, null, null, null, null);
+        $phone->AddCommand('Liste Emis', 'listoutgoing', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconoutgoing, 1, 'default', 'default',  6, '0', $updateiconePhone, true, false, null, null, null, null, 'NONAME');
+        //$phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
+        //$phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
         $phone->AddCommand('Vider le journal d appels', 'phone_dell_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeDell_call, 0, 'default', 'default', 9, '0', $updateiconePhone, false, null, true);
         $phone->AddCommand('Tout marquer comme lu', 'phone_read_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeRead_call, 0, 'default', 'default', 10, '0', $updateiconePhone, false, null, true);
+
         log::add('Freebox_OS', 'debug', '└─────────');
     }
+
     private static function createEq_network($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : Appareils connectés');
@@ -381,7 +383,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Wifi');
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $TemplateWifiOnOFF = 'Freebox_OS::Freebox_OS::Wifi';
+            $TemplateWifiOnOFF = 'default';
             $iconeWifiOn = 'fas fa-wifi';
             $iconeWifiOff = 'fas fa-times';
             $iconeWifiPlanningOn = 'fas fa-calendar-alt';

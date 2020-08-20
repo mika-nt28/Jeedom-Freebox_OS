@@ -32,7 +32,6 @@ $('.bt_Freebox_OS_Save').on('click', function () {
     SetSetting(ip, VersionAPP, Categorie);
 });
 
-
 $('.bt_Freebox_Autorisation').on('click', function () {
     autorisationFreebox();
 });
@@ -48,7 +47,6 @@ $('.bt_Freebox_OS_ResetConfig').on('click', function () {
 $('.bt_Freebox_OS_Save_room').on('click', function () {
     SaveTitelRoom();
 });
-
 
 function updateMenu(objectclass) {
     $('.li_Freebox_OS_Summary.active').removeClass('active');
@@ -137,6 +135,7 @@ function SearchTile_Group() {
             pieces = data.result.piece;
             object = data.result.objects;
             $("#table_room tr").remove();
+            $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièce Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");
             for (var i = 0; i < pieces.length; i++) {
                 var piece = pieces[i];
                 var tr = '<tr class="piece">';

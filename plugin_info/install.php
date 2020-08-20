@@ -105,6 +105,6 @@ function updateConfig()
 	$version = 1;
 	if (config::byKey('FREEBOX_CONFIG_V', 'Freebox_OS', 0) != $version) {
 		Freebox_OS::resetConfig();
-		config::save('FREEBOX_CONFIG_V', $version, 'Freebox_OS');
+		config::save('FREEBOX_CONFIG_V', $version, 'Freebox_OS');z
 	}
 }

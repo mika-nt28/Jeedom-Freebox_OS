@@ -213,21 +213,27 @@ class Free_Refresh
                     switch ($Command->getLogicalId()) {
                         case "nbAppelsManquee":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['missed']);
+                            log::add('Freebox_OS', 'debug', '>───────── Appels manqués : ' . $result['missed']);
                             break;
                         case "nbAppelRecus":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['accepted']);
+                            log::add('Freebox_OS', 'debug', '>───────── Appels reçus : ' . $result['accepted']);
                             break;
                         case "nbAppelPasse":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['outgoing']);
+                            log::add('Freebox_OS', 'debug', '>───────── Appels passés : ' . $result['outgoing']);
                             break;
                         case "listAppelsManquee":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_missed']);
+                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels manqués : ' . $result['list_missed']);
                             break;
                         case "listAppelsRecus":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_accepted']);
+                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels reçus : ' . $result['list_accepted']);
                             break;
                         case "listAppelsPasse":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_outgoing']);
+                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels passés : ' . $result['list_outgoing']);
                             break;
                     }
                 }

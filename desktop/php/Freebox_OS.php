@@ -54,26 +54,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					$template = $eqLogic->getLogicalId();
 				}
 				switch ($template) {
-					case 'AirPlay':
-					case 'airplay':
 					case 'airmedia':
 					case 'connexion':
-					case 'ADSL':
 					case 'downloads':
-					case 'Downloads':
 					case 'system':
-					case 'System':
-					case 'disk':
-					case 'Disque':
 					case 'disk':
 					case 'phone':
-					case 'Phone':
 					case 'wifi':
-					case 'Wifi':
 					case 'player':
-					case 'Player':
 					case 'network':
-					case 'Reseau':
 						$status = 1;
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
@@ -107,24 +96,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					}
 				}
 				switch ($template) {
-					case 'AirPlay':
-					case 'airplay':
-					case 'ADSL':
+					case 'airmedia':
+					case 'connexion':
 					case 'downloads':
-					case 'Downloads':
 					case 'system':
-					case 'Disque':
 					case 'disk':
 					case 'phone':
-					case 'Phone':
-					case 'Wifi':
-					case 'parental':
-					case 'player':
-					case 'Reseau':
-					case 'airmedia':
-					case 'network':
-					case 'connexion':
 					case 'wifi':
+					case 'player':
+					case 'network':
 
 						break;
 					default:

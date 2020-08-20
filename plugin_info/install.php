@@ -91,7 +91,6 @@ function removeLogicId($eqLogic, $from)
 	$cmd = $eqLogic->getCmd(null, $from);
 	if (is_object($cmd)) {
 		$cmd->remove();
-		$cmd->save(true);
 	}
 }
 

@@ -12,23 +12,18 @@ function Freebox_OS_update()
 	try {
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
-		log::add('Freebox_OS', 'debug', '│ Etape 1/5 : Suppression FreeboxTv');
-		foreach (eqLogic::byLogicalId('FreeboxTv', 'Freebox_OS', true) as $eqLogic) {
-			$eqLogic->remove();
-			log::add('Freebox_OS', 'debug', '│ Etape 1 : OK pour la suppression');
-		}
 		$WifiEX = 0;
 		foreach (eqLogic::byLogicalId('Wifi', 'Freebox_OS', true) as $eqLogic) {
 			$WifiEX = 1;
-			log::add('Freebox_OS', 'debug', '│ Etape 2/5 : Migration Wifi déjà faite (' . $WifiEX . ')');
+			log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Migration Wifi déjà faite (' . $WifiEX . ')');
 		}
 		if ($WifiEX != 1) {
 			$Wifi = Freebox_OS::AddEqLogic('Wifi', 'wifi', 'default', false, null, null);
 			$link_IA = $Wifi->getId();
-			log::add('Freebox_OS', 'debug', '│ Etape 2/5 : Création Equipement WIFI -- ID N° : ' . $link_IA);
+			log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Création Equipement WIFI -- ID N° : ' . $link_IA);
 		}
 
-		log::add('Freebox_OS', 'debug', '│ Etape 3/5 : Update nouveautés + corrections commandes');
+		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Update nouveautés + corrections commandes');
 
 		while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
 			$cron->remove();
@@ -53,9 +48,9 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'sonnerieDectOff'); // Amélioration 20200820
 		}
 
-		log::add('Freebox_OS', 'debug', '│ Etape 4/5 : Changement de nom de certains équipements');
+		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);
-		log::add('Freebox_OS', 'debug', '│ Etape 5/5 : Sauvegarde de l\'ensemble des équipements');
+		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Sauvegarde de l\'ensemble des équipements');
 
 		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oublier pas de lancer les 3 Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {

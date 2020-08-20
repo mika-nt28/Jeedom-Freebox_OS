@@ -140,14 +140,14 @@ function SearchTile_Group() {
             for (var i = 0; i < pieces.length; i++) {
                 var piece = pieces[i];
                 var tr = '<tr class="piece">';
-                    tr += '<td>';
-                    tr += '<input class="titleRoomAttr form-control" data-l1key="PieceName" value="'+piece+'" disabled/>';
-                    tr += '</td>';
-                    tr += '<td><select id="'+piece+'" class="titleRoomAttr form-control" data-l1key="object_id">'+object+'</td>';
-                    tr += '</tr>';
+                tr += '<td>';
+                tr += '<input class="titleRoomAttr form-control" data-l1key="PieceName" value="' + piece + '" disabled/>';
+                tr += '</td>';
+                tr += '<td><select id="' + piece + '" class="titleRoomAttr form-control" data-l1key="object_id">' + object + '</td>';
+                tr += '</tr>';
                 $('#table_room tbody').append(tr);
                 value = data.result.config[piece];
-                $('#'+piece).val(value);
+                $('#' + piece).val(value);
             }
         }
     });
@@ -496,7 +496,7 @@ function SaveTitelRoom() {
     });
 }
 
-function funNext(){
+function funNext() {
     updateMenu($('.li_Freebox_OS_Summary.active').next());
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {

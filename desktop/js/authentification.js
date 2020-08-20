@@ -135,7 +135,7 @@ function SearchTile_Group() {
             pieces = data.result.piece;
             object = data.result.objects;
             $("#table_room tr").remove();
-            $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièce Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");
+            $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièces Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");
             for (var i = 0; i < pieces.length; i++) {
                 var piece = pieces[i];
                 var tr = '<tr class="piece">';

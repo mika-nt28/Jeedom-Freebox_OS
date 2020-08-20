@@ -663,15 +663,15 @@ class Free_API
 
                         if ($result['result'][$k]['type'] == 'missed') {
                             $cptAppel_missed++;
-                            $listNumber_missed .= $result['result'][$k]['number'] . " : " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
+                            $listNumber_missed .= $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s" . "\r\n";
                         }
                         if ($result['result'][$k]['type'] == 'accepted') {
                             $cptAppel_accepted++;
-                            $listNumber_accepted .= $result['result'][$k]['number'] . " : " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
+                            $listNumber_accepted .= $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s" . "\r\n";
                         }
                         if ($result['result'][$k]['type'] == 'outgoing') {
                             $cptAppel_outgoing++;
-                            $listNumber_outgoing .= $result['result'][$k]['number'] . " : " . $name . " à " . $time . " - de " . $result['result'][$k]['duration'] . "s" . "\r\n";
+                            $listNumber_outgoing .= $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s" . "\r\n";
                         }
                     }
                 }

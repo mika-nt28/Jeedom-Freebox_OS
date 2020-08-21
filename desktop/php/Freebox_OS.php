@@ -257,6 +257,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 						</div>
+						<div class="form-group IPv6">
+							<label class="col-sm-2 control-label IPV6">{{Affichage IPv6 sur le widget}}
+								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv6 sur le widget}}"></i></sup>
+							</label>
+							<div class="col-sm-3 IPV6">
+								<label class="checkbox-inline IPV6"><input id="IPV6" type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="deamoncheck" /></label>
+							</div>
+						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{logicalId équipement}}
 								<sup><i class="fas fa-question-circle" title="{{logicalId de l'équipement Freebox}}"></i></sup>
@@ -281,8 +289,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="action"></span>
 							</div>
 						</div>
-
-
 					</fieldset>
 				</form>
 			</div>

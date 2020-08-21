@@ -208,7 +208,11 @@ function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
 	}
+	$('.IPv6').hide();
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+	if (template == 'network') {
+		$('.IPv6').show();
+	}
 	switch (template) {
 		case 'airmedia':
 		case 'connexion':

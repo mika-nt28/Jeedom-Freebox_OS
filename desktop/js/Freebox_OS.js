@@ -208,7 +208,11 @@ function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
 	}
+	$('.IPv6').hide();
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+	if (template === 'network' || template === 'networkwifiguest') {
+		// $('.IPv6').show(); //Fonction désactivée en attendant la fin de la mise à jour de la fonction
+	}
 	switch (template) {
 		case 'airmedia':
 		case 'connexion':
@@ -216,6 +220,7 @@ function addCmdToTable(_cmd) {
 		case 'downloads':
 		case 'homeadapters':
 		case 'network':
+		case 'networkwifiguest':
 		case 'system':
 		case 'wifi':
 		case 'phone':

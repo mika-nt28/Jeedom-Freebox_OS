@@ -111,7 +111,6 @@ class Free_Update
         }
     }
 
-
     private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         $result = $Free_API->universal_get('download_stats');
@@ -126,6 +125,7 @@ class Free_Update
             }
         }
     }
+
     private static function update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
         $cmd = cmd::byid($_cmd->getvalue());
@@ -136,10 +136,12 @@ class Free_Update
         $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);
         Free_Refresh::RefreshInformation($logicalId_eq->getId());
     }
+
     private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
         $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
     }
+
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         $result = $Free_API->nb_appel_absence();

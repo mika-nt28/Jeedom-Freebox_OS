@@ -384,12 +384,18 @@ class Freebox_OS extends eqLogic
 			'homeadaptersName' => 'Home Adapters',
 			'networkID' => 'network',
 			'networkName' => 'Appareils connectés',
+			'notificationID' => 'notification',
+			'notificationName' => 'notification',
 			'phoneID' => 'phone',
 			'phoneName' => 'Téléphone',
 			'systemID' => 'system',
 			'systemName' => 'Système',
 			'wifiID' => 'wifi',
-			'wifiName' => 'Wifi'
+			'wifiName' => 'Wifi',
+			'wifiguestID' => 'wifiguest',
+			'wifiguestName' => 'Wifi GUEST',
+			'wifiWPSID' => 'wifiWPS',
+			'wifiWPSName' => 'Wifi WPS'
 		);
 	}
 	public static function updateLogicalID($_version, $_update = false)

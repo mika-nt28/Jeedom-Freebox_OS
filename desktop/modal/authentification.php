@@ -114,7 +114,7 @@ if (!isConnect('admin')) {
                             <label class="col-md-5 control-label">{{Ajouter automatiquement les équipements détectés
                                 dans :}}</label>
                             <div class="col-md-4">
-                                <select id="sel_catego" class="configKey form-control" data-l1key="defaultParentObject">
+                                <select id="sel_object_default" class="configKey form-control" data-l1key="defaultParentObject">
                                     <option value="">{{Aucune}}</option>
                                     <?php
                                     foreach (jeeObject::all() as $object) {

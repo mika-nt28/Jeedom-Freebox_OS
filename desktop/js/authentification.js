@@ -25,10 +25,9 @@ $('.bt_eqlogic_control_parental').on('click', function () {
 });
 
 $('.bt_Freebox_OS_Save').on('click', function () {
-
     ip = $('#input_freeboxIP').val();
     VersionAPP = $('#input_freeAppVersion').val();
-    Categorie = $('#sel_catego').val();
+    Categorie = $('#sel_object_default').val();
     SetSetting(ip, VersionAPP, Categorie);
 });
 
@@ -321,7 +320,7 @@ function GetSetting() {
             $('#input_freeNameAPP').val(data.result.NameAPP);
             $('#input_IdApp').val(data.result.IdApp);
             $('#input_DeviceName').val(data.result.DeviceName);
-            $('#sel_catego').val(data.result.Categorie);
+            $('#sel_object_default').val(data.result.Categorie);
             if (data.result.LogLevel == 100) {
                 var debugHides = document.getElementsByClassName('debugFreeOS');
                 for (var i = 0; i < debugHides.length; i++) {

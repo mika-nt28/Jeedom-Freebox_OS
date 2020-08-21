@@ -46,19 +46,19 @@ try {
 			ajax::success($result);
 			break;
 		case 'SearchTile_group':
-            $objects = "";
-            $objects = $objects.'<option value="">Default</option>';
-            foreach (jeeObject::all() as $object) {
-                $objects = $objects.'<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-            }
-            $objects = $objects.'</select>';
-            $result = array(
-                piece => Free_CreateTil::createTil('Tiles_group'),
-                objects => $objects,
-                config =>  config::bykey('FREEBOX_PIECE', 'Freebox_OS', "")
-            );
+			$objects = "";
+			$objects = $objects . '<option value="">Default</option>';
+			foreach (jeeObject::all() as $object) {
+				$objects = $objects . '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+			}
+			$objects = $objects . '</select>';
+			$result = array(
+				piece => Free_CreateTil::createTil('Tiles_group'),
+				objects => $objects,
+				config =>  config::bykey('FREEBOX_PIECE', 'Freebox_OS', "")
+			);
 
-            ajax::success($result);
+			ajax::success($result);
 			break;
 		case 'SearchArchi':
 			Free_CreateEq::createEq();
@@ -128,7 +128,7 @@ try {
 		case 'SetSetting':
 			config::save('FREEBOX_SERVER_IP', init('ip'), 'Freebox_OS');
 			config::save('FREEBOX_SERVER_APP_VERSION', init('VersionAPP'), 'Freebox_OS');
-			config::save('defaultParentObject', init('track_id'));
+			config::save('defaultParentObject', init('Categorie'), 'Freebox_OS');
 			ajax::success(true);
 			break;
 		case 'GetSessionData':
@@ -144,20 +144,19 @@ try {
 			config::save('FREEBOX_SERVER_APP_TOKEN', init('app_token'), 'Freebox_OS');
 			ajax::success(true);
 			break;
-        case  'setRoomID' :
-            $result = "";
-            $data = init('data');
-            $piecefinal = [];
-            foreach ($data as $piece) {
-                $piecename = $piece["PieceName"];
-                $value = ($piece['object_id'] != '' ? $piece['object_id'] : config::byKey('defaultParentObject', 'Freebox_OS'));
-                $piecefinal[$piecename] = $value;
-            }
-            config::save('FREEBOX_PIECE', $piecefinal, 'Freebox_OS');
-            $result = $piecefinal;
-            ajax::success($result);
-            break;
-
+		case  'setRoomID':
+			$result = "";
+			$data = init('data');
+			$piecefinal = [];
+			foreach ($data as $piece) {
+				$piecename = $piece["PieceName"];
+				$value = ($piece['object_id'] != '' ? $piece['object_id'] : config::byKey('defaultParentObject', 'Freebox_OS'));
+				$piecefinal[$piecename] = $value;
+			}
+			config::save('FREEBOX_PIECE', $piecefinal, 'Freebox_OS');
+			$result = $piecefinal;
+			ajax::success($result);
+			break;
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	/*     * *********Catch exeption*************** */

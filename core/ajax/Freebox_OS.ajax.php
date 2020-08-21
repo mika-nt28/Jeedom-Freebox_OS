@@ -120,7 +120,7 @@ try {
 				"NameAPP" => config::byKey('FREEBOX_SERVER_APP_NAME', 'Freebox_OS'),
 				"IdApp" => config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS'),
 				"DeviceName" => config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'),
-				"Categorie" => config::byKey('defaultParentObject', 'Freebox_OS', "auccun"),
+				"Categorie" => config::byKey('defaultParentObject', 'Freebox_OS'),
 				"LogLevel" => log::getLogLevel('Freebox_OS')
 			);
 			ajax::success($result);

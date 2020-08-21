@@ -36,17 +36,17 @@ function Freebox_OS_update()
 				UpdateLogicId($eqLogic, 'wifiStatut'); // Amélioration 20200820
 			}
 
-            removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
-            removeLogicId($eqLogic, 'port_forwarding'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'nbAppelsManquee'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'nbAppelRecus'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'nbAppelPass'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'listAppelsManquee'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'listAppelsRecus'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'listAppelsPasse'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'sonnerieDectOn'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'sonnerieDectOff'); // Amélioration 20200820
-        }
+			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
+			removeLogicId($eqLogic, 'port_forwarding'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'nbAppelsManquee'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'nbAppelRecus'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'nbAppelPasse'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'listAppelsManquee'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'listAppelsRecus'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'listAppelsPasse'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'sonnerieDectOn'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'sonnerieDectOff'); // Amélioration 20200820
+		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);

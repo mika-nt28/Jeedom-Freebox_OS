@@ -18,6 +18,8 @@
 
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 
-function Freebox_OS_pre_update() {
+function Freebox_OS_pre_update()
+{
     /** fonction executer automatiquement avant mise à jour du plugin. **/
+    exec("sudo rm -R " . dirname(__FILE__) . "/../core/template/");
 }

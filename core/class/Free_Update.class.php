@@ -90,8 +90,11 @@ class Free_Update
     private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
         $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");
+        log::add('Freebox_OS', 'debug', '│ Media type : ' . $_options['titre']);
+        log::add('Freebox_OS', 'debug', '│ Media : ' . $_options['message']);
+
         if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
-            log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
+            log::add('Freebox_OS', 'error', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplets' . $receivers->execCmd() . ' type :' . $_options['titre']);
             return;
         }
         $Parameter["media_type"] = $_options['titre'];

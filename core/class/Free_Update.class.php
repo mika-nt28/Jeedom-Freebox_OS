@@ -184,14 +184,6 @@ class Free_Update
     private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
-            case "wifiOnOff":
-                $result = $Free_API->universal_get();
-                if ($result == true) {
-                    $Free_API->universal_put(0, 'wifi', null, null, null);
-                } else {
-                    $Free_API->universal_put(1, 'wifi', null, null, null);
-                }
-                break;
             case 'wifiOn':
                 $Free_API->universal_put(1, 'wifi', null, null, null);
                 break;

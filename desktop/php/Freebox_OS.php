@@ -104,8 +104,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					case 'phone':
 					case 'wifi':
 					case 'player':
+					case 'parental':
 					case 'network':
-
 						break;
 					default:
 						$status = 1;

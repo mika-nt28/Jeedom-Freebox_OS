@@ -21,5 +21,5 @@ require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function Freebox_OS_pre_update()
 {
     /** fonction executer automatiquement avant mise à jour du plugin. **/
-    exec("sudo rm -R " . dirname(__FILE__) . "/../core/template/");
+    exec("sudo rm *.html" . dirname(__FILE__) . "/../core/template/dashboard/");
 }

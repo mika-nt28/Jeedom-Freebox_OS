@@ -70,6 +70,9 @@ class Free_Update
             case 'network':
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
+            case 'networkwifiguest':
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                break;
             case 'system':
                 Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 if ($logicalId != 'reboot') {
@@ -90,8 +93,10 @@ class Free_Update
     private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
         $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");
+        log::add('Freebox_OS', 'debug', '│ Media type : ' . $_options['titre'] . ' -- Media : ' . $_options['message'] . ' -- Action : ' . $logicalId);
+
         if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
-            log::add('Freebox_OS', 'debug', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplet équipement' . $receivers->execCmd() . ' type:' . $_options['titre']);
+            log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, les paramètres sont incomplets' . $receivers->execCmd() . ' type :' . $_options['titre']);
             return;
         }
         $Parameter["media_type"] = $_options['titre'];
@@ -99,7 +104,6 @@ class Free_Update
         $Parameter["password"] = $_cmd->getConfiguration('password');
         switch ($logicalId) {
             case "airmediastart":
-                log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
                 $Parameter["action"] = "start";
                 $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
                 break;
@@ -109,7 +113,6 @@ class Free_Update
                 break;
         }
     }
-
 
     private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
@@ -125,6 +128,7 @@ class Free_Update
             }
         }
     }
+
     private static function update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
         $cmd = cmd::byid($_cmd->getvalue());
@@ -135,10 +139,12 @@ class Free_Update
         $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);
         Free_Refresh::RefreshInformation($logicalId_eq->getId());
     }
+
     private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
         $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
     }
+
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         $result = $Free_API->nb_appel_absence();
@@ -181,14 +187,6 @@ class Free_Update
     private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
-            case "wifiOnOff":
-                $result = $Free_API->universal_get();
-                if ($result == true) {
-                    $Free_API->universal_put(0, 'wifi', null, null, null);
-                } else {
-                    $Free_API->universal_put(1, 'wifi', null, null, null);
-                }
-                break;
             case 'wifiOn':
                 $Free_API->universal_put(1, 'wifi', null, null, null);
                 break;

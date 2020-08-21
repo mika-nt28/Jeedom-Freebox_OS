@@ -293,7 +293,7 @@ class Free_API
                 $logicalinfo = Freebox_OS::getlogicalinfo();
                 $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 
-                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd', 0, '0', 100, null, '0', false, false, 'never', null, true);
+                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', true, false, 'never', null, true);
                 $command->event($value);
                 log::add('Freebox_OS', 'debug', '└─────────');
             }
@@ -309,6 +309,9 @@ class Free_API
             case '4G':
                 $config = 'api/v8/connection/lte/config';
                 $config_log = 'Etat 4G';
+                break;
+            case 'airmedia':
+                $config = 'api/v8/airmedia/receivers/';
                 break;
             case 'disk':
                 $config = 'api/v8/storage/disk/' . $id;
@@ -357,6 +360,15 @@ class Free_API
                 break;
             case 'network_ping':
                 $config = 'api/v8/lan/browser/pub/' . $id;
+                break;
+            case 'network_interfaces':
+                $config = 'api/v8/lan/browser/interfaces/';
+                break;
+            case 'network_wifiGuest':
+                $config = 'api/v8/lan/browser/wifiguest/';
+                break;
+            case 'network_wifiGuest_ping':
+                $config = 'api/v8/lan/browser/wifiguest/' . $id;
                 break;
             case 'system':
                 $config = 'api/v8/system';
@@ -407,6 +419,9 @@ class Free_API
                 case 'network_ping':
                     return $result;
                     break;
+                case 'network_wifiGuest_ping':
+                    return $result;
+                    break;
                 case 'planning':
                     if ($result['result']['use_planning']) {
                         $value = 1;
@@ -436,7 +451,7 @@ class Free_API
             }
             return $value;
         } else {
-            if ($update == "network_ping") {
+            if ($update == "network_ping" || $update == "network_wifiGuest_ping") {
                 return $result;
             } else {
                 return false;

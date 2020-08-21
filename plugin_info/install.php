@@ -15,15 +15,15 @@ function Freebox_OS_update()
 		$WifiEX = 0;
 		foreach (eqLogic::byLogicalId('Wifi', 'Freebox_OS', true) as $eqLogic) {
 			$WifiEX = 1;
-			log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Migration Wifi déjà faite (' . $WifiEX . ')');
+			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Migration Wifi déjà faite (' . $WifiEX . ')');
 		}
 		if ($WifiEX != 1) {
 			$Wifi = Freebox_OS::AddEqLogic('Wifi', 'wifi', 'default', false, null, null);
 			$link_IA = $Wifi->getId();
-			log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Création Equipement WIFI -- ID N° : ' . $link_IA);
+			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Création Equipement WIFI -- ID N° : ' . $link_IA);
 		}
 
-		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Update nouveautés + corrections commandes');
+		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
 		while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
 			$cron->remove();
@@ -36,23 +36,22 @@ function Freebox_OS_update()
 				UpdateLogicId($eqLogic, 'wifiStatut'); // Amélioration 20200820
 			}
 
-            removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
-            removeLogicId($eqLogic, 'port_forwarding'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'nbAppelsManquee'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'nbAppelRecus'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'nbAppelPass'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'listAppelsManquee'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'listAppelsRecus'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'listAppelsPasse'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'sonnerieDectOn'); // Amélioration 20200820
-            removeLogicId($eqLogic, 'sonnerieDectOff'); // Amélioration 20200820
-        }
+			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
+			removeLogicId($eqLogic, 'port_forwarding'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'nbAppelsManquee'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'nbAppelRecus'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'nbAppelPasse'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'listAppelsManquee'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'listAppelsRecus'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'listAppelsPasse'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'sonnerieDectOn'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'sonnerieDectOff'); // Amélioration 20200820
+		}
 
-		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Changement de nom de certains équipements');
+		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);
-		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Sauvegarde de l\'ensemble des équipements');
 
-		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oublier pas de lancer les 3 Scans afin de bénéficier des nouveautés');
+		message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les trois Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {
 		$e = print_r($e, 1);
 		log::add('Freebox_OS', 'error', 'Freebox_OS update ERROR : ' . $e);

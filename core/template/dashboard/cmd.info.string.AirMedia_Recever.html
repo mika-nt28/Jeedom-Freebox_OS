@@ -1,5 +1,12 @@
-<div class="cmd tooltips cmd-widget" data-type="info" data-subtype="string" data-cmd_id="#id#" title="#collectDate#">
-	<select style="color:black;width: 100px;" class="action CmdSelectorAirMedia#id#"></select>
+<div style="width: 200px;" class=" cmd tooltips cmd-widget" data-type="info" data-subtype="string" data-cmd_id="#id#"
+	title="#collectDate#">
+	<br>
+	<div class="title #hide_name#">
+		<div class="cmdName" style="#hideCmdName#">#name_display#</div>
+	</div>
+
+	<select class="selectCmd action CmdSelectorAirMedia#id#"></select>
+
 	<script>
 		$.ajax({
 			type: 'POST',

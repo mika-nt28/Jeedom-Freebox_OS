@@ -1,0 +1,44 @@
+<div style="width: 200px;" class="cmd tooltips cmd-widget" data-type="action" data-subtype="message" data-cmd_id="#id#">
+	<br>
+	<select class="selectCmd CmdSelectorType#id#"></select>
+	<textarea class="form-control input-sm CmdMedia#id#" rows="2" placeholder="Url du media"
+		data-cmd_id="#id#"></textarea>
+	<br>
+	<a class="btn btn-success btn-xs execute cmdName">#name_display#</a>
+	<br>
+
+</div>
+<script>
+	$.ajax({
+		type: 'POST',
+		async: false,
+		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		data: {
+			action: 'get_airmediareceivers'
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {},
+		success: function (data) {
+			$('.CmdSelectorType#id#').html('');
+			jQuery.each(data.result, function (id, Receiver) {
+				$('.CmdSelectorType#id#').append($('<optgroup label="' + Receiver.name + '">'));
+				jQuery.each(Receiver.capabilities, function (key, value) {
+					if (value)
+						$('.CmdSelectorType#id#').append($('<option value="' + key + '">')
+							.text(key));
+				});
+			});
+		}
+	});
+	//$('.CmdSelectorMode#id# option[value="#state#"]').prop('selected', true);
+	$('.cmd[data-cmd_id=#id#] .execute').on('click', function () {
+		jeedom.cmd.execute({
+			id: '#id#',
+			value: {
+				titre: $('.CmdSelectorType#id#').val(),
+				message: $('.CmdMedia#id#').val()
+			}
+		});
+	});
+</script>

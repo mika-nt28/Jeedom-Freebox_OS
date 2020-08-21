@@ -78,7 +78,10 @@ class Free_Refresh
                     Free_Refresh::refresh_player($Equipement, $Free_API);
                     break;
                 case 'network':
-                    Free_Refresh::refresh_network($Equipement, $Free_API);
+                    Free_Refresh::refresh_network($Equipement, $Free_API, 'LAN');
+                    break;
+                case 'networkwifiguest':
+                    Free_Refresh::refresh_network($Equipement, $Free_API, 'WIFIGUEST');
                     break;
                 case 'system':
                     Free_Refresh::refresh_system($Equipement, $Free_API);
@@ -241,11 +244,16 @@ class Free_Refresh
         }
     }
 
-    private static function refresh_network($Equipement, $Free_API)
+    private static function refresh_network($Equipement, $Free_API, $_network = 'LAN')
     {
+        if ($_network == 'LAN') {
+            $_networkinterface = 'network_ping';
+        } else if ($_network == 'WIFIGUEST') {
+            $_networkinterface = 'network_wifiGuest_ping';
+        }
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
-                $result = $Free_API->universal_get('network_ping', $Command->getLogicalId());
+                $result = $Free_API->universal_get($_networkinterface, $Command->getLogicalId());
                 if (!$result['success']) {
                     log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
                     if ($result['error_code'] === "internal_error") {

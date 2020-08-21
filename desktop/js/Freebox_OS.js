@@ -211,7 +211,7 @@ function addCmdToTable(_cmd) {
 	$('.IPv6').hide();
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
 	if (template === 'network' || template === 'networkwifiguest') {
-		$('.IPv6').show();
+		// $('.IPv6').show(); //Fonction désactivée en attendant la fin de la mise à jour de la fonction
 	}
 	switch (template) {
 		case 'airmedia':

@@ -384,6 +384,8 @@ class Freebox_OS extends eqLogic
 			'homeadaptersName' => 'Home Adapters',
 			'networkID' => 'network',
 			'networkName' => 'Appareils connectés',
+			'networkwifiguestID' => 'networkwifiguest',
+			'networkwifiguestName' => 'Appareils connectés Wifi Invité',
 			'notificationID' => 'notification',
 			'notificationName' => 'notification',
 			'phoneID' => 'phone',
@@ -393,7 +395,7 @@ class Freebox_OS extends eqLogic
 			'wifiID' => 'wifi',
 			'wifiName' => 'Wifi',
 			'wifiguestID' => 'wifiguest',
-			'wifiguestName' => 'Wifi GUEST',
+			'wifiguestName' => 'Wifi Invité',
 			'wifiWPSID' => 'wifiWPS',
 			'wifiWPSName' => 'Wifi WPS'
 		);

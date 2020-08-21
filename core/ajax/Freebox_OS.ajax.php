@@ -89,6 +89,10 @@ try {
 			Free_CreateEq::createEq('network');
 			ajax::success(true);
 			break;
+		case 'Searchnetworkwifiguest':
+			Free_CreateEq::createEq('networkwifiguest');
+			ajax::success(true);
+			break;
 		case 'Searchphone':
 			Free_CreateEq::createEq('phone');
 			ajax::success(true);

@@ -361,6 +361,15 @@ class Free_API
             case 'network_ping':
                 $config = 'api/v8/lan/browser/pub/' . $id;
                 break;
+            case 'network_interfaces':
+                $config = 'api/v8/lan/browser/interfaces/';
+                break;
+            case 'network_wifiGuest':
+                $config = 'api/v8/lan/browser/wifiguest/';
+                break;
+            case 'network_wifiGuest_ping':
+                $config = 'api/v8/lan/browser/wifiguest/' . $id;
+                break;
             case 'system':
                 $config = 'api/v8/system';
                 break;
@@ -410,6 +419,9 @@ class Free_API
                 case 'network_ping':
                     return $result;
                     break;
+                case 'network_wifiGuest_ping':
+                    return $result;
+                    break;
                 case 'planning':
                     if ($result['result']['use_planning']) {
                         $value = 1;
@@ -439,7 +451,7 @@ class Free_API
             }
             return $value;
         } else {
-            if ($update == "network_ping") {
+            if ($update == "network_ping" || $update == "network_wifiGuest_ping") {
                 return $result;
             } else {
                 return false;

@@ -210,7 +210,7 @@ function addCmdToTable(_cmd) {
 	}
 	$('.IPv6').hide();
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
-	if (template == 'network') {
+	if (template === 'network' || template === 'networkwifiguest') {
 		$('.IPv6').show();
 	}
 	switch (template) {
@@ -220,6 +220,7 @@ function addCmdToTable(_cmd) {
 		case 'downloads':
 		case 'homeadapters':
 		case 'network':
+		case 'networkwifiguest':
 		case 'system':
 		case 'wifi':
 		case 'phone':

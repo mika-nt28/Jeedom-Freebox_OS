@@ -70,6 +70,9 @@ class Free_Update
             case 'network':
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
+            case 'networkwifiguest':
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                break;
             case 'system':
                 Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 if ($logicalId != 'reboot') {

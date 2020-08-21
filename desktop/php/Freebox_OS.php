@@ -63,6 +63,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					case 'wifi':
 					case 'player':
 					case 'network':
+					case 'networkwifiguest':
 						$status = 1;
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
@@ -106,6 +107,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					case 'player':
 					case 'parental':
 					case 'network':
+					case 'networkwifiguest':
 						break;
 					default:
 						$status = 1;

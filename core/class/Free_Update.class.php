@@ -90,11 +90,10 @@ class Free_Update
     private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
         $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");
-        log::add('Freebox_OS', 'debug', '│ Media type : ' . $_options['titre']);
-        log::add('Freebox_OS', 'debug', '│ Media : ' . $_options['message']);
+        log::add('Freebox_OS', 'debug', '│ Media type : ' . $_options['titre'] . ' -- Media : ' . $_options['message'] . ' -- Action : ' . $logicalId);
 
         if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
-            log::add('Freebox_OS', 'error', '│ [AirPlay] Impossible d\'envoyer la demande les paramètres sont incomplets' . $receivers->execCmd() . ' type :' . $_options['titre']);
+            log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, les paramètres sont incomplets' . $receivers->execCmd() . ' type :' . $_options['titre']);
             return;
         }
         $Parameter["media_type"] = $_options['titre'];
@@ -102,7 +101,6 @@ class Free_Update
         $Parameter["password"] = $_cmd->getConfiguration('password');
         switch ($logicalId) {
             case "airmediastart":
-                log::add('Freebox_OS', 'debug', '│ [AirPlay] AirMedia Start : ' . $Parameter["media"]);
                 $Parameter["action"] = "start";
                 $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
                 break;

@@ -113,7 +113,7 @@ try {
 			$result = array(
 				"Type_box" => config::byKey('TYPE_FREEBOX', 'Freebox_OS'),
 				"Type_box_name" => config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'),
-				"Type_box_tiles" => config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS')
+				"Type_box_tiles" => config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS', "NOK")
 			);
 			ajax::success($result);
 			break;

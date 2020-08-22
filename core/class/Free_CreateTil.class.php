@@ -27,7 +27,7 @@ class Free_CreateTil
             Free_CreateTil::createTil_modelBox();
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
-        if ($Type_box == 'OK') {
+        if ($Type_box == 'OK' || $create == "box") {
             $logicalinfo = Freebox_OS::getlogicalinfo();
             if (version_compare(jeedom::version(), "4", "<")) {
                 $templatecore_V4 = null;

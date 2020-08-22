@@ -34,7 +34,7 @@ if (!isConnect('admin')) {
                 <li class="cursor li_Freebox_OS_Summary" data-href="setting"><a><i class="fas fa-cogs"></i> {{Réglages}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="authentification"><a><i class="fas fa-rss"></i> {{Authentification}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="rights"><a><i class="fas fa-balance-scale-right"></i> {{Droits}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="room"><a><i class="far fa-object-group"></i> {{Objects}}</a></li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="room"><a><i class="far fa-object-group"></i> {{Objets}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="scan"><a><i class="fas fa-search-plus"></i> {{Scan des équipements}}</a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="end"><a><i class="fas fa-check"></i> {{Fin}}</a>
                 </li>
@@ -287,7 +287,7 @@ if (!isConnect('admin')) {
                     <thead>
                         <tr>
                             <th style="width: 320px">{{Pièce Freebox}}</th>
-                            <th>{{Objects Jeedom}}</th>
+                            <th>{{Objets Jeedom}}</th>
                         </tr>
                     </thead>
                     <tbody>

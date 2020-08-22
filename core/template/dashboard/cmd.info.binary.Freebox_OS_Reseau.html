@@ -340,6 +340,10 @@
 		.lan-workstation-1 {
 			background-position: 0 100%
 		}
+
+		.freeOSReseauxHide {
+
+		}
 	</style>
 	<div class="title #hide_name#">
 		<div class="cmdName">#name_display#</div>
@@ -369,8 +373,33 @@
 						$(".cmd[data-cmd_id=#id#] .lan-host-img").addClass('lan-' + data.configuration
 							.host_type + '-0');
 					}
+
+					jeedom.eqLogic.byId({
+						id: data.eqLogic_id,
+						success: function (data2) {
+							if (data2.configuration == undefined) {
+								if (data2.result.configuration.IPV4 == 0) {
+									$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").addClass('hidden');
+								}
+
+								if (data2.result.configuration.IPV6 == 0) {
+									$(".cmd[data-cmd_id=#id#] .ipv6").addClass('hidden');
+								}
+							} else {
+								if (data2.configuration.IPV4 == 0) {
+									$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").addClass('hidden');
+								}
+
+								if (data2.configuration.IPV6 == 0) {
+									$(".cmd[data-cmd_id=#id#] .ipv6").addClass('hidden');
+								}
+							}
+						},
+					});
 				}
 			});
+
+
 		}
 		jeedom.cmd.update['#id#']({
 			display_value: '#state#',

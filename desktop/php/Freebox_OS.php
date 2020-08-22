@@ -244,29 +244,38 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
 				<form class="form-horizontal col-sm-10">
 					<fieldset>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label IPV6">{{Affichage IPv4 sur le widget}}
+                                <sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv6 sur le widget}}"></i></sup>
+                            </label>
+                            <div class="col-sm-3">
+                                <label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" /></label>
+                            </div>
+                        </div>
 						<div class="form-group">
-							<label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}
-								<sup><i class="fas fa-question-circle" title="{{Cron }}"></i></sup>
+							<label class="col-sm-2 control-label">{{Affichage IPv6 sur le widget}}
+								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv6 sur le widget}}"></i></sup>
 							</label>
 							<div class="col-sm-3">
-								<div class="input-group">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{*/5 * * * *}}" />
-									<span class="input-group-btn">
+								<label class="checkbox-inline IPV6"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" /></label>
+							</div>
+						</div>
+                    </br>
+                        <div class="form-group">
+                            <label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}
+                                <sup><i class="fas fa-question-circle" title="{{Cron }}"></i></sup>
+                            </label>
+                            <div class="col-sm-3">
+                                <div class="input-group">
+                                    <input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{*/5 * * * *}}" />
+                                    <span class="input-group-btn">
 										<a class="btn btn-default cursor jeeHelper" data-helper="cron">
 											<i class="fas fa-question-circle"></i>
 										</a>
 									</span>
-								</div>
-							</div>
-						</div>
-						<div class="form-group IPv6">
-							<label class="col-sm-2 control-label IPV6">{{Affichage IPv6 sur le widget}}
-								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv6 sur le widget}}"></i></sup>
-							</label>
-							<div class="col-sm-3 IPV6">
-								<label class="checkbox-inline IPV6"><input id="IPV6" type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="deamoncheck" /></label>
-							</div>
-						</div>
+                                </div>
+                            </div>
+                        </div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{logicalId équipement}}
 								<sup><i class="fas fa-question-circle" title="{{logicalId de l'équipement Freebox}}"></i></sup>

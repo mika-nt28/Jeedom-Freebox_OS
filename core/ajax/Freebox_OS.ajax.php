@@ -106,7 +106,8 @@ try {
 			ajax::success(true);
 			break;
 		case 'Searchdisk':
-			ajax::success($Free_API->disk());
+			Free_CreateEq::createEq('disk');
+			ajax::success(true);
 			break;
 		case 'GetBox':
 			Free_CreateTil::createTil('box');

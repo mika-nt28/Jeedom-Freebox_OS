@@ -12,7 +12,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		display: none;
 	}
 
-	.eqLogicThumbnailDisplay .eqLogicThumbnailContainer {
+	.eqLogicThumbnailDisplayEquipement {
 		z-index: 0;
 		margin-top: 5px;
 		margin-bottom: 30px;
@@ -61,7 +61,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		</div>
 		<div class="divEquipements">
 			<legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
-			<div class="eqLogicThumbnailContainer">
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
@@ -102,7 +102,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		</div>
 		<div class="divTiles">
 			<legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
-			<div class="eqLogicThumbnailContainer">
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
@@ -152,7 +152,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		</div>
 		<div class="divParental">
 			<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parentaux}}</legend>
-			<div class="eqLogicThumbnailContainer">
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
@@ -279,23 +279,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
 				<form class="form-horizontal col-sm-10">
 					<fieldset>
-						<div class="form-group IPV4">
-							<label class="col-sm-2 control-label">{{Affichage IPv4 sur le widget}}
-								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 sur le widget}}"></i></sup>
+						<div class="form-group IPV">
+							<label class="col-sm-2 control-label">{{Affichage IP sur le widget}}
+								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
 							</label>
 							<div class="col-sm-3">
-								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" /></label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
 							</div>
 						</div>
-						<div class="form-group IPV6">
-							<label class="col-sm-2 control-label">{{Affichage IPv6 sur le widget}}
-								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv6 sur le widget}}"></i></sup>
-							</label>
-							<div class="col-sm-3">
-								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" /></label>
-							</div>
-						</div>
-						</br>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}
 								<sup><i class="fas fa-question-circle" title="{{Cron }}"></i></sup>

@@ -45,6 +45,8 @@ class Freebox_OS extends eqLogic
 	{
 		log::add('Freebox_OS', 'debug', '================= CRON JOUR ' . ' ==================');
 		Free_CreateEq::createEq('network');
+		Free_CreateEq::createEq('networkwifiguest');
+		Free_CreateEq::createEq('disk');
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 			Free_CreateTil::createTil('homeadapters_SP');
 		}

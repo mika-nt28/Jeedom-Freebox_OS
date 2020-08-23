@@ -181,7 +181,7 @@ class Free_Refresh
     }
     private static function refresh_connexion_4G($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('connexion4G', null, null, 'lte/config');
+        $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {

@@ -312,9 +312,6 @@ class Free_API
             case 'connexion':
                 $config = 'api/v8/connection/' . $update_type;
                 break;
-            case 'connexion4G':
-                $config = 'api/v8/connection/' . $update_type;
-                break;
             case 'disk':
                 $config = 'api/v8/storage/disk/' . $id;
                 break;
@@ -388,7 +385,7 @@ class Free_API
             $value = 0;
             switch ($update) {
                 case 'connexion':
-                    if ($update_type == 'lte/config') {
+                    if ($update_type == 'lte/config' && $boucle == 4) {
                         if ($result['result']['enabled']) {
                             $value = 1;
                         }

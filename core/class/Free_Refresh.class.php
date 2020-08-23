@@ -39,6 +39,7 @@ class Free_Refresh
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);
                     Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
                     Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
                     break;
                 case 'disk':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -147,6 +148,7 @@ class Free_Refresh
             }
         }
     }
+
     private static function refresh_connexion_FTTH($Equipement, $Free_API)
     {
         $result = $Free_API->universal_get('connexion', null, null, 'ftth');
@@ -171,6 +173,33 @@ class Free_Refresh
                             break;
                         case "sfp_pwr_rx":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_connexion_4G($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('connexion4G', null, null, 'lte/config');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "rx_used_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_used_rate']);
+                            break;
+                        case "rx_used_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_used_rate']);
+                            break;
+                        case "state":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            break;
+                        case "tx_used_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_used_rate']);
+                            break;
+                        case "tx_used_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_used_rate']);
                             break;
                     }
                 }

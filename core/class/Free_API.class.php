@@ -312,6 +312,9 @@ class Free_API
             case 'connexion':
                 $config = 'api/v8/connection/' . $update_type;
                 break;
+            case 'connexion4G':
+                $config = 'api/v8/connection/' . $update_type;
+                break;
             case 'disk':
                 $config = 'api/v8/storage/disk/' . $id;
                 break;

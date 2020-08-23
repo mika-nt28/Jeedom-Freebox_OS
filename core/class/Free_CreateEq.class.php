@@ -35,6 +35,7 @@ class Free_CreateEq
             case 'connexion':
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexionFTTH($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion4G($logicalinfo, $templatecore_V4);
                 break;
             case 'disk':
                 Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4);
@@ -64,6 +65,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexionFTTH($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion4G($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
@@ -143,11 +145,11 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('connexion', null, null, 'ftth');
         if ($result['sfp_present'] == null) {
-            $_sfp_present = 'Module Fibre Non Présent';
+            $_modul = 'Module Fibre Non Présent';
         } else {
-            $_sfp_present = 'Module Présent';
+            $_modul = 'Module Fibre Présent';
         }
-        log::add('Freebox_OS', 'debug', '│ ' . $_sfp_present);
+        log::add('Freebox_OS', 'debug', '│ ' . $_modul);
 
         if ($result != false && $result['sfp_present'] == 1) {
 
@@ -168,6 +170,27 @@ class Free_CreateEq
         } else {
             log::add('Freebox_OS', 'debug', '│ Pas de commande spécifique à ajouter');
         }
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_connexion4G($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
+        if ($result != false) {
+            $_modul = 'Module 4G Présent';
+            log::add('Freebox_OS', 'debug', '│ ' . $_modul);
+            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
+            $Connexion->AddCommand('Débit xDSL Descendant', 'tx_used_rate_xdsl', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Débit xDSL Montant', 'rx_used_rate_xdsl', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  21, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Débit 4G Descendant', 'tx_use_rate_lte', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  22, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Débit 4G Montant', 'rx_used_rate_lte', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  23, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Etat de la connexion xDSL 4G', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  24, '0', null, true);
+        } else {
+            $_modul = 'Module 4G Non Présent';
+            log::add('Freebox_OS', 'debug', '│ ' . $_modul);
+        }
+
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_disk($logicalinfo, $templatecore_V4)

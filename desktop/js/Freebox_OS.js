@@ -196,12 +196,8 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
 
 	if (template === 'network' || template === 'networkwifiguest') {
-		//$('.IPV6').show();
-		//$('.IPV4').show();
 		$('.IPV').show();
 	} else {
-		//$('.IPV6').hide();
-		//$('.IPV4').hide();
 		$('.IPV').hide();
 	}
 });

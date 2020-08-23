@@ -49,15 +49,6 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 
 });
 
-$('.MaFreebox').on('click', function () {
-	$('#md_modal').dialog({
-		title: "{{Paramètres de la Freebox}}",
-		height: 700,
-		width: 850
-	});
-	$('#md_modal').load('index.php?v=d&modal=MaFreebox&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
-});
-
 $('.authentification').on('click', function () {
 	$('#md_modal').dialog({
 		title: "{{Authentification Freebox}}",

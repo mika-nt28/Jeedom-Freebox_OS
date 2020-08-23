@@ -280,8 +280,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<form class="form-horizontal col-sm-10">
 					<fieldset>
 						<div class="form-group IPV4">
-							<label class="col-sm-2 control-label">{{Affichage IPv4 sur le widget}}
-								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 sur le widget}}"></i></sup>
+							<label class="col-sm-2 control-label">{{Affichage IP sur le widget}}
+								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6sur le widget}}"></i></sup>
 							</label>
 							<div class="col-sm-3">
 								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>

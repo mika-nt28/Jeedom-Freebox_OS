@@ -279,23 +279,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
 				<form class="form-horizontal col-sm-10">
 					<fieldset>
-						<div class="form-group IPV4">
+						<div class="form-group IPV">
 							<label class="col-sm-2 control-label">{{Affichage IP sur le widget}}
-								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6sur le widget}}"></i></sup>
+								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
 							</label>
 							<div class="col-sm-3">
 								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
 							</div>
 						</div>
-						<div class="form-group IPV6">
-							<label class="col-sm-2 control-label">{{Affichage IPv6 sur le widget}}
-								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv6 sur le widget}}"></i></sup>
-							</label>
-							<div class="col-sm-3">
-								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" /></label>
-							</div>
-						</div>
-						</br>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}
 								<sup><i class="fas fa-question-circle" title="{{Cron }}"></i></sup>

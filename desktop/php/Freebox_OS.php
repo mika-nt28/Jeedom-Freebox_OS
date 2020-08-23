@@ -284,7 +284,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 sur le widget}}"></i></sup>
 							</label>
 							<div class="col-sm-3">
-								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" /></label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
 							</div>
 						</div>
 						<div class="form-group IPV6">

@@ -116,7 +116,7 @@ class Free_Update
 
     private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
-        $result = $Free_API->universal_get('download_stats');
+        $result = $Free_API->universal_get('download_stats', null, null, null);
         if ($result != false) {
             switch ($logicalId) {
                 case "stop_dl":

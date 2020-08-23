@@ -37,6 +37,9 @@ class Free_Refresh
                     break;
                 case 'connexion':
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
                     break;
                 case 'disk':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -91,11 +94,11 @@ class Free_Refresh
                         if (is_object($Command)) {
                             switch ($Command->getLogicalId()) {
                                 case "wifiStatut":
-                                    $result = $Free_API->universal_get('wifi');
+                                    $result = $Free_API->universal_get('wifi', null, null, 'config');
                                     $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                                     break;
                                 case "wifiPlanning":
-                                    $result = $Free_API->universal_get('planning');
+                                    $result = $Free_API->universal_get('wifi', null, null, 'planning');
                                     $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                                     break;
                             }
@@ -139,6 +142,82 @@ class Free_Refresh
                             break;
                         case "state":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static function refresh_connexion_FTTH($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('connexion', null, null, 'ftth');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "link_type":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
+                            break;
+                        case "sfp_present":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_present']);
+                            break;
+                        case "sfp_has_signal":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_has_signal']);
+                            break;
+                        case "sfp_alim_ok":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
+                            break;
+                        case "sfp_pwr_tx":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
+                            break;
+                        case "sfp_pwr_rx":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_connexion_4G($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "rx_used_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_used_rate']);
+                            break;
+                        case "rx_used_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_used_rate']);
+                            break;
+                        case "state":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            break;
+                        case "tx_used_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_used_rate']);
+                            break;
+                        case "tx_used_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_used_rate']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_connexion_Config($Equipement, $Free_API)
+    {
+        $result =  $Free_API->universal_get('connexion', null, null, 'config');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "ping":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ping']);
+                            break;
+                        case "wol":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['wol']);
                             break;
                     }
                 }
@@ -247,13 +326,13 @@ class Free_Refresh
     private static function refresh_network($Equipement, $Free_API, $_network = 'LAN')
     {
         if ($_network == 'LAN') {
-            $_networkinterface = 'network_ping';
+            $update_type = 'pub';
         } else if ($_network == 'WIFIGUEST') {
-            $_networkinterface = 'network_wifiGuest_ping';
+            $update_type = 'wifiguest';
         }
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
-                $result = $Free_API->universal_get($_networkinterface, $Command->getLogicalId());
+                $result = $Free_API->universal_get('network_ping', $Command->getLogicalId(), null, $update_type);
                 if (!$result['success']) {
                     log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
                     if ($result['error_code'] === "internal_error") {
@@ -327,9 +406,9 @@ class Free_Refresh
                 default:
                     if (is_object($Command)) {
                         if ($Command->getLogicalId() == "4GStatut") {
-                            $result = $Free_API->universal_get('4G');
+                            $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
                         } else {
-                            $result = $Free_API->universal_get('system', null, null);
+                            $result = $Free_API->universal_get('system', null, null, null);
                         }
 
                         switch ($Command->getLogicalId()) {

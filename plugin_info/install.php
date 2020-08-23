@@ -46,6 +46,12 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'listAppelsPasse'); // Amélioration 20200820
 			removeLogicId($eqLogic, 'sonnerieDectOn'); // Amélioration 20200820
 			removeLogicId($eqLogic, 'sonnerieDectOff'); // Amélioration 20200820
+			removeLogicId($eqLogic, 'rate_down'); // Amélioration 20200823
+			removeLogicId($eqLogic, 'rate_up'); // Amélioration 20200823
+			removeLogicId($eqLogic, 'bandwidth_up'); // Amélioration 20200823
+			removeLogicId($eqLogic, 'bandwidth_down'); // Amélioration 20200823
+			removeLogicId($eqLogic, 'media'); // Amélioration 20200823
+			removeLogicId($eqLogic, 'state'); // Amélioration 20200823
 		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');

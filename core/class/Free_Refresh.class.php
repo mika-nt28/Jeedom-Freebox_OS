@@ -37,6 +37,8 @@ class Free_Refresh
                     break;
                 case 'connexion':
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
                     break;
                 case 'disk':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -139,6 +141,54 @@ class Free_Refresh
                             break;
                         case "state":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_connexion_FTTH($Equipement, $Free_API)
+    {
+        $result =  $Free_API->universal_get('connexionFTTH');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "link_type":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
+                            break;
+                        case "sfp_present":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_present']);
+                            break;
+                        case "sfp_has_signal":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_has_signal']);
+                            break;
+                        case "sfp_alim_ok":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
+                            break;
+                        case "sfp_pwr_tx":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
+                            break;
+                        case "sfp_pwr_rx":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_connexion_Config($Equipement, $Free_API)
+    {
+        $result =  $Free_API->universal_get('connexionConfig');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "ping":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ping']);
+                            break;
+                        case "wol":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['wol']);
                             break;
                     }
                 }

@@ -313,6 +313,12 @@ class Free_API
             case 'airmedia':
                 $config = 'api/v8/airmedia/receivers/';
                 break;
+            case 'connexionConfig':
+                $config = 'api/v8/connection/config';
+                break;
+            case 'connexionFTTH':
+                $config = 'api/v8/connection/ftth';
+                break;
             case 'disk':
                 $config = 'api/v8/storage/disk/' . $id;
                 break;

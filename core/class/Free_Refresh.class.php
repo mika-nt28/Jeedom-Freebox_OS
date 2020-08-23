@@ -93,11 +93,11 @@ class Free_Refresh
                         if (is_object($Command)) {
                             switch ($Command->getLogicalId()) {
                                 case "wifiStatut":
-                                    $result = $Free_API->universal_get('wifi');
+                                    $result = $Free_API->universal_get('wifi', null, null, 'config');
                                     $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                                     break;
                                 case "wifiPlanning":
-                                    $result = $Free_API->universal_get('planning');
+                                    $result = $Free_API->universal_get('wifi', null, null, 'planning');
                                     $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                                     break;
                             }
@@ -149,7 +149,7 @@ class Free_Refresh
     }
     private static function refresh_connexion_FTTH($Equipement, $Free_API)
     {
-        $result =  $Free_API->universal_get('connexionFTTH');
+        $result = $Free_API->universal_get('connexion', null, null, 'ftth');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -179,7 +179,7 @@ class Free_Refresh
     }
     private static function refresh_connexion_Config($Equipement, $Free_API)
     {
-        $result =  $Free_API->universal_get('connexionConfig');
+        $result =  $Free_API->universal_get('connexion', null, null, 'config');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -297,13 +297,13 @@ class Free_Refresh
     private static function refresh_network($Equipement, $Free_API, $_network = 'LAN')
     {
         if ($_network == 'LAN') {
-            $_networkinterface = 'network_ping';
+            $update_type = 'pub';
         } else if ($_network == 'WIFIGUEST') {
-            $_networkinterface = 'network_wifiGuest_ping';
+            $update_type = 'wifiguest';
         }
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
-                $result = $Free_API->universal_get($_networkinterface, $Command->getLogicalId());
+                $result = $Free_API->universal_get('network_ping', $Command->getLogicalId(), null, $update_type);
                 if (!$result['success']) {
                     log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
                     if ($result['error_code'] === "internal_error") {
@@ -377,9 +377,9 @@ class Free_Refresh
                 default:
                     if (is_object($Command)) {
                         if ($Command->getLogicalId() == "4GStatut") {
-                            $result = $Free_API->universal_get('4G');
+                            $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
                         } else {
-                            $result = $Free_API->universal_get('system', null, null);
+                            $result = $Free_API->universal_get('system', null, null, null);
                         }
 
                         switch ($Command->getLogicalId()) {

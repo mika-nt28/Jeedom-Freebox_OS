@@ -300,24 +300,17 @@ class Free_API
         }
     }
 
-    public function universal_get($update = 'wifi', $id = null, $boucle = 4)
+    public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config')
     {
         $config_log = null;
         $fonction = "GET";
         $Parameter = null;
         switch ($update) {
-            case '4G':
-                $config = 'api/v8/connection/lte/config';
-                $config_log = 'Etat 4G';
-                break;
             case 'airmedia':
                 $config = 'api/v8/airmedia/receivers/';
                 break;
-            case 'connexionConfig':
-                $config = 'api/v8/connection/config';
-                break;
-            case 'connexionFTTH':
-                $config = 'api/v8/connection/ftth';
+            case 'connexion':
+                $config = 'api/v8/connection/' . $update_type;
                 break;
             case 'disk':
                 $config = 'api/v8/storage/disk/' . $id;
@@ -350,10 +343,6 @@ class Free_API
             case 'parentalprofile':
                 $config = 'api/v8/profile';
                 break;
-            case 'planning':
-                $config = 'api/v8/wifi/planning';
-                $config_log = 'Etat du Planning du Wifi';
-                break;
             case 'player':
                 $config = 'api/v8/player';
                 break;
@@ -362,19 +351,10 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network':
-                $config = 'api/v8/lan/browser/pub';
+                $config = 'api/v8/lan/browser/' . $update_type;
                 break;
             case 'network_ping':
-                $config = 'api/v8/lan/browser/pub/' . $id;
-                break;
-            case 'network_interfaces':
-                $config = 'api/v8/lan/browser/interfaces/';
-                break;
-            case 'network_wifiGuest':
-                $config = 'api/v8/lan/browser/wifiguest/';
-                break;
-            case 'network_wifiGuest_ping':
-                $config = 'api/v8/lan/browser/wifiguest/' . $id;
+                $config = 'api/v8/lan/browser/' . $update_type . '/' . $id;
                 break;
             case 'system':
                 $config = 'api/v8/system';
@@ -390,15 +370,7 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'wifi':
-                $config = 'api/v8/wifi/config';
-                $config_log = 'Etat du Wifi';
-                break;
-            case 'wifi_guest':
-                $config = 'api/v8/wifi/custom_key';
-                break;
-            case 'wifi_wps':
-                $config = 'api/v8/wifi/wps/config';
-                $config_log = 'Etat du Wifi WPS';
+                $config = 'api/v8/wifi/' . $update_type;
                 break;
             case 'PortForwarding':
                 $config = '/api/v8/fw/redir/';
@@ -412,9 +384,14 @@ class Free_API
         if ($result['success']) {
             $value = 0;
             switch ($update) {
-                case '4G':
-                    if ($result['result']['enabled']) {
-                        $value = 1;
+                case 'connexion':
+                    if ($update_type == 'lte/config') {
+                        if ($result['result']['enabled']) {
+                            $value = 1;
+                        }
+                        return $value;
+                    } else {
+                        return $result['result'];
                     }
                     break;
                 case 'disk':
@@ -425,14 +402,6 @@ class Free_API
                 case 'network_ping':
                     return $result;
                     break;
-                case 'network_wifiGuest_ping':
-                    return $result;
-                    break;
-                case 'planning':
-                    if ($result['result']['use_planning']) {
-                        $value = 1;
-                    }
-                    break;
                 case 'system':
                     if ($boucle != null) {
                         return $result['result'][$boucle];
@@ -441,8 +410,18 @@ class Free_API
                     }
                     break;
                 case 'wifi':
-                    if ($result['result']['enabled']) {
-                        $value = 1;
+                    if ($update_type == 'config') {
+                        if ($result['result']['enabled']) {
+                            $value = 1;
+                        }
+                        return $value;
+                    } else if ($update_type == 'planning') {
+                        if ($result['result']['use_planning']) {
+                            $value = 1;
+                        }
+                        return $value;
+                    } else {
+                        return $result['result'];
                     }
                     break;
                 default:
@@ -457,7 +436,7 @@ class Free_API
             }
             return $value;
         } else {
-            if ($update == "network_ping" || $update == "network_wifiGuest_ping") {
+            if ($update == "network_ping") {
                 return $result;
             } else {
                 return false;
@@ -508,11 +487,6 @@ class Free_API
                 $parametre = $jsontestprofile;
                 $config = "api/v8/network_control/" . $id;
                 break;
-            case 'planning':
-                $config = 'api/v8/wifi/planning';
-                $config_log = 'Mise à jour : Planning du Wifi';
-                $config_commande = 'use_planning';
-                break;
             case 'player_ID_ctrl':
                 $config = 'api/v8/player/' . $id . '/api/v6/control/mediactrl';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
@@ -551,6 +525,11 @@ class Free_API
                 $config = 'api/v8/wifi/wps/config';
                 $config_commande = 'enabled';
                 $config_log = 'Mise à jour de : Etat du Wifi WPS';
+                break;
+            case 'planning':
+                $config = 'api/v8/wifi/planning';
+                $config_log = 'Mise à jour : Planning du Wifi';
+                $config_commande = 'use_planning';
                 break;
             case 'set_tiles':
                 if ($id != null) {

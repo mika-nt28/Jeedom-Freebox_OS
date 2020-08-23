@@ -73,9 +73,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
-                // Free_CreateEq::createEq_wifi_wps($logicalinfo, $templatecore_V4);
                 //Free_CreateEq::createEq_airmedia_sp($logicalinfo, $templatecore_V4);
-                //Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -103,7 +101,7 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['airmediaName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('airmedia', null, null);
+        $Free_API->universal_get('airmedia', null, null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -118,7 +116,7 @@ class Free_CreateEq
             $updateiconeADSL = false;
         };
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('connexionFTTH');
+        $result = $Free_API->universal_get('connexion', null, null, 'ftth');
         if ($result['sfp_present'] == null) {
             $_bandwidth_down_value = null;
             $_bandwidth_down_unit = 'Mb/s';
@@ -143,7 +141,7 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('connexionFTTH');
+        $result = $Free_API->universal_get('connexion', null, null, 'ftth');
         if ($result['sfp_present'] == null) {
             $_sfp_present = 'Module Fibre Non Présent';
         } else {
@@ -160,8 +158,6 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
                 $updateiconeADSL = false;
             };
-            $Free_API = new Free_API();
-            $Free_API->universal_get('connexionFTTH');
             $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
             $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateiconeADSL, true);
             $Connexion->AddCommand('Module Fibre présent', 'sfp_present', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  21, '0', $updateiconeADSL, true);
@@ -309,7 +305,7 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiguestName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('network_interfaces', null, null);
+        $Free_API->universal_get('network', null, null, 'interfaces');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -318,17 +314,17 @@ class Free_CreateEq
         if ($_network == 'LAN') {
             $_networkname = $logicalinfo['networkName'];
             $_networkID = $logicalinfo['networkID'];
-            $_networkinterface = 'network';
+            $_networkinterface = 'pub';
         } else if ($_network == 'WIFIGUEST') {
             $_networkname = $logicalinfo['networkwifiguestName'];
             $_networkID = $logicalinfo['networkwifiguestID'];
-            $_networkinterface = 'network_wifiGuest';
+            $_networkinterface = 'wifiGuest';
         }
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
         log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
-        foreach ($Free_API->universal_get($_networkinterface) as $Equipement) {
+        foreach ($Free_API->universal_get('network', null, null, $_networkinterface) as $Equipement) {
             if ($Equipement['primary_name'] != '') {
                 $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
                 $Command->setConfiguration('host_type', $Equipement['host_type']);
@@ -505,18 +501,19 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'ENERGY_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconeWifiPlanningOff, 0, 'default', 'default', 7, '0', $updateiconeWifi, false);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_wifi_guest($logicalinfo, $templatecore_V4)
-    {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiguestName']);
-        $Free_API = new Free_API();
-        $Free_API->universal_get('network_wifiGuest', null, null);
-        log::add('Freebox_OS', 'debug', '└─────────');
-    }
+
     private static function createEq_wifi_wps($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiWPSName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('wifi_wps', null, null);
+        $Free_API->universal_get('wifi', null, null, 'wps/config');
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_mac_filter($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiWPSName']);
+        $Free_API = new Free_API();
+        $Free_API->universal_get('wifi', null, null, 'mac_filter');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 }

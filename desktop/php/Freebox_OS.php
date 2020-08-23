@@ -12,7 +12,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		display: none;
 	}
 
-	.eqLogicThumbnailDisplay .eqLogicThumbnailContainer {
+	.eqLogicThumbnailDisplayEquipement {
 		z-index: 0;
 		margin-top: 5px;
 		margin-bottom: 30px;
@@ -61,7 +61,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		</div>
 		<div class="divEquipements">
 			<legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
-			<div class="eqLogicThumbnailContainer">
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
@@ -102,7 +102,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		</div>
 		<div class="divTiles">
 			<legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
-			<div class="eqLogicThumbnailContainer">
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
@@ -152,7 +152,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		</div>
 		<div class="divParental">
 			<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parentaux}}</legend>
-			<div class="eqLogicThumbnailContainer">
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {

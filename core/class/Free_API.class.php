@@ -436,6 +436,8 @@ class Free_API
         } else {
             if ($update == "network_ping") {
                 return $result;
+            } else if ($update_type == 'lte/config') {
+                return $result['msg'];
             } else {
                 return false;
             }
@@ -454,10 +456,9 @@ class Free_API
                 break;
             case 'notification_ID':
                 $config = 'api/v8/notif/targets/' . $id;
-                break;
-            case 'notification_DELETE_ID':
-                $config = 'api/v8/notif/targets/' . $id;
-                $fonction = "DELETE";
+                if ($_options == 'DELETE') {
+                    $fonction = "DELETE";
+                }
                 break;
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
@@ -497,12 +498,8 @@ class Free_API
                 $config_commande = 'url';
                 $fonction = "POST";
                 break;
-            case 'phone_dell_call':
-                $config = 'api/v8/call/log/delete_all';
-                $fonction = "POST";
-                break;
-            case 'phone_read_call':
-                $config = 'api/v8/call/log/mark_all_as_read';
+            case 'phone':
+                $config = 'api/v8/call/log/' . $_options;
                 $fonction = "POST";
                 break;
             case 'reboot':
@@ -515,19 +512,13 @@ class Free_API
                 $config_log = 'Mise à jour de : WakeOnLAN';
                 break;
             case 'wifi':
-                $config = 'api/v8/wifi/config';
-                $config_commande = 'enabled';
-                $config_log = 'Mise à jour de : Etat du Wifi';
-                break;
-            case 'wifi_wps':
-                $config = 'api/v8/wifi/wps/config';
-                $config_commande = 'enabled';
-                $config_log = 'Mise à jour de : Etat du Wifi WPS';
-                break;
-            case 'planning':
-                $config = 'api/v8/wifi/planning';
-                $config_log = 'Mise à jour : Planning du Wifi';
-                $config_commande = 'use_planning';
+                $config = 'api/v8/wifi/' . $_options;
+                if ($_options == 'planning') {
+                    $config_commande = 'use_planning';
+                } else {
+                    $config_commande = 'enabled';
+                }
+                $config_log = 'Mise à jour de : Etat du Wifi ' . $_options;
                 break;
             case 'set_tiles':
                 if ($id != null) {
@@ -553,7 +544,7 @@ class Free_API
             $return = $this->fetch('/' . $config, array("mac" => $id, "password" => ""), $fonction);
         } else if ($update == 'set_tiles') {
             $return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
-        } else if ($update == 'reboot' || $update == 'phone_dell_call' || $update == 'phone_read_call') {
+        } else if ($update == 'phone') {
             $return = $this->fetch('/' . $config . '/', null, $fonction);
         } else {
             if ($config_log != null) {
@@ -567,10 +558,11 @@ class Free_API
             switch ($update) {
                 case 'wifi':
                 case '4G':
-                    return $return['result']['enabled'];
-                    break;
-                case 'planning':
-                    return $return['result']['use_planning'];
+                    if ($_options == 'planning') {
+                        return $return['result']['use_planning'];
+                    } else {
+                        return $return['result']['enabled'];
+                    };
                     break;
                 case 'settile':
                     return $return['result'];

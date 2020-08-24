@@ -57,7 +57,7 @@ class Free_Refresh
                     break;
                 case 'homeadapters':
                     foreach ($Equipement->getCmd('info') as $Command) {
-                        $result = $Free_API->universal_get('homeadapters    ', $Command->getLogicalId(), null, null);
+                        $result = $Free_API->universal_get('homeadapters', $Command->getLogicalId(), null, null);
                         if ($result != false) {
                             if ($result['status'] == 'active') {
                                 $homeadapters_value = 1;
@@ -182,7 +182,7 @@ class Free_Refresh
     private static function refresh_connexion_4G($Equipement, $Free_API)
     {
         $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
-        if ($result != false) {
+        if ($result != false && $result == 'Aucun module 4G détecté') {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
@@ -290,32 +290,29 @@ class Free_Refresh
     {
         $result = $Free_API->nb_appel_absence();
         if ($result != false) {
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels manqués : ' . $result['missed'] . ' -- Liste des appels manqués : ' . $result['list_missed']);
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels reçus : ' . $result['accepted'] . ' -- Liste des appels reçus : ' . $result['list_accepted']);
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels passés : ' . $result['outgoing'] . ' -- Liste des appels passés : ' . $result['list_outgoing']);
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "nbmissed":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['missed']);
-                            log::add('Freebox_OS', 'debug', '>───────── Appels manqués : ' . $result['missed']);
                             break;
                         case "nbaccepted":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['accepted']);
-                            log::add('Freebox_OS', 'debug', '>───────── Appels reçus : ' . $result['accepted']);
                             break;
                         case "nboutgoing":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['outgoing']);
-                            log::add('Freebox_OS', 'debug', '>───────── Appels passés : ' . $result['outgoing']);
                             break;
                         case "listmissed":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_missed']);
-                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels manqués : ' . $result['list_missed']);
                             break;
                         case "listaccepted":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_accepted']);
-                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels reçus : ' . $result['list_accepted']);
                             break;
                         case "listoutgoing":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_outgoing']);
-                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels passés : ' . $result['list_outgoing']);
                             break;
                     }
                 }
@@ -422,7 +419,7 @@ class Free_Refresh
                                 $_uptime = str_replace(' minute ', 'min ', $_uptime);
                                 $_uptime = str_replace(' minutes ', 'min ', $_uptime);
                                 $_uptime = str_replace(' secondes', 's', $_uptime);
-                                $_uptimet = str_replace(' seconde', 's', $_uptime);
+                                $_uptime = str_replace(' seconde', 's', $_uptime);
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $_uptime);
                                 break;
                             case "board_name":

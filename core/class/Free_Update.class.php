@@ -150,17 +150,11 @@ class Free_Update
         $result = $Free_API->nb_appel_absence();
         if ($result != false) {
             switch ($logicalId) {
-                case "sonnerieDectOn":
-                    $Free_API->ringtone('ON');
-                    break;
-                case "sonnerieDectOff":
-                    $Free_API->ringtone('OFF');
-                    break;
                 case "phone_dell_call":
-                    $Free_API->universal_put(null, 'phone_dell_call', null, null, null);
+                    $Free_API->universal_put(null, 'phone', null, null, 'delete_all');
                     break;
                 case "phone_read_call":
-                    $Free_API->universal_put(null, 'phone_read_call', null, null, null);
+                    $Free_API->universal_put(null, 'phone', null, null, 'mark_all_as_read');
                     break;
             }
         }
@@ -171,9 +165,6 @@ class Free_Update
         switch ($logicalId) {
             case "reboot":
                 $Free_API->universal_put(null, 'reboot', null, null, null);
-                break;
-            case "update":
-                $Free_API->Updatesystem();
                 break;
             case '4GOn':
                 $Free_API->universal_put(1, '4G', null, null, null);
@@ -188,16 +179,16 @@ class Free_Update
     {
         switch ($logicalId) {
             case 'wifiOn':
-                $Free_API->universal_put(1, 'wifi', null, null, null);
+                $Free_API->universal_put(1, 'wifi', null, null, 'config');
                 break;
             case 'wifiOff':
-                $Free_API->universal_put(0, 'wifi', null, null, null);
+                $Free_API->universal_put(0, 'wifi', null, null, 'config');
                 break;
             case 'wifiPlanningOn':
-                $Free_API->universal_put(1, 'planning', null, null, null);
+                $Free_API->universal_put(1, 'wifi', null, null, 'planning');
                 break;
             case 'wifiPlanningOff':
-                $Free_API->universal_put(0, 'planning', null, null, null);
+                $Free_API->universal_put(0, 'wifi', null, null, 'planning');
                 break;
         }
     }

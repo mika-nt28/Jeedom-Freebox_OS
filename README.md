@@ -10,7 +10,7 @@ Plugin permetant de récupérer toutes les infos disponibles sur la Freebox et p
 
 _[Documentation](http://mika-nt28.github.io/Documentations/Freebox_OS/#language#/)_
 
-_[changelog](https://mika-nt28.github.io/Documentations/Freebox_OS/#language#/changelog)_
+_[changelog](https://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/changelog)_
 
 _[Fil d'actualité du Plugin](https://community.jeedom.com/t/info-plugin-freebox-mise-a-jour-des-composants-de-la-delta-tiles-systeme/30673/27)_
 

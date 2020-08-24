@@ -305,39 +305,38 @@ class Free_API
         $config_log = null;
         $fonction = "GET";
         $Parameter = null;
+        if ($id != null) {
+            $id = '/' . $id;
+        } else if ($id == null && $update == 'tiles') {
+            $id = '/all';
+        }
         switch ($update) {
             case 'airmedia':
                 $config = 'api/v8/airmedia/receivers/';
                 break;
             case 'connexion':
                 $config = 'api/v8/connection/' . $update_type;
+                $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
                 break;
             case 'disk':
-                $config = 'api/v8/storage/disk/' . $id;
+                $config = 'api/v8/storage/disk' . $id;
                 break;
             case 'download_stats':
                 $config = 'api/v8/downloads/stats/';
                 break;
             case 'homeadapters':
-                $config = 'api/v8/home/adapters';
-                break;
-            case 'homeadapters_status':
-                $config = 'api/v8/home/adapters/' . $id;
+                $config = 'api/v8/home/adapters' . $id;
                 break;
             case 'notification':
                 $config = 'api/v8/notif/targets';
                 $config_log = 'Liste des notifications';
                 break;
             case 'notification_ID':
-                $config = 'api/v8/notif/targets/' . $id;
+                $config = 'api/v8/notif/targets' . $id;
                 $config_log = 'Etat des notifications';
                 break;
             case 'parental':
-                $config = 'api/v8/network_control';
-                $config_log = 'Etat Contrôle Parental';
-                break;
-            case 'parental_ID':
-                $config = 'api/v8/network_control/' . $id;
+                $config = 'api/v8/network_control' . $id;
                 $config_log = 'Etat Contrôle Parental';
                 break;
             case 'parentalprofile':
@@ -347,14 +346,14 @@ class Free_API
                 $config = 'api/v8/player';
                 break;
             case 'player_ID':
-                $config = 'api/v8/player/' . $id . '/api/v6/status';
+                $config = 'api/v8/player' . $id . '/api/v6/status';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network':
                 $config = 'api/v8/lan/browser/' . $update_type;
                 break;
             case 'network_ping':
-                $config = 'api/v8/lan/browser/' . $update_type . '/' . $id;
+                $config = 'api/v8/lan/browser/' . $update_type  . $id;
                 break;
             case 'system':
                 $config = 'api/v8/system';
@@ -363,14 +362,12 @@ class Free_API
                 $config = 'api/v8/switch/status';
                 break;
             case 'tiles':
-                $config = 'api/v8/home/tileset/all';
-                break;
-            case 'tiles_ID':
-                $config = 'api/v8/home/tileset/' . $id;
+                $config = 'api/v8/home/tileset' . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $update_type;
+                $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';
                 break;
             case 'PortForwarding':
                 $config = '/api/v8/fw/redir/';
@@ -389,6 +386,7 @@ class Free_API
                         if ($result['result']['enabled']) {
                             $value = 1;
                         }
+                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
                         return $value;
                     } else {
                         return $result['result'];
@@ -414,26 +412,26 @@ class Free_API
                         if ($result['result']['enabled']) {
                             $value = 1;
                         }
+                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
                         return $value;
                     } else if ($update_type == 'planning') {
                         if ($result['result']['use_planning']) {
                             $value = 1;
                         }
+                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
                         return $value;
                     } else {
                         return $result['result'];
                     }
                     break;
                 default:
+                    if ($config_log != null && $id != null && $id != '/all') {
+                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
+                    }
                     return $result['result'];
                     break;
             }
 
-            if ($config_log != null && $id == null) {
-                log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
-            } else if ($config_log != null && $id != null) {
-                log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
-            }
             return $value;
         } else {
             if ($update == "network_ping") {

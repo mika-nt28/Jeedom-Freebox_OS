@@ -57,7 +57,7 @@ class Free_Refresh
                     break;
                 case 'homeadapters':
                     foreach ($Equipement->getCmd('info') as $Command) {
-                        $result = $Free_API->universal_get('homeadapters_status', $Command->getLogicalId());
+                        $result = $Free_API->universal_get('homeadapters    ', $Command->getLogicalId(), null, null);
                         if ($result != false) {
                             if ($result['status'] == 'active') {
                                 $homeadapters_value = 1;
@@ -70,7 +70,7 @@ class Free_Refresh
                     break;
                 case 'parental':
                     foreach ($Equipement->getCmd('info') as $Command) {
-                        $results = $Free_API->universal_get('parental_ID', $Equipement->getConfiguration('action'));
+                        $results = $Free_API->universal_get('parental', $Equipement->getConfiguration('action'));
                         $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
                     }
                     break;
@@ -446,7 +446,7 @@ class Free_Refresh
 
     private static function refresh_default($Equipement, $Free_API)
     {
-        $results = $Free_API->universal_get('tiles_ID', $Equipement->getLogicalId());
+        $results = $Free_API->universal_get('tiles', $Equipement->getLogicalId(), null, null);
 
         if ($results != false) {
             foreach ($results as $result) {
@@ -454,14 +454,12 @@ class Free_Refresh
                     $cmd = $Equipement->getCmd('info', $data['ep_id']);
                     if (!is_object($cmd)) break;
 
-                    log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
                     if ($data['name'] == 'pushed') {
                         $nb_pushed = count($data['history']);
                         $nb_pushed_k = $nb_pushed - 1;
                         $_value_history = $data['history'][$nb_pushed_k]['value'];
                         log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
                     };
-
 
                     switch ($cmd->getSubType()) {
                         case 'numeric':
@@ -543,7 +541,7 @@ class Free_Refresh
                 }
             }
         }
-        log::add('Freebox_OS', 'debug', '└─────────');
+        //log::add('Freebox_OS', 'debug', '└─────────');
     }
 
     private static function refresh_player($Equipement, $Free_API)

@@ -17,7 +17,7 @@ _[Documentation](http://mika-nt28.github.io/Documentations/Freebox_OS/#language#
 
 _[changelog](https://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/changelog)_
 
-_[Fil d'actualité du Plugin](https://community.jeedom.com/t/info-plugin-freebox-mise-a-jour-des-composants-de-la-delta-tiles-systeme/30673/27)_
+_[Fil d'actualité du Plugin](https://community.jeedom.com/t/info-plugin-freebox-mise-a-jour-des-composants-de-la-delta-tiles-systeme/30673)_
 
 ## Demande d'améliorations ou d'aide:
 

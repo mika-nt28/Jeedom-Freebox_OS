@@ -1,4 +1,4 @@
-<img align="right" src="plugin_info/Freebox_OS_icon.png" width="150">
+<img align="right" src="https://raw.githubusercontent.com/mika-nt28/Jeedom-Freebox_OS/master/plugin_info/freebox_os_icon.png" width="150">
 
 # Jeedom - Plugin Freebox OS
 

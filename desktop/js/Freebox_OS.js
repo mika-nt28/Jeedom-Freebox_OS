@@ -6,10 +6,12 @@ $("#table_cmd").sortable({
 	tolerance: "intersect",
 	forcePlaceholderSize: true
 });
+
 $('#bt_resetSearch').off('click').on('click', function () {
 	$('#in_searchEqlogic').val('')
 	$('#in_searchEqlogic').keyup();
 })
+
 $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _options) {
 	var camera = jQuery.parseJSON(_options);
 	bootbox.confirm("{{Une caméra Freebox a été détectée (<b>" + camera.name + "</b>)<br>Voulez-vous l’ajouter au Plugin Caméra ?}}", function (result) {
@@ -21,6 +23,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 					action: 'createCamera',
 					name: camera.name,
 					id: camera.id,
+					room: camera.room,
 					url: camera.url
 				},
 				dataType: 'json',
@@ -38,19 +41,21 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 						message: "{{La caméra (<b>" + camera.name + "</b>) a été ajoutée avec succès}}",
 						level: 'success'
 					});
+					window.location.reload();
 				}
 			});
 		}
 	});
 
 });
-$('.MaFreebox').on('click', function () {
+
+$('.authentification').on('click', function () {
 	$('#md_modal').dialog({
-		title: "{{Paramètres de la Freebox}}",
+		title: "{{Authentification Freebox}}",
 		height: 700,
 		width: 850
 	});
-	$('#md_modal').load('index.php?v=d&modal=MaFreebox&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
+	$('#md_modal').load('index.php?v=d&modal=authentification&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
 });
 
 $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
@@ -84,6 +89,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 	});
 
 });
+
 $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 	$('#div_alert').showAlert({
 		message: '{{Recherche <b>Contrôle Parental</b>}}',
@@ -142,11 +148,14 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 				level: 'success'
 
 			});
-			//window.location.reload();
+			if (!data.result) {
+				window.location.reload();
+			}
 		}
 	});
 
 });
+
 $('.Equipement').on('click', function () {
 	$('#div_alert').showAlert({
 		message: '{{Recherche des <b>commandes</b>}}',
@@ -183,6 +192,14 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
+
+	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+
+	if (template === 'network' || template === 'networkwifiguest') {
+		$('.IPV').show();
+	} else {
+		$('.IPV').hide();
+	}
 });
 
 $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function () {
@@ -190,41 +207,30 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', functi
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 });
-  
+
+setupPage();
 
 function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
 	}
-	var inverse = $('<span>');
+
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
 	switch (template) {
 		case 'airmedia':
-		case 'airplay':
 		case 'connexion':
-		case 'downloads':
-		case 'parental':
-		case 'phone':
-		case 'player':
-		case 'wifi':
-			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
-			break;
 		case 'disk':
-		case 'Home Adapters':
-		case 'HomeAdapters':
+		case 'downloads':
 		case 'homeadapters':
 		case 'network':
+		case 'networkwifiguest':
 		case 'system':
+		case 'wifi':
+		case 'phone':
 			$('.Equipement').show();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').hide();
 			break;
 		default:
 			$('.Equipement').hide();
-			$('.Add_Equipement').hide();
-			$('.Equipement_tiles').show();
 			break;
 	}
 	if (!isset(_cmd)) {
@@ -282,4 +288,35 @@ function addCmdToTable(_cmd) {
 	}
 	jeedom.cmd.changeType($('#table_cmd tbody tr').last(), init(_cmd.subType));
 
+}
+
+function setupPage() {
+	if (!divEquipements) {
+		$(".eqLogicThumbnailDisplay .divEquipements").addClass('freeOSHidenDiv');
+	}
+	if (!divTiles) {
+		$(".eqLogicThumbnailDisplay .divTiles").addClass('freeOSHidenDiv');
+	}
+	if (!divParental) {
+		$(".eqLogicThumbnailDisplay .divParental").addClass('freeOSHidenDiv');
+	}
+
+	$.ajax({
+		type: "POST",
+		url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+		data: {
+			action: "GetBox",
+		},
+		dataType: 'json',
+		error: function (request, status, error) {
+			handleAjaxError(request, status, error);
+		},
+		success: function (data) {
+			result = data.result.Type_box_tiles;
+
+			if (result !== "OK") {
+				$(".titleAction").addClass('freeOSHidenDiv');
+			}
+		}
+	});
 }

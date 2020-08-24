@@ -6,35 +6,51 @@ $plugin = plugin::byId('Freebox_OS');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
 ?>
+
+<style type="text/css">
+	.freeOSHidenDiv {
+		display: none;
+	}
+
+	.eqLogicThumbnailDisplayEquipement {
+		z-index: 0;
+		margin-top: 5px;
+		margin-bottom: 30px;
+		background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important;
+		transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0s;
+	}
+</style>
+
+
 <div class="row row-overflow">
 	<div class="col-xs-12 eqLogicThumbnailDisplay">
 		<legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
 		<div class="eqLogicThumbnailContainer">
 
-			<div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
-				<i class="fas fa-bullseye"></i>
-				<br />
-				<span>{{Scan}}<br />{{équipements standards}}</span>
-			</div>
-			<div class="cursor eqLogicAction logoPrimary" data-action="tile">
-				<i class="fas fa-search"></i>
+			<div class="cursor authentification logoWarning">
+				<i class="fas fa-rss"></i>
 				<br>
-				<span>{{Scan}}<br />{{Tiles}}</span>
-			</div>
-			<div class="cursor eqLogicAction logoPrimary" data-action="control_parental">
-				<i class="fas fa-user-shield"></i>
-				<br>
-				<span>{{Scan}}<br />{{Contrôle parental}}</span>
+				<span>{{Appairage}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
 				<i class="fas fa-wrench"></i>
 				<br>
 				<span>{{Configuration}}</span>
 			</div>
-			<div class="cursor MaFreebox logoSecondary">
-				<i class="fas fa-sitemap"></i>
+			<div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
+				<i class="fas fa-bullseye"></i>
+				<br />
+				<span>{{Scan}}<br />{{équipements standards}}</span>
+			</div>
+			<div class="cursor eqLogicAction logoPrimary" data-action="control_parental">
+				<i class="fas fa-user-shield"></i>
 				<br>
-				<span>{{Paramètres de la Freebox}}</span>
+				<span>{{Scan}}<br />{{Contrôle parental}}</span>
+			</div>
+			<div class="cursor eqLogicAction logoPrimary titleAction" data-action="tile">
+				<i class="fas fa-search"></i>
+				<br>
+				<span>{{Scan}}<br />{{Tiles}}</span>
 			</div>
 		</div>
 		<div class="input-group" style="margin:5px;">
@@ -43,135 +59,136 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<a id="bt_resetSearch" class="btn" style="width:30px"><i class="fas fa-times"></i> </a>
 			</div>
 		</div>
-		<legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
-		<div class="eqLogicThumbnailContainer">
-			<?php
-			$status = 0;
-			foreach ($eqLogics as $eqLogic) {
-				if ($eqLogic->getConfiguration('type') == 'player') {
-					$template = $eqLogic->getConfiguration('type');
-				} else {
-					$template = $eqLogic->getLogicalId();
+		<div class="divEquipements">
+			<legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
+				<?php
+				$status = 0;
+				foreach ($eqLogics as $eqLogic) {
+					if ($eqLogic->getConfiguration('type') == 'player') {
+						$template = $eqLogic->getConfiguration('type');
+					} else {
+						$template = $eqLogic->getLogicalId();
+					}
+					switch ($template) {
+						case 'airmedia':
+						case 'connexion':
+						case 'downloads':
+						case 'system':
+						case 'disk':
+						case 'phone':
+						case 'wifi':
+						case 'player':
+						case 'network':
+						case 'networkwifiguest':
+							$status = 1;
+							$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+							echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+							echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
+							echo '<br>';
+							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+							echo '</div>';
+							break;
+					}
 				}
-				switch ($template) {
-					case 'AirPlay':
-					case 'airplay':
-					case 'airmedia':
-					case 'connexion':
-					case 'ADSL':
-					case 'downloads':
-					case 'Downloads':
-					case 'system':
-					case 'System':
-					case 'disk':
-					case 'Disque':
-					case 'disk':
-					case 'phone':
-					case 'Phone':
-					case 'wifi':
-					case 'Wifi':
-					case 'player':
-					case 'Player':
-					case 'network':
-					case 'Reseau':
+				if ($status == 0) {
+					$divEquipements = false;
+					echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un \"Scan équipements standards\".}}</span></center>";
+				} else {
+					$divEquipements = true;
+				}
+				?>
+			</div>
+		</div>
+		<div class="divTiles">
+			<legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
+				<?php
+				$status = 0;
+				foreach ($eqLogics as $eqLogic) {
+					if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'alarm_control' || $eqLogic->getConfiguration('type') == 'alarm_sensor' || $eqLogic->getConfiguration('type') == 'alarm_remote') {
+						$template = $eqLogic->getConfiguration('type');
+						$icon = $template;
+					} else {
+						$template = $eqLogic->getLogicalId();
+						if ($template == 'homeadapters') {
+							$icon = $template;
+						} else {
+							$icon = 'default';
+						}
+					}
+					switch ($template) {
+						case 'airmedia':
+						case 'connexion':
+						case 'downloads':
+						case 'system':
+						case 'disk':
+						case 'phone':
+						case 'wifi':
+						case 'player':
+						case 'parental':
+						case 'network':
+						case 'networkwifiguest':
+							break;
+						default:
+							$status = 1;
+							$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+							echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+							echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
+							echo '<br>';
+							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+							echo '</div>';
+							break;
+					}
+				}
+				if ($status == 0) {
+					$divTiles = false;
+					echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un \"Scan Tiles\".}}</span></center>";
+				} else {
+					$divTiles = true;
+				}
+				?>
+			</div>
+		</div>
+		<div class="divParental">
+			<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parentaux}}</legend>
+			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
+				<?php
+				$status = 0;
+				foreach ($eqLogics as $eqLogic) {
+					if ($eqLogic->getConfiguration('type') == 'parental') {
 						$status = 1;
+						$template = $eqLogic->getConfiguration('type');
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
 						echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
 						echo '</div>';
-						break;
-				}
-			}
-			if ($status == 0) {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un \"Scan équipements standards\".}}</span></center>";
-			}
-			?>
-		</div>
-
-		<legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
-		<div class="eqLogicThumbnailContainer">
-			<?php
-			$status = 0;
-			foreach ($eqLogics as $eqLogic) {
-				if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'alarm_control' || $eqLogic->getConfiguration('type') == 'alarm_sensor' || $eqLogic->getConfiguration('type') == 'alarm_remote') {
-					$template = $eqLogic->getConfiguration('type');
-					$icon = $template;
-				} else {
-					$template = $eqLogic->getLogicalId();
-					if ($template == 'homeadapters') {
-						$icon = $template;
-					} else {
-						$icon = 'default';
 					}
 				}
-				switch ($template) {
-					case 'AirPlay':
-					case 'airplay':
-					case 'ADSL':
-					case 'downloads':
-					case 'Downloads':
-					case 'system':
-					case 'Disque':
-					case 'disk':
-					case 'phone':
-					case 'Phone':
-					case 'Wifi':
-					case 'parental':
-					case 'player':
-					case 'Reseau':
-					case 'airmedia':
-					case 'network':
-					case 'connexion':
-					case 'wifi':
-
-						break;
-					default:
-						$status = 1;
-						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
-						echo '<br>';
-						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-						echo '</div>';
-						break;
-				}
-			}
-			if ($status == 0) {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un \"Scan Tiles\".}}</span></center>";
-			}
-			?>
-		</div>
-		<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parental}}</legend>
-		<div class="eqLogicThumbnailContainer">
-			<?php
-			$status = 0;
-			foreach ($eqLogics as $eqLogic) {
-				if ($eqLogic->getConfiguration('type') == 'parental') {
-					$status = 1;
-					$template = $eqLogic->getConfiguration('type');
-					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-					echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-					echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
-					echo '<br>';
-					echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+				if ($status == 1) {
 					echo '</div>';
+					$parental = true;
+				} else {
+					echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un \"Scan Contrôle parental\".}}</span></center>";
+					$parental = false;
 				}
-			}
-			if ($status == 1) {
-				echo '</div>';
-			} else {
-				echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un \"Scan Contrôle parental\".}}</span></center>";
-			}
-			?>
+				?>
+			</div>
 		</div>
 	</div>
+
+	<?php
+	sendVarToJS('divEquipements', $divEquipements);
+	sendVarToJS('divTiles', $divTiles);
+	sendVarToJS('divParental', $parental);
+	?>
 
 	<div class="col-xs-12 eqLogic" style="display: none;">
 		<div class="input-group pull-right" style="display:inline-flex">
 			<span class="input-group-btn">
-				<a class="btn btn-default btn-sm eqLogicAction roundedLeft" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a><a class="btn btn-danger btn-sm eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
+				<a class="btn btn-default btn-sm eqLogicAction roundedLeft" data-action="configure"><i class="fas fa-cogs"></i> {{Configuration avancée}}</a><a class="btn btn-sm btn-info eqLogicAction Equipement"><i class="fas fa-search"></i> {{Recherche des équipements supplémentaires}}</a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}</a><a class="btn btn-danger btn-sm eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}</a>
 			</span>
 		</div>
 		<ul class="nav nav-tabs" role="tablist">
@@ -262,6 +279,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
 				<form class="form-horizontal col-sm-10">
 					<fieldset>
+						<div class="form-group IPV">
+							<label class="col-sm-2 control-label">{{Affichage IP sur le widget}}
+								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
+							</label>
+							<div class="col-sm-3">
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
+							</div>
+						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}
 								<sup><i class="fas fa-question-circle" title="{{Cron }}"></i></sup>
@@ -277,12 +303,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 						</div>
-						<div class="form-group Equipement">
-							<label class="col-sm-2 control-label">{{Recherche des équipements}}</label>
-							<div class="col-sm-9">
-								<a class="btn btn-primary eqLogicAction"><i class="fas fa-search"></i> {{Recherche}}</a>
-							</div>
-						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{logicalId équipement}}
 								<sup><i class="fas fa-question-circle" title="{{logicalId de l'équipement Freebox}}"></i></sup>
@@ -291,7 +311,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="logicalID"></span>
 							</div>
 						</div>
-						<div class="form-group Equipement_tiles">
+						<div class="form-group">
 							<label class="col-sm-2 control-label">{{Type d'équipement}}
 								<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
 							</label>
@@ -299,7 +319,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="type"></span>
 							</div>
 						</div>
-						<div class="form-group Equipement_tiles">
+						<div class="form-group">
 							<label class="col-sm-2 control-label">{{Type d'actions de l'équipement}}
 								<sup><i class="fas fa-question-circle" title="{{Type action Freebox}}"></i></sup>
 							</label>
@@ -307,13 +327,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="action"></span>
 							</div>
 						</div>
-
-
 					</fieldset>
 				</form>
 			</div>
 			<div role="tabpanel" class="tab-pane" id="commandtab">
-				<a class="btn btn-sm cmdAction pull-right Add_Equipement" data-action="add" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une info}}</a>
+
 				<br /><br />
 				<table id="table_cmd" class="table table-bordered table-condensed">
 					<thead>
@@ -324,7 +342,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<th style="width: 350px;">{{Min/Max - Unité}}</th>
 							<th>{{Paramètres}}</th>
 							<th style="width: 250px;">{{Options}}</th>
-
 						</tr>
 					</thead>
 					<tbody></tbody>

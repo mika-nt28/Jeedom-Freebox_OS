@@ -216,10 +216,14 @@ class Free_CreateEq
             $updateiconeDownloads = false;
             $iconeDownloadsOn = 'fas fa-play';
             $iconeDownloadsOff = 'fas fa-stop';
+            $iconeRSSnb = 'fas fa-rss';
+            $iconeRSSread = 'fas fa-rss-square';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $iconeDownloadsOn = 'fas fa-play icon_green';
             $iconeDownloadsOff = 'fas fa-stop icon_red';
+            $iconeRSSnb = 'fas fa-rss icon_green';
+            $iconeRSSread = 'fas fa-rss-square icon_orange';
             $updateiconeDownloads = false;
         };
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
@@ -237,8 +241,8 @@ class Free_CreateEq
         $downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  12, '0', $updateiconeDownloads, true, null, null, null, '#value# / 1000', '2');
         $downloads->AddCommand('Start Téléchargement', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOn, 0, 'default', 'default',  13, '0', $updateiconeDownloads, false);
         $downloads->AddCommand('Stop Téléchargement', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconeDownloadsOff, 0, 'default', 'default',  14, '0', $updateiconeDownloads, false);
-        //$downloads->AddCommand('Nombre de flux RSS', 'nb_rss', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  15, '0', $updateiconeDownloads, true);
-        //$downloads->AddCommand('Nombre de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  16, '0', $updateiconeDownloads, true);
+        $downloads->AddCommand('Nombre de flux RSS', 'nb_rss', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeRSSnb, 0, 'default', 'default',  15, '0', $updateiconeDownloads, false, null, true);
+        $downloads->AddCommand('Nombre de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconeRSSread, 0, 'default', 'default',  16, '0', $updateiconeDownloads, false, null, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -280,8 +284,6 @@ class Free_CreateEq
             $iconmissed = 'icon techno-phone1';
             $iconaccepted = 'icon techno-phone3';
             $iconoutgoing = 'ficon techno-phone2';
-            //$iconeDectOn = 'jeedom-bell';
-            //$iconeDectOff = 'jeedom-no-bell';
             $iconeDell_call = 'fas fa-magic';
             $iconeRead_call = 'fab fa-readme';
             $updateiconePhone = false;
@@ -290,8 +292,6 @@ class Free_CreateEq
             $iconmissed = 'icon techno-phone1 icon_red';
             $iconaccepted = 'icon techno-phone3 icon_blue';
             $iconoutgoing = 'icon techno-phone2 icon_green';
-            //$iconeDectOn = 'jeedom-bell icon_red';
-            //$iconeDectOff = 'jeedom-no-bell icon_green';
             $iconeDell_call = 'fas fa-magic icon_red';
             $iconeRead_call = 'fab fa-readme icon_blue';
             $updateiconePhone = false;
@@ -303,8 +303,6 @@ class Free_CreateEq
         $phone->AddCommand('Liste Reçus', 'listaccepted', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconaccepted, 1, 'default', 'default',  4, '0', $updateiconePhone, true, false, null, null, null, null, 'NONAME');
         $phone->AddCommand('Nombre Emis', 'nboutgoing', 'info', 'numeric', $templatecore_V4 . 'badge', null, null, 1, 'default', 'default', 0, $iconoutgoing, 1, 'default', 'default',  5, '0', $updateiconePhone, true, false, true, null, null, null, null);
         $phone->AddCommand('Liste Emis', 'listoutgoing', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconoutgoing, 1, 'default', 'default',  6, '0', $updateiconePhone, true, false, null, null, null, null, 'NONAME');
-        //$phone->AddCommand('Faire sonner les téléphones DECT', 'sonnerieDectOn', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null, 1, 'default', 'default', 0, $iconeDectOn, 1, 'default', 'default', 4, '0', $updateiconePhone, false);
-        //$phone->AddCommand('Arrêter les sonneries des téléphones DECT', 'sonnerieDectOff', 'action', 'other', 'Freebox_OS::Freebox_OS_Phone', null, null,  1, 'default', 'default', 0, $iconeDectOff, 0, 'default', 'default', 5, '0', $updateiconePhone, false);
         $phone->AddCommand('Vider le journal d appels', 'phone_dell_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeDell_call, 1, 'default', 'default', 9, '0', $updateiconePhone, false, null, true);
         $phone->AddCommand('Tout marquer comme lu', 'phone_read_call', 'action', 'other', 'default', null, null,  1, 'default', 'default', 0, $iconeRead_call, 0, 'default', 'default', 10, '0', $updateiconePhone, false, null, true);
 

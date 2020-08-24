@@ -248,16 +248,16 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_rss_items_unread']);
                             break;
                         case "rx_rate":
-                            $result = $result['rx_rate'];
+                            $rx_rate = $result['rx_rate'];
                             if (function_exists('bcdiv'))
-                                $result = bcdiv($result, 1048576, 2);
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                                $rx_rate = bcdiv($result, 1048576, 2);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $rx_rate);
                             break;
                         case "tx_rate":
-                            $result = $result['tx_rate'];
+                            $tx_rate = $result['tx_rate'];
                             if (function_exists('bcdiv'))
-                                $result = bcdiv($result, 1048576, 2);
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                                $tx_rate = bcdiv($tx_rate, 1048576, 2);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $tx_rate);
                             break;
                         case "nb_tasks_active":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_active']);
@@ -416,14 +416,14 @@ class Free_Refresh
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
                                 break;
                             case "uptime":
-                                $result = $result['uptime'];
-                                $result = str_replace(' heure ', 'h ', $result);
-                                $result = str_replace(' heures ', 'h ', $result);
-                                $result = str_replace(' minute ', 'min ', $result);
-                                $result = str_replace(' minutes ', 'min ', $result);
-                                $result = str_replace(' secondes', 's', $result);
-                                $result = str_replace(' seconde', 's', $result);
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                                $_uptime = $result['uptime'];
+                                $_uptime = str_replace(' heure ', 'h ', $_uptime);
+                                $_uptime = str_replace(' heures ', 'h ', $_uptime);
+                                $_uptime = str_replace(' minute ', 'min ', $_uptime);
+                                $_uptime = str_replace(' minutes ', 'min ', $_uptime);
+                                $_uptime = str_replace(' secondes', 's', $_uptime);
+                                $_uptimet = str_replace(' seconde', 's', $_uptime);
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $_uptime);
                                 break;
                             case "board_name":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);

@@ -341,13 +341,14 @@ class Free_CreateEq
             $_networkID = $logicalinfo['networkwifiguestID'];
             $_networkinterface = 'wifiGuest';
         }
+        $updateWidget = true;
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
         log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
         foreach ($Free_API->universal_get('network', null, null, $_networkinterface) as $Equipement) {
             if ($Equipement['primary_name'] != '') {
-                $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Freebox_OS_Reseau', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', false, true);
+                $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true);
                 $Command->setConfiguration('host_type', $Equipement['host_type']);
                 if (isset($Equipement['l3connectivities'])) {
                     foreach ($Equipement['l3connectivities'] as $Ip) {

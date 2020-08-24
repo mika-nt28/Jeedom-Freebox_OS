@@ -155,7 +155,6 @@ class Free_CreateTil
     {
         log::add('Freebox_OS', 'debug', '>───────── Création équipement : Home Adapters');
         Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
-        //log::add('Freebox_OS', 'debug', '└─────────');
     }
     public static function createTil_homeadapters_SP($logicalinfo, $templatecore_V4)
     {
@@ -163,7 +162,7 @@ class Free_CreateTil
 
         $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
 
-        foreach ($Free_API->universal_get('homeadapters') as $Equipement) {
+        foreach ($Free_API->universal_get('homeadapters', null, null, null) as $Equipement) {
             if ($Equipement['label'] != '') {
                 $homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
                 if ($Equipement['status'] == 'active') {

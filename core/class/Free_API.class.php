@@ -444,7 +444,7 @@ class Free_API
         }
     }
 
-    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status = null)
+    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null)
     {
         $fonction = "PUT";
         $config_log = null;
@@ -476,7 +476,7 @@ class Free_API
                     $timestamp = $date->getTimestamp();
                     $jsontestprofile['override_until'] = $timestamp + $_options['select'];
                     $jsontestprofile['override'] = true;
-                    if ($_status == 'denied') {
+                    if ($_status_cmd == 'denied') {
                         $jsontestprofile['override_mode'] = "allowed";
                     } else {
                         $jsontestprofile['override_mode'] = "denied";
@@ -540,7 +540,7 @@ class Free_API
                 log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
                 $config = 'api/v8/home/endpoints/';
                 $config_commande = 'enabled';
-                $config_log = 'Mise à jour de : Etat du Wifi';
+                $config_log = 'Mise à jour de : ';
                 break;
         }
         if ($parametre === 1) {
@@ -568,13 +568,11 @@ class Free_API
             }
             switch ($update) {
                 case 'wifi':
+                case '4G':
                     return $return['result']['enabled'];
                     break;
                 case 'planning':
                     return $return['result']['use_planning'];
-                    break;
-                case '4G':
-                    return $return['result']['enabled'];
                     break;
                 case 'settile':
                     return $return['result'];
@@ -584,26 +582,6 @@ class Free_API
                     break;
             }
         }
-    }
-
-    public function ringtone($update = 'ON')
-    {
-        switch ($update) {
-            case 'ON':
-                $config = 'dect_page_start';
-                break;
-            case 'OFF':
-                $config = 'dect_page_stop';
-                break;
-        }
-        log::add('Freebox_OS', 'debug', '>───────── Ringtone ' . $update);
-        $result = $this->fetch('/api/v8/phone/' . $config . '/', "", "POST");
-        if ($result === false)
-            return false;
-        if ($result['success'])
-            return $result;
-        else
-            return false;
     }
 
     public function connexion_stats()

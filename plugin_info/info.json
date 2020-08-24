@@ -1,8 +1,8 @@
 {
 	"id": "Freebox_OS",
 	"name": "Freebox",
-	"description": "Plugin pour commander la Freebox OS",
-	"usage": "Il permet de récupérer toutes les infos disponibles sur la Freebox et pour les Delta il permet de récupérer les équipements connectés",
+	"description": "Ce Plugin permet de récupérer les informations disponibles sur les box Freebox Révolution/Delta/Pop.<br/>Pour les Freebox Delta, il permet aussi de récupèrer les équipements connectés (Domotique)",
+	"usage": "Il est possible de commander le wifi, le planning du wifi, le contrôle parental.<br/>Pour la freebox delta plusieurs possibilités sont disponible, Il est entre autre possible de commander le pack sécurité ainsi que les différents équipements compatibles avec celle-ci.Il permet de récupérer toutes les infos disponibles sur la Freebox et pour les Delta il permet de récupérer les équipements connectés",
 	"licence": "AGPL",
 	"author": "Halbout Michael | JAG",
 	"require": "3.3",

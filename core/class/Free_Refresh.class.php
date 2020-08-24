@@ -57,7 +57,7 @@ class Free_Refresh
                     break;
                 case 'homeadapters':
                     foreach ($Equipement->getCmd('info') as $Command) {
-                        $result = $Free_API->universal_get('homeadapters_status', $Command->getLogicalId());
+                        $result = $Free_API->universal_get('homeadapters', $Command->getLogicalId(), null, null);
                         if ($result != false) {
                             if ($result['status'] == 'active') {
                                 $homeadapters_value = 1;
@@ -70,7 +70,7 @@ class Free_Refresh
                     break;
                 case 'parental':
                     foreach ($Equipement->getCmd('info') as $Command) {
-                        $results = $Free_API->universal_get('parental_ID', $Equipement->getConfiguration('action'));
+                        $results = $Free_API->universal_get('parental', $Equipement->getConfiguration('action'));
                         $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
                     }
                     break;
@@ -182,7 +182,7 @@ class Free_Refresh
     private static function refresh_connexion_4G($Equipement, $Free_API)
     {
         $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
-        if ($result != false) {
+        if ($result != false && $result == 'Aucun module 4G détecté') {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
@@ -248,16 +248,16 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_rss_items_unread']);
                             break;
                         case "rx_rate":
-                            $result = $result['rx_rate'];
+                            $rx_rate = $result['rx_rate'];
                             if (function_exists('bcdiv'))
-                                $result = bcdiv($result, 1048576, 2);
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                                $rx_rate = bcdiv($result, 1048576, 2);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $rx_rate);
                             break;
                         case "tx_rate":
-                            $result = $result['tx_rate'];
+                            $tx_rate = $result['tx_rate'];
                             if (function_exists('bcdiv'))
-                                $result = bcdiv($result, 1048576, 2);
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                                $tx_rate = bcdiv($tx_rate, 1048576, 2);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $tx_rate);
                             break;
                         case "nb_tasks_active":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_active']);
@@ -290,32 +290,29 @@ class Free_Refresh
     {
         $result = $Free_API->nb_appel_absence();
         if ($result != false) {
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels manqués : ' . $result['missed'] . ' -- Liste des appels manqués : ' . $result['list_missed']);
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels reçus : ' . $result['accepted'] . ' -- Liste des appels reçus : ' . $result['list_accepted']);
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels passés : ' . $result['outgoing'] . ' -- Liste des appels passés : ' . $result['list_outgoing']);
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "nbmissed":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['missed']);
-                            log::add('Freebox_OS', 'debug', '>───────── Appels manqués : ' . $result['missed']);
                             break;
                         case "nbaccepted":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['accepted']);
-                            log::add('Freebox_OS', 'debug', '>───────── Appels reçus : ' . $result['accepted']);
                             break;
                         case "nboutgoing":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['outgoing']);
-                            log::add('Freebox_OS', 'debug', '>───────── Appels passés : ' . $result['outgoing']);
                             break;
                         case "listmissed":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_missed']);
-                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels manqués : ' . $result['list_missed']);
                             break;
                         case "listaccepted":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_accepted']);
-                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels reçus : ' . $result['list_accepted']);
                             break;
                         case "listoutgoing":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['list_outgoing']);
-                            log::add('Freebox_OS', 'debug', '>───────── Liste des appels passés : ' . $result['list_outgoing']);
                             break;
                     }
                 }
@@ -416,14 +413,14 @@ class Free_Refresh
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
                                 break;
                             case "uptime":
-                                $result = $result['uptime'];
-                                $result = str_replace(' heure ', 'h ', $result);
-                                $result = str_replace(' heures ', 'h ', $result);
-                                $result = str_replace(' minute ', 'min ', $result);
-                                $result = str_replace(' minutes ', 'min ', $result);
-                                $result = str_replace(' secondes', 's', $result);
-                                $result = str_replace(' seconde', 's', $result);
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                                $_uptime = $result['uptime'];
+                                $_uptime = str_replace(' heure ', 'h ', $_uptime);
+                                $_uptime = str_replace(' heures ', 'h ', $_uptime);
+                                $_uptime = str_replace(' minute ', 'min ', $_uptime);
+                                $_uptime = str_replace(' minutes ', 'min ', $_uptime);
+                                $_uptime = str_replace(' secondes', 's', $_uptime);
+                                $_uptime = str_replace(' seconde', 's', $_uptime);
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $_uptime);
                                 break;
                             case "board_name":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
@@ -446,7 +443,7 @@ class Free_Refresh
 
     private static function refresh_default($Equipement, $Free_API)
     {
-        $results = $Free_API->universal_get('tiles_ID', $Equipement->getLogicalId());
+        $results = $Free_API->universal_get('tiles', $Equipement->getLogicalId(), null, null);
 
         if ($results != false) {
             foreach ($results as $result) {
@@ -454,14 +451,12 @@ class Free_Refresh
                     $cmd = $Equipement->getCmd('info', $data['ep_id']);
                     if (!is_object($cmd)) break;
 
-                    log::add('Freebox_OS', 'debug', '│ Label : ' . $data['label'] . ' -- Name : ' . $data['name'] . ' -- Id : ' . $data['ep_id'] . ' -- Value : ' . $data['value']);
                     if ($data['name'] == 'pushed') {
                         $nb_pushed = count($data['history']);
                         $nb_pushed_k = $nb_pushed - 1;
                         $_value_history = $data['history'][$nb_pushed_k]['value'];
                         log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
                     };
-
 
                     switch ($cmd->getSubType()) {
                         case 'numeric':
@@ -543,7 +538,7 @@ class Free_Refresh
                 }
             }
         }
-        log::add('Freebox_OS', 'debug', '└─────────');
+        //log::add('Freebox_OS', 'debug', '└─────────');
     }
 
     private static function refresh_player($Equipement, $Free_API)

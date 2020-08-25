@@ -171,10 +171,10 @@ class Free_CreateEq
     }
     private static function createEq_connexion4G($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique 4G : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
-        if ($result != false) {
+        if ($result != false && $result != 'Aucun module 4G détecté') {
             $_modul = 'Module 4G Présent';
             log::add('Freebox_OS', 'debug', '│ ' . $_modul);
             $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');

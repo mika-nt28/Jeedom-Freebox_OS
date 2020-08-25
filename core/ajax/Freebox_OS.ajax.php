@@ -110,10 +110,13 @@ try {
 			ajax::success(true);
 			break;
 		case 'GetBox':
-			Free_CreateTil::createTil('box');
+			$deamon = Freebox_OS::deamon_info();
+			if ($deamon['state'] == 'ok') {
+				Free_CreateTil::createTil('box');
+			}
 			$result = array(
-				"Type_box" => config::byKey('TYPE_FREEBOX', 'Freebox_OS'),
-				"Type_box_name" => config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'),
+				"Type_box" => config::byKey('TYPE_FREEBOX', 'Freebox_OS', "null"),
+				"Type_box_name" => config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS', "null"),
 				"Type_box_tiles" => config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS', "NOK")
 			);
 			ajax::success($result);

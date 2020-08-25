@@ -170,7 +170,7 @@ if (!isConnect('admin')) {
             <center>
                 <center><i class="fas fa-balance-scale-right" style="font-size: 5em;"></i></center>
                 <br />
-                <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/modification_droit.png" height="450" width="450" />
+                <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/modification_droit.png" height="400" width="400" />
                 <br />
                 <center>
                     <div class="alert alert-info">{{Se connecter à l’interface de la Freebox puis ouvrir les paramètres de

@@ -67,11 +67,8 @@ function autorisationFreebox() {
         },
         success: function (data) {
             if (!data.result.success) {
-                $('#div_alert').showAlert({
-                    message: data.result.msg,
-                    level: 'danger'
-                });
                 if (data.result.error_code == "new_apps_denied")
+
                     $('.textFreebox').text('L\'association de nouvelles applications est désactivée.Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
                 return;
             } else {
@@ -247,7 +244,6 @@ function AskTrackAuthorization() {
                             $('.Freebox_OS_Display.' + $(this).attr('rights')).show();
                             progress(45);
                             break;
-
                         case "denied":
                             $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'authentification. Merci}}');
                             progress(-1);

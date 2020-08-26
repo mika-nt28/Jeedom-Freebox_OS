@@ -302,6 +302,7 @@ class Free_CreateTil
                                 $link_logicalId = 'default';
                                 $icon = null;
                                 $generic_type_I = null;
+                                $invertSlide = null;
                                 if ($access == "r") {
                                     if ($Command['ui']['access'] == "rw") {
                                         $label_sup = 'Etat ';
@@ -311,7 +312,8 @@ class Free_CreateTil
                                         $generic_type = 'FLAP_SLIDER';
                                         $Templatecore = $templatecore_V4 . 'shutter';
                                         $_min = '0';
-                                        $_max = 100;
+                                        $_max = '100';
+                                        $invertSlide = true;
                                     } elseif ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
                                         $Templatecore_A = 'default'; //$templatecore_V4 . 'light';
                                         $_min = '0';
@@ -352,7 +354,7 @@ class Free_CreateTil
                                         $_slider->setConfiguration("binaryID", $_cmd->getID());
                                         $_slider->save();
                                     } else {
-                                        $infoCmd = $Tile->AddCommand($_name_I, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null);
+                                        $infoCmd = $Tile->AddCommand($_name_I, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null, null, null, null, null, null, $invertSlide);
                                     }
 
                                     if (($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') || ($Equipement['action'] == "store_slider" && $Command['name'] == 'position')) {

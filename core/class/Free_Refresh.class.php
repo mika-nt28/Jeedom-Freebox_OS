@@ -460,7 +460,7 @@ class Free_Refresh
 
                     switch ($cmd->getSubType()) {
                         case 'numeric':
-                            if ($cmd->getConfiguration('inverse')) {
+                            if ($cmd->getConfiguration('invertslide')) {
                                 $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
                             } else {
                                 if ($data['name'] == 'pushed') {
@@ -527,7 +527,7 @@ class Free_Refresh
                             $_value = $data['value'];
                             break;
                         case 'binary':
-                            if ($cmd->getConfiguration('inverse')) {
+                            if ($cmd->getConfiguration('invertslide')) {
                                 $_value = !$data['value'];
                             } else {
                                 $_value = $data['value'];

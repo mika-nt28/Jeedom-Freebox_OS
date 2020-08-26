@@ -72,7 +72,7 @@ function autorisationFreebox() {
                     level: 'danger'
                 });
                 if (data.result.error_code == "new_apps_denied")
-                    $('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>Relancer l'authentification");
+                    $('.textFreebox').text('L\'association de nouvelles applications est désactivée.Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
                 return;
             } else {
                 sendToBdd(data.result);

@@ -198,7 +198,7 @@ class Free_Update
         $_execute = 1;
         switch ($logicalId_type) {
             case 'slider':
-                if ($_cmd->getConfiguration('inverse')) {
+                if ($_cmd->getConfiguration('invertslide')) {
                     $parametre['value'] = ($_cmd->getConfiguration('maxValue') - $_cmd->getConfiguration('minValue')) - $_options['slider'];
                 } else {
                     $parametre['value'] = (int) $_options['slider'];
@@ -248,7 +248,7 @@ class Free_Update
                     if (is_object($Listener)) {
                         $parametre['value'] = $Listener->execCmd();
                     }
-                    if ($_cmd->getConfiguration('inverse')) {
+                    if ($_cmd->getConfiguration('invertslide')) {
                         $parametre['value'] = !$parametre['value'];
                     }
                 }

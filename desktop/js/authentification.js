@@ -68,7 +68,6 @@ function autorisationFreebox() {
         success: function (data) {
             if (!data.result.success) {
                 if (data.result.error_code == "new_apps_denied")
-
                     $('.textFreebox').text('L\'association de nouvelles applications est désactivée.Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
                 return;
             } else {
@@ -222,7 +221,6 @@ function AskTrackAuthorization() {
                     $('.bt_Freebox_OS_Next').show();
                     $('.bt_Freebox_OS_Previous').show();
                     switch (data.result.result.status) {
-
                         case "unknown":
                             $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
                             Good();

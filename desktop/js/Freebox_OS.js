@@ -271,7 +271,7 @@ function addCmdToTable(_cmd) {
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
 	}
 	if (init(_cmd.type) == 'action' && init(_cmd.subType) == 'slider') {
-		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertslide"/>{{Inverser Slide}}</label></span> ';
+		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertslide"/>{{Inverser Curseur}}</label></span> ';
 	}
 	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span> ';
 

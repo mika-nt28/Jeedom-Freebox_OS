@@ -245,7 +245,7 @@ function AskTrackAuthorization() {
                             $('.Freebox_OK').show();
                             $('.Freebox_OK_NEXT').show();
                             $('.Freebox_OS_Display.' + $(this).attr('rights')).show();
-                            progress(50);
+                            progress(45);
                             break;
 
                         case "denied":

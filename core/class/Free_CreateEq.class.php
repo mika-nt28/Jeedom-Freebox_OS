@@ -62,6 +62,17 @@ class Free_CreateEq
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 break;
             default:
+                log::add('Freebox_OS', 'debug', '================= ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS  ==================');
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['airmediaName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / Fibre' . ' / 4G');
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['diskName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkwifiguestName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['phoneName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['wifiName']);
+                log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
+                log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexionFTTH($logicalinfo, $templatecore_V4);
@@ -75,7 +86,6 @@ class Free_CreateEq
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
-                //Free_CreateEq::createEq_airmedia_sp($logicalinfo, $templatecore_V4);
                 break;
         }
     }

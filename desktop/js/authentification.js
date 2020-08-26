@@ -67,12 +67,8 @@ function autorisationFreebox() {
         },
         success: function (data) {
             if (!data.result.success) {
-                $('#div_alert').showAlert({
-                    message: data.result.msg,
-                    level: 'danger'
-                });
                 if (data.result.error_code == "new_apps_denied")
-                    $('#div_alert').append(".<br>Pour activer l'option, il faut se rendre dans : mafreebox.freebox.fr -> Paramètres de la Freebox -> Gestion des accès <br> Et cocher : <b>Permettre les nouvelles demandes d'associations</b>  -> Appliquer<br>Relancer l'authentification");
+                    $('.textFreebox').text('L\'association de nouvelles applications est désactivée.Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
                 return;
             } else {
                 sendToBdd(data.result);
@@ -225,7 +221,6 @@ function AskTrackAuthorization() {
                     $('.bt_Freebox_OS_Next').show();
                     $('.bt_Freebox_OS_Previous').show();
                     switch (data.result.result.status) {
-
                         case "unknown":
                             $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
                             Good();
@@ -245,9 +240,8 @@ function AskTrackAuthorization() {
                             $('.Freebox_OK').show();
                             $('.Freebox_OK_NEXT').show();
                             $('.Freebox_OS_Display.' + $(this).attr('rights')).show();
-                            progress(60);
+                            progress(45);
                             break;
-
                         case "denied":
                             $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'authentification. Merci}}');
                             progress(-1);

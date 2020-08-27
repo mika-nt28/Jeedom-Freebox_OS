@@ -581,11 +581,12 @@ class Free_API
             return false;
         if ($result['success']) {
             if ($result['result']['media'] != 'ftth') {
-                $vdslRateJson = $this->fetch('/api/v8/connection/xdsl/');
-                if ($vdslRateJson === false)
+                $result_vds = $this->fetch('/api/v8/connection/xdsl/');
+                log::add('Freebox_OS', 'debug', '│ Modulation : ' . $result_vds['result']['status']['modulation']);
+                if ($result_vds === false)
                     return false;
-                if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
-                    $result['result']['media'] = $vdslRateJson['result']['status']['modulation'];
+                if ($result_vds['result']['status']['modulation'] == "vdsl")
+                    $result['result']['media'] = $result_vds['result']['status']['modulation'];
             }
             $retourFbx = array(
                 'rate_down' => round($result['result']['rate_down'] / 1024, 2),

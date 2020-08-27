@@ -114,15 +114,19 @@ class Free_Refresh
 
     private static function refresh_connexion($Equipement, $Free_API)
     {
-        $result = $Free_API->connexion_stats();
+        //$result = $Free_API->connexion_stats();
+        $result = $Free_API->universal_get('connexion', null, null, null);
+        log::add('Freebox_OS', 'debug', '│ Modulation : ' . $result);
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "bandwidth_down":
+                            $bandwidth_down = round($result['bandwidth_down'] / 1000000, 2);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_down']);
                             break;
                         case "bandwidth_up":
+                            $bandwidth_up = round($result['bandwidth_up'] / 1000000, 2);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_up']);
                             break;
                         case "ipv4":

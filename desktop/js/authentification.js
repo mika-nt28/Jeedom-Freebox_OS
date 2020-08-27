@@ -11,16 +11,19 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
 
 $('.bt_eqlogic_standard').on('click', function () {
     SearchArchi();
+    logs('debug', "Lancement recherche des équipements standards.");
     progress(85);
 });
 
 $('.bt_eqlogic_tiles').on('click', function () {
     SearchTile();
+    logs('debug', "Lancement recherche des tiles");
     progress(90);
 });
 
 $('.bt_eqlogic_control_parental').on('click', function () {
     SearchParental();
+    logs('debug', "Lancement recherche des contrôles parentaux");
     progress(95);
 });
 
@@ -32,18 +35,22 @@ $('.bt_Freebox_OS_Save').on('click', function () {
 });
 
 $('.bt_Freebox_Autorisation').on('click', function () {
+    logs('debug', "Lancement autorisation Freebox");
     autorisationFreebox();
 });
 
 $('.bt_Freebox_droitVerif').on('click', function () {
+    logs('debug', "Lancement vérification des droits");
     GetSessionData();
 });
 
 $('.bt_Freebox_OS_ResetConfig').on('click', function () {
+    logs('debug', "Reset de la configuration");
     SetDefaultSetting();
 });
 
 $('.bt_Freebox_OS_Save_room').on('click', function () {
+    logs('debug', "Sauvegarde des Pièces des Tiles");
     SaveTitelRoom();
 });
 
@@ -69,10 +76,12 @@ function autorisationFreebox() {
             if (!data.result.success) {
                 if (data.result.error_code == "new_apps_denied")
                     $('.textFreebox').text('L\'association de nouvelles applications est désactivée.Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
+                logs('error', "L\'association de nouvelles applications est désactivée");
                 return;
             } else {
                 sendToBdd(data.result);
                 $('.textFreebox').text('{{Merci d\'appuyer sur le bouton V de votre Freebox, afin de confirmer l\'autorisation d\'accès à votre Freebox.}}');
+                logs('error', "Attente appuie sur le bouton V");
                 $('.img-freeboxOS').attr('src', 'plugins/Freebox_OS/core/images/authentification/authentification.jpg');
                 progress(40);
                 setTimeout(AskTrackAuthorization, 3000);
@@ -223,6 +232,7 @@ function AskTrackAuthorization() {
                     switch (data.result.result.status) {
                         case "unknown":
                             $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
+                            logs('error', "ERREUR : " + "L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification");
                             Good();
                             progress(-1);
                             break;
@@ -232,11 +242,13 @@ function AskTrackAuthorization() {
                             break;
                         case "timeout":
                             $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'authentification. Merci}}');
+                            logs('error', "ERREUR : " + "Vous n\'avez pas validé à temps, il faut relancer l\'authentification");
                             Good();
                             progress(-1);
                             break;
                         case "granted":
                             $('.textFreebox').text('{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}');
+                            logs('debug', "Félicitation votre Freebox est maintenant reliée à Jeedom.");
                             $('.Freebox_OK').show();
                             $('.Freebox_OK_NEXT').show();
                             $('.Freebox_OS_Display.' + $(this).attr('rights')).show();
@@ -244,14 +256,13 @@ function AskTrackAuthorization() {
                             break;
                         case "denied":
                             $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'authentification. Merci}}');
+                            logs('error', "Vous avez refusé, il faut relancer l\'authentification.");
                             progress(-1);
                             Good();
                             break;
                         default:
-                            $('#div_alert').showAlert({
-                                message: "REST OK : track_authorization -> Error 4 : Inconnue",
-                                level: 'danger'
-                            });
+                            $('.textFreebox').text('{{REST OK : track_authorization -> Error 4 : Inconnue}}');
+                            logs('error', "REST OK : track_authorization -> Error 4 : Inconnue");
                             Good();
                             break;
                     }
@@ -271,6 +282,7 @@ function Good() {
     $('.bt_Freebox_OS_Previous').hide();
     $('.bt_Freebox_OS_NEXT').hide();
     $('.alert-info Freebox_OK').text('{{Authentification réussi}}');
+    logs('debug', "Authentification réussi");
 }
 
 function progress(ProgressPourcent) {
@@ -319,6 +331,8 @@ function GetSetting() {
             console.log(data.result.DeviceName)
             if (data.result.DeviceName == null || data.result.DeviceName == "") {
                 $('.bt_Freebox_OS_Next').hide();
+                $('.textFreebox').text('Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage');
+                logs('error', "ERREUR : " + "Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage");
             }
 
             if (data.result.LogLevel == 100) {
@@ -500,7 +514,7 @@ function funNext() {
     $('.bt_Freebox_OS_Next').show();
     $('.bt_Freebox_OS_Previous').show();
 
-    logs('debug', "Function Next etape : "+$('.li_Freebox_OS_Summary.active').attr('data-href'));
+    logs('debug', "================= Etape : " + $('.li_Freebox_OS_Summary.active').attr('data-href'));
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':
@@ -574,9 +588,7 @@ function logs(loglevel, logText) {
             logsText: logText
         },
         dataType: 'json',
-        error: function (request, status, error) {
-        },
-        success: function (data) {
-        }
+        error: function (request, status, error) {},
+        success: function (data) {}
     });
 }

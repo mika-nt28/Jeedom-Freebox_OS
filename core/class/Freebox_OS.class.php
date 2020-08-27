@@ -77,7 +77,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function deamon_start($_debug = false)
 	{
-		log::remove('Freebox_OS');
+		//log::remove('Freebox_OS');
 		self::deamon_stop();
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] != 'ok') return;

@@ -253,12 +253,16 @@ class Free_CreateEq
             $iconDownloadsOff = 'fas fa-stop';
             $iconRSSnb = 'fas fa-rss';
             $iconRSSread = 'fas fa-rss-square';
+            $iconconn_ready = 'fas fa-ethernet';
+            $iconthrottling_is_scheduled = 'far fa-calendar-alt';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $iconDownloadsOn = 'fas fa-play icon_green';
             $iconDownloadsOff = 'fas fa-stop icon_red';
             $iconRSSnb = 'fas fa-rss icon_green';
             $iconRSSread = 'fas fa-rss-square icon_orange';
+            $iconconn_ready = 'fas fa-ethernet icon_green';
+            $iconthrottling_is_scheduled = 'far fa-calendar-alt icon_green';
         };
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true);
@@ -277,6 +281,8 @@ class Free_CreateEq
         $downloads->AddCommand('Stop Téléchargement', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsOff, 0, 'default', 'default',  14, '0', $updateicon, false);
         $downloads->AddCommand('Nb de flux RSS', 'nb_rss', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSnb, 0, 'default', 'default',  15, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Nb de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSread, 0, 'default', 'default',  16, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true);
+        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconthrottling_is_scheduled, 0, 'default', 'default',  18, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

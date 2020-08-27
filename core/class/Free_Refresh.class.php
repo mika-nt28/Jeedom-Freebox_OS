@@ -265,6 +265,12 @@ class Free_Refresh
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
+                        case "conn_ready":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['conn_ready']);
+                            break;
+                        case "throttling_is_scheduled":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['throttling_is_scheduled']);
+                            break;
                         case "nb_tasks":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
                             break;

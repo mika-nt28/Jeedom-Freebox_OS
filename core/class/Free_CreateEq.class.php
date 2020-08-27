@@ -34,8 +34,9 @@ class Free_CreateEq
                 break;
             case 'connexion':
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexionFTTH($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion4G($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 break;
             case 'disk':
                 Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4);
@@ -64,7 +65,7 @@ class Free_CreateEq
             default:
                 log::add('Freebox_OS', 'debug', '================= ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS  ==================');
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['airmediaName']);
-                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / Fibre' . ' / 4G');
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl');
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['diskName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkwifiguestName']);
@@ -75,8 +76,9 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexionFTTH($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion4G($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
@@ -151,7 +153,7 @@ class Free_CreateEq
         $Connexion->AddCommand('Proxy Wake on Lan', 'wol', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  10, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_connexionFTTH($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
@@ -183,7 +185,7 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_connexion4G($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion_4G($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique 4G : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
@@ -199,6 +201,24 @@ class Free_CreateEq
             $Connexion->AddCommand('Etat de la connexion xDSL 4G', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  24, '0', null, true);
         } else {
             $_modul = 'Module 4G Non Présent';
+            log::add('Freebox_OS', 'debug', '│ ' . $_modul);
+        }
+
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_connexion_xdsl($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique xdsl : ' . $logicalinfo['connexionName']);
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('connexion', null, null, 'xdsl');
+        if ($result != false && $result != 'Aucun module 4G détecté') {
+            $_modul = 'Module xdsl Présent';
+            log::add('Freebox_OS', 'debug', '│ ' . $_modul);
+            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
+            $Connexion->AddCommand('Type de modulation', 'modulation', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  40, '0', null, true);
+            $Connexion->AddCommand('Protocole', 'protocol', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  41, '0', null, true);
+        } else {
+            $_modul = 'Module xdsl Non Présent';
             log::add('Freebox_OS', 'debug', '│ ' . $_modul);
         }
 

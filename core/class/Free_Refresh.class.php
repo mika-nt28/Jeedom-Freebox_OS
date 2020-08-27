@@ -37,9 +37,10 @@ class Free_Refresh
                     break;
                 case 'connexion':
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
                     Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_xdsl($Equipement, $Free_API);
                     break;
                 case 'disk':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -114,7 +115,6 @@ class Free_Refresh
 
     private static function refresh_connexion($Equipement, $Free_API)
     {
-        //$result = $Free_API->connexion_stats();
         $result = $Free_API->universal_get('connexion', null, null, null);
         log::add('Freebox_OS', 'debug', '│ Modulation : ' . $result);
         if ($result != false) {
@@ -151,36 +151,6 @@ class Free_Refresh
         }
     }
 
-    private static function refresh_connexion_FTTH($Equipement, $Free_API)
-    {
-        $result = $Free_API->universal_get('connexion', null, null, 'ftth');
-        if ($result != false) {
-            foreach ($Equipement->getCmd('info') as $Command) {
-                if (is_object($Command)) {
-                    switch ($Command->getLogicalId()) {
-                        case "link_type":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
-                            break;
-                        case "sfp_present":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_present']);
-                            break;
-                        case "sfp_has_signal":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_has_signal']);
-                            break;
-                        case "sfp_alim_ok":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
-                            break;
-                        case "sfp_pwr_tx":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
-                            break;
-                        case "sfp_pwr_rx":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
-                            break;
-                    }
-                }
-            }
-        }
-    }
     private static function refresh_connexion_4G($Equipement, $Free_API)
     {
         $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
@@ -220,6 +190,56 @@ class Free_Refresh
                             break;
                         case "wol":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['wol']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static function refresh_connexion_FTTH($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('connexion', null, null, 'ftth');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "link_type":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
+                            break;
+                        case "sfp_present":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_present']);
+                            break;
+                        case "sfp_has_signal":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_has_signal']);
+                            break;
+                        case "sfp_alim_ok":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
+                            break;
+                        case "sfp_pwr_tx":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
+                            break;
+                        case "sfp_pwr_rx":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static function refresh_connexion_xdsl($Equipement, $Free_API)
+    {
+        $result =  $Free_API->universal_get('connexion', null, null, 'xdsl');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "modulation":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']['modulation']);
+                            break;
+                        case "protocol":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']['protocol']);
                             break;
                     }
                 }

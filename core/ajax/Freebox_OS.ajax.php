@@ -165,6 +165,10 @@ try {
 			$result = $piecefinal;
 			ajax::success($result);
 			break;
+        case  'setLogs':
+            log::add('Freebox_OS', init('loglevel'), init('logsText'));
+            ajax::success();
+            break;
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	/*     * *********Catch exeption*************** */

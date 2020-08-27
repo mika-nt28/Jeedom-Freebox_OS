@@ -500,6 +500,8 @@ function funNext() {
     $('.bt_Freebox_OS_Next').show();
     $('.bt_Freebox_OS_Previous').show();
 
+    logs('debug', "Function Next etape : "+$('.li_Freebox_OS_Summary.active').attr('data-href'));
+
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':
             progress(0);
@@ -560,4 +562,21 @@ function funPrev() {
             progress(100);
             break;
     }
+}
+
+function logs(loglevel, logText) {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "setLogs",
+            loglevel: loglevel,
+            logsText: logText
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+        },
+        success: function (data) {
+        }
+    });
 }

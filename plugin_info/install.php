@@ -37,15 +37,6 @@ function Freebox_OS_update()
 			}
 
 			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
-			removeLogicId($eqLogic, 'port_forwarding'); // Amélioration 20200820
-			removeLogicId($eqLogic, 'nbAppelsManquee'); // Amélioration 20200820
-			removeLogicId($eqLogic, 'nbAppelRecus'); // Amélioration 20200820
-			removeLogicId($eqLogic, 'nbAppelPasse'); // Amélioration 20200820
-			removeLogicId($eqLogic, 'listAppelsManquee'); // Amélioration 20200820
-			removeLogicId($eqLogic, 'listAppelsRecus'); // Amélioration 20200820
-			removeLogicId($eqLogic, 'listAppelsPasse'); // Amélioration 20200820
-			removeLogicId($eqLogic, 'sonnerieDectOn'); // Amélioration 20200820
-			removeLogicId($eqLogic, 'sonnerieDectOff'); // Amélioration 20200820
 			removeLogicId($eqLogic, 'rate_down'); // Amélioration 20200823
 			removeLogicId($eqLogic, 'rate_up'); // Amélioration 20200823
 			removeLogicId($eqLogic, 'bandwidth_up'); // Amélioration 20200823

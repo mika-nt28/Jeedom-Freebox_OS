@@ -122,11 +122,9 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "bandwidth_down":
-                            $bandwidth_down = round($result['bandwidth_down'] / 1000000, 2);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_down']);
                             break;
                         case "bandwidth_up":
-                            $bandwidth_up = round($result['bandwidth_up'] / 1000000, 2);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_up']);
                             break;
                         case "ipv4":

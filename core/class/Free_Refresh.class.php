@@ -116,7 +116,6 @@ class Free_Refresh
     private static function refresh_connexion($Equipement, $Free_API)
     {
         $result = $Free_API->universal_get('connexion', null, null, null);
-        log::add('Freebox_OS', 'debug', '│ Modulation : ' . $result);
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -154,7 +153,7 @@ class Free_Refresh
     private static function refresh_connexion_4G($Equipement, $Free_API)
     {
         $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
-        if ($result != false && $result == 'Aucun module 4G détecté') {
+        if ($result != false && $result != 'Aucun module 4G détecté') {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {

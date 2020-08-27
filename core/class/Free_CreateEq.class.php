@@ -130,10 +130,10 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('connexion', null, null, 'ftth');
         if ($result['sfp_present'] == null) {
-            $_bandwidth_value_down = '#value# / 100000';
+            $_bandwidth_value_down = '#value# / 1000000';
             $_bandwidth_down_unit = 'Mb/s';
-            $_bandwidth_value_up = '#value# / 1000';
-            $_bandwidth_up_unit = 'Kb/s';
+            $_bandwidth_value_up = '#value#  / 1000000';
+            $_bandwidth_up_unit = 'Mb/s';
         } else {
             $_bandwidth_value_down = '#value#  / 1000000000';
             $_bandwidth_down_unit = 'Gb/s';

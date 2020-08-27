@@ -315,11 +315,12 @@ function GetSetting() {
             $('#input_IdApp').val(data.result.IdApp);
             $('#input_DeviceName').val(data.result.DeviceName);
             $('#sel_object_default').val(data.result.Categorie);
-            if (data.result.DeviceName == null) {
+
+            console.log(data.result.DeviceName)
+            if (data.result.DeviceName == null || data.result.DeviceName == "") {
                 $('.bt_Freebox_OS_Next').hide();
-            } else {
-                $('.bt_Freebox_OS_Next').show();
             }
+
             if (data.result.LogLevel == 100) {
                 var debugHides = document.getElementsByClassName('debugFreeOS');
                 for (var i = 0; i < debugHides.length; i++) {
@@ -496,6 +497,9 @@ function SaveTitelRoom() {
 function funNext() {
     updateMenu($('.li_Freebox_OS_Summary.active').next());
 
+    $('.bt_Freebox_OS_Next').show();
+    $('.bt_Freebox_OS_Previous').show();
+
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':
             progress(0);
@@ -526,6 +530,9 @@ function funNext() {
 
 function funPrev() {
     updateMenu($('.li_Freebox_OS_Summary.active').prev());
+
+    $('.bt_Freebox_OS_Next').show();
+    $('.bt_Freebox_OS_Previous').show();
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':

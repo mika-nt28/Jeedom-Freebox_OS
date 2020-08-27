@@ -157,8 +157,14 @@ class Free_Refresh
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
+                        case "rx_max_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_max_rate']);
+                            break;
                         case "rx_used_rate_lte":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_used_rate']);
+                            break;
+                        case "rx_max_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_max_rate']);
                             break;
                         case "rx_used_rate_xdsl":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_used_rate']);
@@ -166,8 +172,14 @@ class Free_Refresh
                         case "state":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
                             break;
+                        case "tx_max_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_max_rate']);
+                            break;
                         case "tx_used_rate_lte":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_used_rate']);
+                            break;
+                        case "tx_max_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_max_rate']);
                             break;
                         case "tx_used_rate_xdsl":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_used_rate']);

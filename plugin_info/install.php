@@ -37,12 +37,14 @@ function Freebox_OS_update()
 			}
 
 			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
-			removeLogicId($eqLogic, 'rate_down'); // Amélioration 20200823
-			removeLogicId($eqLogic, 'rate_up'); // Amélioration 20200823
-			removeLogicId($eqLogic, 'bandwidth_up'); // Amélioration 20200823
-			removeLogicId($eqLogic, 'bandwidth_down'); // Amélioration 20200823
-			removeLogicId($eqLogic, 'media'); // Amélioration 20200823
-			removeLogicId($eqLogic, 'state'); // Amélioration 20200823
+			removeLogicId($eqLogic, 'rate_down'); // Amélioration 20200823/27
+			removeLogicId($eqLogic, 'rate_up'); // Amélioration 20200823/27
+			removeLogicId($eqLogic, 'bandwidth_up'); // Amélioration 20200823/27
+			removeLogicId($eqLogic, 'bandwidth_down'); // Amélioration 20200823/27
+			removeLogicId($eqLogic, 'media'); // Amélioration 20200823/27
+			removeLogicId($eqLogic, 'state'); // Amélioration 20200823/27
+			removeLogicId($eqLogic, 'tx_use_rate_lte'); // Amélioration 20200827
+			removeLogicId($eqLogic, 'rx_use_rate_lte'); // Amélioration 20200827
 		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');

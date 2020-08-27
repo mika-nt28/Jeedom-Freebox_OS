@@ -315,6 +315,11 @@ function GetSetting() {
             $('#input_IdApp').val(data.result.IdApp);
             $('#input_DeviceName').val(data.result.DeviceName);
             $('#sel_object_default').val(data.result.Categorie);
+            if (data.result.DeviceName == null) {
+                $('.bt_Freebox_OS_Next').hide();
+            } else {
+                $('.bt_Freebox_OS_Next').show();
+            }
             if (data.result.LogLevel == 100) {
                 var debugHides = document.getElementsByClassName('debugFreeOS');
                 for (var i = 0; i < debugHides.length; i++) {

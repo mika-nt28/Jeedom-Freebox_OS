@@ -574,34 +574,6 @@ class Free_API
         }
     }
 
-    public function connexion_stats()
-    {
-        $result = $this->fetch('/api/v8/connection/');
-        if ($result === false)
-            return false;
-        if ($result['success']) {
-            if ($result['result']['media'] != 'ftth') {
-                $vdslRateJson = $this->fetch('/api/v8/connection/xdsl/');
-                if ($vdslRateJson === false)
-                    return false;
-                if ($vdslRateJson['result']['status']['modulation'] == "vdsl")
-                    $result['result']['media'] = $vdslRateJson['result']['status']['modulation'];
-            }
-            $retourFbx = array(
-                'rate_down' => round($result['result']['rate_down'] / 1024, 2),
-                'rate_up' => round($result['result']['rate_up'] / 1024, 2),
-                'bandwidth_up' => round($result['result']['bandwidth_up'] / 1000000, 2),
-                'bandwidth_down' => round($result['result']['bandwidth_down'] / 1000000, 2),
-                'media' => $result['result']['media'],
-                'state' => $result['result']['state'],
-                'ipv6' => $result['result']['ipv6'],
-                'ipv4' => $result['result']['ipv4']
-            );
-            return $retourFbx;
-        } else
-            return false;
-    }
-
     public function nb_appel_absence()
     {
         $listNumber_missed = null;

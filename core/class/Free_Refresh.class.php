@@ -319,6 +319,12 @@ class Free_Refresh
                         case "nb_tasks_checking":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_checking']);
                             break;
+                        case "rx_rate":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['rx_rate']);
+                            break;
+                        case "tx_rate":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tx_rate']);
+                            break;
                     }
                 }
             }

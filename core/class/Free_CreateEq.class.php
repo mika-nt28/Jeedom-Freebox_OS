@@ -264,6 +264,9 @@ class Free_CreateEq
             $iconconn_ready = 'fas fa-ethernet icon_green';
             $iconthrottling_is_scheduled = 'far fa-calendar-alt icon_green';
         };
+        $_rx_tx_rate_value = '#value# / 1000000';
+        $_rx_tx_rate_unit = 'Mb/s';
+
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true);
         $downloads->AddCommand('Nb de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true);
@@ -283,6 +286,9 @@ class Free_CreateEq
         $downloads->AddCommand('Nb de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSread, 0, 'default', 'default',  16, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true);
         $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconthrottling_is_scheduled, 0, 'default', 'default',  18, '0', $updateicon, true);
+        $downloads->AddCommand('Débit descendant', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', $_rx_tx_rate_unit, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, null, null, $_rx_tx_rate_value, '2');
+        $downloads->AddCommand('Débit montant', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', $_rx_tx_rate_unit, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateicon, true, null, null, null, $_rx_tx_rate_value, '2');
+
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

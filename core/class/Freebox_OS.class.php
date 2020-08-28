@@ -283,6 +283,9 @@ class Freebox_OS extends eqLogic
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
 			}
+
+			if ($_iconname != null) {
+				$Command->setdisplay('showIconAndNamedashboard', 1);
 		}
 
 		if ($_logicalId == "tempDenied") {

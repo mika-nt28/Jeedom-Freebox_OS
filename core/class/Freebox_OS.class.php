@@ -77,7 +77,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function deamon_start($_debug = false)
 	{
-		log::remove('Freebox_OS');
+		//log::remove('Freebox_OS');
 		self::deamon_stop();
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] != 'ok') return;
@@ -176,7 +176,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
 
@@ -209,6 +209,10 @@ class Freebox_OS extends eqLogic
 
 			if ($invertBinary != null && $SubType == 'binary') {
 				$Command->setdisplay('invertBinary', 1);
+			}
+
+			if ($invertSlide != null) {
+				$Command->setdisplay('invertslide', 1);
 			}
 			if ($icon != null) {
 				$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');
@@ -278,6 +282,10 @@ class Freebox_OS extends eqLogic
 
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
+			}
+
+			if ($_iconname != null) {
+				$Command->setdisplay('showIconAndNamedashboard', 1);
 			}
 		}
 

@@ -34,8 +34,9 @@ class Free_CreateEq
                 break;
             case 'connexion':
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexionFTTH($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion4G($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 break;
             case 'disk':
                 Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4);
@@ -56,16 +57,29 @@ class Free_CreateEq
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
                 break;
             case 'system':
+                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
                 break;
             case 'wifi':
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 break;
             default:
+                log::add('Freebox_OS', 'debug', '================= ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS  ==================');
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['airmediaName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl');
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['diskName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkwifiguestName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['phoneName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['wifiName']);
+                log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
+                log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexionFTTH($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion4G($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
@@ -75,7 +89,6 @@ class Free_CreateEq
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
-                //Free_CreateEq::createEq_airmedia_sp($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -118,17 +131,21 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('connexion', null, null, 'ftth');
         if ($result['sfp_present'] == null) {
-            $_bandwidth_down_value = null;
+            $_bandwidth_value_down = '#value# / 1000000';
             $_bandwidth_down_unit = 'Mb/s';
+            $_bandwidth_value_up = '#value#  / 1000000';
+            $_bandwidth_up_unit = 'Mb/s';
         } else {
-            $_bandwidth_down_value = '#value# / 1000';
+            $_bandwidth_value_down = '#value#  / 1000000000';
             $_bandwidth_down_unit = 'Gb/s';
+            $_bandwidth_value_up = '#value#  / 1000000';
+            $_bandwidth_up_unit = 'Mb/s';
         }
         $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
-        $Connexion->AddCommand('Débit descendant', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true);
-        $Connexion->AddCommand('Débit montant', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true);
-        $Connexion->AddCommand('Débit descendant (max)', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', $_bandwidth_down_unit, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateicon, true, null, null, null, $_bandwidth_down_value, '2');
-        $Connexion->AddCommand('Débit montant (max)', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Mb/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateicon, true, null, null, null, null, '2');
+        $Connexion->AddCommand('Débit descendant', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true, null, null, null, '#value# / 1024', '2');
+        $Connexion->AddCommand('Débit montant', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true, null, null, null, '#value# / 1024', '2');
+        $Connexion->AddCommand('Débit descendant (max)', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', $_bandwidth_down_unit, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateicon, true, null, null, null, $_bandwidth_value_down, '2');
+        $Connexion->AddCommand('Débit montant (max)', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', $_bandwidth_up_unit, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateicon, true, null, null, null, $_bandwidth_value_up, '2');
         $Connexion->AddCommand('Type de connexion', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateicon, true);
         $Connexion->AddCommand('Etat de la connexion', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateicon, true);
         $Connexion->AddCommand('IPv4', 'ipv4', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  7, '0', $updateicon, true);
@@ -137,7 +154,7 @@ class Free_CreateEq
         $Connexion->AddCommand('Proxy Wake on Lan', 'wol', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  10, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_connexionFTTH($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
@@ -169,7 +186,7 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_connexion4G($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion_4G($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique 4G : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
@@ -180,11 +197,33 @@ class Free_CreateEq
             $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
             $Connexion->AddCommand('Débit xDSL Descendant', 'tx_used_rate_xdsl', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', null, true, null, null, null, '#value# / 1000', '2');
             $Connexion->AddCommand('Débit xDSL Montant', 'rx_used_rate_xdsl', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  21, '0', null, true, null, null, null, '#value# / 1000', '2');
-            $Connexion->AddCommand('Débit 4G Descendant', 'tx_use_rate_lte', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  22, '0', null, true, null, null, null, '#value# / 1000', '2');
-            $Connexion->AddCommand('Débit 4G Montant', 'rx_used_rate_lte', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  23, '0', null, true, null, null, null, '#value# / 1000', '2');
-            $Connexion->AddCommand('Etat de la connexion xDSL 4G', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  24, '0', null, true);
+            $Connexion->AddCommand('Débit xDSL Descendant (max)', 'tx_max_rate_xdsl', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  22, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Débit xDSL Montant (max)', 'rx_max_rate_xdsl', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  23, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Débit 4G Descendant', 'tx_use_rate_lte', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  24, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Débit 4G Montant', 'rx_used_rate_lte', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  25, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Débit 4G Descendant (max)', 'tx_max_rate_lte', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  26, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Débit 4G Montant (max)', 'rx_max_rate_lte', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  27, '0', null, true, null, null, null, '#value# / 1000', '2');
+            $Connexion->AddCommand('Etat de la connexion xDSL 4G', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  28, '0', null, true);
         } else {
             $_modul = 'Module 4G Non Présent';
+            log::add('Freebox_OS', 'debug', '│ ' . $_modul);
+        }
+
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_connexion_xdsl($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique xdsl : ' . $logicalinfo['connexionName']);
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('connexion', null, null, 'xdsl');
+        if ($result != false && $result != 'Aucun module 4G détecté') {
+            $_modul = 'Module xdsl Présent';
+            log::add('Freebox_OS', 'debug', '│ ' . $_modul);
+            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
+            $Connexion->AddCommand('Type de modulation', 'modulation', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  40, '0', null, true);
+            $Connexion->AddCommand('Protocole', 'protocol', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  41, '0', null, true);
+        } else {
+            $_modul = 'Module xdsl Non Présent';
             log::add('Freebox_OS', 'debug', '│ ' . $_modul);
         }
 
@@ -215,12 +254,26 @@ class Free_CreateEq
             $iconDownloadsOff = 'fas fa-stop';
             $iconRSSnb = 'fas fa-rss';
             $iconRSSread = 'fas fa-rss-square';
+            $iconconn_ready = 'fas fa-ethernet';
+            $iconthrottling_is_scheduled = 'far fa-calendar-alt';
+            $Templatemode = 'default';
+            $iconDownloadsnormal = 'fas fa-rocket';
+            $iconDownloadsslow = 'fas fa-download';
+            $iconDownloadshibernate = 'far fa-pause-circle';
+            $iconDownloadsschedule  = 'far fa-calendar-alt';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $iconDownloadsOn = 'fas fa-play icon_green';
             $iconDownloadsOff = 'fas fa-stop icon_red';
             $iconRSSnb = 'fas fa-rss icon_green';
             $iconRSSread = 'fas fa-rss-square icon_orange';
+            $iconconn_ready = 'fas fa-ethernet icon_green';
+            $iconthrottling_is_scheduled = 'far fa-calendar-alt icon_green';
+            $Templatemode = 'Freebox_OS::Mode Téléchargement';
+            $iconDownloadsnormal = 'fas fa-rocket icon_green';
+            $iconDownloadsslow = 'fas fa-download icon_green';
+            $iconDownloadshibernate = 'far fa-pause-circle icon_red';
+            $iconDownloadsschedule = 'far fa-calendar-alt icon_green';
         };
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true);
@@ -239,6 +292,13 @@ class Free_CreateEq
         $downloads->AddCommand('Stop Téléchargement', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsOff, 0, 'default', 'default',  14, '0', $updateicon, false);
         $downloads->AddCommand('Nb de flux RSS', 'nb_rss', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSnb, 0, 'default', 'default',  15, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Nb de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSread, 0, 'default', 'default',  16, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconthrottling_is_scheduled, 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Mode Téléchargement', 'mode', 'info', 'string', $Templatemode, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Activer mode normal', 'normal', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Activer mode lent', 'slow', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsslow, 0, 'default', 'default',  21, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Activer mode Stop', 'hibernate', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadshibernate, 0, 'default', 'default',  22, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Activer mode Planning', ' schedule', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsschedule, 0, 'default', 'default',  23, '0', $updateicon, false, null, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -336,7 +396,7 @@ class Free_CreateEq
             $_networkID = $logicalinfo['networkwifiguestID'];
             $_networkinterface = 'wifiGuest';
         }
-        $updateWidget = true;
+        $updateWidget = false;
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
@@ -392,12 +452,13 @@ class Free_CreateEq
             $iconReboot = 'fas fa-sync icon_red';
         };
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
-        $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  31, '0', $updateicon, false);
+        $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  31, '0', true, false, null, true);
         $system->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateicon, true);
         $system->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true);
         $system->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateicon, true);
         $system->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateicon, true);
         $system->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateicon, true);
+        //$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateicon);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

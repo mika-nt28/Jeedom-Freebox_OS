@@ -25,8 +25,10 @@ if (!isConnect('admin')) {
     throw new Exception('{{401 - Accès non autorisé}}');
 }
 ?>
-<div id="div_Alert_Freebox_Include"></div>
-<div class="row row-overflow">
+<!--<div id="div_alert" class="jqAlert alert danger" style="width: 100%">
+    <span class="displayError"></span>
+</div> -->
+<div class=" row row-overflow">
     <div class="col-lg-2">
         <div class="bs-sidebar">
             <ul class="nav nav-list bs-sidenav">
@@ -75,6 +77,7 @@ if (!isConnect('admin')) {
             <center>
                 <center><i class="fas fa-cogs" style="font-size: 8em;"></i></center>
                 <br />
+                <h3 class="textFreebox">{{}}</h3>
                 <div class="alert alert-info">{{C'est partie, lançons nous. Pour commencer nous allons valider les
                     réglages}}
                 </div>
@@ -188,6 +191,9 @@ if (!isConnect('admin')) {
                     <div class="alert alert-info">{{Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant}}
                     </div>
                 </center>
+                <br />
+                <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a></center>
+                <br />
                 <table id="table_packages" class="table table-condensed">
                     <thead>
                         <tr>
@@ -258,9 +264,7 @@ if (!isConnect('admin')) {
                         </tr>
                     </tbody>
                 </table>
-                <br />
-                <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a></center>
-                <br />
+
             </center>
         </div>
 

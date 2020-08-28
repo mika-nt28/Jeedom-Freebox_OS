@@ -37,9 +37,10 @@ class Free_Refresh
                     break;
                 case 'connexion':
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
                     Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
+                    Free_Refresh::refresh_connexion_xdsl($Equipement, $Free_API);
                     break;
                 case 'disk':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -54,6 +55,7 @@ class Free_Refresh
                     break;
                 case 'downloads':
                     Free_Refresh::refresh_download($Equipement, $Free_API);
+                    Free_Refresh::refresh_download_config($Equipement, $Free_API);
                     break;
                 case 'homeadapters':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -114,7 +116,7 @@ class Free_Refresh
 
     private static function refresh_connexion($Equipement, $Free_API)
     {
-        $result = $Free_API->connexion_stats();
+        $result = $Free_API->universal_get('connexion', null, null, null);
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -142,6 +144,64 @@ class Free_Refresh
                             break;
                         case "state":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static function refresh_connexion_4G($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
+        if ($result != false && $result != 'Aucun module 4G détecté') {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "rx_max_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_max_rate']);
+                            break;
+                        case "rx_used_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_used_rate']);
+                            break;
+                        case "rx_max_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_max_rate']);
+                            break;
+                        case "rx_used_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_used_rate']);
+                            break;
+                        case "state":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            break;
+                        case "tx_max_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_max_rate']);
+                            break;
+                        case "tx_used_rate_lte":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_used_rate']);
+                            break;
+                        case "tx_max_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_max_rate']);
+                            break;
+                        case "tx_used_rate_xdsl":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_used_rate']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_connexion_Config($Equipement, $Free_API)
+    {
+        $result =  $Free_API->universal_get('connexion', null, null, 'config');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "ping":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ping']);
+                            break;
+                        case "wol":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['wol']);
                             break;
                     }
                 }
@@ -179,45 +239,19 @@ class Free_Refresh
             }
         }
     }
-    private static function refresh_connexion_4G($Equipement, $Free_API)
+
+    private static function refresh_connexion_xdsl($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
-        if ($result != false && $result == 'Aucun module 4G détecté') {
-            foreach ($Equipement->getCmd('info') as $Command) {
-                if (is_object($Command)) {
-                    switch ($Command->getLogicalId()) {
-                        case "rx_used_rate_lte":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_used_rate']);
-                            break;
-                        case "rx_used_rate_xdsl":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_used_rate']);
-                            break;
-                        case "state":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
-                            break;
-                        case "tx_used_rate_lte":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_used_rate']);
-                            break;
-                        case "tx_used_rate_xdsl":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_used_rate']);
-                            break;
-                    }
-                }
-            }
-        }
-    }
-    private static function refresh_connexion_Config($Equipement, $Free_API)
-    {
-        $result =  $Free_API->universal_get('connexion', null, null, 'config');
+        $result =  $Free_API->universal_get('connexion', null, null, 'xdsl');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
-                        case "ping":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ping']);
+                        case "modulation":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']['modulation']);
                             break;
-                        case "wol":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['wol']);
+                        case "protocol":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']['protocol']);
                             break;
                     }
                 }
@@ -227,11 +261,17 @@ class Free_Refresh
 
     private static function refresh_download($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('download_stats');
+        $result = $Free_API->universal_get('download', null, null, 'stats/');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
+                        case "conn_ready":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['conn_ready']);
+                            break;
+                        case "throttling_is_scheduled":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['throttling_is_scheduled']);
+                            break;
                         case "nb_tasks":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
                             break;
@@ -279,6 +319,21 @@ class Free_Refresh
                             break;
                         case "nb_tasks_checking":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_checking']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_download_config($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('download', null, null, 'config/');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "mode":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['throttling']['mode']);
                             break;
                     }
                 }
@@ -460,7 +515,7 @@ class Free_Refresh
 
                     switch ($cmd->getSubType()) {
                         case 'numeric':
-                            if ($cmd->getConfiguration('inverse')) {
+                            if ($cmd->getConfiguration('invertslide')) {
                                 $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
                             } else {
                                 if ($data['name'] == 'pushed') {
@@ -527,7 +582,7 @@ class Free_Refresh
                             $_value = $data['value'];
                             break;
                         case 'binary':
-                            if ($cmd->getConfiguration('inverse')) {
+                            if ($cmd->getConfiguration('invertslide')) {
                                 $_value = !$data['value'];
                             } else {
                                 $_value = $data['value'];

@@ -106,6 +106,18 @@ class Free_Template
 				array('operation' => "#value# == 1", 'state_light' => '<i class=\'icon_red icon jeedom-lock-ferme\'></i>')
 			)
 		);
+
+		// Template pour l'état du mode de téléchargement' (info)
+		$return['info']['string']['Mode Téléchargement'] = array(
+			'template' => 'tmplmultistate',
+			'replace' => array('#_time_widget_#' => '1'),
+			'test' => array(
+				array('operation' => "#value# == 'normal'", 'state_light' => '<i class=\'icon_green icon fas fa-rocket\'></i>'),
+				array('operation' => "#value# == 'slow'", 'state_light' => '<i class=\'icon_green icon fas fa-download\'></i>'),
+				array('operation' => "#value# == 'hibernate'", 'state_light' => '<i class=\'icon_red icon far fa-pause-circle\'></i>'),
+				array('operation' => "#value# == 'schedule'", 'state_light' => '<i class=\'icon_green icon far fa-calendar-alt\'></i>')
+			)
+		);
 		return $return;
 	}
 }

@@ -217,26 +217,6 @@ class Free_API
         }
     }
 
-    public function downloads($Etat)
-    {
-        $result = $this->fetch('/api/v8/downloads/');
-        if ($result === false)
-            return false;
-        $nbDL = count($result['result']);
-        for ($i = 0; $i < $nbDL; ++$i) {
-            if ($Etat == 0)
-                $downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "stopped"), "PUT");
-            if ($Etat == 1)
-                $downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "downloading"), "PUT");
-        }
-        if ($downloads === false)
-            return false;
-        if ($downloads['success'])
-            return $downloads['success'];
-        else
-            return false;
-    }
-
     public function PortForwarding($id, $fonction = "get", $active = null)
     {
         $PortForwarding = $this->fetch('/api/v8/fw/redir/');
@@ -321,8 +301,8 @@ class Free_API
             case 'disk':
                 $config = 'api/v8/storage/disk' . $id;
                 break;
-            case 'download_stats':
-                $config = 'api/v8/downloads/stats/';
+            case 'download':
+                $config = 'api/v8/downloads/' . $update_type;
                 break;
             case 'homeadapters':
                 $config = 'api/v8/home/adapters' . $id;
@@ -443,7 +423,25 @@ class Free_API
             }
         }
     }
-
+    public function downloads_put($Etat)
+    {
+        $result = $this->fetch('/api/v8/downloads/');
+        if ($result === false)
+            return false;
+        $nbDL = count($result['result']);
+        for ($i = 0; $i < $nbDL; ++$i) {
+            if ($Etat == 0)
+                $downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "stopped"), "PUT");
+            if ($Etat == 1)
+                $downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "downloading"), "PUT");
+        }
+        if ($downloads === false)
+            return false;
+        if ($downloads['success'])
+            return $downloads['success'];
+        else
+            return false;
+    }
     public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null)
     {
         $fonction = "PUT";
@@ -453,6 +451,9 @@ class Free_API
                 $config = 'api/v8/connection/lte/config';
                 $config_log = 'Mise à jour de : Activation 4G';
                 $config_commande = 'enabled';
+                break;
+            case 'download':
+                $config = 'api/v8/downloads/throttling';
                 break;
             case 'notification_ID':
                 $config = 'api/v8/notif/targets/' . $id;
@@ -538,7 +539,7 @@ class Free_API
             $parametre = false;
         }
 
-        if ($update == 'parental') {
+        if ($update == 'parental' || $update = 'donwload') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
         } else if ($update == 'WakeOnLAN') {
             $return = $this->fetch('/' . $config, array("mac" => $id, "password" => ""), $fonction);

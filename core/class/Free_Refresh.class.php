@@ -55,6 +55,7 @@ class Free_Refresh
                     break;
                 case 'downloads':
                     Free_Refresh::refresh_download($Equipement, $Free_API);
+                    Free_Refresh::refresh_download_config($Equipement, $Free_API);
                     break;
                 case 'homeadapters':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -260,7 +261,7 @@ class Free_Refresh
 
     private static function refresh_download($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('download_stats');
+        $result = $Free_API->universal_get('download', null, null, 'stats/');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -318,6 +319,21 @@ class Free_Refresh
                             break;
                         case "nb_tasks_checking":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_checking']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_download_config($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('download', null, null, 'config/');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "mode":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['throttling']['mode']);
                             break;
                     }
                 }

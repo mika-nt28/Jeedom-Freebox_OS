@@ -255,6 +255,11 @@ class Free_CreateEq
             $iconRSSread = 'fas fa-rss-square';
             $iconconn_ready = 'fas fa-ethernet';
             $iconthrottling_is_scheduled = 'far fa-calendar-alt';
+            $Templatemode = 'default';
+            $iconDownloadsnormal = 'fas fa-rocket';
+            $iconDownloadsslow = 'fas fa-download';
+            $iconDownloadshibernate = 'far fa-pause-circle';
+            $iconDownloadsschedule  = 'far fa-calendar-alt';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $iconDownloadsOn = 'fas fa-play icon_green';
@@ -263,6 +268,11 @@ class Free_CreateEq
             $iconRSSread = 'fas fa-rss-square icon_orange';
             $iconconn_ready = 'fas fa-ethernet icon_green';
             $iconthrottling_is_scheduled = 'far fa-calendar-alt icon_green';
+            $Templatemode = 'Freebox_OS::Mode Téléchargement';
+            $iconDownloadsnormal = 'fas fa-rocket icon_green';
+            $iconDownloadsslow = 'fas fa-download icon_green';
+            $iconDownloadshibernate = 'far fa-pause-circle icon_red';
+            $iconDownloadsschedule = 'far fa-calendar-alt icon_green';
         };
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true);
@@ -281,8 +291,13 @@ class Free_CreateEq
         $downloads->AddCommand('Stop Téléchargement', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsOff, 0, 'default', 'default',  14, '0', $updateicon, false);
         $downloads->AddCommand('Nb de flux RSS', 'nb_rss', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSnb, 0, 'default', 'default',  15, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Nb de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSread, 0, 'default', 'default',  16, '0', $updateicon, false, null, true);
-        $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true);
-        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconthrottling_is_scheduled, 0, 'default', 'default',  18, '0', $updateicon, true);
+        $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconthrottling_is_scheduled, 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Mode Téléchargement', 'mode', 'info', 'string', $Templatemode, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Activer mode normal', 'normal', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Activer mode lent', 'slow', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsslow, 0, 'default', 'default',  21, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Activer mode Stop', 'hibernate', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadshibernate, 0, 'default', 'default',  22, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Activer mode Planning', ' schedule', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsschedule, 0, 'default', 'default',  23, '0', $updateicon, false, null, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -436,7 +451,7 @@ class Free_CreateEq
             $iconReboot = 'fas fa-sync icon_red';
         };
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
-        $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  31, '0', $updateicon, false);
+        $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  31, '0', true, false, null, true);
         $system->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateicon, true);
         $system->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true);
         $system->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateicon, true);

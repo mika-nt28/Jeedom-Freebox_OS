@@ -57,6 +57,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
                 break;
             case 'system':
+                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
                 break;
             case 'wifi':

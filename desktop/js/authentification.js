@@ -330,11 +330,17 @@ function GetSetting() {
         },
         success: function (data) {
             $('#input_freeboxIP').val(data.result.ip);
+            logs('debug', "IP : " + data.result.ip);
             $('#input_freeAppVersion').val(data.result.VersionAPP);
+            logs('debug', "Version API : " + data.result.VersionAPP);
             $('#input_freeNameAPP').val(data.result.NameAPP);
+            logs('debug', "Nom API : " + data.result.NameAPP);
             $('#input_IdApp').val(data.result.IdApp);
+            logs('debug', "Id API : " + data.result.IdApp);
             $('#input_DeviceName').val(data.result.DeviceName);
+            logs('debug', "Nom Jeedom : " + data.result.DeviceName);
             $('#sel_object_default').val(data.result.Categorie);
+            logs('debug', "Objet par défaut : " + data.result.Categorie);
 
             console.log(data.result.DeviceName)
             if (data.result.DeviceName == null || data.result.DeviceName == "") {

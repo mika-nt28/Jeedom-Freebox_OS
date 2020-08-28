@@ -286,6 +286,7 @@ class Freebox_OS extends eqLogic
 
 			if ($_iconname != null) {
 				$Command->setdisplay('showIconAndNamedashboard', 1);
+			}
 		}
 
 		if ($_logicalId == "tempDenied") {

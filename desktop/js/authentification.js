@@ -10,24 +10,25 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
 });
 
 $('.bt_eqlogic_standard').on('click', function () {
+    logs('debug', "================= Lancement recherche des équipements standards");
     SearchArchi();
-    logs('debug', "Lancement recherche des équipements standards.");
     progress(85);
 });
 
 $('.bt_eqlogic_tiles').on('click', function () {
+    logs('debug', "================= Lancement recherche des tiles");
     SearchTile();
-    logs('debug', "Lancement recherche des tiles");
     progress(90);
 });
 
 $('.bt_eqlogic_control_parental').on('click', function () {
+    logs('debug', "================= Lancement recherche des contrôles parentaux");
     SearchParental();
-    logs('debug', "Lancement recherche des contrôles parentaux");
     progress(95);
 });
 
 $('.bt_Freebox_OS_Save').on('click', function () {
+    logs('debug', "================= Sauvegarde des Paramètres");
     ip = $('#input_freeboxIP').val();
     VersionAPP = $('#input_freeAppVersion').val();
     Categorie = $('#sel_object_default').val();
@@ -35,22 +36,22 @@ $('.bt_Freebox_OS_Save').on('click', function () {
 });
 
 $('.bt_Freebox_Autorisation').on('click', function () {
-    logs('debug', "Lancement autorisation Freebox");
+    logs('debug', "================= Lancement autorisation Freebox");
     autorisationFreebox();
 });
 
 $('.bt_Freebox_droitVerif').on('click', function () {
-    logs('debug', "Lancement vérification des droits");
+    logs('debug', "================= Lancement vérification des droits");
     GetSessionData();
 });
 
 $('.bt_Freebox_OS_ResetConfig').on('click', function () {
-    logs('debug', "Reset de la configuration");
+    logs('debug', "================= Reset de la configuration");
     SetDefaultSetting();
 });
 
 $('.bt_Freebox_OS_Save_room').on('click', function () {
-    logs('debug', "Sauvegarde des Pièces des Tiles");
+    logs('debug', "================= Sauvegarde des Pièces des Tiles");
     SaveTitelRoom();
 });
 
@@ -73,15 +74,20 @@ function autorisationFreebox() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
+
             if (!data.result.success) {
+                $('div_alert').showAlert({
+                    message: data.result.msg,
+                    level: 'danger'
+                });
                 if (data.result.error_code == "new_apps_denied")
                     $('.textFreebox').text('L\'association de nouvelles applications est désactivée.Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
-                logs('error', "L\'association de nouvelles applications est désactivée");
+                logs('error', "L\'association de nouvelles applications est désactivée ou la version du Freebox Server n'est pas correct");
                 return;
             } else {
                 sendToBdd(data.result);
                 $('.textFreebox').text('{{Merci d\'appuyer sur le bouton V de votre Freebox, afin de confirmer l\'autorisation d\'accès à votre Freebox.}}');
-                logs('error', "Attente appuie sur le bouton V");
+                logs('debug', '(' + data.result.error_code + ') ' + "Attente appuie sur le bouton V");
                 $('.img-freeboxOS').attr('src', 'plugins/Freebox_OS/core/images/authentification/authentification.jpg');
                 progress(40);
                 setTimeout(AskTrackAuthorization, 3000);
@@ -194,6 +200,7 @@ function sendToBdd(jsonParser) {
                     message: data,
                     level: 'danger'
                 });
+                logs('error', +data);
                 return;
             }
         }
@@ -225,6 +232,7 @@ function AskTrackAuthorization() {
                         message: data.result.msg,
                         level: 'danger'
                     });
+                    logs('error', +data.result.msg);
                 } else {
                     $('.textFreebox').show();
                     $('.bt_Freebox_OS_Next').show();
@@ -232,7 +240,7 @@ function AskTrackAuthorization() {
                     switch (data.result.result.status) {
                         case "unknown":
                             $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
-                            logs('error', "ERREUR : " + "L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification");
+                            logs('error', "ERREUR : " + '(' + data.result.result.status + ') ' + "L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification");
                             Good();
                             progress(-1);
                             break;
@@ -242,13 +250,13 @@ function AskTrackAuthorization() {
                             break;
                         case "timeout":
                             $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'authentification. Merci}}');
-                            logs('error', "ERREUR : " + "Vous n\'avez pas validé à temps, il faut relancer l\'authentification");
+                            logs('error', "ERREUR : " + '(' + data.result.result.status + ') ' + "Vous n\'avez pas validé à temps, il faut relancer l\'authentification");
                             Good();
                             progress(-1);
                             break;
                         case "granted":
                             $('.textFreebox').text('{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}');
-                            logs('debug', "Félicitation votre Freebox est maintenant reliée à Jeedom.");
+                            logs('debug', '(' + data.result.result.status + ') ' + "Félicitation votre Freebox est maintenant reliée à Jeedom");
                             $('.Freebox_OK').show();
                             $('.Freebox_OK_NEXT').show();
                             $('.Freebox_OS_Display.' + $(this).attr('rights')).show();
@@ -256,13 +264,13 @@ function AskTrackAuthorization() {
                             break;
                         case "denied":
                             $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'authentification. Merci}}');
-                            logs('error', "Vous avez refusé, il faut relancer l\'authentification.");
+                            logs('error', '(' + data.result.result.status + ') ' + "Vous avez refusé, il faut relancer l\'authentification");
                             progress(-1);
                             Good();
                             break;
                         default:
                             $('.textFreebox').text('{{REST OK : track_authorization -> Error 4 : Inconnue}}');
-                            logs('error', "REST OK : track_authorization -> Error 4 : Inconnue");
+                            logs('error', '(' + data.result.result.status + ') ' + "REST OK : track_authorization -> Error 4 : Inconnue");
                             Good();
                             break;
                     }
@@ -333,6 +341,10 @@ function GetSetting() {
                 $('.bt_Freebox_OS_Next').hide();
                 $('.textFreebox').text('Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage');
                 logs('error', "ERREUR : " + "Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage");
+                $('#div_alert').showAlert({
+                    message: 'Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage',
+                    level: 'danger'
+                });
             }
 
             if (data.result.LogLevel == 100) {
@@ -433,7 +445,7 @@ function GetSessionData() {
                     permissions.player &&
                     permissions.profile &&
                     permissions.settings) {
-
+                    logs('debug', "================= Les droits sont OK");
                     $('.textFreebox').show();
                     $('.bt_Freebox_OS_Next').show();
                     $('.bt_Freebox_OS_Previous').show();
@@ -468,8 +480,9 @@ function getBox(type) {
                 } else {
                     funPrev()
                 }
-
+                logs('debug', "================= BOX NON COMPATIBLE AVEC LES TILES");
             } else {
+                logs('debug', "================= BOX COMPATIBLE AVEC LES TILES");
                 SearchTile_Group();
             }
         }

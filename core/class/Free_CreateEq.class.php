@@ -396,7 +396,7 @@ class Free_CreateEq
             $_networkID = $logicalinfo['networkwifiguestID'];
             $_networkinterface = 'wifiGuest';
         }
-        $updateWidget = true;
+        $updateWidget = false;
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');

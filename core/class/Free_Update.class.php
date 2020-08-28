@@ -116,14 +116,29 @@ class Free_Update
 
     private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
-        $result = $Free_API->universal_get('download_stats', null, null, null);
+        $result = $Free_API->universal_get('download', null, null, 'stats/');
         if ($result != false) {
             switch ($logicalId) {
                 case "stop_dl":
-                    $Free_API->downloads(0);
+                    $Free_API->downloads_put(0);
                     break;
                 case "start_dl":
-                    $Free_API->downloads(1);
+                    $Free_API->downloads_put(1);
+                    break;
+            }
+        }
+        if ($result != false) {
+            switch ($logicalId) {
+                case "normal":
+                case "slow":
+                case "hibernate":
+                    $parametre['throttling'] = $logicalId;
+                    $Free_API->universal_put($parametre, 'download', null, null, null);
+                    break;
+                case "schedule":
+                    $parametre['throttling'] = $logicalId;
+                    $parametre['is_scheduled'] = true;
+                    $Free_API->universal_put($parametre, 'download', null, null, null);
                     break;
             }
         }

@@ -222,13 +222,13 @@ class Free_Update
 
                 $action = $logicalId_eq->getConfiguration('action');
                 $type = $logicalId_eq->getConfiguration('type');
-                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action ' . $action . ' -- valeur type ' . $parametre['value_type'] . ' -- valeur  ' . $parametre['value']);
+                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- valeur  : ' . $parametre['value']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
                     $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
-
                     if ($cmd !== false) {
                         if ($cmd->execCmd() == 0) {
                             $_execute = 0;
+                            log::add('Freebox_OS', 'debug', '│ Pas d\'action car l\'équipement est éteint');
                         }
                     }
                 }

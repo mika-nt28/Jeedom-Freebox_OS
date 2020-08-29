@@ -48,9 +48,11 @@ class Free_CreateEq
                 Free_CreateEq::createEq_parental($logicalinfo, $templatecore_V4);
                 break;
             case 'network':
+                Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'LAN');
                 break;
             case 'networkwifiguest':
+                Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'WIFIGUEST');
                 break;
             case 'phone':
@@ -89,6 +91,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
+
                 break;
         }
     }
@@ -379,7 +382,7 @@ class Free_CreateEq
     }
     private static function createEq_network_interface($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiguestName']);
+        log::add('Freebox_OS', 'debug', '┌───────── Recherche des Interfaces réseaux ');
         $Free_API = new Free_API();
         $Free_API->universal_get('network', null, null, 'interfaces');
         log::add('Freebox_OS', 'debug', '└─────────');
@@ -394,7 +397,7 @@ class Free_CreateEq
         } else if ($_network == 'WIFIGUEST') {
             $_networkname = $logicalinfo['networkwifiguestName'];
             $_networkID = $logicalinfo['networkwifiguestID'];
-            $_networkinterface = 'wifiGuest';
+            $_networkinterface = 'wifiguest';
         }
         $updateWidget = false;
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);

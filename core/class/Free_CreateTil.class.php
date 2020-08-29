@@ -358,7 +358,12 @@ class Free_CreateTil
                                     }
 
                                     if (($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') || ($Equipement['action'] == "store_slider" && $Command['name'] == 'position')) {
-                                        $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
+                                        $_slider_color = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
+                                        if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+                                            $_cmd = $Tile->getCmd("info", 0);
+                                            $_slider_color->setConfiguration("binaryID", $_cmd->getID());
+                                            $_slider_color->save();
+                                        }
                                     }
                                     $label_sup = null;
                                     $Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);

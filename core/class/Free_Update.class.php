@@ -222,10 +222,13 @@ class Free_Update
 
                 $action = $logicalId_eq->getConfiguration('action');
                 $type = $logicalId_eq->getConfiguration('type');
-                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action ' . $action);
+                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action ' . $action . ' -- valeur type ' . $parametre['value_type'] . ' -- valeur  ' . $parametre['value']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
                     $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
+                    log::add('Freebox_OS', 'debug', '│ TEST : ' . $logicalId_conf);
+
                     if ($cmd !== false) {
+                        log::add('Freebox_OS', 'debug', '│ cmd différent false');
                         if ($cmd->execCmd() == 0) {
                             $_execute = 0;
                         }

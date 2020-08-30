@@ -244,7 +244,7 @@ class Free_Update
                 break;
             case 'color':
                 $parametre['value'] = $_options['color'];
-                $parametre['value_type'] = '';
+                $parametre['value_type'] = 'int';
                 break;
             case 'message':
                 $parametre['value'] = $_options['message'];

@@ -305,6 +305,7 @@ class Free_CreateTil
                                 $generic_type_I = null;
                                 $invertSlide = null;
                                 $unit = $Command['ui']['unit'];
+                                $_SubType = 'slider';
                                 if ($access == "r") {
                                     if ($Command['ui']['access'] == "rw") {
                                         $label_sup = 'Etat ';
@@ -333,6 +334,7 @@ class Free_CreateTil
                                         $generic_type = 'LIGHT_SLIDER';
                                         $generic_type_I = 'LIGHT_STATE';
                                         $link_logicalId = $Command['ep_id'];
+                                        $_SubType = 'color';
                                     } elseif ($Equipement['type'] == "alarm_remote" && $Command['name'] == 'pushed') {
                                         $Templatecore = 'Freebox_OS::Télécommande Freebox';
                                         $_min = '0';
@@ -363,7 +365,7 @@ class Free_CreateTil
                                     }
 
                                     if ((($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'hs') || ($Equipement['action'] == "store_slider" && $Command['name'] == 'position')) {
-                                        $_slider_color = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $unit, $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
+                                        $_slider_color = $Tile->AddCommand($name, $Command['ep_id'], 'action', $_SubType, $Templatecore_A, $unit, $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
                                         if (($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'hs') {
                                             $_cmd = $Tile->getCmd("info", 0);
                                             $_slider_color->setConfiguration("binaryID", $_cmd->getID());

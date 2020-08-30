@@ -304,6 +304,7 @@ class Free_CreateTil
                                 $icon = null;
                                 $generic_type_I = null;
                                 $invertSlide = null;
+                                $unit = $Command['ui']['unit'];
                                 if ($access == "r") {
                                     if ($Command['ui']['access'] == "rw") {
                                         $label_sup = 'Etat ';
@@ -315,17 +316,20 @@ class Free_CreateTil
                                         $_min = '0';
                                         $_max = '100';
                                         $invertSlide = true;
-                                    } elseif ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
+                                    } elseif ($Command['name'] == "luminosity" || (($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'v')) {
                                         $Templatecore_A = 'default'; //$templatecore_V4 . 'light';
                                         $_min = '0';
                                         $_max = 255;
                                         $generic_type = 'LIGHT_SET_COLOR';
                                         $generic_type_I = 'LIGHT_COLOR';
                                         $link_logicalId = $Command['ep_id'];
-                                    } elseif ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+                                        if ($Command['ui']['unit'] == null) {
+                                            $unit = '%';
+                                        }
+                                    } elseif (($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'hs') {
                                         $Templatecore_A = 'default';
                                         $_min = '0';
-                                        $_max = 255;
+                                        //$_max = 255;
                                         $generic_type = 'LIGHT_SLIDER';
                                         $generic_type_I = 'LIGHT_STATE';
                                         $link_logicalId = $Command['ep_id'];
@@ -345,21 +349,21 @@ class Free_CreateTil
                                     } else {
                                         $_name_I = 'Etat volet';
                                     }
-                                    if ($Command['name'] == "luminosity" || ($Equipement['action'] == "color_picker" && $Command['name'] == 'v')) {
-                                        $infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $binaireID);
+                                    if ($Command['name'] == "luminosity" || (($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'v')) {
+                                        $infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', 'numeric', $Templatecore, $unit, $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true, $binaireID);
 
                                         $_cmd = $Tile->getCmd("info", 0);
 
                                         $Link_I_light = $infoCmd;
-                                        $_slider = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max,  2, $IsHistorized, false, false);
+                                        $_slider = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $unit, $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max,  2, $IsHistorized, false, false);
                                         $_slider->setConfiguration("binaryID", $_cmd->getID());
                                         $_slider->save();
                                     } else {
-                                        $infoCmd = $Tile->AddCommand($_name_I, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null, null, null, null, null, null, $invertSlide);
+                                        $infoCmd = $Tile->AddCommand($_name_I, $Command['ep_id'], 'info', 'numeric', $Templatecore, $unit, $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null, null, null, null, null, null, $invertSlide);
                                     }
 
                                     if ((($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'hs') || ($Equipement['action'] == "store_slider" && $Command['name'] == 'position')) {
-                                        $_slider_color = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
+                                        $_slider_color = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $unit, $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
                                         if (($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'hs') {
                                             $_cmd = $Tile->getCmd("info", 0);
                                             $_slider_color->setConfiguration("binaryID", $_cmd->getID());

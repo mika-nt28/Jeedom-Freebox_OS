@@ -81,6 +81,7 @@ class Free_Update
                 break;
             case 'wifi':
                 Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                //Free_Update::update_lcd($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             default:
@@ -190,6 +191,14 @@ class Free_Update
         }
     }
 
+    private static function update_lcd($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    {
+        switch ($logicalId) {
+            case 'hide_wifi_key':
+                $Free_API->universal_put(1, 'lcd', null, null, $logicalId);
+                break;
+        }
+    }
     private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {

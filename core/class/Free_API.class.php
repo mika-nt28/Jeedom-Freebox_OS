@@ -461,6 +461,10 @@ class Free_API
                     $fonction = "DELETE";
                 }
                 break;
+            case 'lcd':
+                $config = 'api/v8/lcd/config';
+                $config_commande = 'hide_wifi_key';
+                break;
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';

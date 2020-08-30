@@ -561,6 +561,7 @@ class Free_CreateEq
             $iconWifiOff = 'fas fa-times';
             $iconWifiPlanningOn = 'fas fa-calendar-alt';
             $iconWifiPlanningOff = 'fas fa-calendar-times';
+            $iconhide_wifi_key = 'fas fa-key';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $TemplateWifiOnOFF = 'Freebox_OS::Wifi';
@@ -569,6 +570,7 @@ class Free_CreateEq
             $iconWifiOff = 'fas fa-times icon_red';
             $iconWifiPlanningOn = 'fas fa-calendar-alt icon_green';
             $iconWifiPlanningOff = 'fas fa-calendar-times icon_red';
+            $iconhide_wifi_key = 'fas fa-key icon_blue';
         };
         $Wifi = Freebox_OS::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null, null, '*/5 * * * *');
         $StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateicon, true);
@@ -578,6 +580,8 @@ class Free_CreateEq
         $PlanningWifi = $Wifi->AddCommand('Etat Planning', 'wifiPlanning', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateicon, true);
         $Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 6, '0', $updateicon, false);
         $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 7, '0', $updateicon, false);
+        // Afficher Clef Wifi
+        //$Wifi->AddCommand('Afficher Clef Wifi', 'hide_wifi_key', 'action', 'other', 'default', null, 'default', 1, 'default', 'wifiPlanning', 0, $iconhide_wifi_key, 0, 'default', 'default', 8, '0', $updateicon, false);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

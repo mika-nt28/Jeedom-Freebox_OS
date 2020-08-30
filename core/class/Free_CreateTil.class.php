@@ -27,6 +27,7 @@ class Free_CreateTil
             Free_CreateTil::createTil_modelBox();
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
+        log::add('Freebox_OS', 'debug', '>───────── Type de box compatible Tiles ? : ' . $Type_box);
         if ($Type_box == 'OK' || $create == "box") {
             $logicalinfo = Freebox_OS::getlogicalinfo();
             if (version_compare(jeedom::version(), "4", "<")) {
@@ -357,9 +358,9 @@ class Free_CreateTil
                                         $infoCmd = $Tile->AddCommand($_name_I, $Command['ep_id'], 'info', 'numeric', $Templatecore, $Command['ui']['unit'], $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, null, $IsHistorized, false, true, null, null, null, null, null, null, $invertSlide);
                                     }
 
-                                    if (($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') || ($Equipement['action'] == "store_slider" && $Command['name'] == 'position')) {
+                                    if ((($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'hs') || ($Equipement['action'] == "store_slider" && $Command['name'] == 'position')) {
                                         $_slider_color = $Tile->AddCommand($name, $Command['ep_id'], 'action', 'slider', $Templatecore_A, $Command['ui']['unit'], $generic_type, $IsVisible, $infoCmd, $link_logicalId, $IsVisible_I, null, 0, $_min, $_max, null, $IsHistorized, false, false, null);
-                                        if ($Equipement['action'] == "color_picker" && $Command['name'] == 'hs') {
+                                        if (($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'hs') {
                                             $_cmd = $Tile->getCmd("info", 0);
                                             $_slider_color->setConfiguration("binaryID", $_cmd->getID());
                                             $_slider_color->save();

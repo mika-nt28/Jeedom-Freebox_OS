@@ -579,7 +579,14 @@ class Free_Refresh
                                 log::add('Freebox_OS', 'debug', '│──────────> Fin Update commande spécifique pour Homebridge');
                             };
 
-                            $_value = $data['value'];
+                            if ($data['ui']['display'] == 'color') {
+                                $_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
+                                $_light = hexdec(substr($_value, 0, 2));
+                                $_value = '#' . substr($_value, -6);
+                                log::add('Freebox_OS', 'debug', '>──────────> Display de Type : ' . $data['ui']['display'] . ' -- Light : ' . $_light . ' -- Valeur : ' . $_value);
+                            } else {
+                                $_value = $data['value'];
+                            }
                             break;
                         case 'binary':
                             if ($cmd->getConfiguration('invertslide')) {

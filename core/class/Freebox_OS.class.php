@@ -118,6 +118,7 @@ class Freebox_OS extends eqLogic
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null, $_autorefresh = null, $_Room = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
+		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . '-- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
 		if (!is_object($EqLogic)) {
 			if ($_Room == null) {
 				$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
@@ -135,32 +136,24 @@ class Freebox_OS extends eqLogic
 				$EqLogic->setcategory($category, 1);
 			}
 
-			if ($_autorefresh != null) {
-				$EqLogic->setConfiguration('autorefresh', $_autorefresh);
-			} else {
-				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
-			}
 			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
-		if ($_autorefresh == null) {
-			if ($EqLogic->getConfiguration('autorefresh') == null && $tiles != true && $EqLogic->getLogicalId() != 'disk') {
-				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
-			} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getLogicalId() == 'disk') {
-				$EqLogic->setConfiguration('autorefresh', '1 * * * *');
-			}
-		}
 		if ($tiles == true) {
 			$EqLogic->setConfiguration('type', $eq_type);
 			$EqLogic->setConfiguration('action', $eq_action);
 			if ($_autorefresh == null) {
-				if ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player' && $EqLogic->getConfiguration('type', $eq_type) != 'alarm_remote') {
+				if ($EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player' && $EqLogic->getConfiguration('type', $eq_type) != 'alarm_remote') {
 					$EqLogic->setConfiguration('autorefresh', '* * * * *');
-				} elseif ($EqLogic->getConfiguration('autorefresh') == null && $EqLogic->getConfiguration('type', $eq_type) == 'alarm_remote') {
+				} elseif ($EqLogic->getConfiguration('type', $eq_type) == 'alarm_remote') {
 					$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+				} elseif ($EqLogic->getLogicalId() == 'disk') {
+					$EqLogic->setConfiguration('autorefresh', '1 * * * *');
 				} else {
 					$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 				}
+			} else {
+				$EqLogic->setConfiguration('autorefresh', $_autorefresh);
 			}
 
 			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
@@ -289,7 +282,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 
-		if ($_logicalId == "tempDenied") {
+		if ($_logicalId === "tempDenied") {
 			$Command->setConfiguration('listValue', '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00');
 		}
 		$Command->save();

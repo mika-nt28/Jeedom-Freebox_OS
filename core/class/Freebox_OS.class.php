@@ -126,8 +126,8 @@ class Freebox_OS extends eqLogic
 			if ($_Room == null) {
 				$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
 			} else {
-				//Fonction A TRAITER
-				//$defaultRoom = intval($_Room);
+				// Fonction désactiver A TRAITER => Pose des soucis chez certain utilisateurs
+				// $defaultRoom = intval($_Room);
 			}
 			if ($defaultRoom) $EqLogic->setObject_id($defaultRoom);
 			$EqLogic->setEqType_name('Freebox_OS');

@@ -515,7 +515,7 @@ class Free_Refresh
 
                     switch ($cmd->getSubType()) {
                         case 'numeric':
-                            if ($cmd->getConfiguration('invertslide')) {
+                            if ($cmd->getConfiguration('invertnumeric')) {
                                 $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
                             } else {
                                 if ($data['name'] == 'pushed') {
@@ -524,6 +524,7 @@ class Free_Refresh
                                     $_value = $data['value'];
                                 }
                             }
+                            log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $data['value'] . ' -- valeur Inverser : ' . $cmd->getConfiguration('invertnumeric'));
                             break;
                         case 'string':
                             if ($data['name'] == 'state' && $Equipement->getConfiguration('type') == 'alarm_control') {
@@ -589,11 +590,7 @@ class Free_Refresh
                             }
                             break;
                         case 'binary':
-                            if ($cmd->getConfiguration('invertslide')) {
-                                $_value = !$data['value'];
-                            } else {
-                                $_value = $data['value'];
-                            }
+                            $_value = $data['value'];
                             break;
                     }
                     $Equipement->checkAndUpdateCmd($data['ep_id'], $_value);

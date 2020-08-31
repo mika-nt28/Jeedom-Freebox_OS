@@ -137,6 +137,45 @@ class Free_CreateTil
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
+    // FONCTION A TERMINER
+    /* public static function createTil_Camera_activateRTSP($ip =null,$username = null,$password)
+    {
+
+        //this.activateRTSP = function(camera, callback) {
+            if ($ip == '0.0.0.0') {
+               // console.log('[!] Failed activating '+camera.login+':XXXXXX@'+$ip);
+                log::add('Freebox_OS', 'debug', '│ Failed activating : ' . $username . ':XXXXXX@' . $ip);
+                $result = false;
+                return $result;
+            }
+           // $let_password = encodeURIComponent($password);
+            //let url = 'http://'+camera.login+':'+$password+'@'+$ip+'/adm/set_group.cgi?group=H264&sp_uri=live'
+            //log::add('Freebox_OS', 'debug', '│ equesting RTSP for camera : ' . $URLrtsp . ' - URL de snaphot : ' . $URL_snaphot);
+            //console.log('[i] Requesting RTSP for camera '+camera.id)
+           
+            request(url, function (error, response, body) {
+                if (body != null) {
+                    if(body.includes('OK')) {
+                        log::add('Freebox_OS', 'debug', '│ Successfully activated : ' . $username . ':XXXXXX@' . $ip);
+                        //console.log('[!] Successfully activated '+camera.login+':XXXXXX@'+camera.ip)
+                        $result = true;
+                    } else {
+                        //console.log(body)
+                        log::add('Freebox_OS', 'debug', '│ Failed activating : ' . $username . ':XXXXXX@' . $ip);
+                        //console.log('[!] Failed activating '+camera.login+':XXXXXX@'+camera.ip)
+                        $result = false;
+                    }
+                } else {
+                    log::add('Freebox_OS', 'debug', '│ Failed activating : ' . $username . ':XXXXXX@' . $ip .' got a null response.');
+                    //console.log('[!] Failed activating '+camera.login+':XXXXXX@'+camera.ip+' got a null response.')
+                    //console.log(error)
+                    $result = false;
+                }
+                return $result;
+            })
+       // }
+        
+    }*/
     public static function createTil_Group($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();

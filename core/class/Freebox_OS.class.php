@@ -141,6 +141,13 @@ class Freebox_OS extends eqLogic
 			} else {
 				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			}
+			if ($tiles == true) {
+				$EqLogic->setConfiguration('type', $eq_type);
+				$EqLogic->setConfiguration('action', $eq_action);
+				if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
+					$EqLogic->setConfiguration('action', $logicalID_equip);
+				}
+			}
 			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
@@ -162,6 +169,7 @@ class Freebox_OS extends eqLogic
 				$EqLogic->setConfiguration('action', $logicalID_equip);
 			}
 		}
+
 		$EqLogic->save();
 		return $EqLogic;
 	}

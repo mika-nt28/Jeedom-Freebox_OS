@@ -136,26 +136,28 @@ class Freebox_OS extends eqLogic
 				$EqLogic->setcategory($category, 1);
 			}
 
+			if ($_autorefresh != null) {
+				$EqLogic->setConfiguration('autorefresh', $_autorefresh);
+			} else {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			}
 			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
+		if ($_autorefresh == null) {
+			if ($tiles == true && ($EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player' && $EqLogic->getConfiguration('type', $eq_type) != 'alarm_remote')) {
+				$EqLogic->setConfiguration('autorefresh', '* * * * *');
+			} elseif ($tiles == true && ($EqLogic->getConfiguration('type', $eq_type) == 'alarm_remote')) {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			} elseif ($EqLogic->getLogicalId() == 'disk') {
+				$EqLogic->setConfiguration('autorefresh', '1 * * * *');
+			} else {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			}
+		}
 		if ($tiles == true) {
 			$EqLogic->setConfiguration('type', $eq_type);
 			$EqLogic->setConfiguration('action', $eq_action);
-			if ($_autorefresh == null) {
-				if ($EqLogic->getConfiguration('type', $eq_type) != 'parental' && $EqLogic->getConfiguration('type', $eq_type) != 'player' && $EqLogic->getConfiguration('type', $eq_type) != 'alarm_remote') {
-					$EqLogic->setConfiguration('autorefresh', '* * * * *');
-				} elseif ($EqLogic->getConfiguration('type', $eq_type) == 'alarm_remote') {
-					$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
-				} elseif ($EqLogic->getLogicalId() == 'disk') {
-					$EqLogic->setConfiguration('autorefresh', '1 * * * *');
-				} else {
-					$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
-				}
-			} else {
-				$EqLogic->setConfiguration('autorefresh', $_autorefresh);
-			}
-
 			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
 				$EqLogic->setConfiguration('action', $logicalID_equip);
 			}

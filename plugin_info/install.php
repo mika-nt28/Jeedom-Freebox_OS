@@ -46,6 +46,10 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'tx_use_rate_lte'); // Amélioration 20200827
 			removeLogicId($eqLogic, 'rx_use_rate_lte'); // Amélioration 20200827
 			removeLogicId($eqLogic, 'update'); // Amélioration 20200828
+			removeLogicId($eqLogic, 'tx_use_rate_lte'); // Amélioration 20200831
+			removeLogicId($eqLogic, 'rx_used_rate_lte'); // Amélioration 20200831
+			removeLogicId($eqLogic, 'tx_max_rate_lte'); // Amélioration 20200831
+			removeLogicId($eqLogic, 'rx_max_rate_lte'); // Amélioration 20200831
 		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');

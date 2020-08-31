@@ -355,7 +355,7 @@ class Free_CreateTil
                                         $generic_type = 'FLAP_SLIDER';
                                         $Templatecore = $templatecore_V4 . 'shutter';
                                         $_min = '0';
-                                        $_max = '100';
+                                        $_max = 100;
                                         $invertSlide = true;
                                     } elseif ($Command['name'] == "luminosity" || (($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'v')) {
                                         $Templatecore_A = 'default'; //$templatecore_V4 . 'light';
@@ -392,9 +392,7 @@ class Free_CreateTil
                                     }
                                     if ($Command['name'] == "luminosity" || (($Equipement['action'] == "color_picker" || $Equipement['action'] == "heat_picker") && $Command['name'] == 'v')) {
                                         $infoCmd = $Tile->AddCommand($label_sup . $name, $Command['ep_id'], 'info', $_SubType_I, $Templatecore, $unit, $generic_type_I, $IsVisible_I, 'default', $link_logicalId, 0, null, 0, $_min, $_max,  null, $IsHistorized, false, true);
-
                                         $_cmd = $Tile->getCmd("info", 0);
-
                                         $Link_I_light = $infoCmd;
                                         $_slider = $Tile->AddCommand($name, $Command['ep_id'], 'action', $_SubType_A, $Templatecore_A, $unit, $generic_type, $IsVisible, $Link_I_light, $link_logicalId, 0, null, 0, $_min, $_max,  2, $IsHistorized, false, false);
                                         $_slider->setConfiguration("binaryID", $_cmd->getID());
@@ -433,7 +431,7 @@ class Free_CreateTil
                                     }
                                 }
                                 if ($access == "w") {
-                                    if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker" && $Equipement['action'] == "store_slider" && $Command['name'] == 'position') {
+                                    if ($Command['name'] != "luminosity" && $Equipement['action'] != "color_picker" && ($Equipement['action'] == "store_slider" && $Command['name'] != 'position')) {
                                         $action = $Tile->AddCommand($label_sup . $Command['label'], $Command['ep_id'], 'action', 'slider', null, $Command['ui']['unit'], $generic_type, $IsVisible, 'default', 'default', 0, null, 0, 'default', null, 0, false, false, null);
                                     }
                                 }

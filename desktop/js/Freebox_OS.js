@@ -267,13 +267,17 @@ function addCmdToTable(_cmd) {
 	tr += '</td>';
 	tr += '<td>';
 	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';
-	if (_cmd.subType == "numeric" || _cmd.subType == "binary") {
+	if (_cmd.subType == "binary") {
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
+		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span> ';
 	}
-	if (init(_cmd.type) == 'action' && init(_cmd.subType) == 'slider') {
-		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertslide"/>{{Inverser Curseur}}</label></span> ';
+	if ((init(_cmd.type) == 'action' && init(_cmd.subType) == 'slider')) {
+		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertslide"/>{{Inverser Curseur}}</label></span> ';
 	}
-	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span> ';
+	if ((init(_cmd.type) == 'info' && init(_cmd.subType) == 'numeric')) {
+		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertnumeric"/>{{Inverser Valeur}}</label></span> ';
+	}
+
 
 	tr += '</td>';
 

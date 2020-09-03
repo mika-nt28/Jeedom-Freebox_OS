@@ -273,7 +273,7 @@ class Free_API
                 $logicalinfo = Freebox_OS::getlogicalinfo();
                 $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 
-                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', true, false, 'never', null, true);
+                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true);
                 $command->event($value);
                 log::add('Freebox_OS', 'debug', '└─────────');
             }
@@ -460,6 +460,10 @@ class Free_API
                 if ($_options == 'DELETE') {
                     $fonction = "DELETE";
                 }
+                break;
+            case 'lcd':
+                $config = 'api/v8/lcd/config';
+                $config_commande = 'hide_wifi_key';
                 break;
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';

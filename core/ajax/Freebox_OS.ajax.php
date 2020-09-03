@@ -111,7 +111,8 @@ try {
 			break;
 		case 'GetBox':
 			$deamon = Freebox_OS::deamon_info();
-			if ($deamon['state'] == 'ok') {
+			$Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
+			if ($deamon['state'] == 'ok' && $Type_box != 'OK') {
 				Free_CreateTil::createTil('box');
 			}
 			$result = array(
@@ -165,10 +166,10 @@ try {
 			$result = $piecefinal;
 			ajax::success($result);
 			break;
-        case  'setLogs':
-            log::add('Freebox_OS', init('loglevel'), init('logsText'));
-            ajax::success();
-            break;
+		case  'setLogs':
+			log::add('Freebox_OS', init('loglevel'), init('logsText'));
+			ajax::success();
+			break;
 	}
 	throw new Exception(__('Aucune methode correspondante à : ', __FILE__) . init('action'));
 	/*     * *********Catch exeption*************** */

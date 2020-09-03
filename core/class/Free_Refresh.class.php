@@ -515,7 +515,7 @@ class Free_Refresh
 
                     switch ($cmd->getSubType()) {
                         case 'numeric':
-                            if ($cmd->getConfiguration('invertslide')) {
+                            if ($cmd->getConfiguration('invertnumeric')) {
                                 $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
                             } else {
                                 if ($data['name'] == 'pushed') {
@@ -524,6 +524,7 @@ class Free_Refresh
                                     $_value = $data['value'];
                                 }
                             }
+                            log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $data['value'] . ' -- valeur Inverser : ' . $cmd->getConfiguration('invertnumeric'));
                             break;
                         case 'string':
                             if ($data['name'] == 'state' && $Equipement->getConfiguration('type') == 'alarm_control') {
@@ -579,14 +580,29 @@ class Free_Refresh
                                 log::add('Freebox_OS', 'debug', '│──────────> Fin Update commande spécifique pour Homebridge');
                             };
 
-                            $_value = $data['value'];
-                            break;
-                        case 'binary':
-                            if ($cmd->getConfiguration('invertslide')) {
-                                $_value = !$data['value'];
+                            if ($data['ui']['display'] == 'color') {
+                                log::add('Freebox_OS', 'debug', '│──────────> Value Freebox ' . $data['value']);
+                                $_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
+                                $_value2 = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
+                                $result = Free_Color::RGBToXy($_value2);
+                                log::add('Freebox_OS', 'debug', '│──────────> x : ' . $result['x'] . ' -- y : ' . $result['y'] . ' -- bri : ' . $result['bri']);
+                                $RGB = Free_Color::xyToRGB($result['x'], $result['y'], $result['bri']);
+                                $rouge = substr($_value2, 1, 2);
+                                $vert  = substr($_value2, 3, 2);
+                                $bleu  = substr($_value2, 5, 2);
+                                log::add('Freebox_OS', 'debug', '│──────────> RGB ' . $RGB);
+                                log::add('Freebox_OS', 'debug', '│──────────> Value 1 ' . $_value);
+                                log::add('Freebox_OS', 'debug', '│──────────> Value 2 ' . $_value2);
+                                log::add('Freebox_OS', 'debug', '│──────────> rouge : ' . $rouge . ' -- Vert : ' . $vert . ' -- Bleu : ' . $bleu);
+                                $_light = hexdec(substr($_value, 7, 2));
+                                $_value = '#' . substr($_value2, -6);
+                                log::add('Freebox_OS', 'debug', '>──────────> Display de Type : ' . $data['ui']['display'] . ' -- Light : ' . $_light . ' -- Valeur : ' . $_value);
                             } else {
                                 $_value = $data['value'];
                             }
+                            break;
+                        case 'binary':
+                            $_value = $data['value'];
                             break;
                     }
                     $Equipement->checkAndUpdateCmd($data['ep_id'], $_value);

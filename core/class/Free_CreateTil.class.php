@@ -137,7 +137,7 @@ class Free_CreateTil
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    // FONCTION A TERMINER
+    // A FINALISER TERMINER
     /* public static function createTil_Camera_activateRTSP($ip =null,$username = null,$password)
     {
 
@@ -372,7 +372,9 @@ class Free_CreateTil
                                         $generic_type = 'LIGHT_SET_COLOR';
                                         $generic_type_I = 'LIGHT_COLOR';
                                         $link_logicalId = $Command['ep_id'];
-                                        $_SubType_A = 'color';
+                                        // A FINALISER => Passer en color => Supprimer la partie Slider
+                                        //$_SubType_A = 'color';
+                                        $_SubType_A = 'slider';
                                         $_SubType_I = 'string';
                                     } elseif ($Equipement['type'] == "alarm_remote" && $Command['name'] == 'pushed') {
                                         $Templatecore = 'Freebox_OS::Télécommande Freebox';
@@ -560,7 +562,7 @@ class Free_CreateTil
     {
         $config = config::bykey('FREEBOX_PIECE', 'Freebox_OS', "null");
         if ($config == "null") return "null";
-        $result = $config[$pieceName];
+        $result = intval($config[$pieceName]);
         return $result;
     }
 }

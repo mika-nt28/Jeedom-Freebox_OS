@@ -81,6 +81,7 @@ class Free_Update
                 break;
             case 'wifi':
                 Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                //Free_Update::update_lcd($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             default:
@@ -190,6 +191,14 @@ class Free_Update
         }
     }
 
+    private static function update_lcd($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    {
+        switch ($logicalId) {
+            case 'hide_wifi_key':
+                $Free_API->universal_put(1, 'lcd', null, null, $logicalId);
+                break;
+        }
+    }
     private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
@@ -214,6 +223,7 @@ class Free_Update
         switch ($logicalId_type) {
             case 'slider':
                 if ($_cmd->getConfiguration('invertslide')) {
+                    log::add('Freebox_OS', 'debug', '│ Inverse Slider ');
                     $parametre['value'] = ($_cmd->getConfiguration('maxValue') - $_cmd->getConfiguration('minValue')) - $_options['slider'];
                 } else {
                     $parametre['value'] = (int) $_options['slider'];
@@ -222,7 +232,7 @@ class Free_Update
 
                 $action = $logicalId_eq->getConfiguration('action');
                 $type = $logicalId_eq->getConfiguration('type');
-                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- valeur  : ' . $parametre['value']);
+                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- valeur Inversé  : ' . $_cmd->getConfiguration('invertslide') . ' -- valeur  : ' . $parametre['value'] . ' -- valeur slider : ' . $_options['slider']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
                     $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
                     if ($cmd !== false) {
@@ -234,8 +244,29 @@ class Free_Update
                 }
                 break;
             case 'color':
-                $parametre['value'] = $_options['color'];
-                $parametre['value_type'] = '';
+                $bright = str_pad(dechex($_options['color']), 2, "0", STR_PAD_LEFT);
+                $color = str_replace('#', '', $_options['color']);
+                log::add('Freebox_OS', 'debug', '>──────────> luminosité : ' . $bright . ' -- Couleur : ' . $color);
+                if ($color == '000000') {
+                    $bright = '00';
+                    log::add('Freebox_OS', 'debug', '>──────────> ETEINDRE LA LAMPE');
+                } else {
+                    if ($bright == '00') {
+                        $bright = dechex(50);
+                    }
+                    $_value = $bright . $color;
+                    $_value = hexdec($_value);
+                    log::add('Freebox_OS', 'debug', '>──────────> RGB EN HEX : ' . $_value);
+                    $parametre['value'] = $_value;
+                    $parametre['value_type'] = 'int';
+                    $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
+                    if ($cmd !== false) {
+                        if ($cmd->execCmd() == 0) {
+                            $_execute = 0;
+                            log::add('Freebox_OS', 'debug', '│ Pas d\'action car l\'équipement est éteint');
+                        }
+                    }
+                }
                 break;
             case 'message':
                 $parametre['value'] = $_options['message'];

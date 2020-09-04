@@ -55,6 +55,7 @@ class Free_CreateTil
                     $result = Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
                     break;
             }
+            return $result;
         } else {
             if ($create == 'box') {
                 Free_CreateTil::createTil_modelBox();
@@ -65,9 +66,8 @@ class Free_CreateTil
             } else {
                 log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
             }
+            return;
         }
-
-        return $result;
     }
     private static function createTil_modelBox()
     {

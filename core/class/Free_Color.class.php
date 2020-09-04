@@ -82,6 +82,41 @@ class Free_Color
 		$b = hexdec(substr($RGB, 5, 2));
 
 		// Calculate rgb as coef
+		$Rsrgb = $r / 255;
+		$Gsrgb = $g / 255;
+		$Bsrgb = $b / 255;
+
+		$a = 0.055;
+
+		if ($Rsrgb <= 0.04045) {
+			$Rlin = $Rsrgb / 12.92;
+		} else {
+			$Rlin = pow(($Rsrgb + $a) / (1 + $a), 2.4);
+		}
+		if ($Gsrgb <= 0.04045) {
+			$Glin = $Gsrgb / 12.92;
+		} else {
+			$Glin = pow(($Gsrgb + $a) / (1 + $a), 2.4);
+		}
+		if ($Bsrgb <= 0.04045) {
+			$Blin = $Bsrgb / 12.92;
+		} else {
+			$Blin = pow(($Bsrgb + $a) / (1 + $a), 2.4);
+		}
+
+		$X = 0.4124 * $Rlin + 0.3576 * $Glin + 0.1805 * $Blin;
+		$Y = 0.2126 * $Rlin + 0.7152 * $Glin + 0.0722 * $Blin;
+		$Z = 0.0193 * $Rlin + 0.1192 * $Glin + 0.9505 * $Blin;
+
+		if (($X + $Y + $Z) != 0) {
+			$x = $X / ($X + $Y + $Z);
+			$y = $Y / ($X + $Y + $Z);
+		} else { // round to 4 decimal max (=api max size)
+			echo "Can t do the convertion.";
+			$x = round($X / ($X + $Y + $Z), 4);
+			$y = round($Y / ($X + $Y + $Z), 4);
+		}
+		/*
 		$r = $r / 255;
 		$g = $g / 255;
 		$b = $b / 255;
@@ -95,15 +130,15 @@ class Free_Color
 		$X = $r * 0.649926 + $g * 0.103455 + $b * 0.197109;
 		$Y = $r * 0.234327 + $g * 0.743075 + $b * 0.022598;
 		$Z = $r * 0        + $g * 0.053077 + $b * 1.035763;
-
+*/
 		// Calculate xy and bri
-		if (($X + $Y + $Z) == 0) {
+		/*if (($X + $Y + $Z) == 0) {
 			$x = 0;
 			$y = 0;
 		} else { // round to 4 decimal max (=api max size)
 			$x = round($X / ($X + $Y + $Z), 4);
 			$y = round($Y / ($X + $Y + $Z), 4);
-		}
+		}*/
 		$bri = round($Y * 254);
 		if ($bri > 254) {
 			$bri = 254;

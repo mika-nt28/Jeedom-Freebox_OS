@@ -61,25 +61,33 @@ class Free_CreateTV
             } else {
                 $_devicename = $Equipement['device_name'];
             }
-            if ($Equipement['id'] != null) {
-                log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $_devicename . ' -- Id : ' . $Equipement['id']);
-                $player = Freebox_OS::AddEqLogic($_devicename, 'player_' . $Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id'], '*/5 * * * *');
-                log::add('Freebox_OS', 'debug', '│ Nom : ' . $_devicename . ' -- id : player_' . $Equipement['id'] . ' -- FREE-ID : ' . $Equipement['id']);
-                $player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
-                $player->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
-                $player->AddCommand('Modèle', 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);
-                $player->AddCommand('Version', 'api_version', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
-                $player->AddCommand('API Disponible', 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
-                $player->AddCommand('Disponible sur le réseau', 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
-                $player->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
-                //$player->AddCommand('Play Pause', 'play_pause', 'action', 'message', null, null, null, 1, 'default', 'default', 0, $iconePlayOn, 0, 'default', 'default', 8, '0', false, false);
-                //$player->AddCommand('Stop', 'stop', 'action', 'message', null, null, null, 1, 'default', 'default', 0, $iconePlayOff, 0, 'default', 'default', 9, '0', false, false);
-                //$player->AddCommand('Précedent', 'previous', 'action', 'message', null, null, null, 1, 'default', 'default', 0, $iconePlayPrevious, 0, 'default', 'default', 10, '0', false, false);
-                //$player->AddCommand('Suivant', 'next', 'action', 'message', null, null, null, 1, 'default', 'default', 0, $iconePlayNext, 0, 'default', 'default', 11, '0', false, false);
 
-                Free_Refresh::RefreshInformation($player->getId());
+
+            if ($Equipement['id'] != null) {
+                $results_playerID = $Free_API->universal_get('player_ID', $Equipement['id']);
+
+                if ($results_playerID != null) {
+                    log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $_devicename . ' -- Id : ' . $Equipement['id']);
+                    $player = Freebox_OS::AddEqLogic($_devicename, 'player_' . $Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id'], '*/5 * * * *');
+                    log::add('Freebox_OS', 'debug', '│ Nom : ' . $_devicename . ' -- id : player_' . $Equipement['id'] . ' -- FREE-ID : ' . $Equipement['id']);
+                    $player->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
+                    $player->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
+                    $player->AddCommand('Modèle', 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);
+                    $player->AddCommand('Version', 'api_version', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
+                    $player->AddCommand('API Disponible', 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
+                    $player->AddCommand('Disponible sur le réseau', 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
+                    $player->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
+                    //$player->AddCommand('Play Pause', 'play_pause', 'action', 'message', null, null, null, 1, 'default', 'default', 0, $iconePlayOn, 0, 'default', 'default', 8, '0', false, false);
+                    //$player->AddCommand('Stop', 'stop', 'action', 'message', null, null, null, 1, 'default', 'default', 0, $iconePlayOff, 0, 'default', 'default', 9, '0', false, false);
+                    //$player->AddCommand('Précedent', 'previous', 'action', 'message', null, null, null, 1, 'default', 'default', 0, $iconePlayPrevious, 0, 'default', 'default', 10, '0', false, false);
+                    //$player->AddCommand('Suivant', 'next', 'action', 'message', null, null, null, 1, 'default', 'default', 0, $iconePlayNext, 0, 'default', 'default', 11, '0', false, false);
+
+                    Free_Refresh::RefreshInformation($player->getId());
+                } else {
+                    log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- Il n\'est pas possible de récupèrer le status du Player donc pas de création de l\'équipement (mettre sous tension le player pour résoudre ce problème)');
+                }
             } else {
-                log::add('Freebox_OS', 'debug', '│──────────> PLAYER : ' . $_devicename . ' -- L\'Id est vide donc pas de création de l\'équipement (mettre sous tension le player pour résoudre ce problème)');
+                log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- L\'Id est vide donc pas de création de l\'équipement (mettre sous tension le player pour résoudre ce problème)');
             }
         }
         log::add('Freebox_OS', 'debug', '└─────────');

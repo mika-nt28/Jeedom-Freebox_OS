@@ -614,8 +614,11 @@ class Free_Refresh
 
     private static function refresh_player($Equipement, $Free_API)
     {
+        if ($Equipement->getConfiguration('player') == 'OK') {
+            $results_playerID = $Free_API->universal_get('player_ID', $Equipement->getConfiguration('action'));
+        }
 
-        $results_playerID = $Free_API->universal_get('player_ID', $Equipement->getConfiguration('action'));
+        log::add('Freebox_OS', 'debug', '│──────────> Player OK ? : ' . $Equipement->getConfiguration('player'));
         $results_players = $Free_API->universal_get('player', $Equipement->getConfiguration('action'));
 
         $cmd_mac = $Equipement->getCmd('info', 'mac');

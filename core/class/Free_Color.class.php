@@ -24,6 +24,7 @@ class Free_Color
 	public static function convertRGBToXY($RGB)
 	{
 		// Get decimal RGB
+		log::add('Freebox_OS', 'debug', '│──────────> RGB  = ' . $RGB);
 		$r = hexdec(substr($RGB, 1, 2));
 		$g = hexdec(substr($RGB, 3, 2));
 		$b = hexdec(substr($RGB, 5, 2));
@@ -49,9 +50,9 @@ class Free_Color
 			$y = $xyz['y'] / array_sum($xyz);
 		}
 		$bri = round($xyz['y'] * 255);
-		log::add('Freebox_OS', 'debug', '│──────────> Value x ' . $x);
-		log::add('Freebox_OS', 'debug', '│──────────> Value y ' . $y);
-		log::add('Freebox_OS', 'debug', '│──────────> bri ' . $bri);
+		log::add('Freebox_OS', 'debug', '│──────────> Value x = ' . $x);
+		log::add('Freebox_OS', 'debug', '│──────────> Value y = ' . $y);
+		log::add('Freebox_OS', 'debug', '│──────────> bri = ' . $bri);
 		$parametre['x'] = $x;
 		$parametre['y'] = $y;
 		$parametre['bri'] = $bri;

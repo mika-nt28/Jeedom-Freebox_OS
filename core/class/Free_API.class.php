@@ -178,8 +178,17 @@ class Free_API
                 if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
                     log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
                     return false;
-                } else if ($result['error_code'] == "auth_required" || $result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token' || $result['error_code'] == 'denied_from_external_ip' || $result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
+                } else if ($result['error_code'] == "auth_required") {
                     log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
+                    return false;
+                } else if ($result['error_code'] == 'denied_from_external_ip') {
+                    log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $result['msg']);
+                    return false;
+                } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
+                    log::add('Freebox_OS', 'error', 'Erreur Application : ' . $result['msg']);
+                    return false;
+                } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
+                    log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
                     return false;
                 } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                     log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $result['msg']);

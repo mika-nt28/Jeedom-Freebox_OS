@@ -584,7 +584,7 @@ class Free_Refresh
                                 log::add('Freebox_OS', 'debug', '│──────────> Value Freebox ' . $data['value']);
                                 $_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
                                 $_value2 = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
-                                $result = Free_Color::RGBToXy($_value2);
+                                $result = Free_Color::convertRGBToXY($_value2);
                                 log::add('Freebox_OS', 'debug', '│──────────> x : ' . $result['x'] . ' -- y : ' . $result['y'] . ' -- bri : ' . $result['bri']);
                                 $RGB = Free_Color::xyToRGB($result['x'], $result['y'], $result['bri']);
                                 $rouge = substr($_value2, 1, 2);

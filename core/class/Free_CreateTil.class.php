@@ -20,6 +20,12 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_CreateTil
 {
+    // init variable
+    private $Link_I_store;
+    private $Link_I_ALARM;
+    private $Link_I_ALARM_ENABLE;
+    private $_eqLogic;
+
     public static function createTil($create = 'default')
     {
 
@@ -216,11 +222,6 @@ class Free_CreateTil
     }
     private static function createTil_Tiles($logicalinfo, $templatecore_V4)
     {
-        // init variable
-        $Link_I_store = null;
-        $Link_I_ALARM = null;
-        $Link_I_ALARM_ENABLE = null;
-        $_eqLogic = null;
 
         $Free_API = new Free_API();
         $WebcamOKAll = false;

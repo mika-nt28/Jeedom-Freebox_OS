@@ -484,7 +484,7 @@ class Free_CreateTil
                                     $Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
                                     if ($Equipement['action'] == 'store') {
                                         $Link_I_store = $infoCmd;
-                                    } elseif ($Equipement['type'] == 'light') {
+                                    } elseif ($Equipement['type'] == 'light' || ($Equipement['type'] == 'info' && $Equipement['action'] == 'toggle')) {
                                         $Link_I_light = $infoCmd;
                                     } else {
                                         $Link_I_store = 'default';

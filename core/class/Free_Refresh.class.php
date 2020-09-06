@@ -581,18 +581,18 @@ class Free_Refresh
                             };
 
                             if ($data['ui']['display'] == 'color') {
-                                log::add('Freebox_OS', 'debug', '│──────────> Value Freebox ' . $data['value']);
+                                log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
                                 $_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
                                 $_value2 = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
-                                $result = Free_Color::RGBToXy($_value2);
+                                $result = Free_Color::convertRGBToXY($data['value']);
                                 log::add('Freebox_OS', 'debug', '│──────────> x : ' . $result['x'] . ' -- y : ' . $result['y'] . ' -- bri : ' . $result['bri']);
-                                $RGB = Free_Color::xyToRGB($result['x'], $result['y'], $result['bri']);
+                                $RGB = Free_Color::convertxyToRGB($result['x'], $result['y'], $result['bri']);
                                 $rouge = substr($_value2, 1, 2);
                                 $vert  = substr($_value2, 3, 2);
                                 $bleu  = substr($_value2, 5, 2);
-                                log::add('Freebox_OS', 'debug', '│──────────> RGB ' . $RGB);
-                                log::add('Freebox_OS', 'debug', '│──────────> Value 1 ' . $_value);
-                                log::add('Freebox_OS', 'debug', '│──────────> Value 2 ' . $_value2);
+                                log::add('Freebox_OS', 'debug', '│──────────> RGB : ' . $RGB);
+                                log::add('Freebox_OS', 'debug', '│──────────> Value 1 : ' . $_value);
+                                log::add('Freebox_OS', 'debug', '│──────────> Value 2 : ' . $_value2);
                                 log::add('Freebox_OS', 'debug', '│──────────> rouge : ' . $rouge . ' -- Vert : ' . $vert . ' -- Bleu : ' . $bleu);
                                 $_light = hexdec(substr($_value, 7, 2));
                                 $_value = '#' . substr($_value2, -6);

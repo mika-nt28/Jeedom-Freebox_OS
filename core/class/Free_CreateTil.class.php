@@ -216,6 +216,12 @@ class Free_CreateTil
     }
     private static function createTil_Tiles($logicalinfo, $templatecore_V4)
     {
+        // init variable
+        $Link_I_store = null;
+        $Link_I_ALARM = null;
+        $Link_I_ALARM_ENABLE = null;
+        $_eqLogic = null;
+
         $Free_API = new Free_API();
         $WebcamOKAll = false;
         foreach ($Free_API->universal_get('tiles') as $Equipement) {
@@ -484,7 +490,7 @@ class Free_CreateTil
                                     $Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
                                     if ($Equipement['action'] == 'store') {
                                         $Link_I_store = $infoCmd;
-                                    } elseif ($Equipement['type'] == 'light') {
+                                    } elseif ($Equipement['type'] == 'light' || ($Equipement['type'] == 'info' && $Equipement['action'] == 'toggle')) {
                                         $Link_I_light = $infoCmd;
                                     } else {
                                         $Link_I_store = 'default';

@@ -89,7 +89,7 @@ class Freebox_OS extends eqLogic
 			$cron->setClass('Freebox_OS');
 			$cron->setFunction('RefreshToken');
 			$cron->setEnable(1);
-			$cron->setSchedule('15 * * * *');
+			$cron->setSchedule('*/45 * * * *');
 			$cron->setTimeout('1');
 			$cron->save();
 		}

@@ -172,12 +172,15 @@ class Free_API
             $result = json_decode($content, true);
             if ($result == null) return false;
             if (!$result['success'] && $result['error_code'] != "auth_required") {
+                //if (!$result['success']) {
                 if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
                     log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
                     return false;
-                    // } else if ($result['error_code'] == "auth_required") {
+                } else if ($result['error_code'] == "auth_required") {
+                    //$this->close_session();
+                    //$this->getFreeboxOpenSessionData();
                     //   log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
-                    //  return false;
+                    return false;
                 } else if ($result['error_code'] == 'denied_from_external_ip') {
                     log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $result['msg']);
                     return false;

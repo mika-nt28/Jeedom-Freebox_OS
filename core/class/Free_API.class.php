@@ -145,13 +145,9 @@ class Free_API
                 sleep(1);
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
-            if ($log_createeq != null) {
-                $type_log = 'Freebox_OS' . $log_createeq;
-            } else {
-                $type_log = 'Freebox_OS';
-            }
+
             if ($log_update == false) {
-                log::add($type_log, 'debug', '┌───────── Début de Mise à jour');
+                log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour');
             };
             log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] Connexion ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
             $ch = curl_init();
@@ -174,7 +170,7 @@ class Free_API
             log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] ' . $content);
             $result = json_decode($content, true);
             if ($result == null) return false;
-            if (!$result['success']) {
+            if (!$result['success'] && $result['error_code'] != "auth_required") {
                 if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
                     log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
                     return false;

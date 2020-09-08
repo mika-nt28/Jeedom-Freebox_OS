@@ -178,9 +178,9 @@ class Free_API
                 if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
                     log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
                     return false;
-                } else if ($result['error_code'] == "auth_required") {
-                    log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
-                    return false;
+                    // } else if ($result['error_code'] == "auth_required") {
+                    //   log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
+                    //  return false;
                 } else if ($result['error_code'] == 'denied_from_external_ip') {
                     log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $result['msg']);
                     return false;

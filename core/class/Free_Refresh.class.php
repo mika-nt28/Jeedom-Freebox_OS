@@ -37,10 +37,6 @@ class Free_Refresh
                     break;
                 case 'connexion':
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_xdsl($Equipement, $Free_API);
                     break;
                 case 'disk':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -55,7 +51,6 @@ class Free_Refresh
                     break;
                 case 'downloads':
                     Free_Refresh::refresh_download($Equipement, $Free_API);
-                    Free_Refresh::refresh_download_config($Equipement, $Free_API);
                     break;
                 case 'homeadapters':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -144,6 +139,18 @@ class Free_Refresh
                             break;
                         case "state":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            break;
+                        case "rx_max_rate_lte": // toute la partie çG
+                            Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
+                            break;
+                        case "ping": // toute la partie CONFIG
+                            Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
+                            break;
+                        case "link_type": // toute la partie Fibre
+                            Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
+                            break;
+                        case "modulation": // toute la partie XDSL
+                            Free_Refresh::refresh_connexion_xdsl($Equipement, $Free_API);
                             break;
                     }
                 }
@@ -319,6 +326,9 @@ class Free_Refresh
                             break;
                         case "nb_tasks_checking":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_checking']);
+                            break;
+                        case "mode":
+                            Free_Refresh::refresh_download_config($Equipement, $Free_API);
                             break;
                     }
                 }

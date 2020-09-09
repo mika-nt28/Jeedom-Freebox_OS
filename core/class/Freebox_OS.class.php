@@ -22,6 +22,7 @@ require_once dirname(__FILE__) . '/../../core/php/Freebox_OS.inc.php';
 
 class Freebox_OS extends eqLogic
 {
+	public $dateRun;
 	/*     * *************************Attributs****************************** */
 
 	/*     * ***********************Methode static*************************** */
@@ -88,8 +89,8 @@ class Freebox_OS extends eqLogic
 			$cron->setClass('Freebox_OS');
 			$cron->setFunction('RefreshToken');
 			$cron->setEnable(1);
-			$cron->setSchedule('15 * * * *');
-			$cron->setTimeout('1');
+			$cron->setSchedule('*/48 * * * *');
+			$cron->setTimeout('5');
 			$cron->save();
 		}
 		$cron->start();

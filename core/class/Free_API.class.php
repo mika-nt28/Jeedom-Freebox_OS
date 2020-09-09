@@ -177,9 +177,10 @@ class Free_API
                     log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
                     return false;
                 } else if ($result['error_code'] == "auth_required") {
-                    //$this->close_session();
-                    $this->getFreeboxOpenSessionData();
                     log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['msg']);
+                    $this->close_session();
+                    $this->getFreeboxOpenSessionData();
+                    log::add('Freebox_OS', 'Debug', '[Redémarrage session Terminée à cause de l\'erreur] : ' . $result['msg']);
                     return false;
                 } else if ($result['error_code'] == 'denied_from_external_ip') {
                     log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $result['msg']);

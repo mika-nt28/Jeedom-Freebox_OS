@@ -142,7 +142,7 @@ class Free_API
         try {
             $session_token = cache::byKey('Freebox_OS::SessionToken');
             while ($session_token->getValue('') == '') {
-                sleep(1);
+                //sleep(1);
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
 

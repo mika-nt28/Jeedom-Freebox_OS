@@ -31,3 +31,4 @@ include_file('core', 'Free_Update', 'class', 'Freebox_OS');
 include_file('core', 'Free_CreateEq', 'class', 'Freebox_OS');
 include_file('core', 'Free_CreateTil', 'class', 'Freebox_OS');
 include_file('core', 'Free_CreateTV', 'class', 'Freebox_OS');
+include_file('core', 'Free_Color', 'class', 'Freebox_OS');

@@ -42,7 +42,7 @@ class Free_API
             }
             return $result;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[FreeboxTrackId]' . $e->getCode());
+            log::add('Freebox_OS', 'error', '[Freebox TrackId] : ' . $e->getCode());
         }
     }
 
@@ -56,7 +56,7 @@ class Free_API
             }
             return $result;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[FreeboxAutorisation]' . $e->getCode());
+            log::add('Freebox_OS', 'error', '[Freebox Autorisation] : ' . $e->getCode());
         }
     }
 
@@ -65,7 +65,7 @@ class Free_API
         try {
             $http = new com_http($this->serveur . '/api/v8/login/');
             $json = $http->exec(30, 2);
-            log::add('Freebox_OS', 'debug', '[FreeboxPassword]' . $json);
+            log::add('Freebox_OS', 'debug', '[Freebox Password] : ' . $json);
             $json_connect = json_decode($json, true);
             if ($json_connect['success'])
                 cache::set('Freebox_OS::Challenge', $json_connect['result']['challenge'], 0);
@@ -73,7 +73,7 @@ class Free_API
                 return false;
             return true;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[FreeboxPassword]' . $e->getCode());
+            log::add('Freebox_OS', 'error', '[Freebox Password] : ' . $e->getCode());
         }
     }
 
@@ -93,7 +93,7 @@ class Free_API
                 'password' => hash_hmac('sha1', $challenge->getValue(''), $this->app_token)
             )));
             $json = $http->exec(30, 2);
-            log::add('Freebox_OS', 'debug', '[FreeboxOpenSession]' . $json);
+            log::add('Freebox_OS', 'debug', '[Freebox Open Session] : ' . $json);
             $result = json_decode($json, true);
 
             if (!$result['success']) {
@@ -109,7 +109,7 @@ class Free_API
             }
             return false;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[FreeboxOpenSession]' . $e->getCode());
+            log::add('Freebox_OS', 'error', '[Freebox Open Session] : ' . $e->getCode());
         }
     }
 
@@ -129,11 +129,11 @@ class Free_API
                 'password' => hash_hmac('sha1', $challenge->getValue(''), $this->app_token)
             )));
             $json = $http->exec(30, 2);
-            log::add('Freebox_OS', 'debug', '[getFreeboxOpenSessionData]' . $json);
+            log::add('Freebox_OS', 'debug', '[get Freebox Open Session Data] : ' . $json);
             $result = json_decode($json, true);
             return $result;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[getFreeboxOpenSessionData]' . $e->getCode());
+            log::add('Freebox_OS', 'error', '[get Freebox Open Session Data] : ' . $e->getCode());
         }
     }
 
@@ -145,15 +145,11 @@ class Free_API
                 sleep(1);
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
-            if ($log_createeq != null) {
-                $type_log = 'Freebox_OS' . $log_createeq;
-            } else {
-                $type_log = 'Freebox_OS';
-            }
+
             if ($log_update == false) {
-                log::add($type_log, 'debug', '┌───────── Début de Mise à jour');
+                log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
             };
-            log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] Connexion ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
+            log::add('Freebox_OS', 'debug', '│ [Freebox Request Connexion] : ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $this->serveur . $api_url);
             curl_setopt($ch, CURLOPT_HEADER, false);
@@ -166,20 +162,34 @@ class Free_API
             } elseif ($method == "PUT") {
                 curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
             }
-            if ($params)
+            if ($params) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
+            }
             curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: " . $session_token->getValue('')));
             $content = curl_exec($ch);
             curl_close($ch);
-            log::add('Freebox_OS', 'debug', '│ [FreeboxRequest] ' . $content);
+            log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
             $result = json_decode($content, true);
             if ($result == null) return false;
+            //if (!$result['success'] && $result['error_code'] != "auth_required") {
             if (!$result['success']) {
                 if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
                     log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
                     return false;
-                } else if ($result['error_code'] == "auth_required" || $result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token' || $result['error_code'] == 'denied_from_external_ip' || $result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
-                    log::add('Freebox_OS', 'error', 'Erreur Authentification : ' . $result['msg']);
+                } else if ($result['error_code'] == "auth_required") {
+                    log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['error_code']);
+                    $this->close_session();
+                    $this->getFreeboxOpenSessionData();
+                    log::add('Freebox_OS', 'Debug', '[Redémarrage session Terminée à cause de l\'erreur] : ' . $result['error_code']);
+                    return false;
+                } else if ($result['error_code'] == 'denied_from_external_ip') {
+                    log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $result['msg']);
+                    return false;
+                } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
+                    log::add('Freebox_OS', 'error', 'Erreur Application : ' . $result['msg']);
+                    return false;
+                } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
+                    log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
                     return false;
                 } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                     log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $result['msg']);
@@ -189,7 +199,7 @@ class Free_API
             log::add('Freebox_OS', 'debug', '└─────────');
             return $result;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '│ [FreeboxRequest]' . $e->getCode());
+            log::add('Freebox_OS', 'error', '│ [Freebox Request] : ' . $e->getCode());
             log::add('Freebox_OS', 'debug', '└─────────');
         }
     }
@@ -207,13 +217,13 @@ class Free_API
             $http = new com_http($this->serveur . '/api/v8/login/logout/');
             $http->setPost(array());
             $json = $http->exec(2, 2);
-            log::add('Freebox_OS', 'debug', 'closing session :' . $json);
+            log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $json);
             $SessionToken = cache::byKey('Freebox_OS::SessionToken');
             if (is_object($SessionToken))
                 $SessionToken->remove();
             return $json;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[FreeboxCloseSession]' . $e->getCode());
+            log::add('Freebox_OS', 'error', '[Freebox Close Session] : ' . $e->getCode());
         }
     }
 
@@ -273,7 +283,7 @@ class Free_API
                 $logicalinfo = Freebox_OS::getlogicalinfo();
                 $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
 
-                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', true, false, 'never', null, true);
+                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true);
                 $command->event($value);
                 log::add('Freebox_OS', 'debug', '└─────────');
             }
@@ -460,6 +470,10 @@ class Free_API
                 if ($_options == 'DELETE') {
                     $fonction = "DELETE";
                 }
+                break;
+            case 'lcd':
+                $config = 'api/v8/lcd/config';
+                $config_commande = 'hide_wifi_key';
                 break;
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';

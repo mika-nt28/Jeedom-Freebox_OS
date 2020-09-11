@@ -37,10 +37,6 @@ class Free_Refresh
                     break;
                 case 'connexion':
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
-                    Free_Refresh::refresh_connexion_xdsl($Equipement, $Free_API);
                     break;
                 case 'disk':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -55,7 +51,6 @@ class Free_Refresh
                     break;
                 case 'downloads':
                     Free_Refresh::refresh_download($Equipement, $Free_API);
-                    Free_Refresh::refresh_download_config($Equipement, $Free_API);
                     break;
                 case 'homeadapters':
                     foreach ($Equipement->getCmd('info') as $Command) {
@@ -144,6 +139,18 @@ class Free_Refresh
                             break;
                         case "state":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            break;
+                        case "rx_max_rate_lte": // toute la partie çG
+                            Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
+                            break;
+                        case "ping": // toute la partie CONFIG
+                            Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
+                            break;
+                        case "link_type": // toute la partie Fibre
+                            Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
+                            break;
+                        case "modulation": // toute la partie XDSL
+                            Free_Refresh::refresh_connexion_xdsl($Equipement, $Free_API);
                             break;
                     }
                 }
@@ -319,6 +326,9 @@ class Free_Refresh
                             break;
                         case "nb_tasks_checking":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_checking']);
+                            break;
+                        case "mode":
+                            Free_Refresh::refresh_download_config($Equipement, $Free_API);
                             break;
                     }
                 }
@@ -515,7 +525,7 @@ class Free_Refresh
 
                     switch ($cmd->getSubType()) {
                         case 'numeric':
-                            if ($cmd->getConfiguration('invertslide')) {
+                            if ($cmd->getConfiguration('invertnumeric')) {
                                 $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
                             } else {
                                 if ($data['name'] == 'pushed') {
@@ -524,6 +534,7 @@ class Free_Refresh
                                     $_value = $data['value'];
                                 }
                             }
+                            log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $data['value'] . ' -- valeur Inverser : ' . $cmd->getConfiguration('invertnumeric'));
                             break;
                         case 'string':
                             if ($data['name'] == 'state' && $Equipement->getConfiguration('type') == 'alarm_control') {
@@ -579,14 +590,29 @@ class Free_Refresh
                                 log::add('Freebox_OS', 'debug', '│──────────> Fin Update commande spécifique pour Homebridge');
                             };
 
-                            $_value = $data['value'];
-                            break;
-                        case 'binary':
-                            if ($cmd->getConfiguration('invertslide')) {
-                                $_value = !$data['value'];
+                            if ($data['ui']['display'] == 'color') {
+                                log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
+                                $_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
+                                $_value2 = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
+                                $result = Free_Color::convertRGBToXY($data['value']);
+                                log::add('Freebox_OS', 'debug', '│──────────> x : ' . $result['x'] . ' -- y : ' . $result['y'] . ' -- bri : ' . $result['bri']);
+                                $RGB = Free_Color::convertxyToRGB($result['x'], $result['y'], $result['bri']);
+                                $rouge = substr($_value2, 1, 2);
+                                $vert  = substr($_value2, 3, 2);
+                                $bleu  = substr($_value2, 5, 2);
+                                log::add('Freebox_OS', 'debug', '│──────────> RGB : ' . $RGB);
+                                log::add('Freebox_OS', 'debug', '│──────────> Value 1 : ' . $_value);
+                                log::add('Freebox_OS', 'debug', '│──────────> Value 2 : ' . $_value2);
+                                log::add('Freebox_OS', 'debug', '│──────────> rouge : ' . $rouge . ' -- Vert : ' . $vert . ' -- Bleu : ' . $bleu);
+                                $_light = hexdec(substr($_value, 7, 2));
+                                $_value = '#' . substr($_value2, -6);
+                                log::add('Freebox_OS', 'debug', '>──────────> Display de Type : ' . $data['ui']['display'] . ' -- Light : ' . $_light . ' -- Valeur : ' . $_value);
                             } else {
                                 $_value = $data['value'];
                             }
+                            break;
+                        case 'binary':
+                            $_value = $data['value'];
                             break;
                     }
                     $Equipement->checkAndUpdateCmd($data['ep_id'], $_value);
@@ -598,8 +624,11 @@ class Free_Refresh
 
     private static function refresh_player($Equipement, $Free_API)
     {
+        if ($Equipement->getConfiguration('player') == 'OK') {
+            $results_playerID = $Free_API->universal_get('player_ID', $Equipement->getConfiguration('action'));
+        }
 
-        $results_playerID = $Free_API->universal_get('player_ID', $Equipement->getConfiguration('action'));
+        log::add('Freebox_OS', 'debug', '│──────────> Player OK ? : ' . $Equipement->getConfiguration('player'));
         $results_players = $Free_API->universal_get('player', $Equipement->getConfiguration('action'));
 
         $cmd_mac = $Equipement->getCmd('info', 'mac');

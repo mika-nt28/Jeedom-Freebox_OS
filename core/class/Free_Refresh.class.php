@@ -499,9 +499,34 @@ class Free_Refresh
                             case "4GStatut":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                                 break;
+                            case "mode": // toute la partie Info de la Freebox
+                                Free_Refresh::refresh_system_lan($Equipement, $Free_API);
+                                break;
                         }
                     }
                     break;
+            }
+        }
+    }
+    private static function refresh_system_lan($Equipement, $Free_API)
+    {
+        $result =  $Free_API->universal_get('network', null, null, 'config/');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "ip":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ip']);
+                            break;
+                        case "mode":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mode']);
+                            config::save('TYPE_FREEBOX_MODE', $result['mode'], 'Freebox_OS');
+                            break;
+                        case "name":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['name']);
+                            break;
+                    }
+                }
             }
         }
     }

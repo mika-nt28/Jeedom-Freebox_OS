@@ -60,6 +60,7 @@ class Free_CreateEq
                 break;
             case 'system':
                 Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
                 break;
             case 'wifi':
@@ -70,10 +71,10 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['airmediaName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl');
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['diskName']);
-                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkName']);
-                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkwifiguestName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['phoneName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkwifiguestName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['wifiName']);
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
                 log::add('Freebox_OS', 'debug', '====================================================================================');
@@ -84,10 +85,11 @@ class Free_CreateEq
                 Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
-                Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
+                Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
@@ -384,7 +386,7 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Recherche des Interfaces réseaux ');
         $Free_API = new Free_API();
-        $Free_API->universal_get('network', null, null, 'interfaces');
+        $Free_API->universal_get('network', null, null, 'browser/interfaces');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -404,7 +406,7 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
         log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
-        foreach ($Free_API->universal_get('network', null, null, $_networkinterface) as $Equipement) {
+        foreach ($Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface) as $Equipement) {
             if ($Equipement['primary_name'] != '') {
                 $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true);
                 $Command->setConfiguration('host_type', $Equipement['host_type']);
@@ -462,6 +464,23 @@ class Free_CreateEq
         $system->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateicon, true);
         $system->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateicon, true);
         //$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateicon);
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_system_lan($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifique : ' . $logicalinfo['systemName']);
+        $updateicon = false;
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $iconReboot = 'fas fa-sync';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $iconReboot = 'fas fa-sync icon_red';
+        };
+        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
+        $system->AddCommand('Nom Freebox', 'name', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 60, '0', $updateicon, true);
+        $system->AddCommand('Mode Feeebox', 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  61, '0', $updateicon, true);
+        $system->AddCommand('Ip', 'ip', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  62, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

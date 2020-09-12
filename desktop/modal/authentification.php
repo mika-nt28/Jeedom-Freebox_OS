@@ -54,6 +54,7 @@ if (!isConnect('admin')) {
         <div class="Freebox_OS_Display home">
             <div>
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
             </div>
             <br /><br /> <br />
             <BR>
@@ -68,10 +69,10 @@ if (!isConnect('admin')) {
 
         <div class="Freebox_OS_Display setting" style="display:none;">
             <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i>
-                {{Précédent}}</a>
+            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
             <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
             <a class="btn btn-sm btn-danger pull-right bt_Freebox_OS_ResetConfig"><i class="fas fa-trash"></i> Reset Configuration</a>
+            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
             <br /><br /> <br />
             <BR>
             <center>
@@ -141,6 +142,7 @@ if (!isConnect('admin')) {
             <div>
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
                 <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
             </div>
             <br /><br /> <br />
             <BR>
@@ -167,6 +169,7 @@ if (!isConnect('admin')) {
             <div>
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
                 <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
             </div>
             <br /><br /> <br />
             <BR>
@@ -273,6 +276,7 @@ if (!isConnect('admin')) {
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
                 <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save_room"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc"><i class="fas fa-book"></i> {{Documentation}}</a>
             </div>
             <br /><br /> <br />
             <BR>
@@ -308,6 +312,7 @@ if (!isConnect('admin')) {
             <div>
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
                 <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc"><i class="fas fa-book"></i> {{Documentation}}</a>
             </div>
             <br /><br /> <br />
             <BR>

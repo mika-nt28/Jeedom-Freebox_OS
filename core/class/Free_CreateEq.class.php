@@ -88,8 +88,10 @@ class Free_CreateEq
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
-                Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
+                if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
+                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
+                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
+                }
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
@@ -482,6 +484,8 @@ class Free_CreateEq
         $system->AddCommand('Mode Feeebox', 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  61, '0', $updateicon, true);
         $system->AddCommand('Ip', 'ip', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  62, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
+
+        Free_Refresh::RefreshInformation($logicalinfo['systemID']);
     }
 
     private static function createEq_system_SP($logicalinfo, $templatecore_V4)

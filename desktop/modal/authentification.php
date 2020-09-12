@@ -195,7 +195,8 @@ if (!isConnect('admin')) {
                     </div>
                 </center>
                 <br />
-                <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a></center>
+                <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a>
+                    <a id="bt_Freebox_OS" class="btn btn-sm btn-default bt_Freebox_OS" target='_blank' href='http://mafreebox.freebox.fr'><i class="far fa-hand-point-right"></i> {{Ouvrir Interface Freebox}}</a></center>
                 <br />
                 <table id="table_packages" class="table table-condensed">
                     <thead>

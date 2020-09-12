@@ -415,6 +415,7 @@ function GetSessionData() {
     $('.Freebox_OK').hide();
     $('.Freebox_OK_NEXT').hide();
     $('.bt_Freebox_droitVerif').show();
+    $('.bt_Freebox_OS').show();
 
     $.ajax({
         type: "POST",
@@ -458,6 +459,7 @@ function GetSessionData() {
                     $('.Freebox_OK').show();
                     $('.Freebox_OK_NEXT').show();
                     $('.bt_Freebox_droitVerif').hide();
+                    $('.bt_Freebox_OS').hide();
 
                     progress(65);
                 }

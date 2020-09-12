@@ -195,8 +195,7 @@ if (!isConnect('admin')) {
                     </div>
                 </center>
                 <br />
-                <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a>
-                    <a id="bt_Freebox_OS" class="btn btn-sm btn-default bt_Freebox_OS" target='_blank' href='http://mafreebox.freebox.fr'><i class="far fa-hand-point-right"></i> {{Ouvrir Interface Freebox}}</a></center>
+                <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a> <a id="bt_Freebox_OS" class="btn btn-sm btn-default bt_Freebox_OS" target='_blank' href='http://mafreebox.freebox.fr'><i class="far fa-hand-point-right"></i> {{Ouvrir Interface Freebox}}</a></center>
                 <br />
                 <table id="table_packages" class="table table-condensed">
                     <thead>
@@ -277,7 +276,7 @@ if (!isConnect('admin')) {
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
                 <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save_room"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc"><i class="fas fa-book"></i> {{Documentation}}</a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
             </div>
             <br /><br /> <br />
             <BR>
@@ -313,7 +312,7 @@ if (!isConnect('admin')) {
             <div>
                 <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
                 <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc"><i class="fas fa-book"></i> {{Documentation}}</a>
+                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
             </div>
             <br /><br /> <br />
             <BR>

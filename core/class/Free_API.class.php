@@ -340,7 +340,7 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network':
-                $config = 'api/v8/lan/browser/' . $update_type;
+                $config = 'api/v8/lan/' . $update_type;
                 break;
             case 'network_ping':
                 $config = 'api/v8/lan/browser/' . $update_type  . $id;

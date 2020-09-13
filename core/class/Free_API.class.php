@@ -155,12 +155,12 @@ class Free_API
             curl_setopt($ch, CURLOPT_HEADER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
             if ($method == "POST") {
                 curl_setopt($ch, CURLOPT_POST, true);
-            } elseif ($method == "DELETE") {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-            } elseif ($method == "PUT") {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            } elseif ($method == "DELETE" || $method == "PUT") {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
             }
             if ($params) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
@@ -168,7 +168,9 @@ class Free_API
             curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: " . $session_token->getValue('')));
             $content = curl_exec($ch);
             curl_close($ch);
+
             log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
+
             $result = json_decode($content, true);
             if ($result == null) return false;
             //if (!$result['success'] && $result['error_code'] != "auth_required") {

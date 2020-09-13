@@ -37,6 +37,9 @@ class Freebox_OS extends eqLogic
 					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
 					Free_Refresh::RefreshInformation($eqLogic->getId());
 				}
+				if ($deamon_info['state'] != 'ok') {
+					log::add('Freebox_OS', 'debug', '================= PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state'] . ' ==================');
+				}
 			} catch (Exception $exc) {
 				log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh);
 			}
@@ -56,6 +59,8 @@ class Freebox_OS extends eqLogic
 				Free_CreateTil::createTil('homeadapters_SP');
 			}
 			log::add('Freebox_OS', 'debug', '================= FIN CRON JOUR ' . ' ==================');
+		} else {
+			log::add('Freebox_OS', 'debug', '================= PAS DE CRON JOUR à cause du Démon : ' . $deamon_info['state'] . ' ==================');
 		}
 	}
 

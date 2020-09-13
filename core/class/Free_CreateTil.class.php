@@ -20,11 +20,6 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_CreateTil
 {
-    // init variable
-    private $Link_I_store;
-    private $Link_I_ALARM;
-    private $Link_I_ALARM_ENABLE;
-    private $_eqLogic;
 
     public static function createTil($create = 'default')
     {
@@ -246,6 +241,10 @@ class Free_CreateTil
                 $Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
                 $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $Equipement['type']), $Equipement['node_id'], $category, true, $Equipement['type'], $Equipement['action'], null, $_autorefresh, $room);
             }
+            $Link_I_store = null;
+            $Link_I_ALARM = null;
+            $Link_I_ALARM_ENABLE = null;
+            $_eqLogic = null;
             foreach ($Equipement['data'] as $Command) {
                 if ($Command['label'] != '') {
                     $info = null;

@@ -437,12 +437,20 @@ class Free_Refresh
 
     private static function refresh_system($Equipement, $Free_API)
     {
+        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système');
+        $result = $Free_API->universal_get('system', null, null, null);
+        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement des capteurs');
+        $result_sensors = $Free_API->universal_get('system', null, "sensors");
+        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement des ventilateurs');
+        $result_fans = $Free_API->universal_get('system', null, "fans");
+        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement des extensions');
+        $result_expansions = $Free_API->universal_get('system', null, "expansions");
         foreach ($Equipement->getCmd('info') as $Command) {
             $logicalId = $Command->getConfiguration('logicalId');
 
             switch ($Command->getConfiguration('logicalId')) {
                 case "sensors":
-                    foreach ($Free_API->universal_get('system', null, "sensors") as $system) {
+                    foreach ($result_sensors as $system) {
                         if ($Command->getLogicalId() != $system['id']) continue;
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
@@ -450,7 +458,7 @@ class Free_Refresh
                     }
                     break;
                 case "fans":
-                    foreach ($Free_API->universal_get('system', null, "fans") as $system) {
+                    foreach ($result_fans as $system) {
                         if ($Command->getLogicalId() != $system['id']) continue;
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
@@ -458,7 +466,7 @@ class Free_Refresh
                     }
                     break;
                 case "expansions":
-                    foreach ($Free_API->universal_get('system', null, "expansions") as $system) {
+                    foreach ($result_expansions as $system) {
                         if ($Command->getLogicalId() != $system['slot']) continue;
                         $value = $system['present'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['slot'] . ' -- valeur : ' . $value);
@@ -467,12 +475,6 @@ class Free_Refresh
                     break;
                 default:
                     if (is_object($Command)) {
-                        if ($Command->getLogicalId() == "4GStatut") {
-                            $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
-                        } else {
-                            $result = $Free_API->universal_get('system', null, null, null);
-                        }
-
                         switch ($Command->getLogicalId()) {
                             case "mac":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
@@ -496,8 +498,8 @@ class Free_Refresh
                             case "firmware_version":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
                                 break;
-                            case "4GStatut":
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                            case "4GStatut": // toute la partie 4G
+                                Free_Refresh::refresh_system_4G($Equipement, $Free_API);
                                 break;
                             case "mode": // toute la partie Info de la Freebox
                                 Free_Refresh::refresh_system_lan($Equipement, $Free_API);
@@ -508,8 +510,25 @@ class Free_Refresh
             }
         }
     }
+    private static function refresh_system_4G($Equipement, $Free_API)
+    {
+        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement 4G');
+        $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "4GStatut":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                            break;
+                    }
+                }
+            }
+        }
+    }
     private static function refresh_system_lan($Equipement, $Free_API)
     {
+        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement Config Freebox');
         $result =  $Free_API->universal_get('network', null, null, 'config/');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {

@@ -468,6 +468,7 @@ class Free_CreateEq
         $system->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateicon, true);
         $system->AddCommand('Type de Freebox', 'pretty_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info', 0, null, 0, 'default', 'default',  63, '0', $updateicon, true);
         $system->AddCommand('Type de Wifi', 'wifi_type', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'model_info',  0, null, 0, 'default', 'default',  64, '0', $updateicon, true);
+        $system->AddCommand('Modele de Freebox', 'model_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info',  0, null, 0, 'default', 'default',  65, '0', $updateicon, true);
         //$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateicon);
         log::add('Freebox_OS', 'debug', '└─────────');
     }

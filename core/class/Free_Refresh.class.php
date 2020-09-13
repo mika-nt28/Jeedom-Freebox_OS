@@ -470,8 +470,13 @@ class Free_Refresh
                 case "model_info":
                     if (is_object($Command)) {
                         switch ($Command->getLogicalId()) {
+                            case "model_name":
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['name']);
+                                log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['name']);
+                                break;
                             case "pretty_name":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['pretty_name']);
+                                config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
                                 log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['pretty_name']);
                                 break;
                             case "wifi_type":
@@ -507,6 +512,7 @@ class Free_Refresh
                                 break;
                             case "board_name":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
+                                config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
                                 break;
                             case "serial":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);

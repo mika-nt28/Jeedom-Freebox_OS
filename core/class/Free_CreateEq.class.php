@@ -88,6 +88,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
                 if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
@@ -465,6 +466,8 @@ class Free_CreateEq
         $system->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateicon, true);
         $system->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateicon, true);
         $system->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateicon, true);
+        $system->AddCommand('Type de Freebox', 'pretty_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info', 0, null, 0, 'default', 'default',  63, '0', $updateicon, true);
+        $system->AddCommand('Type de Wifi', 'wifi_type', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'model_info',  0, null, 0, 'default', 'default',  64, '0', $updateicon, true);
         //$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateicon);
         log::add('Freebox_OS', 'debug', '└─────────');
     }

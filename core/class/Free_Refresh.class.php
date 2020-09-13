@@ -439,18 +439,12 @@ class Free_Refresh
     {
         log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système');
         $result = $Free_API->universal_get('system', null, null, null);
-        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement des capteurs');
-        $result_sensors = $Free_API->universal_get('system', null, "sensors");
-        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement des ventilateurs');
-        $result_fans = $Free_API->universal_get('system', null, "fans");
-        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement des extensions');
-        $result_expansions = $Free_API->universal_get('system', null, "expansions");
         foreach ($Equipement->getCmd('info') as $Command) {
             $logicalId = $Command->getConfiguration('logicalId');
 
             switch ($Command->getConfiguration('logicalId')) {
                 case "sensors":
-                    foreach ($result_sensors as $system) {
+                    foreach ($result['sensors'] as $system) {
                         if ($Command->getLogicalId() != $system['id']) continue;
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
@@ -458,7 +452,7 @@ class Free_Refresh
                     }
                     break;
                 case "fans":
-                    foreach ($result_fans as $system) {
+                    foreach ($result['fans'] as $system) {
                         if ($Command->getLogicalId() != $system['id']) continue;
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
@@ -466,11 +460,38 @@ class Free_Refresh
                     }
                     break;
                 case "expansions":
-                    foreach ($result_expansions as $system) {
+                    foreach ($result['expansions'] as $system) {
                         if ($Command->getLogicalId() != $system['slot']) continue;
                         $value = $system['present'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['slot'] . ' -- valeur : ' . $value);
                         $Equipement->checkAndUpdateCmd($system['slot'], $value);
+                    }
+                    break;
+                case "model_info":
+                    if (is_object($Command)) {
+                        switch ($Command->getLogicalId()) {
+                            case "model_name":
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['name']);
+                                log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['name']);
+                                break;
+                            case "pretty_name":
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['pretty_name']);
+                                config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
+                                log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['pretty_name']);
+                                break;
+                            case "wifi_type":
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['wifi_type']);
+                                log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['wifi_type']);
+                                break;
+                        }
+                    }
+
+
+                    foreach ($result['model_info'] as $system) {
+                        if ($Command->getLogicalId() != $system['slot']) continue;
+                        $value = $system['value'];
+                        log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
+                        $Equipement->checkAndUpdateCmd($system['id'], $value);
                     }
                     break;
                 default:
@@ -491,6 +512,7 @@ class Free_Refresh
                                 break;
                             case "board_name":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
+                                config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
                                 break;
                             case "serial":
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);

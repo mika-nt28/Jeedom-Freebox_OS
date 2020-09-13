@@ -22,7 +22,6 @@ require_once dirname(__FILE__) . '/../../core/php/Freebox_OS.inc.php';
 
 class Freebox_OS extends eqLogic
 {
-	public $dateRun;
 	/*     * *************************Attributs****************************** */
 
 	/*     * ***********************Methode static*************************** */

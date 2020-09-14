@@ -408,7 +408,6 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
-        log::add('Freebox_OS', 'debug', '>───────── Commande trouvée pour le réseau');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
         foreach ($result as $Equipement) {
             if ($Equipement['primary_name'] != '') {

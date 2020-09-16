@@ -315,12 +315,21 @@ class Freebox_OS extends eqLogic
 		}
 		$Command->save();
 
+		$createRefreshCmd = true;
 		$refresh = $this->getCmd(null, 'refresh');
 		if (!is_object($refresh)) {
-			$refresh = new Freebox_OSCmd();
-			$refresh->setLogicalId('refresh');
-			$refresh->setIsVisible(1);
-			$refresh->setName(__('Rafraichir', __FILE__));
+			$refresh = cmd::byEqLogicIdCmdName($this->getId(), __('Rafraichir', __FILE__));
+			if (is_object($refresh)) {
+				$createRefreshCmd = false;
+			}
+		}
+		if ($createRefreshCmd) {
+			if (!is_object($refresh)) {
+				$refresh = new Freebox_OSCmd();
+				$refresh->setLogicalId('refresh');
+				$refresh->setIsVisible(1);
+				$refresh->setName(__('Rafraichir', __FILE__));
+			}
 			$refresh->setType('action');
 			$refresh->setSubType('other');
 			$refresh->setEqLogic_id($this->getId());
@@ -355,12 +364,21 @@ class Freebox_OS extends eqLogic
 			Free_Refresh::RefreshInformation($this->getId());
 		}
 
+		$createRefreshCmd = true;
 		$refresh = $this->getCmd(null, 'refresh');
 		if (!is_object($refresh)) {
-			$refresh = new Freebox_OSCmd();
-			$refresh->setLogicalId('refresh');
-			$refresh->setIsVisible(1);
-			$refresh->setName(__('Rafraichir', __FILE__));
+			$refresh = cmd::byEqLogicIdCmdName($this->getId(), __('Rafraichir', __FILE__));
+			if (is_object($refresh)) {
+				$createRefreshCmd = false;
+			}
+		}
+		if ($createRefreshCmd) {
+			if (!is_object($refresh)) {
+				$refresh = new Freebox_OSCmd();
+				$refresh->setLogicalId('refresh');
+				$refresh->setIsVisible(1);
+				$refresh->setName(__('Rafraichir', __FILE__));
+			}
 			$refresh->setType('action');
 			$refresh->setSubType('other');
 			$refresh->setEqLogic_id($this->getId());
@@ -510,6 +528,13 @@ class Freebox_OS extends eqLogic
 
 class Freebox_OSCmd extends cmd
 {
+	public function dontRemoveCmd()
+	{
+		if ($this->getLogicalId() == 'refresh') {
+			return true;
+		}
+		return false;
+	}
 	public function execute($_options = array())
 	{
 		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');

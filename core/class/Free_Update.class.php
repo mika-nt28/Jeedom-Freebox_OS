@@ -35,8 +35,13 @@ class Free_Update
 
         switch ($update) {
             case 'airmedia':
-                Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
+                    Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                } else {
+                    log::add('Freebox_OS', 'debug', '│ Pas de fonction rafraichir pour cet équipement');
+                    log::add('Freebox_OS', 'debug', '└─────────');
+                }
                 break;
             case 'connexion':
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());

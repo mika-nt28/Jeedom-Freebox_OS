@@ -384,17 +384,67 @@ class Free_Refresh
             }
         }
     }
+    private static function refresh_network_global($Equipement, $Free_API, $_network = 'LAN')
+    {
+        if ($_network == 'LAN') {
+            $_networkinterface = 'pub';
+        } else if ($_network == 'WIFIGUEST') {
+            $_networkinterface = 'wifiguest';
+        }
+        $result_network = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
 
+
+        foreach ($Equipement->getCmd('info') as $Command) {
+            if (is_object($Command)) {
+                foreach ($result_network as $result) {
+                    //$Command->getLogicalId() != $result['id'];
+                    $test = $Command->getLogicalId();
+                    if (isset($result['l3connectivities'])) {
+                        foreach ($result['l3connectivities'] as $Ip) {
+                            if ($Ip['active']) {
+                                if ($Ip['af'] == 'ipv4') {
+                                    $Command->setConfiguration('IPV4', $Ip['addr']);
+                                    log::add('Freebox_OS', 'debug', '>─────────  IPV4 : ' . $Ip['addr']);
+                                } else {
+                                    $Command->setConfiguration('IPV6', $Ip['addr']);
+                                    log::add('Freebox_OS', 'debug', '>─────────  IPV6 : ' . $Ip['addr']);
+                                }
+                            }
+                        }
+                    }
+                    $test->setConfiguration('host_type', $result['host_type']);
+                    $Command->save();
+                    if (isset($result['active'])) {
+                        if ($result['active'] == 'true') {
+                            $Command->setOrder($Command->getOrder() % 1000);
+                            $Command->save();
+                            log::add('Freebox_OS', 'debug', '>───────── TESSSSSSSST' . $Command->getLogicalId() . ' : true ');
+                            $Equipement->checkAndUpdateCmd($result['id'], true);
+                        } else {
+                            $Command->setOrder($Command->getOrder() % 1000 + 1000);
+                            $Command->save();
+                            log::add('Freebox_OS', 'debug', '>───────── ' . $Command->getLogicalId() . ' : false ');
+                            $Equipement->checkAndUpdateCmd($result['id'], false);
+                        }
+                    } else {
+                        $Equipement->checkAndUpdateCmd($result['id'], false);
+                    }
+                    $Command->setConfiguration('host_type', $result['host_type']);
+                    $Command->save();
+                    log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $result['active'] . ' -- Type : ' . $result['host_type']);
+                }
+            }
+        }
     private static function refresh_network($Equipement, $Free_API, $_network = 'LAN')
     {
         if ($_network == 'LAN') {
-            $update_type = 'pub';
+            $_networkinterface = 'pub';
         } else if ($_network == 'WIFIGUEST') {
-            $update_type = 'wifiguest';
+            $_networkinterface = 'wifiguest';
         }
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
-                $result = $Free_API->universal_get('network_ping', $Command->getLogicalId(), null, $update_type);
+                $result = $Free_API->universal_get('network_ping', $Command->getLogicalId(), null, $_networkinterface);
                 if (!$result['success']) {
                     log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
                     if ($result['error_code'] === "internal_error") {

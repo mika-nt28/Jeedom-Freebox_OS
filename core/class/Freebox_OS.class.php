@@ -51,8 +51,8 @@ class Freebox_OS extends eqLogic
 		if ($deamon_info['state'] == 'ok') {
 			log::add('Freebox_OS', 'debug', '================= CRON JOUR ' . ' ==================');
 			if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
-				Free_CreateEq::createEq('network');
-				Free_CreateEq::createEq('networkwifiguest');
+				Free_CreateEq::createEq('network', false);
+				Free_CreateEq::createEq('networkwifiguest', false);
 			}
 			Free_CreateEq::createEq('disk');
 			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {

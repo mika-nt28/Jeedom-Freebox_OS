@@ -20,7 +20,7 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 
 class Free_CreateEq
 {
-    public static function createEq($create = 'default')
+    public static function createEq($create = 'default', $IsVisible = true)
     {
         $logicalinfo = Freebox_OS::getlogicalinfo();
         if (version_compare(jeedom::version(), "4", "<")) {
@@ -49,11 +49,11 @@ class Free_CreateEq
                 break;
             case 'network':
                 Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'LAN');
+                Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'LAN', $IsVisible);
                 break;
             case 'networkwifiguest':
                 Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'WIFIGUEST');
+                Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'WIFIGUEST', $IsVisible);
                 break;
             case 'phone':
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
@@ -393,7 +393,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_network_SP($logicalinfo, $templatecore_V4, $_network = 'LAN')
+    private static function createEq_network_SP($logicalinfo, $templatecore_V4, $_network = 'LAN', $IsVisible = true)
     {
         if ($_network == 'LAN') {
             $_networkname = $logicalinfo['networkName'];
@@ -411,7 +411,7 @@ class Free_CreateEq
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
         foreach ($result as $Equipement) {
             if ($Equipement['primary_name'] != '') {
-                $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true);
+                $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true);
                 $Command->setConfiguration('host_type', $Equipement['host_type']);
                 if (isset($Equipement['l3connectivities'])) {
                     foreach ($Equipement['l3connectivities'] as $Ip) {

@@ -1,7 +1,6 @@
 <img align="right" src="plugin_info/freebox_os_icon.png" width="150">
 
-[![GitHub license](https://img.shields.io/badge/License-GPL%20v3-blue.svg)](https://github.com/jeedom/core/blob/master/LICENSE)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/jeedom/core/graphs/commit-activity)
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/mika-nt28/Jeedom-Freebox_OS/graphs/commit-activity)
 [![GitHub contributors](https://img.shields.io/github/contributors/jeedom/core.svg)](https://github.com/mika-nt28/Jeedom-Freebox_OS/graphs/contributors/)
 
 # Jeedom - Plugin Freebox OS

@@ -78,7 +78,7 @@ class Free_Refresh
                     Free_Refresh::refresh_player($Equipement, $Free_API);
                     break;
                 case 'network':
-                    Free_Refresh::refresh_network($Equipement, $Free_API, 'LAN');
+                    Free_Refresh::refresh_network_global($Equipement, $Free_API, 'LAN');
                     break;
                 case 'networkwifiguest':
                     Free_Refresh::refresh_network($Equipement, $Free_API, 'WIFIGUEST');
@@ -386,6 +386,8 @@ class Free_Refresh
     }
     private static function refresh_network_global($Equipement, $Free_API, $_network = 'LAN')
     {
+        $cmd = null;
+        $value = null;
         if ($_network == 'LAN') {
             $_networkinterface = 'pub';
         } else if ($_network == 'WIFIGUEST') {
@@ -397,44 +399,40 @@ class Free_Refresh
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
                 foreach ($result_network as $result) {
-                    //$Command->getLogicalId() != $result['id'];
-                    $test = $Command->getLogicalId();
+
+                    $cmd = $Equipement->getCmd('info', $result['id']);
+                    if ($Command->getLogicalId() != $result['id']) continue;
                     if (isset($result['l3connectivities'])) {
                         foreach ($result['l3connectivities'] as $Ip) {
                             if ($Ip['active']) {
                                 if ($Ip['af'] == 'ipv4') {
-                                    $Command->setConfiguration('IPV4', $Ip['addr']);
-                                    log::add('Freebox_OS', 'debug', '>─────────  IPV4 : ' . $Ip['addr']);
+                                    $cmd->setConfiguration('IPV4', $Ip['addr']);
                                 } else {
-                                    $Command->setConfiguration('IPV6', $Ip['addr']);
-                                    log::add('Freebox_OS', 'debug', '>─────────  IPV6 : ' . $Ip['addr']);
+                                    $cmd->setConfiguration('IPV6', $Ip['addr']);
                                 }
                             }
                         }
                     }
-                    $test->setConfiguration('host_type', $result['host_type']);
-                    $Command->save();
+                    $cmd->setConfiguration('host_type', $result['host_type']);
                     if (isset($result['active'])) {
                         if ($result['active'] == 'true') {
-                            $Command->setOrder($Command->getOrder() % 1000);
-                            $Command->save();
-                            log::add('Freebox_OS', 'debug', '>───────── TESSSSSSSST' . $Command->getLogicalId() . ' : true ');
-                            $Equipement->checkAndUpdateCmd($result['id'], true);
+                            $cmd->setOrder($cmd->getOrder() % 1000);
+                            $value = true;
                         } else {
-                            $Command->setOrder($Command->getOrder() % 1000 + 1000);
-                            $Command->save();
-                            log::add('Freebox_OS', 'debug', '>───────── ' . $Command->getLogicalId() . ' : false ');
-                            $Equipement->checkAndUpdateCmd($result['id'], false);
+                            $cmd->setOrder($cmd->getOrder() % 1000 + 1000);
+                            $value = false;
                         }
                     } else {
-                        $Equipement->checkAndUpdateCmd($result['id'], false);
+                        $value = false;
                     }
-                    $Command->setConfiguration('host_type', $result['host_type']);
-                    $Command->save();
+
+                    $Equipement->checkAndUpdateCmd($cmd, $value);
+                    $cmd->save();
                     log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $result['active'] . ' -- Type : ' . $result['host_type']);
                 }
             }
         }
+    }
     private static function refresh_network($Equipement, $Free_API, $_network = 'LAN')
     {
         if ($_network == 'LAN') {

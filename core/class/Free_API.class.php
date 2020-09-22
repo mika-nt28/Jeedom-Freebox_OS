@@ -394,7 +394,7 @@ class Free_API
                 case 'disk':
                     $total_bytes = $result['result']['partitions'][0]['total_bytes'];
                     $used_bytes = $result['result']['partitions'][0]['used_bytes'];
-                    if ($used_bytes != null) {
+                    if ($total_bytes != null) {
                         $value = round($used_bytes / $total_bytes * 100, 2);
                     } else {
                         $value = 0;

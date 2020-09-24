@@ -397,7 +397,7 @@ class Free_Refresh
 
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
-                $cmd_ok = false;
+                //$cmd_ok = false;
                 foreach ($result_network as $result) {
 
                     $cmd = $Equipement->getCmd('info', $result['id']);
@@ -429,7 +429,7 @@ class Free_Refresh
 
                     $Equipement->checkAndUpdateCmd($cmd, $value);
                     $cmd->save();
-                    $cmd_ok = true;
+                    //$cmd_ok = true;
                     log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $result['active'] . ' -- Type : ' . $result['host_type']);
                 }
                 /* if ($cmd_ok != true) {

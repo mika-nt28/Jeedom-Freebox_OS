@@ -386,7 +386,6 @@ class Free_Refresh
     }
     private static function refresh_network_global($Equipement, $Free_API, $_network = 'LAN')
     {
-        $cmd = null;
         $value = null;
         if ($_network == 'LAN') {
             $_networkinterface = 'pub';
@@ -396,8 +395,13 @@ class Free_Refresh
         $result_network = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
 
         foreach ($Equipement->getCmd('info') as $Command) {
+            $_control_id = array_search($Command->getLogicalId(), array_column($result_network, 'id'), true);
+
+            if ($_control_id  === false) {
+                log::add('Freebox_OS', 'debug', '│===========> APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
+                $Command->remove();
+            }
             if (is_object($Command)) {
-                $cmd_ok = false;
                 foreach ($result_network as $result) {
 
                     $cmd = $Equipement->getCmd('info', $result['id']);
@@ -429,13 +433,9 @@ class Free_Refresh
 
                     $Equipement->checkAndUpdateCmd($cmd, $value);
                     $cmd->save();
-                    $cmd_ok = true;
                     log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $result['active'] . ' -- Type : ' . $result['host_type']);
+                    break;
                 }
-                /* if ($cmd_ok != true) {
-                    log::add('Freebox_OS', 'debug', '>───────── APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
-                    $Command->remove();
-                }*/
             }
         }
     }
@@ -503,6 +503,7 @@ class Free_Refresh
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
                         $Equipement->checkAndUpdateCmd($system['id'], $value);
+                        break;
                     }
                     break;
                 case "fans":
@@ -511,6 +512,7 @@ class Free_Refresh
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
                         $Equipement->checkAndUpdateCmd($system['id'], $value);
+                        break;
                     }
                     break;
                 case "expansions":
@@ -521,6 +523,7 @@ class Free_Refresh
                         $value = $system['present'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['slot'] . ' -- valeur : ' . $value);
                         $Equipement->checkAndUpdateCmd($system['slot'], $value);
+                        break;
                     }
                     break;
                 case "model_info":
@@ -548,6 +551,7 @@ class Free_Refresh
                         $value = $system['value'];
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
                         $Equipement->checkAndUpdateCmd($system['id'], $value);
+                        break;
                     }
                     break;
                 default:

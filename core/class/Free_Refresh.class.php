@@ -432,10 +432,10 @@ class Free_Refresh
                     $cmd_ok = true;
                     log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $result['active'] . ' -- Type : ' . $result['host_type']);
                 }
-                if ($cmd_ok != true) {
+                /* if ($cmd_ok != true) {
                     log::add('Freebox_OS', 'debug', '>───────── APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
                     $Command->remove();
-                }
+                }*/
             }
         }
     }

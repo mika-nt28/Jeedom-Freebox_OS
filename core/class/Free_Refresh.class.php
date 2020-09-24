@@ -386,7 +386,7 @@ class Free_Refresh
     }
     private static function refresh_network_global($Equipement, $Free_API, $_network = 'LAN')
     {
-        $cmd = null;
+        //$cmd = null;
         $value = null;
         if ($_network == 'LAN') {
             $_networkinterface = 'pub';
@@ -432,6 +432,7 @@ class Free_Refresh
                     //$cmd_ok = true;
                     log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $result['active'] . ' -- Type : ' . $result['host_type']);
                 }
+                //Suppression commande si non présente
                 /* if ($cmd_ok != true) {
                     log::add('Freebox_OS', 'debug', '>───────── APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
                     $Command->remove();

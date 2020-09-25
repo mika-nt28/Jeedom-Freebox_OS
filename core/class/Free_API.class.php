@@ -285,7 +285,11 @@ class Free_API
             foreach ($reponse['result'] as $disks) {
                 $total_bytes = $disks['partitions'][0]['total_bytes'];
                 $used_bytes = $disks['partitions'][0]['used_bytes'];
-                $value = round($used_bytes / $total_bytes * 100, 2);
+                if ($total_bytes != null) {
+                    $value = round($used_bytes / $total_bytes * 100, 2);
+                } else {
+                    $value = 0;
+                }
                 log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
                 log::add('Freebox_OS', 'debug', '│ Disque  [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 
@@ -349,11 +353,12 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network':
+            case 'network_ping':
                 $config = 'api/v8/lan/' . $update_type;
                 break;
-            case 'network_ping':
-                $config = 'api/v8/lan/browser/' . $update_type  . $id;
-                break;
+                //case 'network_ping': // A SUPPRIMER A LA FIN DES TESTS NOUVELLE METHODE
+                //  $config = 'api/v8/lan/browser/' . $update_type  . $id;
+                //break;
             case 'system':
                 $config = 'api/v8/system';
                 break;

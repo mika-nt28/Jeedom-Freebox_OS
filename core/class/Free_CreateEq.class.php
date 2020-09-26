@@ -414,36 +414,39 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
-        foreach ($result as $Equipement) {
-            if ($Equipement['primary_name'] != '') {
-                $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true);
-                $Command->setConfiguration('host_type', $Equipement['host_type']);
-                if (isset($Equipement['l3connectivities'])) {
-                    foreach ($Equipement['l3connectivities'] as $Ip) {
-                        if ($Ip['active']) {
-                            if ($Ip['af'] == 'ipv4') {
-                                $Command->setConfiguration('IPV4', $Ip['addr']);
-                            } else {
-                                $Command->setConfiguration('IPV6', $Ip['addr']);
+        if ($result['result'] != null) {
+
+            foreach ($result as $Equipement) {
+                if ($Equipement['primary_name'] != '') {
+                    $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true);
+                    $Command->setConfiguration('host_type', $Equipement['host_type']);
+                    if (isset($Equipement['l3connectivities'])) {
+                        foreach ($Equipement['l3connectivities'] as $Ip) {
+                            if ($Ip['active']) {
+                                if ($Ip['af'] == 'ipv4') {
+                                    $Command->setConfiguration('IPV4', $Ip['addr']);
+                                } else {
+                                    $Command->setConfiguration('IPV6', $Ip['addr']);
+                                }
                             }
                         }
                     }
-                }
-                if (isset($Equipement['l2ident'])) {
-                    $ident = $Equipement['l2ident'];
-                    if ($ident['type'] == 'mac_address') {
-                        $Command->setConfiguration('mac_address', $ident['id']);
+                    if (isset($Equipement['l2ident'])) {
+                        $ident = $Equipement['l2ident'];
+                        if ($ident['type'] == 'mac_address') {
+                            $Command->setConfiguration('mac_address', $ident['id']);
+                        }
                     }
+                    if ($Command->execCmd() != $Equipement['active']) {
+                        $Command->setCollectDate(date('Y-m-d H:i:s'));
+                        $Command->setConfiguration('doNotRepeatEvent', 1);
+                        $Command->event($Equipement['active']);
+                    }
+                    $Command->save();
                 }
-                if ($Command->execCmd() != $Equipement['active']) {
-                    $Command->setCollectDate(date('Y-m-d H:i:s'));
-                    $Command->setConfiguration('doNotRepeatEvent', 1);
-                    $Command->event($Equipement['active']);
-                }
-                $Command->save();
             }
+            log::add('Freebox_OS', 'debug', '└─────────');
         }
-        log::add('Freebox_OS', 'debug', '└─────────');
     }
 
     private static function createEq_notification($logicalinfo, $templatecore_V4)

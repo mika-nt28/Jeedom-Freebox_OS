@@ -356,9 +356,9 @@ class Free_API
             case 'network_ping':
                 $config = 'api/v8/lan/' . $update_type;
                 break;
-                //case 'network_ping': // A SUPPRIMER A LA FIN DES TESTS NOUVELLE METHODE
-                //  $config = 'api/v8/lan/browser/' . $update_type  . $id;
-                //break;
+            case 'network_ID':
+                $config = 'api/v8/lan/browser/' . $update_type  . $id;
+                break;
             case 'system':
                 $config = 'api/v8/system';
                 break;
@@ -442,7 +442,7 @@ class Free_API
 
             return $value;
         } else {
-            if ($update == "network_ping") {
+            if ($update == "network_ping" || $update == "network_ID") {
                 return $result;
             } else if ($update_type == 'lte/config') {
                 return $result['msg'];

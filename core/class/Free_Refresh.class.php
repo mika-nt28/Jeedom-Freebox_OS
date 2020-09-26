@@ -456,7 +456,7 @@ class Free_Refresh
         }
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
-                $result = $Free_API->universal_get('network_ping', $Command->getLogicalId(), null, $_networkinterface);
+                $result = $Free_API->universal_get('network_ID', $Command->getLogicalId(), null, $_networkinterface);
                 if (!$result['success']) {
                     log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
                     if ($result['error_code'] === "internal_error") {

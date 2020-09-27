@@ -619,19 +619,19 @@ class Free_Refresh
     {
         log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement Config Freebox');
         $result =  $Free_API->universal_get('network', null, null, 'config/');
-        if ($result != false) {
+        if ($result != false || isset($result['result']) != true) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "ip":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['ip']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['ip']);
                             break;
                         case "mode":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mode']);
-                            config::save('TYPE_FREEBOX_MODE', $result['mode'], 'Freebox_OS');
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['mode']);
+                            config::save('TYPE_FREEBOX_MODE', $result['result']['mode'], 'Freebox_OS');
                             break;
                         case "name":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['name']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['name']);
                             break;
                     }
                 }
@@ -641,6 +641,9 @@ class Free_Refresh
 
     private static function refresh_default($Equipement, $Free_API)
     {
+        $_Alarm_mode_value = null;
+        $_Alarm_stat_value = null;
+        $_Alarm_mode_value = null;
         $results = $Free_API->universal_get('tiles', $Equipement->getLogicalId(), null, null);
 
         if ($results != false) {

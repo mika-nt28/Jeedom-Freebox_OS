@@ -619,7 +619,8 @@ class Free_Refresh
     {
         log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement Config Freebox');
         $result =  $Free_API->universal_get('network', null, null, 'config/');
-        if ($result != false || isset($result['result']) != true) {
+
+        if ($result != false || isset($result['result']) != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {

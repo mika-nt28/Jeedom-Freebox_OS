@@ -251,6 +251,16 @@ class Freebox_OS extends eqLogic
 				$Command->setConfiguration('calculValueOffset', $_calculValueOffset);
 				$Command->setConfiguration('historizeRound', $_historizeRound);
 			}
+			if ($_home_mode_set != null) { // Compatibilité Homebridge
+				$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
+				$this->save(true);
+				if ($_home_mode_set == 'SetModeAbsent') {
+					$this->setConfiguration('SetModePresent', "NOT");
+				} else {
+					$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
+				}
+				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
+			}
 			$Command->save();
 		}
 		if ($generic_type != null) {
@@ -260,16 +270,6 @@ class Freebox_OS extends eqLogic
 			$Command->setConfiguration('logicalId_slider', $link_I);
 		}
 
-		if ($_home_mode_set != null) { // Compatibilité Homebridge
-			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
-			$this->save(true);
-			if ($_home_mode_set == 'SetModeAbsent') {
-				$this->setConfiguration('SetModePresent', "NOT");
-			} else {
-				$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
-			}
-			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
-		}
 		if ($repeatevent == true && $Type == 'info') {
 			$Command->setconfiguration('repeatEventManagement', 'never');
 			log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);

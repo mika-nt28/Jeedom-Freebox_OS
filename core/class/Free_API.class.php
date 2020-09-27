@@ -406,6 +406,7 @@ class Free_API
                     }
                     break;
                 case 'network_ping':
+                case 'network':
                     return $result;
                     break;
                 case 'system':

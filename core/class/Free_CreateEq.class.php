@@ -414,9 +414,11 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
-        if ($result['result'] != null) {
 
-            foreach ($result as $Equipement) {
+
+        if (isset($result['result'])) {
+
+            foreach ($result['result'] as $Equipement) {
                 if ($Equipement['primary_name'] != '') {
                     $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true);
                     $Command->setConfiguration('host_type', $Equipement['host_type']);
@@ -446,6 +448,8 @@ class Free_CreateEq
                 }
             }
             log::add('Freebox_OS', 'debug', '└─────────');
+        } else {
+            log::add('Freebox_OS', 'debug', '│===========> PAS D\'APPAREIL TROUVE');
         }
     }
 

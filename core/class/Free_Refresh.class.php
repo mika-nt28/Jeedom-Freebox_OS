@@ -395,7 +395,7 @@ class Free_Refresh
         $result_network_ping = $Free_API->universal_get('network_ping', null, null, 'browser/' . $_networkinterface);
 
         if (!$result_network_ping['success']) {
-            log::add('Freebox_OS', 'debug', '│===========> RESULT Requête pas correct : ' . $result_network_ping['success']);
+            log::add('Freebox_OS', 'debug', '│===========> RESULTAT  Requête pas correct : ' . $result_network_ping['success']);
         } else {
             foreach ($Equipement->getCmd('info') as $Command) {
 

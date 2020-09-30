@@ -542,9 +542,11 @@ class Free_CreateEq
                 $_max = 'default';
                 $_min = 'default';
                 $_unit = null;
-                $_name = $Equipement['name'];
-                $_id = $Equipement['id'];
-                $_value = $Equipement['value'];
+                if ($boucle_update != 'expansions') {
+                    $_name = $Equipement['name'];
+                    $_id = $Equipement['id'];
+                    $_value = $Equipement['value'];
+                }
                 $_type = 'numeric';
                 $IsVisible = 1;
                 $_iconname = true;

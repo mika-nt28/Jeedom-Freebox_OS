@@ -142,7 +142,7 @@ class Free_API
         try {
             $session_token = cache::byKey('Freebox_OS::SessionToken');
             while ($session_token->getValue('') == '') {
-                sleep(1);
+                //sleep(1);
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
 
@@ -155,49 +155,58 @@ class Free_API
             curl_setopt($ch, CURLOPT_HEADER, false);
             curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
             curl_setopt($ch, CURLOPT_COOKIESESSION, true);
+            curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 60);
+            curl_setopt($ch, CURLOPT_TIMEOUT, 60);
             if ($method == "POST") {
                 curl_setopt($ch, CURLOPT_POST, true);
-            } elseif ($method == "DELETE") {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "DELETE");
-            } elseif ($method == "PUT") {
-                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+            } elseif ($method == "DELETE" || $method == "PUT") {
+                curl_setopt($ch, CURLOPT_CUSTOMREQUEST, $method);
             }
             if ($params) {
                 curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($params));
             }
             curl_setopt($ch, CURLOPT_HTTPHEADER, array("X-Fbx-App-Auth: " . $session_token->getValue('')));
             $content = curl_exec($ch);
-            curl_close($ch);
-            log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
-            $result = json_decode($content, true);
-            if ($result == null) return false;
-            //if (!$result['success'] && $result['error_code'] != "auth_required") {
-            if (!$result['success']) {
-                if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
-                    log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
-                    return false;
-                } else if ($result['error_code'] == "auth_required") {
-                    log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['error_code']);
-                    $this->close_session();
-                    $this->getFreeboxOpenSessionData();
-                    log::add('Freebox_OS', 'Debug', '[Redémarrage session Terminée à cause de l\'erreur] : ' . $result['error_code']);
-                    return false;
-                } else if ($result['error_code'] == 'denied_from_external_ip') {
-                    log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $result['msg']);
-                    return false;
-                } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
-                    log::add('Freebox_OS', 'error', 'Erreur Application : ' . $result['msg']);
-                    return false;
-                } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
-                    log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
-                    return false;
-                } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
-                    log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $result['msg']);
-                    return false;
-                }
+            $errorno = 0;
+            if (curl_errno($ch) !== 0) {
+                $error = curl_error($ch);
+                $errorno = curl_errno($ch);
             }
-            log::add('Freebox_OS', 'debug', '└─────────');
-            return $result;
+            curl_close($ch);
+
+            log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
+            if ($errorno !== 0) {
+                return '│ Erreur de connexion cURL vers ' . $this->serveur . $api_url . ': ' . $error;
+            } else {
+                $result = json_decode($content, true);
+                if ($result == null) return false;
+                if (!$result['success']) {
+                    if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
+                        log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
+                        return false;
+                    } else if ($result['error_code'] == "auth_required") {
+                        log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['error_code']);
+                        $this->close_session();
+                        $this->getFreeboxOpenSessionData();
+                        log::add('Freebox_OS', 'Debug', '[Redémarrage session Terminée à cause de l\'erreur] : ' . $result['error_code']);
+                        return false;
+                    } else if ($result['error_code'] == 'denied_from_external_ip') {
+                        log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $result['msg']);
+                        return false;
+                    } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
+                        log::add('Freebox_OS', 'error', 'Erreur Application : ' . $result['msg']);
+                        return false;
+                    } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
+                        log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
+                        return false;
+                    } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
+                        log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $result['msg']);
+                        return false;
+                    }
+                }
+                log::add('Freebox_OS', 'debug', '└─────────');
+                return $result;
+            }
         } catch (Exception $e) {
             log::add('Freebox_OS', 'error', '│ [Freebox Request] : ' . $e->getCode());
             log::add('Freebox_OS', 'debug', '└─────────');
@@ -276,7 +285,11 @@ class Free_API
             foreach ($reponse['result'] as $disks) {
                 $total_bytes = $disks['partitions'][0]['total_bytes'];
                 $used_bytes = $disks['partitions'][0]['used_bytes'];
-                $value = round($used_bytes / $total_bytes * 100, 2);
+                if ($total_bytes != null) {
+                    $value = round($used_bytes / $total_bytes * 100, 2);
+                } else {
+                    $value = 0;
+                }
                 log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
                 log::add('Freebox_OS', 'debug', '│ Disque  [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
 
@@ -340,9 +353,10 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network':
-                $config = 'api/v8/lan/browser/' . $update_type;
-                break;
             case 'network_ping':
+                $config = 'api/v8/lan/' . $update_type;
+                break;
+            case 'network_ID':
                 $config = 'api/v8/lan/browser/' . $update_type  . $id;
                 break;
             case 'system':
@@ -385,9 +399,14 @@ class Free_API
                 case 'disk':
                     $total_bytes = $result['result']['partitions'][0]['total_bytes'];
                     $used_bytes = $result['result']['partitions'][0]['used_bytes'];
-                    $value = round($used_bytes / $total_bytes * 100, 2);
+                    if ($total_bytes != null) {
+                        $value = round($used_bytes / $total_bytes * 100, 2);
+                    } else {
+                        $value = 0;
+                    }
                     break;
                 case 'network_ping':
+                case 'network':
                     return $result;
                     break;
                 case 'system':
@@ -424,7 +443,7 @@ class Free_API
 
             return $value;
         } else {
-            if ($update == "network_ping") {
+            if ($update == "network_ping" || $update == "network_ID") {
                 return $result;
             } else if ($update_type == 'lte/config') {
                 return $result['msg'];

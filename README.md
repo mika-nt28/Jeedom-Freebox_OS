@@ -1,5 +1,8 @@
 <img align="right" src="plugin_info/freebox_os_icon.png" width="150">
 
+[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/mika-nt28/Jeedom-Freebox_OS/graphs/commit-activity)
+[![GitHub contributors](https://img.shields.io/github/contributors/jeedom/core.svg)](https://github.com/mika-nt28/Jeedom-Freebox_OS/graphs/contributors/)
+
 # Jeedom - Plugin Freebox OS
 
 Ce Plugin permet de récupérer les informations disponibles sur les box Freebox Révolution/Delta/Pop.

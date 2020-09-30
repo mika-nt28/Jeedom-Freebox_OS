@@ -542,9 +542,11 @@ class Free_CreateEq
                 $_max = 'default';
                 $_min = 'default';
                 $_unit = null;
-                $_name = $Equipement['name'];
-                $_id = $Equipement['id'];
-                $_value = $Equipement['value'];
+                if ($boucle_update != 'expansions') {
+                    $_name = $Equipement['name'];
+                    $_id = $Equipement['id'];
+                    $_value = $Equipement['value'];
+                }
                 $_type = 'numeric';
                 $IsVisible = 1;
                 $_iconname = true;
@@ -575,11 +577,14 @@ class Free_CreateEq
                     $system->AddCommand($_name, $_id, 'info', $_type, $templatecore_V4 . 'line', $_unit, null, $IsVisible, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, $_order, 0, false, true, null, $_iconname);
 
                     $system->checkAndUpdateCmd($_id, $_value);
-                    if ($Equipement['type'] == 'dsl_lte') {
-                        // Début ajout 4G
-                        $_4G = $system->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 32, '0', false, 'never', null, true);
-                        $system->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icon4Gon, 1, 'default', 'default', 33, '0', false, false, null, true);
-                        $system->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icon4Goff, 0, 'default', 'default', 34, '0', false, false, null, true);
+
+                    if ($boucle_update == 'expansions') {
+                        if ($Equipement['type'] == 'dsl_lte') {
+                            // Début ajout 4G
+                            $_4G = $system->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 32, '0', false, 'never', null, true);
+                            $system->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icon4Gon, 1, 'default', 'default', 33, '0', false, false, null, true);
+                            $system->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icon4Goff, 0, 'default', 'default', 34, '0', false, false, null, true);
+                        }
                     }
                     $_order++;
                 }

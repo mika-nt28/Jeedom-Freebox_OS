@@ -33,6 +33,14 @@ class Freebox_OS extends eqLogic
 			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+				if ($deamon_info['state'] != 'ok') {
+					log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
+					Freebox_OS::deamon_start();
+					$Free_API = new Free_API();
+					$Free_API->getFreeboxOpenSession();
+					$deamon_info = self::deamon_info();
+					log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
+				}
 				if ($c->isDue() && $deamon_info['state'] == 'ok') {
 					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
 					Free_Refresh::RefreshInformation($eqLogic->getId());
@@ -89,8 +97,8 @@ class Freebox_OS extends eqLogic
 	public static function deamon_start($_debug = false)
 	{
 		//log::remove('Freebox_OS');
-		self::deamon_stop();
 		$deamon_info = self::deamon_info();
+		self::deamon_stop();
 		if ($deamon_info['launchable'] != 'ok') return;
 		if ($deamon_info['state'] == 'ok') return;
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
@@ -99,8 +107,8 @@ class Freebox_OS extends eqLogic
 			$cron->setClass('Freebox_OS');
 			$cron->setFunction('RefreshToken');
 			$cron->setEnable(1);
-			$cron->setSchedule('*/48 * * * *');
-			$cron->setTimeout('5');
+			$cron->setSchedule('*/30 * * * *');
+			$cron->setTimeout('10');
 			$cron->save();
 		}
 		$cron->start();
@@ -412,9 +420,14 @@ class Freebox_OS extends eqLogic
 
 	public static function RefreshToken()
 	{
+		log::add('Freebox_OS', 'debug', '=================   REFRESH TOKEN    ==================');
 		$Free_API = new Free_API();
 		$Free_API->close_session();
-		if ($Free_API->getFreeboxOpenSession() === false) self::deamon_stop();
+		if ($Free_API->getFreeboxOpenSession() === false) {
+			self::deamon_stop();
+			log::add('Freebox_OS', 'debug', '[REFRESH TOKEN] : FALSE / ' . $Free_API->getFreeboxOpenSession());
+		}
+		log::add('Freebox_OS', 'debug', '================= FIN REFRESH TOKEN  ==================');
 	}
 	public static function getlogicalinfo()
 	{

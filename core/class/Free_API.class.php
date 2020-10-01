@@ -103,8 +103,10 @@ class Free_API
                     if ($this->getFreeboxOpenSession() === false)
                         return false;
                 }
+                log::add('Freebox_OS', 'debug', '[Freebox Etat Session] : NOK / ' . $result['success']);
             } else {
                 cache::set('Freebox_OS::SessionToken', $result['result']['session_token'], 0);
+                log::add('Freebox_OS', 'debug', '[Freebox Etat Session] : OK / ' . $result['success']);
                 return true;
             }
             return false;

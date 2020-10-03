@@ -29,18 +29,19 @@ class Freebox_OS extends eqLogic
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
+		if ($deamon_info['state'] != 'ok') {
+			log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
+			Freebox_OS::deamon_start();
+			$Free_API = new Free_API();
+			$Free_API->getFreeboxOpenSession();
+			$deamon_info = self::deamon_info();
+			log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
+		}
 		foreach ($eqLogics as $eqLogic) {
 			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
-				if ($deamon_info['state'] != 'ok') {
-					log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
-					Freebox_OS::deamon_start();
-					$Free_API = new Free_API();
-					$Free_API->getFreeboxOpenSession();
-					$deamon_info = self::deamon_info();
-					log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
-				}
+
 				if ($c->isDue() && $deamon_info['state'] == 'ok') {
 					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
 					Free_Refresh::RefreshInformation($eqLogic->getId());

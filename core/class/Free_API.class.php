@@ -135,7 +135,10 @@ class Free_API
             $result = json_decode($json, true);
             return $result;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[get Freebox Open Session Data] : ' . $e->getCode());
+            // Définir le nouveau fuseau horaire
+            date_default_timezone_set('Europe/Paris');
+            $date = date('d-m-y h:i:s');
+            log::add('Freebox_OS', 'error', '[get Freebox Open Session Data] : ' . $date . ' - ' . $e->getCode());
         }
     }
 
@@ -177,6 +180,10 @@ class Free_API
             curl_close($ch);
 
             log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
+            // Définir le nouveau fuseau horaire
+            date_default_timezone_set('Europe/Paris');
+            $date = date('d-m-y h:i:s');
+
             if ($errorno !== 0) {
                 return '│ Erreur de connexion cURL vers ' . $this->serveur . $api_url . ': ' . $error;
             } else {
@@ -184,25 +191,26 @@ class Free_API
                 if ($result == null) return false;
                 if (!$result['success']) {
                     if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
-                        log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $date . ' - ' . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == "auth_required") {
                         log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['error_code']);
                         $this->close_session();
                         $this->getFreeboxOpenSessionData();
                         log::add('Freebox_OS', 'Debug', '[Redémarrage session Terminée à cause de l\'erreur] : ' . $result['error_code']);
-                        return false;
+                        $result = 'auth_required';
+                        return $result;
                     } else if ($result['error_code'] == 'denied_from_external_ip') {
-                        log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $date . ' - '  . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
-                        log::add('Freebox_OS', 'error', 'Erreur Application : ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur Application : ' . $date . ' - ' . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
-                        log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur Token : ' . $date . ' - ' . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
-                        log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $date . ' - ' . $result['msg']);
                         return false;
                     }
                 }
@@ -210,7 +218,7 @@ class Free_API
                 return $result;
             }
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '│ [Freebox Request] : ' . $e->getCode());
+            log::add('Freebox_OS', 'error', '│ [Freebox Request] : ' . $date . ' - ' . $e->getCode());
             log::add('Freebox_OS', 'debug', '└─────────');
         }
     }
@@ -234,7 +242,10 @@ class Free_API
                 $SessionToken->remove();
             return $json;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '[Freebox Close Session] : ' . $e->getCode());
+            // Définir le nouveau fuseau horaire
+            date_default_timezone_set('Europe/Paris');
+            $date = date('d-m-y h:i:s');
+            log::add('Freebox_OS', 'error', '[Freebox Close Session] : ' . $date . ' - ' . $e->getCode());
         }
     }
 
@@ -279,29 +290,33 @@ class Free_API
 
     public function disk()
     {
-        $reponse = $this->fetch('/api/v8/storage/disk/');
-        if ($reponse === false)
+        $result = $this->fetch('/api/v8/storage/disk/');
+        if ($result == 'auth_required') {
+            $result = $this->fetch('/api/v8/storage/disk/');
+        }
+        if ($result === false)
             return false;
-        if ($reponse['success']) {
+        if ($result['success']) {
             $value = 0;
-            foreach ($reponse['result'] as $disks) {
-                $total_bytes = $disks['partitions'][0]['total_bytes'];
-                $used_bytes = $disks['partitions'][0]['used_bytes'];
-                if ($total_bytes != null) {
-                    $value = round($used_bytes / $total_bytes * 100, 2);
-                } else {
-                    $value = 0;
+            log::add('Freebox_OS', 'debug', '┌───────── Création Disque ');
+            $logicalinfo = Freebox_OS::getlogicalinfo();
+            $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
+
+            foreach ($result['result'] as $disks) {
+                if (isset($disks['partitions'][0])) {
+                    if ($disks['partitions'][0]['total_bytes'] != null) {
+                        $value = $disks['partitions'][0]['used_bytes'] / $disks['partitions'][0]['total_bytes'];
+                    } else {
+                        $value = 0;
+                    }
+
+                    log::add('Freebox_OS', 'debug', '│──────────> Disque  [' . $disks['type'] . '] - ' . $disks['id']);
+
+                    $command = $disk->AddCommand($disks['partitions'][0]['label'] . ' - ' . $disks['type'] . ' - ' . $disks['partitions'][0]['fstype'], $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true, '#value#*100', 2);
+                    $command->event($value);
                 }
-                log::add('Freebox_OS', 'debug', '┌───────── Update Disque ');
-                log::add('Freebox_OS', 'debug', '│ Disque  [' . $disks['type'] . '] - ' . $disks['id'] . ': ' . $used_bytes . '/' . $total_bytes . ' => ' . $value . '%');
-
-                $logicalinfo = Freebox_OS::getlogicalinfo();
-                $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null);
-
-                $command = $disk->AddCommand('Occupation du disque - ' . $disks['type'] . ' - (Id ' . $disks['id'] . ')', $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true);
-                $command->event($value);
-                log::add('Freebox_OS', 'debug', '└─────────');
             }
+            log::add('Freebox_OS', 'debug', '└─────────');
         }
     }
 
@@ -381,6 +396,9 @@ class Free_API
         }
 
         $result = $this->fetch('/' . $config, $Parameter, $fonction);
+        if ($result == 'auth_required') {
+            $result = $this->fetch('/' . $config, $Parameter, $fonction);
+        }
         if ($result === false) {
             return false;
         }
@@ -402,7 +420,7 @@ class Free_API
                     $total_bytes = $result['result']['partitions'][0]['total_bytes'];
                     $used_bytes = $result['result']['partitions'][0]['used_bytes'];
                     if ($total_bytes != null) {
-                        $value = round($used_bytes / $total_bytes * 100, 2);
+                        $value = $used_bytes / $total_bytes;
                     } else {
                         $value = 0;
                     }
@@ -457,6 +475,9 @@ class Free_API
     public function downloads_put($Etat)
     {
         $result = $this->fetch('/api/v8/downloads/');
+        if ($result == 'auth_required') {
+            $result = $this->fetch('/api/v8/downloads/');
+        }
         if ($result === false)
             return false;
         $nbDL = count($result['result']);
@@ -615,6 +636,9 @@ class Free_API
         $listNumber_accepted = null;
         $listNumber_outgoing = null;
         $result = $this->fetch('/api/v8/call/log/');
+        if ($result == 'auth_required') {
+            $result = $this->fetch('/api/v8/call/log/');
+        }
         if ($result === false)
             return false;
         if ($result['success']) {
@@ -676,6 +700,9 @@ class Free_API
                 break;
         }
         $result = $this->fetch('/api/v8/airmedia/' . $config, $parametre, $fonction);
+        if ($result == 'auth_required') {
+            $result = $this->fetch('/api/v8/airmedia/' . $config, $parametre, $fonction);
+        }
         if ($result === false)
             return false;
         if ($result['success'])

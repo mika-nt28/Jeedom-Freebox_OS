@@ -29,18 +29,19 @@ class Freebox_OS extends eqLogic
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
+		if ($deamon_info['state'] != 'ok') {
+			log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
+			Freebox_OS::deamon_start();
+			$Free_API = new Free_API();
+			$Free_API->getFreeboxOpenSession();
+			$deamon_info = self::deamon_info();
+			log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
+		}
 		foreach ($eqLogics as $eqLogic) {
 			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
-				if ($deamon_info['state'] != 'ok') {
-					log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
-					Freebox_OS::deamon_start();
-					$Free_API = new Free_API();
-					$Free_API->getFreeboxOpenSession();
-					$deamon_info = self::deamon_info();
-					log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
-				}
+
 				if ($c->isDue() && $deamon_info['state'] == 'ok') {
 					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
 					Free_Refresh::RefreshInformation($eqLogic->getId());
@@ -207,7 +208,7 @@ class Freebox_OS extends eqLogic
 
 	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null)
 	{
-		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
+		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi: ' . $_calculValueOffset . '/' . $_historizeRound);
 
 		$Command = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Command)) {
@@ -257,6 +258,8 @@ class Freebox_OS extends eqLogic
 			}
 			if ($_calculValueOffset != null) {
 				$Command->setConfiguration('calculValueOffset', $_calculValueOffset);
+			}
+			if ($_historizeRound != null) {
 				$Command->setConfiguration('historizeRound', $_historizeRound);
 			}
 			if ($_home_mode_set != null) { // Compatibilité Homebridge

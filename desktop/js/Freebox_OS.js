@@ -241,7 +241,7 @@ function addCmdToTable(_cmd) {
 	}
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
 	tr += '<td>';
-	tr += '<span class="cmdAttr" data-l1key="id" style="display: none;" ></span>';
+	tr += '<span class="cmdAttr" data-l1key="id" ></span>';
 	tr += '</td>';
 	tr += '<td>';
 	tr += '<div class="row">';
@@ -277,10 +277,7 @@ function addCmdToTable(_cmd) {
 	if ((init(_cmd.type) == 'info' && init(_cmd.subType) == 'numeric')) {
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertnumeric"/>{{Inverser Valeur}}</label></span> ';
 	}
-
-
 	tr += '</td>';
-
 	tr += '<td>';
 	if (is_numeric(_cmd.id)) {
 		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> ';

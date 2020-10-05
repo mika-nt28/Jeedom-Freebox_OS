@@ -402,8 +402,8 @@ class Freebox_OS extends eqLogic
 		if (!$this->getIsEnable()) return;
 
 		if ($this->getConfiguration('autorefresh') == '') {
-			throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide', __FILE__));
-			log::add(__CLASS__, 'error', '│ Configuration : Temps de rafraichissement (cron) : ' . $this->getConfiguration('autorefresh'));
+			log::add(Freebox_OS, 'error', '================= CRON : Temps de rafraichissement est vide pour l\'équipement : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
+			throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide : ' . $this->getName(), __FILE__));
 		}
 	}
 

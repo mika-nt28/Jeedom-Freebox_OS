@@ -375,7 +375,8 @@
 						success: function (data2) {
 							if (data2.configuration == undefined) {
 								if (data2.result.configuration.IPV4 == 0) {
-									$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").addClass('hidden');
+									$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").addClass(
+										'hidden');
 								}
 
 								if (data2.result.configuration.IPV6 == 0) {
@@ -383,7 +384,8 @@
 								}
 							} else {
 								if (data2.configuration.IPV4 == 0) {
-									$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").addClass('hidden');
+									$(".cmd[data-cmd_id=#id#] .lan-host-vendor .ipv4").addClass(
+										'hidden');
 								}
 
 								if (data2.configuration.IPV6 == 0) {

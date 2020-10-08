@@ -38,6 +38,7 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
 		}
 		foreach ($eqLogics as $eqLogic) {
+			if (!$eqLogic->getIsEnable()) return;
 			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);

@@ -206,8 +206,8 @@ class Free_CreateTil
         $Free_API = new Free_API();
 
         $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
-
-        foreach ($Free_API->universal_get('homeadapters', null, null, null) as $Equipement) {
+        $result = $Free_API->universal_get('homeadapters', null, null, null);
+        foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {
                 $homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
                 if ($Equipement['status'] == 'active') {
@@ -233,7 +233,8 @@ class Free_CreateTil
         } else {
             $_eq_action = null;
         }
-        foreach ($Free_API->universal_get('tiles') as $Equipement) {
+        $result = $Free_API->universal_get('tiles');
+        foreach ($result as $Equipement) {
             $_autorefresh = '*/5 * * * *';
             if ($Equipement['type'] != 'camera') {
                 if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {

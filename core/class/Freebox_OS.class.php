@@ -38,14 +38,15 @@ class Freebox_OS extends eqLogic
 			log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
 		}
 		foreach ($eqLogics as $eqLogic) {
-			if (!$eqLogic->getIsEnable()) return;
 			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
 
 				if ($c->isDue() && $deamon_info['state'] == 'ok') {
-					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
-					Free_Refresh::RefreshInformation($eqLogic->getId());
+					if ($eqLogic->getIsEnable()) {
+						log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
+						Free_Refresh::RefreshInformation($eqLogic->getId());
+					}
 				}
 				if ($deamon_info['state'] != 'ok') {
 					log::add('Freebox_OS', 'debug', '================= PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state'] . ' ==================');

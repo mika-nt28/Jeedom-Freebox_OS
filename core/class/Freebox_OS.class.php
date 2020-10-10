@@ -58,20 +58,45 @@ class Freebox_OS extends eqLogic
 	}
 	public static function cronDaily()
 	{
+		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
-		if ($deamon_info['state'] == 'ok') {
-			log::add('Freebox_OS', 'debug', '================= CRON JOUR ' . ' ==================');
-			if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
-				Free_CreateEq::createEq('network', false);
-				Free_CreateEq::createEq('networkwifiguest', false);
+		$_crondailyEq = null;
+		$_crondailyTil = null;
+		foreach ($eqLogics as $eqLogic) {
+			try {
+				if ($deamon_info['state'] == 'ok') {
+					if ($eqLogic->getIsEnable()) {
+						switch ($eqLogic->getLogicalId()) {
+							case 'network':
+							case 'networkwifiguest':
+								if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
+									$_crondailyEq = $eqLogic->getLogicalId();
+								}
+								break;
+							case 'disk':
+								$_crondailyEq = $eqLogic->getLogicalId();
+								break;
+							case 'homeadapters':
+								$_crondailyTil = 'homeadapters_SP';
+								break;
+						}
+						if ($_crondailyEq != null or $_crondailyTil != null) {
+							log::add('Freebox_OS', 'debug', '================= CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
+							if ($_crondailyEq != null) {
+								Free_CreateEq::createEq($_crondailyEq, false);
+							}
+							if ($_crondailyTil != null) {
+								Free_CreateTil::createTil($_crondailyTil, false);
+							}
+							log::add('Freebox_OS', 'debug', '================= FIN CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
+						}
+						$_crondailyEq = null;
+						$_crondailyTil = null;
+					}
+				}
+			} catch (Exception $exc) {
+				log::add('Freebox_OS', 'error', __('Erreur Cron Jour ', __FILE__) . $eqLogic->getHumanName());
 			}
-			Free_CreateEq::createEq('disk');
-			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
-				Free_CreateTil::createTil('homeadapters_SP');
-			}
-			log::add('Freebox_OS', 'debug', '================= FIN CRON JOUR ' . ' ==================');
-		} else {
-			log::add('Freebox_OS', 'debug', '================= PAS DE CRON JOUR à cause du Démon : ' . $deamon_info['state'] . ' ==================');
 		}
 	}
 

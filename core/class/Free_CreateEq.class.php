@@ -305,7 +305,8 @@ class Free_CreateEq
     private static function createEq_parental($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
-        foreach ($Free_API->universal_get('parentalprofile') as $Equipement) {
+        $result = $Free_API->universal_get('parentalprofile');
+        foreach ($result  as $Equipement) {
             log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
             if (version_compare(jeedom::version(), "4", "<")) {
                 log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');

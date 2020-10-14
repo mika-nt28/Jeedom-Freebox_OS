@@ -29,38 +29,74 @@ class Freebox_OS extends eqLogic
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
+		if ($deamon_info['state'] != 'ok') {
+			log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
+			Freebox_OS::deamon_start();
+			$Free_API = new Free_API();
+			$Free_API->getFreeboxOpenSession();
+			$deamon_info = self::deamon_info();
+			log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
+		}
 		foreach ($eqLogics as $eqLogic) {
 			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
 			try {
 				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+
 				if ($c->isDue() && $deamon_info['state'] == 'ok') {
-					log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
-					Free_Refresh::RefreshInformation($eqLogic->getId());
+					if ($eqLogic->getIsEnable()) {
+						log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
+						Free_Refresh::RefreshInformation($eqLogic->getId());
+					}
 				}
 				if ($deamon_info['state'] != 'ok') {
 					log::add('Freebox_OS', 'debug', '================= PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state'] . ' ==================');
 				}
 			} catch (Exception $exc) {
-				log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh);
+				log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
 			}
 		}
 	}
 	public static function cronDaily()
 	{
+		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
-		if ($deamon_info['state'] == 'ok') {
-			log::add('Freebox_OS', 'debug', '================= CRON JOUR ' . ' ==================');
-			if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
-				Free_CreateEq::createEq('network', false);
-				Free_CreateEq::createEq('networkwifiguest', false);
+		$_crondailyEq = null;
+		$_crondailyTil = null;
+		foreach ($eqLogics as $eqLogic) {
+			try {
+				if ($deamon_info['state'] == 'ok') {
+					if ($eqLogic->getIsEnable()) {
+						switch ($eqLogic->getLogicalId()) {
+							case 'network':
+							case 'networkwifiguest':
+								if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
+									$_crondailyEq = $eqLogic->getLogicalId();
+								}
+								break;
+							case 'disk':
+								$_crondailyEq = $eqLogic->getLogicalId();
+								break;
+							case 'homeadapters':
+								$_crondailyTil = 'homeadapters_SP';
+								break;
+						}
+						if ($_crondailyEq != null or $_crondailyTil != null) {
+							log::add('Freebox_OS', 'debug', '================= CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
+							if ($_crondailyEq != null) {
+								Free_CreateEq::createEq($_crondailyEq, false);
+							}
+							if ($_crondailyTil != null) {
+								Free_CreateTil::createTil($_crondailyTil, false);
+							}
+							log::add('Freebox_OS', 'debug', '================= FIN CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
+						}
+						$_crondailyEq = null;
+						$_crondailyTil = null;
+					}
+				}
+			} catch (Exception $exc) {
+				log::add('Freebox_OS', 'error', __('Erreur Cron Jour ', __FILE__) . $eqLogic->getHumanName());
 			}
-			Free_CreateEq::createEq('disk');
-			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
-				Free_CreateTil::createTil('homeadapters_SP');
-			}
-			log::add('Freebox_OS', 'debug', '================= FIN CRON JOUR ' . ' ==================');
-		} else {
-			log::add('Freebox_OS', 'debug', '================= PAS DE CRON JOUR à cause du Démon : ' . $deamon_info['state'] . ' ==================');
 		}
 	}
 
@@ -89,8 +125,8 @@ class Freebox_OS extends eqLogic
 	public static function deamon_start($_debug = false)
 	{
 		//log::remove('Freebox_OS');
-		self::deamon_stop();
 		$deamon_info = self::deamon_info();
+		self::deamon_stop();
 		if ($deamon_info['launchable'] != 'ok') return;
 		if ($deamon_info['state'] == 'ok') return;
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
@@ -99,8 +135,8 @@ class Freebox_OS extends eqLogic
 			$cron->setClass('Freebox_OS');
 			$cron->setFunction('RefreshToken');
 			$cron->setEnable(1);
-			$cron->setSchedule('*/48 * * * *');
-			$cron->setTimeout('5');
+			$cron->setSchedule('*/30 * * * *');
+			$cron->setTimeout('10');
 			$cron->save();
 		}
 		$cron->start();
@@ -199,7 +235,7 @@ class Freebox_OS extends eqLogic
 
 	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null)
 	{
-		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax);
+		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi: ' . $_calculValueOffset . '/' . $_historizeRound);
 
 		$Command = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Command)) {
@@ -249,6 +285,8 @@ class Freebox_OS extends eqLogic
 			}
 			if ($_calculValueOffset != null) {
 				$Command->setConfiguration('calculValueOffset', $_calculValueOffset);
+			}
+			if ($_historizeRound != null) {
 				$Command->setConfiguration('historizeRound', $_historizeRound);
 			}
 			if ($_home_mode_set != null) { // Compatibilité Homebridge
@@ -391,8 +429,8 @@ class Freebox_OS extends eqLogic
 		if (!$this->getIsEnable()) return;
 
 		if ($this->getConfiguration('autorefresh') == '') {
-			throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide', __FILE__));
-			log::add(__CLASS__, 'error', '│ Configuration : Temps de rafraichissement (cron) : ' . $this->getConfiguration('autorefresh'));
+			log::add(Freebox_OS, 'error', '================= CRON : Temps de rafraichissement est vide pour l\'équipement : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
+			throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide : ' . $this->getName(), __FILE__));
 		}
 	}
 
@@ -412,9 +450,14 @@ class Freebox_OS extends eqLogic
 
 	public static function RefreshToken()
 	{
+		log::add('Freebox_OS', 'debug', '=================   REFRESH TOKEN    ==================');
 		$Free_API = new Free_API();
 		$Free_API->close_session();
-		if ($Free_API->getFreeboxOpenSession() === false) self::deamon_stop();
+		if ($Free_API->getFreeboxOpenSession() === false) {
+			self::deamon_stop();
+			log::add('Freebox_OS', 'debug', '[REFRESH TOKEN] : FALSE / ' . $Free_API->getFreeboxOpenSession());
+		}
+		log::add('Freebox_OS', 'debug', '================= FIN REFRESH TOKEN  ==================');
 	}
 	public static function getlogicalinfo()
 	{

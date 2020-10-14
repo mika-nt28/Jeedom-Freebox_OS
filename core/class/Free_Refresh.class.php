@@ -43,7 +43,7 @@ class Free_Refresh
                         if (is_object($Command)) {
                             $result = $Free_API->universal_get('disk', $Command->getLogicalId());
                             if ($result != false) {
-                                log::add('Freebox_OS', 'debug', '>───────── Occupation du disque : ' . $result . '%');
+                                log::add('Freebox_OS', 'debug', '>───────── Occupation du disque : ' . $result);
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                             }
                         }
@@ -430,15 +430,15 @@ class Free_Refresh
                                 $value = true;
                             } else {
                                 $cmd->setOrder($cmd->getOrder() % 1000 + 1000);
-                                $value = false;
+                                $value = 0;
                             }
                         } else {
-                            $value = false;
+                            $value = 0;
                         }
 
                         $Equipement->checkAndUpdateCmd($cmd, $value);
                         $cmd->save();
-                        log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $result['active'] . ' -- Type : ' . $result['host_type']);
+                        log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $value . ' -- Type : ' . $result['host_type']);
                         break;
                     }
                 }
@@ -668,7 +668,11 @@ class Free_Refresh
                                 if ($data['name'] == 'pushed') {
                                     $_value = $_value_history;
                                 } else {
-                                    $_value = $data['value'];
+                                    if ($data['value'] == null || $data['value'] == '') {
+                                        $_value = 0;
+                                    } else {
+                                        $_value = $data['value'];
+                                    }
                                 }
                             }
                             log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $data['value'] . ' -- valeur Inverser : ' . $cmd->getConfiguration('invertnumeric'));

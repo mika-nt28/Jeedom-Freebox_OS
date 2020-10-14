@@ -217,7 +217,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					<fieldset>
 						<div class="form-group ">
 							<label class="col-sm-2 control-label">{{Nom de l'équipement}}</label>
-							<div class="col-sm-3">
+							<div class="col-sm-4">
 								<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
 								<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId" style="display : none;" />
 								<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}" />
@@ -225,7 +225,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						</div>
 						<div class="form-group">
 							<label class="col-sm-2 control-label">{{Objet parent}}</label>
-							<div class="col-sm-3">
+							<div class="col-sm-4">
 								<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
 									<option value="">{{Aucun}}</option>
 									<?php
@@ -292,9 +292,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<label class="col-sm-2 control-label">{{Temps de rafraichissement (cron)}}
 								<sup><i class="fas fa-question-circle" title="{{Cron }}"></i></sup>
 							</label>
-							<div class="col-sm-3">
+							<div class="col-sm-4">
 								<div class="input-group">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{*/5 * * * *}}" />
+									<input type="text" class="eqLogicAttr form-control" data-l1key="configuration" data-l2key="autorefresh" placeholder="" />
 									<span class="input-group-btn">
 										<a class="btn btn-default cursor jeeHelper" data-helper="cron">
 											<i class="fas fa-question-circle"></i>
@@ -336,9 +336,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<table id="table_cmd" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th style="width: 10px;"> </th>
-							<th style="width: 650px;">{{Nom}}</th>
-							<th style="width: 110px;">{{Sous-Type}}</th>
+							<th style="width: 50px;"> ID</th>
+							<th style="width: 550px;">{{Nom}}</th>
+							<th style="width: 250px;">{{Sous-Type}}</th>
 							<th style="width: 350px;">{{Min/Max - Unité}}</th>
 							<th>{{Paramètres}}</th>
 							<th style="width: 250px;">{{Options}}</th>

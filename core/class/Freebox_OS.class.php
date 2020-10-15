@@ -509,6 +509,7 @@ class Freebox_OS extends eqLogic
 				case 'connexion':
 					$eqLogic->setLogicalId($logicalinfo['connexionID']);
 					$eqLogic->setName($logicalinfo['connexionName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update logicalID : "' . $logicalinfo['connexionID'] . '" et Update name : "' . $logicalinfo['connexionName'] . '"');
 					break;
 				case 'AirPlay':
@@ -516,12 +517,14 @@ class Freebox_OS extends eqLogic
 				case '':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
 					$eqLogic->setName($logicalinfo['airmediaName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
 					break;
 				case 'Disque':
 				case 'Disques':
 					$eqLogic->setLogicalId($logicalinfo['diskID']);
 					$eqLogic->setName($logicalinfo['diskName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['diskID']);
 					break;
 				case 'Reseau':

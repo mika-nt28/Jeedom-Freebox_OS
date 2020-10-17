@@ -225,27 +225,33 @@ class Free_API
 
     public function close_session()
     {
+        log::add('Freebox_OS', 'debug', '│──────────> Close Session  ');
         try {
             $Challenge = cache::byKey('Freebox_OS::Challenge');
             if (is_object($Challenge)) {
                 $Challenge->remove();
+                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Challenge');
             }
             $session_token = cache::byKey('Freebox_OS::SessionToken');
-            if (!is_object($session_token) || $session_token->getValue('') == '')
+            if (!is_object($session_token) || $session_token->getValue('') == '') {
+                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Token Vide');
                 return;
+            }
+
             $http = new com_http($this->serveur . '/api/v8/login/logout/');
             $http->setPost(array());
             $json = $http->exec(2, 2);
             log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $json);
             $SessionToken = cache::byKey('Freebox_OS::SessionToken');
-            if (is_object($SessionToken))
+
+            if (is_object($SessionToken)) {
                 $SessionToken->remove();
+                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Token');
+            }
+            log::add('Freebox_OS', 'debug', '│──────────> Fin Close Session  ');
             return $json;
         } catch (Exception $e) {
-            // Définir le nouveau fuseau horaire
-            date_default_timezone_set('Europe/Paris');
-            $date = date('d-m-y h:i:s');
-            log::add('Freebox_OS', 'error', '[Freebox Close Session] : ' . $date . ' - ' . $e->getCode());
+            log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $e->getCode() . ' ou session déjà fermée');
         }
     }
 

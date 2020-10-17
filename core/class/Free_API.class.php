@@ -294,38 +294,6 @@ class Free_API
         }
     }
 
-    public function disk()
-    {
-        $result = $this->fetch('/api/v8/storage/disk/');
-        if ($result == 'auth_required') {
-            $result = $this->fetch('/api/v8/storage/disk/');
-        }
-        if ($result === false)
-            return false;
-        if ($result['success']) {
-            $value = 0;
-            log::add('Freebox_OS', 'debug', '┌───────── Création Disque ');
-            $logicalinfo = Freebox_OS::getlogicalinfo();
-            $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
-
-            foreach ($result['result'] as $disks) {
-                if (isset($disks['partitions'][0])) {
-                    if ($disks['partitions'][0]['total_bytes'] != null) {
-                        $value = $disks['partitions'][0]['used_bytes'] / $disks['partitions'][0]['total_bytes'];
-                    } else {
-                        $value = 0;
-                    }
-
-                    log::add('Freebox_OS', 'debug', '│──────────> Disque  [' . $disks['type'] . '] - ' . $disks['id']);
-
-                    $command = $disk->AddCommand($disks['partitions'][0]['label'] . ' - ' . $disks['type'] . ' - ' . $disks['partitions'][0]['fstype'], $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true, '#value#*100', 2);
-                    $command->event($value);
-                }
-            }
-            log::add('Freebox_OS', 'debug', '└─────────');
-        }
-    }
-
     public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config')
     {
         $config_log = null;
@@ -345,7 +313,7 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
                 break;
             case 'disk':
-                $config = 'api/v8/storage/disk' . $id;
+                $config = 'api/v8/storage/disk';
                 break;
             case 'download':
                 $config = 'api/v8/downloads/' . $update_type;
@@ -423,14 +391,6 @@ class Free_API
                     }
                     break;
                 case 'disk':
-                    $total_bytes = $result['result']['partitions'][0]['total_bytes'];
-                    $used_bytes = $result['result']['partitions'][0]['used_bytes'];
-                    if ($total_bytes != null) {
-                        $value = $used_bytes / $total_bytes;
-                    } else {
-                        $value = 0;
-                    }
-                    break;
                 case 'network_ping':
                 case 'network':
                     return $result;

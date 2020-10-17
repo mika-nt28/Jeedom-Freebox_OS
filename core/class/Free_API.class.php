@@ -225,27 +225,33 @@ class Free_API
 
     public function close_session()
     {
+        log::add('Freebox_OS', 'debug', '│──────────> Close Session  ');
         try {
             $Challenge = cache::byKey('Freebox_OS::Challenge');
             if (is_object($Challenge)) {
                 $Challenge->remove();
+                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Challenge');
             }
             $session_token = cache::byKey('Freebox_OS::SessionToken');
-            if (!is_object($session_token) || $session_token->getValue('') == '')
+            if (!is_object($session_token) || $session_token->getValue('') == '') {
+                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Token Vide');
                 return;
+            }
+
             $http = new com_http($this->serveur . '/api/v8/login/logout/');
             $http->setPost(array());
             $json = $http->exec(2, 2);
             log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $json);
             $SessionToken = cache::byKey('Freebox_OS::SessionToken');
-            if (is_object($SessionToken))
+
+            if (is_object($SessionToken)) {
                 $SessionToken->remove();
+                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Token');
+            }
+            log::add('Freebox_OS', 'debug', '│──────────> Fin Close Session  ');
             return $json;
         } catch (Exception $e) {
-            // Définir le nouveau fuseau horaire
-            date_default_timezone_set('Europe/Paris');
-            $date = date('d-m-y h:i:s');
-            log::add('Freebox_OS', 'error', '[Freebox Close Session] : ' . $date . ' - ' . $e->getCode());
+            log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $e->getCode() . ' ou session déjà fermée');
         }
     }
 
@@ -288,38 +294,6 @@ class Free_API
         }
     }
 
-    public function disk()
-    {
-        $result = $this->fetch('/api/v8/storage/disk/');
-        if ($result == 'auth_required') {
-            $result = $this->fetch('/api/v8/storage/disk/');
-        }
-        if ($result === false)
-            return false;
-        if ($result['success']) {
-            $value = 0;
-            log::add('Freebox_OS', 'debug', '┌───────── Création Disque ');
-            $logicalinfo = Freebox_OS::getlogicalinfo();
-            $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
-
-            foreach ($result['result'] as $disks) {
-                if (isset($disks['partitions'][0])) {
-                    if ($disks['partitions'][0]['total_bytes'] != null) {
-                        $value = $disks['partitions'][0]['used_bytes'] / $disks['partitions'][0]['total_bytes'];
-                    } else {
-                        $value = 0;
-                    }
-
-                    log::add('Freebox_OS', 'debug', '│──────────> Disque  [' . $disks['type'] . '] - ' . $disks['id']);
-
-                    $command = $disk->AddCommand($disks['partitions'][0]['label'] . ' - ' . $disks['type'] . ' - ' . $disks['partitions'][0]['fstype'], $disks['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true, '#value#*100', 2);
-                    $command->event($value);
-                }
-            }
-            log::add('Freebox_OS', 'debug', '└─────────');
-        }
-    }
-
     public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config')
     {
         $config_log = null;
@@ -339,7 +313,7 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
                 break;
             case 'disk':
-                $config = 'api/v8/storage/disk' . $id;
+                $config = 'api/v8/storage/disk';
                 break;
             case 'download':
                 $config = 'api/v8/downloads/' . $update_type;
@@ -417,14 +391,6 @@ class Free_API
                     }
                     break;
                 case 'disk':
-                    $total_bytes = $result['result']['partitions'][0]['total_bytes'];
-                    $used_bytes = $result['result']['partitions'][0]['used_bytes'];
-                    if ($total_bytes != null) {
-                        $value = $used_bytes / $total_bytes;
-                    } else {
-                        $value = 0;
-                    }
-                    break;
                 case 'network_ping':
                 case 'network':
                     return $result;

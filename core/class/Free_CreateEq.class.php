@@ -240,7 +240,20 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['diskName']);
         $Free_API = new Free_API();
-        $Free_API->disk();
+        $result = $Free_API->universal_get('disk', null, null, null);
+        if ($result == 'auth_required') {
+            $result = $Free_API->universal_get('disk', null, null, null);
+        }
+        log::add('Freebox_OS', 'debug', '┌───────── Création Disque ');
+        $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
+        if ($result != false) {
+            foreach ($result['result'] as $disks) {
+                foreach ($disks['partitions'] as $partition) {
+                    log::add('Freebox_OS', 'debug', '│──────────> Disque  [' . $disks['type'] . '] - ' . $disks['id'] . ' - Partitions : ' . $partition['label'] . ' -  id ' . $partition['id']);
+                    $disk->AddCommand($partition['label'] . ' - ' . $disks['type'] . ' - ' . $partition['fstype'], $partition['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true, '#value#*100', 2);
+                }
+            }
+        }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

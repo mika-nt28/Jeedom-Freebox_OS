@@ -497,6 +497,7 @@ class Freebox_OS extends eqLogic
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 		log::add('Freebox_OS', 'debug', '┌───────── Fonction updateLogicalID : Start Update');
+		log::add('Freebox_OS', 'debug', '│ Si vide aucun changement nécessaire');
 		foreach ($eqLogics as $eqLogic) {
 
 			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;

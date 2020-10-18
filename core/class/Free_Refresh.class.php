@@ -90,6 +90,10 @@ class Free_Refresh
                                     $result = $Free_API->universal_get('wifi', null, null, 'planning');
                                     $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                                     break;
+                                case "wifiWPS":
+                                    $result = $Free_API->universal_get('wifi', null, null, 'wps/config');
+                                    $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                                    break;
                             }
                         }
                     }
@@ -263,15 +267,22 @@ class Free_Refresh
         $result = $Free_API->universal_get('disk', null, null, null);
 
         if ($result != false) {
-            foreach ($result['result'] as $disks) {
-                foreach ($disks['partitions'] as $partition) {
-                    if ($partition['total_bytes'] != null) {
-                        $value = $partition['used_bytes'] / $partition['total_bytes'];
-                    } else {
-                        $value = 0;
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    foreach ($result['result'] as $disks) {
+                        foreach ($disks['partitions'] as $partition) {
+
+                            if ($Command->getLogicalId() != $partition['id']) continue;
+
+                            if ($partition['total_bytes'] != null) {
+                                $value = $partition['used_bytes'] / $partition['total_bytes'];
+                            } else {
+                                $value = 0;
+                            }
+                            log::add('Freebox_OS', 'debug', '>───────── Occupation de la partition ' . $partition['label'] . ' : ' . $value . ' - Pour le disque  [' . $disks['type'] . '] - ' . $disks['id']);
+                            $Equipement->checkAndUpdateCmd($partition['id'], $value);
+                        }
                     }
-                    log::add('Freebox_OS', 'debug', '>───────── Occupation de la partition ' . $partition['label'] . ' : ' . $value . ' - Pour le disque  [' . $disks['type'] . '] - ' . $disks['id']);
-                    $Equipement->checkAndUpdateCmd($partition['id'], $value);
                 }
             }
         }

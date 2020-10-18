@@ -228,14 +228,15 @@ class Free_CreateTil
         $Link_I_ALARM = null;
         $Link_I_ALARM_ENABLE = null;
 
-        if (isset($Equipement['action'])) {
-            $_eq_action = $Equipement['action'];
-        } else {
-            $_eq_action = null;
-        }
         $result = $Free_API->universal_get('tiles');
+
         foreach ($result as $Equipement) {
             $_autorefresh = '*/5 * * * *';
+            if (isset($Equipement['action'])) {
+                $_eq_action = $Equipement['action'];
+            } else {
+                $_eq_action = null;
+            }
             if ($Equipement['type'] != 'camera') {
                 if ($Equipement['type'] == 'alarm_sensor' || $Equipement['type'] == 'alarm_control' || $Equipement['type'] == 'alarm_remote') {
                     $category = 'security';

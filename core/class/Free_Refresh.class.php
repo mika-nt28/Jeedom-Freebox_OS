@@ -39,15 +39,7 @@ class Free_Refresh
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);
                     break;
                 case 'disk':
-                    foreach ($Equipement->getCmd('info') as $Command) {
-                        if (is_object($Command)) {
-                            $result = $Free_API->universal_get('disk', $Command->getLogicalId());
-                            if ($result != false) {
-                                log::add('Freebox_OS', 'debug', '>───────── Occupation du disque : ' . $result);
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-                            }
-                        }
-                    }
+                    Free_Refresh::refresh_disk($Equipement, $Free_API);
                     break;
                 case 'downloads':
                     Free_Refresh::refresh_download($Equipement, $Free_API);
@@ -96,6 +88,10 @@ class Free_Refresh
                                     break;
                                 case "wifiPlanning":
                                     $result = $Free_API->universal_get('wifi', null, null, 'planning');
+                                    $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                                    break;
+                                case "wifiWPS":
+                                    $result = $Free_API->universal_get('wifi', null, null, 'wps/config');
                                     $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
                                     break;
                             }
@@ -260,6 +256,32 @@ class Free_Refresh
                         case "protocol":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']['protocol']);
                             break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static function refresh_disk($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('disk', null, null, null);
+
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    foreach ($result['result'] as $disks) {
+                        foreach ($disks['partitions'] as $partition) {
+
+                            if ($Command->getLogicalId() != $partition['id']) continue;
+
+                            if ($partition['total_bytes'] != null) {
+                                $value = $partition['used_bytes'] / $partition['total_bytes'];
+                            } else {
+                                $value = 0;
+                            }
+                            log::add('Freebox_OS', 'debug', '>───────── Occupation de la partition ' . $partition['label'] . ' : ' . $value . ' - Pour le disque  [' . $disks['type'] . '] - ' . $disks['id']);
+                            $Equipement->checkAndUpdateCmd($partition['id'], $value);
+                        }
                     }
                 }
             }
@@ -440,56 +462,6 @@ class Free_Refresh
                         $cmd->save();
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $value . ' -- Type : ' . $result['host_type']);
                         break;
-                    }
-                }
-            }
-        }
-    }
-    // A SUPPRIMER A LA FIN DES TESTS NOUVELLE METHODE
-    private static function refresh_network($Equipement, $Free_API, $_network = 'LAN')
-    {
-        if ($_network == 'LAN') {
-            $_networkinterface = 'pub';
-        } else if ($_network == 'WIFIGUEST') {
-            $_networkinterface = 'wifiguest';
-        }
-        foreach ($Equipement->getCmd('info') as $Command) {
-            if (is_object($Command)) {
-                $result = $Free_API->universal_get('network_ID', $Command->getLogicalId(), null, $_networkinterface);
-                if (!$result['success']) {
-                    log::add('Freebox_OS', 'debug', '>───────── ERROR ' . $Command->getLogicalId() . '=> APPAREIL PAS TROUVE');
-                    if ($result['error_code'] === "internal_error") {
-                        $Command->remove();
-                    }
-                } else {
-                    if (isset($result['result']['l3connectivities'])) {
-                        foreach ($result['result']['l3connectivities'] as $Ip) {
-                            if ($Ip['active']) {
-                                if ($Ip['af'] == 'ipv4') {
-                                    $Command->setConfiguration('IPV4', $Ip['addr']);
-                                } else {
-                                    $Command->setConfiguration('IPV6', $Ip['addr']);
-                                }
-                            }
-                        }
-                    }
-                    $Command->setConfiguration('host_type', $result['result']['host_type']);
-                    $Command->save();
-
-                    if (isset($result['result']['active'])) {
-                        if ($result['result']['active'] == 'true') {
-                            $Command->setOrder($Command->getOrder() % 1000);
-                            $Command->save();
-                            log::add('Freebox_OS', 'debug', '>───────── ' . $Command->getLogicalId() . ' : true ');
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), true);
-                        } else {
-                            $Command->setOrder($Command->getOrder() % 1000 + 1000);
-                            $Command->save();
-                            log::add('Freebox_OS', 'debug', '>───────── ' . $Command->getLogicalId() . ' : false ');
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), false);
-                        }
-                    } else {
-                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), false);
                     }
                 }
             }

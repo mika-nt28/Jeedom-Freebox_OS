@@ -240,7 +240,19 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['diskName']);
         $Free_API = new Free_API();
-        $Free_API->disk();
+        $result = $Free_API->universal_get('disk', null, null, null);
+        if ($result == 'auth_required') {
+            $result = $Free_API->universal_get('disk', null, null, null);
+        }
+        $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
+        if ($result != false) {
+            foreach ($result['result'] as $disks) {
+                foreach ($disks['partitions'] as $partition) {
+                    log::add('Freebox_OS', 'debug', '│──────────> Disque [' . $disks['type'] . '] - ' . $disks['id'] . ' - Partitions : ' . $partition['label'] . ' -  id ' . $partition['id']);
+                    $disk->AddCommand($partition['label'] . ' - ' . $disks['type'] . ' - ' . $partition['fstype'], $partition['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true, '#value#*100', 2);
+                }
+            }
+        }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -596,37 +608,71 @@ class Free_CreateEq
             $iconWifiOff = 'fas fa-times';
             $iconWifiPlanningOn = 'fas fa-calendar-alt';
             $iconWifiPlanningOff = 'fas fa-calendar-times';
-            $iconhide_wifi_key = 'fas fa-key';
+            $iconWifiWPSOn = 'fas fa-ethernet';
+            $iconWifiWPSOff = 'fas fa-ethernet';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $TemplateWifiOnOFF = 'Freebox_OS::Wifi';
             $TemplateWifiPlanningOnOFF = 'Freebox_OS::Planning Wifi';
+            $TemplateWifiWPSOnOFF = 'Freebox_OS::Wfi WPS';
             $iconWifiOn = 'fas fa-wifi icon_green';
             $iconWifiOff = 'fas fa-times icon_red';
             $iconWifiPlanningOn = 'fas fa-calendar-alt icon_green';
             $iconWifiPlanningOff = 'fas fa-calendar-times icon_red';
-            $iconhide_wifi_key = 'fas fa-key icon_blue';
+            $iconWifiWPSOn = 'fas fa-ethernet icon_green';
+            $iconWifiWPSOff = 'fas fa-ethernet icon_red';
         };
         $Wifi = Freebox_OS::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null, null, '*/5 * * * *');
-        $StatusWifi = $Wifi->AddCommand('Etat wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateicon, true);
-        $Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 4, '0', $updateicon, false);
-        $Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 5, '0', $updateicon, false);
+        $StatusWifi = $Wifi->AddCommand('Etat Wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateicon, true);
+        $Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
+        $Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 11, '0', $updateicon, false);
         // Planification Wifi
         $PlanningWifi = $Wifi->AddCommand('Etat Planning', 'wifiPlanning', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateicon, true);
-        $Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 6, '0', $updateicon, false);
-        $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 7, '0', $updateicon, false);
-        // Afficher Clef Wifi
-        //$Wifi->AddCommand('Afficher Clef Wifi', 'hide_wifi_key', 'action', 'other', 'default', null, 'default', 1, 'default', 'wifiPlanning', 0, $iconhide_wifi_key, 0, 'default', 'default', 8, '0', $updateicon, false);
+        $Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 12, '0', $updateicon, false);
+        $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 13, '0', $updateicon, false);
+        // Wifi WPS
+        $WifiWPS = $Wifi->AddCommand('Etat WPS', 'wifiWPS', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 3, $updateicon, true);
+        $Wifi->AddCommand('Wifi WPS On', 'wifiWPSOn', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOn, 0, 'default', 'default', 14, '0', $updateicon, false);
+        $Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
+        log::add('Freebox_OS', 'debug', '└─────────');
+        Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi);
+    }
+
+    private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiWPSName']);
+
+        $updateicon = false;
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $iconWifiSessionWPSOn = 'fas fa-link';
+            $iconWifiSessionWPSOff = 'fas fa-link';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $iconWifiSessionWPSOn = 'fas fa-link icon_orange';
+            $iconWifiSessionWPSOff = 'fas fa-link icon_red';
+        };
+        $order = 30;
+        $Wifi->AddCommand('Wifi Session WPS Off (toutes les sessions)', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
+        $order++;
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('wifi', null, null, 'bss');
+
+        if ($result != false) {
+            foreach ($result as $wifibss) {
+                if ($wifibss['config']['wps_enabled'] != true) continue;
+                $Wifi->AddCommand('On Session WPS ' . $wifibss['shared_bss_params']['ssid'], $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
+                if ($wifibss['config']['use_default_config'] == true) {
+                    log::add('Freebox_OS', 'debug', '│──────────> Configuration Wifi commune pour l\'ensemble des cartes');
+                    break;
+                } else {
+                    $order++;
+                }
+            }
+        }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_wifi_wps($logicalinfo, $templatecore_V4)
-    {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiWPSName']);
-        $Free_API = new Free_API();
-        $Free_API->universal_get('wifi', null, null, null);
-        log::add('Freebox_OS', 'debug', '└─────────');
-    }
     private static function createEq_mac_filter($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiWPSName']);

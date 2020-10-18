@@ -60,6 +60,18 @@ class Free_Template
 				'#_time_widget_#' => '1'
 			)
 		);
+		// Template pour le Wifi Wps (action)
+		$return['action']['other']['Wfi WPS'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_orange icon fas fa-broadcast-tower\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-broadcast-tower\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-broadcast-tower\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
 		// Template pour l'état du contrôle Parental' (info)
 		$return['info']['string']['Parental'] = array(
 			'template' => 'tmplmultistate',

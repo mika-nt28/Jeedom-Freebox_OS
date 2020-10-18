@@ -86,7 +86,6 @@ class Free_Update
                 break;
             case 'wifi':
                 Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
-                //Free_Update::update_lcd($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             default:
@@ -206,19 +205,27 @@ class Free_Update
     }
     private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
-        switch ($logicalId) {
-            case 'wifiOn':
-                $Free_API->universal_put(1, 'wifi', null, null, 'config');
-                break;
-            case 'wifiOff':
-                $Free_API->universal_put(0, 'wifi', null, null, 'config');
-                break;
-            case 'wifiPlanningOn':
-                $Free_API->universal_put(1, 'wifi', null, null, 'planning');
-                break;
-            case 'wifiPlanningOff':
-                $Free_API->universal_put(0, 'wifi', null, null, 'planning');
-                break;
+        if ($logicalId != 'refresh') {
+            switch ($logicalId) {
+                case 'wifiOn':
+                    $Free_API->universal_put(1, 'wifi', null, null, 'config');
+                    break;
+                case 'wifiOff':
+                    $Free_API->universal_put(0, 'wifi', null, null, 'config');
+                    break;
+                case 'wifiPlanningOn':
+                    $Free_API->universal_put(1, 'wifi', null, null, 'planning');
+                    break;
+                case 'wifiPlanningOff':
+                    $Free_API->universal_put(0, 'wifi', null, null, 'planning');
+                    break;
+                case 'wifiSessionWPSOff':
+                    $Free_API->universal_put(0, 'wifi', null, null, 'wps/stop');
+                    break;
+                default:
+                    $Free_API->universal_put($logicalId, 'wifi', null, null, 'wps/start');
+                    break;
+            }
         }
     }
 

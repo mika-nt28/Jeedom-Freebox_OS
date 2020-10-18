@@ -135,10 +135,7 @@ class Free_API
             $result = json_decode($json, true);
             return $result;
         } catch (Exception $e) {
-            // Définir le nouveau fuseau horaire
-            date_default_timezone_set('Europe/Paris');
-            $date = date('d-m-y h:i:s');
-            log::add('Freebox_OS', 'error', '[get Freebox Open Session Data] : ' . $date . ' - ' . $e->getCode());
+            log::add('Freebox_OS', 'error', '[get Freebox Open Session Data] : ' . $e->getCode());
         }
     }
 
@@ -147,7 +144,6 @@ class Free_API
         try {
             $session_token = cache::byKey('Freebox_OS::SessionToken');
             while ($session_token->getValue('') == '') {
-                //sleep(1);
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
 

@@ -180,9 +180,6 @@ class Free_API
             curl_close($ch);
 
             log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
-            // Définir le nouveau fuseau horaire
-            date_default_timezone_set('Europe/Paris');
-            $date = date('d-m-y h:i:s');
 
             if ($errorno !== 0) {
                 return '│ Erreur de connexion cURL vers ' . $this->serveur . $api_url . ': ' . $error;
@@ -191,7 +188,7 @@ class Free_API
                 if ($result == null) return false;
                 if (!$result['success']) {
                     if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
-                        log::add('Freebox_OS', 'error', 'Erreur Droits : ' . $date . ' - ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur Droits : '  . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == "auth_required") {
                         log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['error_code']);
@@ -201,16 +198,16 @@ class Free_API
                         $result = 'auth_required';
                         return $result;
                     } else if ($result['error_code'] == 'denied_from_external_ip') {
-                        log::add('Freebox_OS', 'error', 'Erreur Accès : ' . $date . ' - '  . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur Accès : '  . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
-                        log::add('Freebox_OS', 'error', 'Erreur Application : ' . $date . ' - ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur Application : '  . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
-                        log::add('Freebox_OS', 'error', 'Erreur Token : ' . $date . ' - ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
-                        log::add('Freebox_OS', 'error', 'Erreur AUTRE : ' . $date . ' - ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
                         return false;
                     }
                 }
@@ -218,7 +215,7 @@ class Free_API
                 return $result;
             }
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '│ [Freebox Request] : ' . $date . ' - ' . $e->getCode());
+            log::add('Freebox_OS', 'error', '│ [Freebox Request] : '  . $e->getCode());
             log::add('Freebox_OS', 'debug', '└─────────');
         }
     }
@@ -403,7 +400,7 @@ class Free_API
                     }
                     break;
                 case 'wifi':
-                    if ($update_type == 'config') {
+                    if ($update_type == 'config' || $update_type == 'wps/config') {
                         if ($result['result']['enabled']) {
                             $value = 1;
                         }
@@ -538,10 +535,19 @@ class Free_API
                 $config = 'api/v8/wifi/' . $_options;
                 if ($_options == 'planning') {
                     $config_commande = 'use_planning';
+                } else if ($_options == 'wps/start') {
+                    $fonction = "POST";
+                    $config_commande = 'bssid';
+                } else if ($_options == 'wps/stop') {
+                    $fonction = "POST";
                 } else {
                     $config_commande = 'enabled';
                 }
-                $config_log = 'Mise à jour de : Etat du Wifi ' . $_options;
+                if ($_options == 'planning' || $_options == 'wifi') {
+                    $config_log = 'Mise à jour de : Etat du Wifi ' . $_options;
+                } else {
+                    $config_log = null;
+                }
                 break;
             case 'set_tiles':
                 if ($id != null) {

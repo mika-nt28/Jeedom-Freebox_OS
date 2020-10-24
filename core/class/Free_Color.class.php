@@ -21,17 +21,11 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 class Free_Color
 {
 
-	public static function convertRGBToXY($RGB)
+	public static function convertRGBToXY($red, $green, $blue)
 	{
-		// Get decimal RGB
-		log::add('Freebox_OS', 'debug', '│──────────> RGB  = ' . $RGB);
-		$r = hexdec(substr($RGB, 1, 2));
-		$g = hexdec(substr($RGB, 3, 2));
-		$b = hexdec(substr($RGB, 5, 2));
-
-		$normalizedToOne['red'] = $r / 255;
-		$normalizedToOne['green'] = $g / 255;
-		$normalizedToOne['blue'] = $b / 255;
+		$normalizedToOne['red'] = $red / 255;
+		$normalizedToOne['green'] = $green / 255;
+		$normalizedToOne['blue'] = $blue / 255;
 		foreach ($normalizedToOne as $key => $normalized) {
 			if ($normalized > 0.04045) {
 				$color[$key] = pow(($normalized + 0.055) / (1.0 + 0.055), 2.4);
@@ -53,11 +47,11 @@ class Free_Color
 		log::add('Freebox_OS', 'debug', '│──────────> Value x = ' . $x);
 		log::add('Freebox_OS', 'debug', '│──────────> Value y = ' . $y);
 		log::add('Freebox_OS', 'debug', '│──────────> bri = ' . $bri);
-		$parametre['x'] = $x;
-		$parametre['y'] = $y;
-		$parametre['bri'] = $bri;
-		return $parametre;
-		//return array('x' => $x, 'y' => $y, 'bri' => round($xyz['y'] * 255));
+		return array(
+			'x' => $x,
+			'y' => $y,
+			'bri' => $bri,
+		);
 	}
 
 	public static function convertxyToRGB($x, $y, $bri = 255)

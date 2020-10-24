@@ -713,7 +713,6 @@ class Free_Refresh
                                 $rouge = substr($_value2, 1, 2);
                                 $vert  = substr($_value2, 3, 2);
                                 $bleu  = substr($_value2, 5, 2);
-                                log::add('Freebox_OS', 'debug', '│──────────> RGB : ' . $RGB);
                                 log::add('Freebox_OS', 'debug', '│──────────> Value 1 : ' . $_value);
                                 log::add('Freebox_OS', 'debug', '│──────────> Value 2 : ' . $_value2);
                                 log::add('Freebox_OS', 'debug', '│──────────> rouge : ' . $rouge . ' -- Vert : ' . $vert . ' -- Bleu : ' . $bleu);

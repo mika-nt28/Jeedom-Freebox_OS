@@ -256,20 +256,19 @@ class Free_Update
                 }
                 break;
             case 'color':
-                $bright = str_pad(dechex($_options['color']), 2, "0", STR_PAD_LEFT);
-                $color = str_replace('#', '', $_options['color']);
-                log::add('Freebox_OS', 'debug', '>──────────> luminosité : ' . $bright . ' -- Couleur : ' . $color);
-                if ($color == '000000') {
+                /*list($r, $g, $b) = str_split(str_replace('#', '', $_options['color']), 2);
+                $info = Free_Color::convertRGBToXY(hexdec($r), hexdec($g), hexdec($b));
+                $replace['#color#'] = round($info['x'] * 65535) . '::' . round($info['y'] * 65535);
+
+
+                if ($replace['#color#'] == '000000') {
                     $bright = '00';
                     log::add('Freebox_OS', 'debug', '>──────────> ETEINDRE LA LAMPE');
                 } else {
-                    if ($bright == '00') {
-                        $bright = dechex(50);
-                    }
-                    $_value = $bright . $color;
-                    $_value = hexdec($_value);
-                    log::add('Freebox_OS', 'debug', '>──────────> RGB EN HEX : ' . $_value);
-                    $parametre['value'] = $_value;
+                    //$_value = $bright . $color;
+                    //$_value = hexdec($_value);
+                    log::add('Freebox_OS', 'debug', '>──────────> RGB EN HEX : ' . $replace['#color#']);
+                    $parametre['value'] = $replace['#color#'];
                     $parametre['value_type'] = 'int';
                     $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
                     if ($cmd !== false) {
@@ -278,7 +277,7 @@ class Free_Update
                             log::add('Freebox_OS', 'debug', '│ Pas d\'action car l\'équipement est éteint');
                         }
                     }
-                }
+                }*/
                 break;
             case 'message':
                 $parametre['value'] = $_options['message'];

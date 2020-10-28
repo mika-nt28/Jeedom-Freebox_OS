@@ -54,7 +54,7 @@ class Free_Color
 		);
 	}
 
-	public static function convertxyToRGB($x, $y, $bri = 255)
+	public static function convertXYToRGB($x, $y, $bri = 255)
 	{
 		$z = 1.0 - $x - $y;
 		$xyz['y'] = $bri / 255;

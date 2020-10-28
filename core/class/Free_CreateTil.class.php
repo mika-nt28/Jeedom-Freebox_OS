@@ -253,7 +253,17 @@ class Free_CreateTil
                     $category = 'default';
                 }
                 $room = Free_CreateTil::getPiece($Equipement['group']['label']);
-                $Equipement['label'] = preg_replace('/\'+/', ' ', $Equipement['label']); // Suppression '
+                $replace_device_type = array(
+                    ' ' => ' ',
+                    '/' => ' ',
+                    '/\'+/' => ' ',
+                    '\\' => ' ',
+                    'É' => 'E',
+                    '\"' => ' ',
+                    "\'" => ' ',
+                    "'" => ' '
+                );
+                $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);
                 $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $Equipement['type']), $Equipement['node_id'], $category, true, $Equipement['type'],  $_eq_action, null, $_autorefresh, $room);
             }
             $_eqLogic = null;
@@ -268,6 +278,7 @@ class Free_CreateTil
                     $icon = null;
                     if ($Equipement['type'] == 'camera' && method_exists('camera', 'getUrl')) {
                         $_eqLogic == $Equipement['type'];
+                        $command['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Command['label']);
                         $parameter['name'] = $Command['label'];
                         $parameter['id'] = 'FreeboxCamera_' . $Command['ep_id'];
                         $parameter['room'] = $Equipement['group']['label'];
@@ -289,8 +300,7 @@ class Free_CreateTil
                     }
                     if (!is_object($Tile)) continue;
                     log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' -- Pièce : ' . $Equipement['group']['label'] . ' (Node ID ' . $Equipement['node_id'] . ')');
-                    $Command['label'] = preg_replace('/É+/', 'E', $Command['label']); // Suppression É
-                    $Command['label'] = preg_replace('/\'+/', ' ', $Command['label']); // Suppression '
+                    $command['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Command['label']);
                     log::add('Freebox_OS', 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name']);
 
                     log::add('Freebox_OS', 'debug', '│ Type (eq) : ' . $Equipement['type'] . ' -- Action (eq): ' . $_eq_action);

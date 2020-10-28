@@ -537,6 +537,7 @@ class Free_Refresh
                     if (is_object($Command)) {
                         switch ($Command->getLogicalId()) {
                             case "mac":
+                                log::add('Freebox_OS', 'debug', '│──────────> Update pour Adresse mac : ' . $result['mac']);
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
                                 break;
                             case "uptime":
@@ -547,16 +548,20 @@ class Free_Refresh
                                 $_uptime = str_replace(' minutes ', 'min ', $_uptime);
                                 $_uptime = str_replace(' secondes', 's', $_uptime);
                                 $_uptime = str_replace(' seconde', 's', $_uptime);
+                                log::add('Freebox_OS', 'debug', '│──────────> Allumée depuis : ' . $_uptime);
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $_uptime);
                                 break;
                             case "board_name":
+                                log::add('Freebox_OS', 'debug', '│──────────> Board name : ' . $result['board_name']);
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
                                 config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
                                 break;
                             case "serial":
+                                log::add('Freebox_OS', 'debug', '│──────────> Numéro de série : ' . $result['serial']);
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);
                                 break;
                             case "firmware_version":
+                                log::add('Freebox_OS', 'debug', '│──────────> Version Firmware : ' . $result['firmware_version']);
                                 $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
                                 break;
                             case "4GStatut": // toute la partie 4G
@@ -573,14 +578,14 @@ class Free_Refresh
     }
     private static function refresh_system_4G($Equipement, $Free_API)
     {
-        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement 4G');
         $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "4GStatut":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
+                            log::add('Freebox_OS', 'debug', '│──────────> Etat 4G : ' . $result['enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['enabled']);
                             break;
                     }
                 }
@@ -589,7 +594,6 @@ class Free_Refresh
     }
     private static function refresh_system_lan($Equipement, $Free_API)
     {
-        log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système uniquement Config Freebox');
         $result =  $Free_API->universal_get('network', null, null, 'config/');
 
         if ($result != false || isset($result['result']) != false) {
@@ -597,13 +601,16 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "ip":
+                            log::add('Freebox_OS', 'debug', '│──────────> IP : ' . $result['result']['ip']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['ip']);
                             break;
                         case "mode":
+                            log::add('Freebox_OS', 'debug', '│──────────> Mode : ' . $result['result']['mode']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['mode']);
                             config::save('TYPE_FREEBOX_MODE', $result['result']['mode'], 'Freebox_OS');
                             break;
                         case "name":
+                            log::add('Freebox_OS', 'debug', '│──────────> Nom : ' . $result['result']['name']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['name']);
                             break;
                     }
@@ -704,8 +711,11 @@ class Free_Refresh
                             };
 
                             if ($data['ui']['display'] == 'color') {
-                                log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
-                                $_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
+                                //$color = dechex($data['value']);
+                                //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
+                                //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);
+                                //$_value = $color;
+                                /*$_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
                                 $_value2 = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
                                 $result = Free_Color::convertRGBToXY($data['value']);
                                 log::add('Freebox_OS', 'debug', '│──────────> x : ' . $result['x'] . ' -- y : ' . $result['y'] . ' -- bri : ' . $result['bri']);
@@ -713,13 +723,13 @@ class Free_Refresh
                                 $rouge = substr($_value2, 1, 2);
                                 $vert  = substr($_value2, 3, 2);
                                 $bleu  = substr($_value2, 5, 2);
-                                log::add('Freebox_OS', 'debug', '│──────────> RGB : ' . $RGB);
                                 log::add('Freebox_OS', 'debug', '│──────────> Value 1 : ' . $_value);
                                 log::add('Freebox_OS', 'debug', '│──────────> Value 2 : ' . $_value2);
                                 log::add('Freebox_OS', 'debug', '│──────────> rouge : ' . $rouge . ' -- Vert : ' . $vert . ' -- Bleu : ' . $bleu);
                                 $_light = hexdec(substr($_value, 7, 2));
                                 $_value = '#' . substr($_value2, -6);
                                 log::add('Freebox_OS', 'debug', '>──────────> Display de Type : ' . $data['ui']['display'] . ' -- Light : ' . $_light . ' -- Valeur : ' . $_value);
+                            */
                             } else {
                                 $_value = $data['value'];
                             }

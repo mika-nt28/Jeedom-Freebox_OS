@@ -426,6 +426,8 @@ class Free_CreateTil
                                         $generic_type_I = 'BATTERY';
                                         $icon = 'fas fa-battery-full';
                                         $name = 'Batterie';
+                                        $_min = '0';
+                                        $_max = 100;
                                     }
                                     if ($_eq_action != "store_slider" && $Command['name'] != 'position') {
                                         $_name_I = $label_sup . $name;

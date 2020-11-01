@@ -58,6 +58,15 @@ $('.authentification').on('click', function () {
 	$('#md_modal').load('index.php?v=d&modal=authentification&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
 });
 
+$('.health').on('click', function () {
+	$('#md_modal').dialog({
+		title: "{{Santé Freebox}}",
+		height: 700,
+		width: 850
+	});
+	$('#md_modal').load('index.php?v=d&modal=health&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
+});
+
 $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 	$('#div_alert').showAlert({
 		message: '{{Recherche des <b>Equipements standards</b>}}',

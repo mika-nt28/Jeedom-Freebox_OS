@@ -81,7 +81,7 @@ $eqLogics = Freebox_OS::byType('Freebox_OS');
 			} elseif ($battery > 60) {
 				$battery_status = '<span class="label label-success" style="font-size : 1em;">' . $battery . '%</span>';
 			} elseif ($battery == 'N/A') {
-				$battery_status = '<span class="label label-warning" style="font-size : 1em;">' . $battery . '%</span>';
+				$battery_status = '<span class="label label-warning" style="font-size : 1em;">' . $battery . '</span>';
 			} else {
 				$battery_status = '<span class="label label-primary" style="font-size : 1em;">' . $battery . '%</span>';
 			}

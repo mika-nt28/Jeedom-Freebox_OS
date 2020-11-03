@@ -69,7 +69,7 @@ $eqLogics = Freebox_OS::byType('Freebox_OS');
 			echo '<td>' . $status . '</td>';
 			$battery_status = '<span class="label label-success" style="font-size : 1em;">{{OK}}</span>';
 			$battery = $eqLogic->getStatus('battery');
-			if ($eqLogic->getConfiguration('type') == 'alarm_sensor' && $battery == '') {
+			if (($eqLogic->getConfiguration('type') == 'alarm_sensor' && $battery == '') || $eqLogic->getConfiguration('type') == 'alarm_remote') {
 				$battery = 'N/A';
 			}
 			if ($battery == '') {

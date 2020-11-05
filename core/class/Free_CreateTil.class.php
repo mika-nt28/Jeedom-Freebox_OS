@@ -374,6 +374,7 @@ class Free_CreateTil
                                 $Templatecore_A = null;
                                 $_min = 'default';
                                 $_max = 'default';
+                                $unit = null;
                                 $IsVisible = 1;
                                 $IsVisible_I = '0';
                                 $IsHistorized = '0';
@@ -426,6 +427,8 @@ class Free_CreateTil
                                         $generic_type_I = 'BATTERY';
                                         $icon = 'fas fa-battery-full';
                                         $name = 'Batterie';
+                                        $_min = '0';
+                                        $_max = 100;
                                     }
                                     if ($_eq_action != "store_slider" && $Command['name'] != 'position') {
                                         $_name_I = $label_sup . $name;
@@ -486,6 +489,7 @@ class Free_CreateTil
                                 $link_logicalId = 'default';
                                 $order = null;
                                 $IsVisible_PB = 0;
+                                $unit = null;
                                 $Type_command = null;
                                 if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $_eq_action == 'toggle')) {
                                     $Type_command = 'PB';

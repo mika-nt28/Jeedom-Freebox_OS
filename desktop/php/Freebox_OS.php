@@ -26,7 +26,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 	<div class="col-xs-12 eqLogicThumbnailDisplay">
 		<legend><i class="fas fa-cog"></i> {{Gestion}}</legend>
 		<div class="eqLogicThumbnailContainer">
-
 			<div class="cursor authentification logoWarning">
 				<i class="fas fa-rss"></i>
 				<br>
@@ -51,6 +50,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<i class="fas fa-search"></i>
 				<br>
 				<span>{{Scan}}<br />{{Tiles}}</span>
+			</div>
+			<div class="cursor logoSecondary health">
+				<i class="fas fa-medkit"></i>
+				<br />
+				<span>{{Santé}}</span>
 			</div>
 		</div>
 		<div class="input-group" style="margin:5px;">
@@ -229,8 +233,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
 									<option value="">{{Aucun}}</option>
 									<?php
-									foreach (jeeObject::all() as $object)
-										echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+									$options = '';
+									foreach ((jeeObject::buildTree(null, false)) as $object) {
+										$decay = $object->getConfiguration('parentNumber');
+										$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $decay) . $object->getName() . '</option>';
+									}
+									echo $options;
 									?>
 								</select>
 							</div>

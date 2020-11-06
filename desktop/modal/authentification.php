@@ -79,7 +79,7 @@ if (!isConnect('admin')) {
                 <center><i class="fas fa-cogs" style="font-size: 8em;"></i></center>
                 <br />
                 <h3 class="textFreebox">{{}}</h3>
-                <div class="alert alert-info">{{C'est partie, lançons nous. Pour commencer nous allons valider les
+                <div class="alert alert-info">{{C'est parti, lançons nous. Pour commencer nous allons valider les
                     réglages}}
                 </div>
                 <form class="form-horizontal">

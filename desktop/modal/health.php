@@ -48,7 +48,7 @@ $eqLogics = Freebox_OS::byType('Freebox_OS');
 					$icon = $template;
 				} else {
 					$template = $eqLogic->getLogicalId();
-					if (($eqLogic->getConfiguration('type') == 'info' && $eqLogic->getConfiguration('action') == 'store') || ($eqLogic->getConfiguration('type') == 'light')) {
+					if (($eqLogic->getConfiguration('type') == 'info' && ($eqLogic->getConfiguration('action') == 'store' or $eqLogic->getConfiguration('action') == 'store_slider')) || ($eqLogic->getConfiguration('type') == 'light')) {
 						$icon = 'default';
 					} else {
 						$icon = $template;

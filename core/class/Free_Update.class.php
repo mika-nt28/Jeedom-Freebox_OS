@@ -159,7 +159,7 @@ class Free_Update
 
         switch ($logicalId) {
             case "search":
-                Free_CreateEq::createEq('network', 'LAN', false);
+                Free_CreateEq::createEq('network', false);
                 break;
         }
     }
@@ -168,7 +168,7 @@ class Free_Update
 
         switch ($logicalId) {
             case "search":
-                Free_CreateEq::createEq('network', 'WIFIGUEST', false);
+                Free_CreateEq::createEq('networkwifiguest', false);
                 break;
         }
     }

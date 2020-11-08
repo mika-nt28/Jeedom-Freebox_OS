@@ -19,6 +19,7 @@ if (!isConnect('admin')) {
 	throw new Exception('401 - Accès non autorisé');
 }
 $eqLogics = Freebox_OS::byType('Freebox_OS');
+include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 ?>
 
 <table class="table table-condensed tablesorter" id="table_healthFreebox_OS">
@@ -55,7 +56,6 @@ $eqLogics = Freebox_OS::byType('Freebox_OS');
 				}
 			}
 			$image = '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png" height="35" width="35" style="' . $opacity . '" class="' . $opacity . '"/>';
-
 			echo '<tr><td class="' . $opacity . '" >' . $image . '</td><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('logicalID') . '</span></td>';

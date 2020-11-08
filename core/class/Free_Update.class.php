@@ -73,10 +73,16 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'network':
-                Free_Update::update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                }
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'networkwifiguest':
-                Free_Update::update_networkwifiguest($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_networkwifiguest($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                }
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'system':
                 Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -153,10 +159,7 @@ class Free_Update
 
         switch ($logicalId) {
             case "search":
-                Free_CreateEq::createEq('network', 'LAN', false);
-                break;
-            case 'refresh':
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                Free_CreateEq::createEq('network', false);
                 break;
         }
     }
@@ -165,10 +168,7 @@ class Free_Update
 
         switch ($logicalId) {
             case "search":
-                Free_CreateEq::createEq('network', 'WIFIGUEST', false);
-                break;
-            case 'refresh':
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                Free_CreateEq::createEq('networkwifiguest', false);
                 break;
         }
     }

@@ -300,6 +300,10 @@ class Freebox_OS extends eqLogic
 				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
 			}
 			$Command->save();
+
+			if ($_order != null) {
+				$Command->setOrder($_order);
+			}
 		}
 		if ($generic_type != null) {
 			$Command->setGeneric_type($generic_type);
@@ -323,9 +327,6 @@ class Freebox_OS extends eqLogic
 		}
 		if ($link_logicalId != 'default') {
 			$Command->setconfiguration('logicalId', $link_logicalId);
-		}
-		if ($_order != null) {
-			$Command->setOrder($_order);
 		}
 
 		// Forçage pour mettre à jour l'affichage // Option en cas de Update Plugin

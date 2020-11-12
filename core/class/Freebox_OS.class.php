@@ -165,44 +165,58 @@ class Freebox_OS extends eqLogic
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
+		log::add('Freebox_OS', 'debug', '>> ================ >> Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
 		if (!is_object($EqLogic)) {
 
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
-			if ($_Room == null) {
-				$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+			$checks = self::all();
+			$Nameexist = false;
+			foreach ($checks as $check) {
+				if ($check->getName() == $Name) {
+					if ($check->getLogicalId($_logicalId)) {
+						$Nameexist = true;
+					}
+				}
+			}
+			if ($Nameexist) {
+				log::add('Freebox_OS', 'error', 'Un équipement portant ce nom et un id incorrect (' . $Name . ' / ' . $_logicalId . ') existe déjà, il est impossible de créer l\'équipement');
+				return false;
 			} else {
-				// Fonction NON désactiver A TRAITER => Pose des soucis chez certain utilisateurs (Voir Fil d'actualité du Plugin)
-				$defaultRoom = intval($_Room);
-			}
-			if ($defaultRoom != null) {
-				$EqLogic->setObject_id($defaultRoom);
-			}
-			$EqLogic->setEqType_name('Freebox_OS');
-			$EqLogic->setIsEnable(1);
-			$EqLogic->setIsVisible(0);
-			$EqLogic->setName($Name);
-			if ($category != null) {
-				$EqLogic->setcategory($category, 1);
-			}
+				if ($_Room == null) {
+					$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+				} else {
+					// Fonction NON désactiver A TRAITER => Pose des soucis chez certain utilisateurs (Voir Fil d'actualité du Plugin)
+					$defaultRoom = intval($_Room);
+				}
+				if ($defaultRoom != null) {
+					$EqLogic->setObject_id($defaultRoom);
+				}
+				$EqLogic->setEqType_name('Freebox_OS');
+				$EqLogic->setIsEnable(1);
+				$EqLogic->setIsVisible(0);
+				$EqLogic->setName($Name);
+				if ($category != null) {
+					$EqLogic->setcategory($category, 1);
+				}
 
-			if ($_autorefresh != null) {
-				$EqLogic->setConfiguration('autorefresh', $_autorefresh);
-			} else {
-				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
-			}
-			if ($tiles == true) {
-				$EqLogic->setConfiguration('type', $eq_type);
-				$EqLogic->setConfiguration('action', $eq_action);
-				if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
-					$EqLogic->setConfiguration('action', $logicalID_equip);
+				if ($_autorefresh != null) {
+					$EqLogic->setConfiguration('autorefresh', $_autorefresh);
+				} else {
+					$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 				}
-				if ($Player != null) {
-					$EqLogic->setConfiguration('player', $Player);
+				if ($tiles == true) {
+					$EqLogic->setConfiguration('type', $eq_type);
+					$EqLogic->setConfiguration('action', $eq_action);
+					if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
+						$EqLogic->setConfiguration('action', $logicalID_equip);
+					}
+					if ($Player != null) {
+						$EqLogic->setConfiguration('player', $Player);
+					}
 				}
+				$EqLogic->save();
 			}
-			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
 		if ($_autorefresh == null) {
@@ -516,7 +530,6 @@ class Freebox_OS extends eqLogic
 					break;
 				case 'AirPlay':
 				case 'airmedia':
-				case '':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
 					$eqLogic->setName($logicalinfo['airmediaName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);

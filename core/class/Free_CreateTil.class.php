@@ -510,7 +510,7 @@ class Free_CreateTil
                                         $generic_type = 'PRESENCE';
                                         $Templatecore = $templatecore_V4 . 'presence';
                                         $invertBinary = 0;
-                                    } elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $_eq_action == 'toggle') || ($Command['name'] == 'switch' && $_eq_action == 'toggle')) {
+                                    } elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $_eq_action == 'toggle')) {
                                         $generic_type = 'LIGHT_STATE';
                                         $Templatecore = $templatecore_V4 . 'light';
                                         $invertBinary = 0;
@@ -529,7 +529,7 @@ class Free_CreateTil
                                     $Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
                                     if ($_eq_action == 'store') {
                                         $Link_I_store = $infoCmd;
-                                    } elseif ($Equipement['type'] == 'light' || ($Equipement['type'] == 'info' && $_eq_action == 'toggle') || ($Command['name'] == 'switch' && $_eq_action == 'toggle')) {
+                                    } elseif ($Equipement['type'] == 'light' || ($Equipement['type'] == 'info' && $_eq_action == 'toggle')) {
                                         $Link_I_light = $infoCmd;
                                     } else {
                                         $Link_I_store = 'default';

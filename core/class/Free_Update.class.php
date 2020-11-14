@@ -22,7 +22,7 @@ class Free_Update
 {
     public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $_cmd)
     {
-        if ($logicalId != 'refresh') {
+        if ($logicalId != 'refresh' && $logicalId != 'WakeonLAN') {
             log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
             log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
@@ -73,16 +73,13 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'network':
-                if ($logicalId != 'refresh') {
-                    Free_Update::update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
-                }
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
-                break;
             case 'networkwifiguest':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_networkwifiguest($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                    Free_Update::update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
                 }
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                if ($logicalId != 'WakeonLAN') {
+                    Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                }
                 break;
             case 'system':
                 Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -154,25 +151,17 @@ class Free_Update
             }
         }
     }
-    private static function update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $network)
     {
-
         switch ($logicalId) {
             case "search":
-                Free_CreateEq::createEq('network', false);
+                Free_CreateEq::createEq($network, false);
+                break;
+            case "WakeonLAN":
+                $Free_API->universal_put(null, $logicalId, $_options['mac_address'], null, null, null, $_options['password']);
                 break;
         }
     }
-    private static function update_networkwifiguest($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
-    {
-
-        switch ($logicalId) {
-            case "search":
-                Free_CreateEq::createEq('networkwifiguest', false);
-                break;
-        }
-    }
-
     private static function update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
         $cmd = cmd::byid($_cmd->getvalue());

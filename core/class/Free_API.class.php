@@ -453,7 +453,7 @@ class Free_API
         else
             return false;
     }
-    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null)
+    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null, $password = null)
     {
         $fonction = "PUT";
         $config_log = null;
@@ -522,7 +522,7 @@ class Free_API
                 $config = 'api/v8/system/reboot';
                 $fonction = "POST";
                 break;
-            case 'WakeOnLAN':
+            case 'WakeonLAN':
                 $config = 'api/v8/lan/wol/pub/';
                 $fonction = "POST";
                 $config_log = 'Mise à jour de : WakeOnLAN';
@@ -564,8 +564,8 @@ class Free_API
         }
         if ($update == 'parental' || $update == 'donwload') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
-        } else if ($update == 'WakeOnLAN') {
-            $return = $this->fetch('/' . $config, array("mac" => $id, "password" => ""), $fonction);
+        } else if ($update == 'WakeonLAN') {
+            $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $password), $fonction);
         } else if ($update == 'set_tiles') {
             $return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
         } else if ($update == 'phone') {

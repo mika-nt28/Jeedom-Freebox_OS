@@ -404,13 +404,22 @@ class Free_CreateEq
             $_networkname = $logicalinfo['networkName'];
             $_networkID = $logicalinfo['networkID'];
             $_networkinterface = 'pub';
-            $icon_search = 'fas fa-search-plus icon_green';
         } else if ($_network == 'WIFIGUEST') {
             $_networkname = $logicalinfo['networkwifiguestName'];
             $_networkID = $logicalinfo['networkwifiguestID'];
             $_networkinterface = 'wifiguest';
-            $icon_search = 'fas fa-search-plus icon_green';
+            $icon_search = 'fas fa-broadcast-tower icon_green';
         }
+
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $icon_search = 'fas fa-search-plus';
+            $icon_wol = 'fas fa-broadcast-tower';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $icon_search = 'fas fa-search-plus icon_green';
+            $icon_wol = 'fas fa-broadcast-tower icon_orange';
+        };
         $updateWidget = false;
         if ($IsVisible == true) {
             $_IsVisible = 1;
@@ -420,8 +429,8 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
-        $network->AddCommand('Lancer Recherche des nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_search, 0, 'default', 'default',  1, '0', true, false, null, true);
-
+        $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_search, 0, 'default', 'default',  -2, '0', true, false, null, true);
+        $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -1, '0', true, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
 
 

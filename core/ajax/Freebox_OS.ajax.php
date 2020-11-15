@@ -26,7 +26,7 @@ try {
 			break;
 		case 'WakeOnLAN':
 			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
-			ajax::success($Free_API->universal_put(null, 'WakeOnLAN', $Mac, null, null));
+			ajax::success($Free_API->universal_put(null, 'WakeonLAN', $Mac, null, null));
 			break;
 		case 'get_airmediareceivers':
 			ajax::success($Free_API->airmedia('receivers', null, null));

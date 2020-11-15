@@ -130,6 +130,17 @@ class Free_Template
 				array('operation' => "#value# == 'schedule'", 'state_light' => '<i class=\'icon_green icon far fa-calendar-alt\'></i>')
 			)
 		);
+
+		// Template pour l'état du Mac filter' (info)
+		$return['info']['string']['Filtrage Adresse Mac'] = array(
+			'template' => 'tmplmultistate',
+			'replace' => array('#_time_widget_#' => '1'),
+			'test' => array(
+				array('operation' => "#value# == 'disabled'", 'state_light' => '<i class=\'icon_red green fas fa-times-circle\'></i>'),
+				array('operation' => "#value# == 'blacklist'", 'state_light' => '<i class=\'icon_red icon fas fa-wifi\'></i>'),
+				array('operation' => "#value# == 'whitelist'", 'state_light' => '<i class=\'icon_orange icon fas fa-wifi\'></i>')
+			)
+		);
 		return $return;
 	}
 }

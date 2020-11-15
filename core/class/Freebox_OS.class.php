@@ -247,7 +247,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi: ' . $_calculValueOffset . '/' . $_historizeRound);
 
@@ -313,6 +313,9 @@ class Freebox_OS extends eqLogic
 				}
 				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
 			}
+			if ($request != null) {
+				$Command->setConfiguration('request', $request);
+			}
 			$Command->save();
 
 			if ($_order != null) {
@@ -365,6 +368,9 @@ class Freebox_OS extends eqLogic
 
 		if ($_logicalId === "tempDenied") {
 			$Command->setConfiguration('listValue', '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00');
+		}
+		if ($_logicalId === "mac_filter_state") {
+			$Command->setConfiguration('listValue', 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche');
 		}
 		$Command->save();
 
@@ -503,6 +509,7 @@ class Freebox_OS extends eqLogic
 			'wifiName' => 'Wifi',
 			'wifiguestID' => 'wifiguest',
 			'wifiguestName' => 'Wifi Invité',
+			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
 			'wifiWPSName' => 'Wifi WPS'
 		);
@@ -618,5 +625,16 @@ class Freebox_OSCmd extends cmd
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 
 		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
+	}
+
+	public function getWidgetTemplateCode($_version = 'dashboard', $_noCustom = false)
+	{
+		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version, $_noCustom);
+		list($command, $arguments) = explode('?', $this->getConfiguration('request'), 2);
+		if ($command == 'wol')
+			return getTemplate('core', 'scenario', 'cmd.WakeonLAN', 'Freebox_OS');
+		if ($command == 'add_del_mac')
+			return getTemplate('core', 'scenario', 'cmd.mac_filter', 'Freebox_OS');
+		return parent::getWidgetTemplateCode($_version, $_noCustom);
 	}
 }

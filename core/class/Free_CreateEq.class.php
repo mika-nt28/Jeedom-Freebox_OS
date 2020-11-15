@@ -404,13 +404,22 @@ class Free_CreateEq
             $_networkname = $logicalinfo['networkName'];
             $_networkID = $logicalinfo['networkID'];
             $_networkinterface = 'pub';
-            $icon_search = 'fas fa-search-plus icon_green';
         } else if ($_network == 'WIFIGUEST') {
             $_networkname = $logicalinfo['networkwifiguestName'];
             $_networkID = $logicalinfo['networkwifiguestID'];
             $_networkinterface = 'wifiguest';
-            $icon_search = 'fas fa-search-plus icon_green';
+            $icon_search = 'fas fa-broadcast-tower icon_green';
         }
+
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $icon_search = 'fas fa-search-plus';
+            $icon_wol = 'fas fa-broadcast-tower';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $icon_search = 'fas fa-search-plus icon_green';
+            $icon_wol = 'fas fa-broadcast-tower icon_orange';
+        };
         $updateWidget = false;
         if ($IsVisible == true) {
             $_IsVisible = 1;
@@ -420,8 +429,8 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
-        $network->AddCommand('Lancer Recherche des nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_search, 0, 'default', 'default',  1, '0', true, false, null, true);
-
+        $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_search, 0, 'default', 'default',  -2, '0', true, false, null, true);
+        $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -1, '0', true, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
 
 
@@ -640,6 +649,7 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
         log::add('Freebox_OS', 'debug', '└─────────');
         Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi);
+        Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi);
     }
 
     private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi)
@@ -677,11 +687,34 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_mac_filter($logicalinfo, $templatecore_V4)
+    private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiWPSName']);
-        $Free_API = new Free_API();
-        $Free_API->universal_get('wifi', null, null, 'mac_filter');
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifimmac_filter']);
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $Templatemac = null;
+            $iconmac_filter_state = 'fas fa-wifi';
+            $iconmac_add_del_mac = 'fas fa-calculator';
+            $iconmac_list_white = 'fas fa-list-alt';
+            $iconmac_list_black = 'far fa-list-alt';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $Templatemac = 'Freebox_OS::Filtrage Adresse Mac';
+            $iconmac_filter_state = 'fas fa-wifi icon_blue';
+            $iconmac_add_del_mac = 'fas fa-calculator icon_red';
+            $iconmac_list_white = 'fas fa-list-alt icon_green';
+            $iconmac_list_black = 'far fa-list-alt icon_red';
+        };
+        $order = 40;
+        $Statutmac = $Wifi->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order, 1, false, true, null, true);
+        $order++;
+        $Wifi->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order, '0', false, false, null, true);
+        $order++;
+        $Wifi->AddCommand('Ajout - Supprimer filtrage Mac', 'add_del_mac', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconmac_add_del_mac, 0, 'default', 'default',  $order, '0', true, false, null, true, null, null, null, null, null, 'add_del_mac?mac_address=#mac_address#&function=#function#&filter=#filter#&comment=#comment#');
+        $order++;
+        $Wifi->AddCommand('Liste Mac Blanche', 'listwhite', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_white, 0, 'default', 'default',  $order, '0', null, true, false, true, null, null, null, null);
+        $order++;
+        $Wifi->AddCommand('Liste MAC Noire', 'listblack', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_black, 0, 'default', 'default',  $order, '0', null, true, false, true, null, null, null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 }

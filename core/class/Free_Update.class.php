@@ -224,6 +224,11 @@ class Free_Update
                     $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state');
                     break;
                 case 'add_del_mac';
+                    if ($_options['function'] == null || $_options['filter'] == null || $_options['mac_address'] == null) {
+                        log::add('Freebox_OS', 'error', 'Méthode Filtrage  ou type de Filtrage incorrect ');
+                        break;
+                    }
+
                     $Free_API->universal_put(null, 'wifi', $_options, null, 'mac_filter');
                 case 'wifiOn':
                     $Free_API->universal_put(1, 'wifi', null, null, 'config');

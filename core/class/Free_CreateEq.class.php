@@ -706,7 +706,7 @@ class Free_CreateEq
         $order++;
         $Wifi->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order, '0', false, false, null, true);
         $order++;
-        $Wifi->AddCommand('Ajout - Supprimer filtrage Mac', 'add_del_mac', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconmac_add_del_mac, 0, 'default', 'default',  $order, '0', true, false, null, true, null, null, null, null, null, 'add_del_mac?mac_address=#mac#&function=#function#&filter=#filter#&comment=#comment#');
+        $Wifi->AddCommand('Ajout - Supprimer filtrage Mac', 'add_del_mac', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconmac_add_del_mac, 0, 'default', 'default',  $order, '0', true, false, null, true, null, null, null, null, null, 'add_del_mac?mac_address=#mac_address#&function=#function#&filter=#filter#&comment=#comment#');
 
 
         log::add('Freebox_OS', 'debug', '└─────────');

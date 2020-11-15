@@ -695,11 +695,15 @@ class Free_CreateEq
             $Templatemac = null;
             $iconmac_filter_state = 'fas fa-wifi';
             $iconmac_add_del_mac = 'fas fa-calculator';
+            $iconmac_list_white = 'fas fa-list-alt';
+            $iconmac_list_black = 'far fa-list-alt';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $Templatemac = 'Freebox_OS::Filtrage Adresse Mac';
             $iconmac_filter_state = 'fas fa-wifi icon_blue';
             $iconmac_add_del_mac = 'fas fa-calculator icon_red';
+            $iconmac_list_white = 'fas fa-list-alt icon_green';
+            $iconmac_list_black = 'far fa-list-alt icon_red';
         };
         $order = 40;
         $Statutmac = $Wifi->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order, 1, false, true, null, true);
@@ -707,8 +711,10 @@ class Free_CreateEq
         $Wifi->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order, '0', false, false, null, true);
         $order++;
         $Wifi->AddCommand('Ajout - Supprimer filtrage Mac', 'add_del_mac', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconmac_add_del_mac, 0, 'default', 'default',  $order, '0', true, false, null, true, null, null, null, null, null, 'add_del_mac?mac_address=#mac_address#&function=#function#&filter=#filter#&comment=#comment#');
-
-
+        $order++;
+        $Wifi->AddCommand('Liste Mac Blanche', 'listwhite', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_white, 0, 'default', 'default',  $order, '0', null, true, false, true, null, null, null, null);
+        $order++;
+        $Wifi->AddCommand('Liste MAC Noire', 'listblack', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_black, 0, 'default', 'default',  $order, '0', null, true, false, true, null, null, null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 }

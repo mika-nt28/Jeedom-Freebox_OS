@@ -765,11 +765,22 @@ class Free_Refresh
 
     private static function refresh_wifi($Equipement, $Free_API)
     {
+        $listmac = $Free_API->mac_filter_list();
+        if ($listmac != false) {
+            log::add('Freebox_OS', 'debug', '>───────── Liste Noire : ' . $listmac['listmac_blacklist']);
+            log::add('Freebox_OS', 'debug', '>───────── Liste Blanche : ' . $listmac['listmac_whitelist']);
+        }
         $result_config = $Free_API->universal_get('wifi', null, null, 'config');
         $value = 0;
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
                 switch ($Command->getLogicalId()) {
+                    case "listblack":
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $listmac['listmac_blacklist']);
+                        break;
+                    case "listwhite":
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $listmac['listmac_whitelist']);
+                        break;
                     case "wifiStatut":
                         if ($result_config['result']['enabled']) {
                             $value = 1;

@@ -651,6 +651,38 @@ class Free_API
             return false;
     }
 
+    public function mac_filter_list()
+    {
+        $listmac_whitelist = null;
+        $listmac_blacklist = null;
+        $result = $this->fetch('/api/v8/wifi/mac_filter/');
+        if ($result == 'auth_required') {
+            $result = $this->fetch('/api/v8/wifi/mac_filter/');
+        }
+        if ($result === false)
+            return false;
+        if ($result['success']) {
+            if (isset($result['result'])) {
+                $nb_mac = count($result['result']);
+
+                for ($k = 0; $k < $nb_mac; $k++) {
+                    $name = $result['result'][$k]['hostname'];
+                    if ($result['result'][$k]['type'] == 'whitelist') {
+                        $listmac_whitelist  .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                    }
+                    if ($result['result'][$k]['type'] == 'blacklist') {
+                        $listmac_blacklist .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                    }
+                }
+                $return = array('listmac_blacklist' => $listmac_blacklist, 'listmac_whitelist' => $listmac_whitelist);
+            } else {
+                $return = array('listmac_blacklist' => '', 'listmac_whitelist' => "");
+            }
+            return $return;
+        } else
+            return false;
+    }
+
     public function airmedia($update = 'config', $parametre, $receiver)
     {
         switch ($update) {

@@ -386,28 +386,12 @@ class Free_API
                 case 'disk':
                 case 'network_ping':
                 case 'network':
+                case 'wifi':
                     return $result;
                     break;
                 case 'system':
                     if ($boucle != null) {
                         return $result['result'][$boucle];
-                    } else {
-                        return $result['result'];
-                    }
-                    break;
-                case 'wifi':
-                    if ($update_type == 'config' || $update_type == 'wps/config') {
-                        if ($result['result']['enabled']) {
-                            $value = 1;
-                        }
-                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
-                        return $value;
-                    } else if ($update_type == 'planning') {
-                        if ($result['result']['use_planning']) {
-                            $value = 1;
-                        }
-                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
-                        return $value;
                     } else {
                         return $result['result'];
                     }
@@ -453,7 +437,7 @@ class Free_API
         else
             return false;
     }
-    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null, $password = null)
+    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null, $_options_2 = null)
     {
         $fonction = "PUT";
         $config_log = null;
@@ -536,6 +520,20 @@ class Free_API
                     $config_commande = 'bssid';
                 } else if ($_options == 'wps/stop') {
                     $fonction = "POST";
+                } else if ($_options == 'mac_filter') {
+                    $fonction = $id['function'];
+                    if ($fonction != 'POST') {
+                        $id = $id['mac_address'] . '-' . $id['filter'];
+                        $parametre = null;
+                    } else {
+                        $_filter = $id['filter'];
+                        $mac_adress = $id['mac_address'];
+                        $comment = $id['comment'];
+                        $id = null;
+                        $parametre = array("mac" => $mac_adress, "type" => $_filter, "comment" => $comment);
+                    }
+                } else if ($_options == 'config' && $_options_2 == 'mac_filter_state') {
+                    $config_commande = 'mac_filter_state';
                 } else {
                     $config_commande = 'enabled';
                 }
@@ -565,9 +563,11 @@ class Free_API
         if ($update == 'parental' || $update == 'donwload') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
         } else if ($update == 'WakeonLAN') {
-            $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $password), $fonction);
+            $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $_options_2), $fonction);
         } else if ($update == 'set_tiles') {
             $return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
+        } else if ($_options == 'mac_filter') {
+            $return = $this->fetch('/' . $config  . '/' . $id, $parametre, $fonction);
         } else if ($update == 'phone') {
             $return = $this->fetch('/' . $config . '/', null, $fonction);
         } else {

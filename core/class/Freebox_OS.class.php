@@ -369,6 +369,9 @@ class Freebox_OS extends eqLogic
 		if ($_logicalId === "tempDenied") {
 			$Command->setConfiguration('listValue', '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00');
 		}
+		if ($_logicalId === "mac_filter_state") {
+			$Command->setConfiguration('listValue', 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche');
+		}
 		$Command->save();
 
 		$createRefreshCmd = true;
@@ -506,6 +509,7 @@ class Freebox_OS extends eqLogic
 			'wifiName' => 'Wifi',
 			'wifiguestID' => 'wifiguest',
 			'wifiguestName' => 'Wifi Invité',
+			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
 			'wifiWPSName' => 'Wifi WPS'
 		);
@@ -628,7 +632,9 @@ class Freebox_OSCmd extends cmd
 		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version, $_noCustom);
 		list($command, $arguments) = explode('?', $this->getConfiguration('request'), 2);
 		if ($command == 'wol')
-			return getTemplate('core', 'scenario', 'cmd.wol', 'Freebox_OS');
+			return getTemplate('core', 'scenario', 'cmd.WakeonLAN', 'Freebox_OS');
+		if ($command == 'add_del_mac')
+			return getTemplate('core', 'scenario', 'cmd.mac_filter', 'Freebox_OS');
 		return parent::getWidgetTemplateCode($_version, $_noCustom);
 	}
 }

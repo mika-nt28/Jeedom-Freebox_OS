@@ -220,6 +220,11 @@ class Free_Update
     {
         if ($logicalId != 'refresh') {
             switch ($logicalId) {
+                case 'mac_filter_state':
+                    $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state');
+                    break;
+                case 'add_del_mac';
+                    $Free_API->universal_put(null, 'wifi', $_options, null, 'mac_filter');
                 case 'wifiOn':
                     $Free_API->universal_put(1, 'wifi', null, null, 'config');
                     break;

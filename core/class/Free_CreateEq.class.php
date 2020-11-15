@@ -649,6 +649,7 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
         log::add('Freebox_OS', 'debug', '└─────────');
         Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi);
+        Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi);
     }
 
     private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi)
@@ -686,11 +687,28 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_mac_filter($logicalinfo, $templatecore_V4)
+    private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifiWPSName']);
-        $Free_API = new Free_API();
-        $Free_API->universal_get('wifi', null, null, 'mac_filter');
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifimmac_filter']);
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $Templatemac = null;
+            $iconmac_filter_state = 'fas fa-wifi';
+            $iconmac_add_del_mac = 'fas fa-calculator';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $Templatemac = 'Freebox_OS::Filtrage Adresse Mac';
+            $iconmac_filter_state = 'fas fa-wifi icon_blue';
+            $iconmac_add_del_mac = 'fas fa-calculator icon_red';
+        };
+        $order = 40;
+        $Statutmac = $Wifi->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order, 1, false, true, null, true);
+        $order++;
+        $Wifi->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order, '0', false, false, null, true);
+        $order++;
+        $Wifi->AddCommand('Ajout - Supprimer filtrage Mac', 'add_del_mac', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconmac_add_del_mac, 0, 'default', 'default',  $order, '0', true, false, null, true, null, null, null, null, null, 'add_del_mac?mac_address=#mac#&function=#function#&filter=#filter#&comment=#comment#');
+
+
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 }

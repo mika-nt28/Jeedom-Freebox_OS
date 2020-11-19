@@ -60,7 +60,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<div class="input-group" style="margin:5px;">
 			<input class="form-control" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
 			<div class="input-group-btn">
-				<a id="bt_resetSearch" class="btn" style="width:30px"><i class="fas fa-times"></i> </a>
+				<a id="bt_resetSearch" class="btn roundedRight" style="width:30px"><i class="fas fa-times"></i> </a>
 			</div>
 		</div>
 		<div class="divEquipements">

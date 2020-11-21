@@ -308,27 +308,27 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label">{{logicalId équipement}}
+							<label class="col-lg-4 control-label">{{logicalId équipement}}
 								<sup><i class="fas fa-question-circle" title="{{logicalId de l'équipement Freebox}}"></i></sup>
 							</label>
-							<div class="col-sm-3">
-								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="logicalID"></span>
+							<div class="col-lg-3">
+								<span class="eqLogicAttr tooltips label label-default tooltipstered" data-l1key="configuration" data-l2key="logicalID" style="font-size : 1em"></span>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label">{{Type d'équipement}}
+							<label class="col-lg-4 control-label">{{Type d'équipement}}
 								<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
 							</label>
-							<div class="col-sm-3">
-								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="type"></span>
+							<div class="col-lg-3">
+								<span class="eqLogicAttr tooltips label label-default tooltipstered" data-l1key="configuration" data-l2key="type" style="font-size : 1em"></span>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-sm-4 control-label">{{Type d'actions de l'équipement}}
+							<label class="col-lg-4 control-label">{{Type d'actions de l'équipement}}
 								<sup><i class="fas fa-question-circle" title="{{Type action Freebox}}"></i></sup>
 							</label>
-							<div class="col-sm-3">
-								<span class="eqLogicAttr tooltips label label-default" data-l1key="configuration" data-l2key="action"></span>
+							<div class="col-lg-3">
+								<span class="eqLogicAttr tooltips label label-default tooltipstered" data-l1key="configuration" data-l2key="action" style="font-size : 1em"></span>
 							</div>
 						</div>
 					</fieldset>

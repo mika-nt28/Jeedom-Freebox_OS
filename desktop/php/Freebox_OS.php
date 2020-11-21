@@ -277,6 +277,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
 							</div>
 						</div>
+						<!-- Champ de saisie du cron d'auto-actualisation + assistant cron -->
 						<div class="form-group">
 							<label class="col-sm-3 control-label">{{Auto-actualisation}}
 								<sup><i class="fas fa-question-circle" title="{{Fréquence de rafraîchissement de l'équipement}}"></i></sup>
@@ -285,14 +286,13 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="input-group">
 									<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
 									<span class="input-group-btn">
-										<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron">
-											<i class="fas fa-question-circle"></i>
+										<a class="btn btn-default cursor jeeHelper bt_selectAlertCmd roundedRight" tooltip="{{Aide sur cron}" data-helper="cron">
+											<i class="fas fa-question-circle" title="{{Assistant CRON}}"></i>
 										</a>
 									</span>
 								</div>
 							</div>
 						</div>
-
 					</fieldset>
 				</form>
 
@@ -301,39 +301,40 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<form class="form-horizontal col-lg-5">
 					<fieldset>
 						<legend><i class="fas fa-info"></i> {{Informations}}</legend>
-						<div class="form-group">
+						<div class=" form-group">
 							<label class="col-sm-4 control-label"></label>
 							<div class="col-sm-7 text-center">
 								<img src="plugins/Freebox_OS/core/images/default.png" data-original=".jpg" id="img_device" class="img-responsive" style="width:120px" onerror="this.src='plugins/Freebox_OS/core/images/default.png'" />
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-lg-4 control-label">{{logicalId équipement}}
+							<label class="col-sm-4 control-label">{{logicalId équipement}}
 								<sup><i class="fas fa-question-circle" title="{{logicalId de l'équipement Freebox}}"></i></sup>
 							</label>
-							<div class="col-lg-3">
-								<span class="eqLogicAttr tooltips label label-default tooltipstered" data-l1key="configuration" data-l2key="logicalID" style="font-size : 1em"></span>
+							<div class="col-sm-3">
+								<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="logicalID" style="font-size : 1em"></span>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-lg-4 control-label">{{Type d'équipement}}
+							<label class="col-sm-4 control-label">{{Type d'équipement}}
 								<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
 							</label>
-							<div class="col-lg-3">
-								<span class="eqLogicAttr tooltips label label-default tooltipstered" data-l1key="configuration" data-l2key="type" style="font-size : 1em"></span>
+							<div class="col-sm-3">
+								<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type" style="font-size : 1em"></span>
 							</div>
 						</div>
 						<div class="form-group">
-							<label class="col-lg-4 control-label">{{Type d'actions de l'équipement}}
+							<label class="col-sm-4 control-label">{{Type d'actions de l'équipement}}
 								<sup><i class="fas fa-question-circle" title="{{Type action Freebox}}"></i></sup>
 							</label>
-							<div class="col-lg-3">
-								<span class="eqLogicAttr tooltips label label-default tooltipstered" data-l1key="configuration" data-l2key="action" style="font-size : 1em"></span>
+							<div class="col-sm-3">
+								<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="action"></span>
 							</div>
 						</div>
 					</fieldset>
 
 			</div>
+			<!-- Onglet des commandes de l'équipement -->
 			<div role="tabpanel" class="tab-pane" id="commandtab">
 				<!-- <a class="btn btn-success btn-sm cmdAction pull-right" data-action="add" style="margin-top:5px;"><i class="fa fa-plus-circle"></i> {{Commandes}}</a> -->
 				<br /><br />

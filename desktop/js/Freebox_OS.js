@@ -12,6 +12,12 @@ $('#bt_resetSearch').off('click').on('click', function () {
 	$('#in_searchEqlogic').keyup();
 })
 
+$('.cmdAction[data-action=add]').on('click', function() {
+	addCmdToTable()
+	$('.cmd:last .cmdAttr[data-l1key=type]').trigger('change')
+	modifyWithoutSave = true
+  })
+
 $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _options) {
 	var camera = jQuery.parseJSON(_options);
 	bootbox.confirm("{{Une caméra Freebox a été détectée (<b>" + camera.name + "</b>)<br>Voulez-vous l’ajouter au Plugin Caméra ?}}", function (result) {
@@ -264,8 +270,10 @@ function addCmdToTable(_cmd) {
 	tr += '</div>';
 	tr += '</td>';
 	tr += '<td>';
-	tr += '<input class="cmdAttr form-control type input-sm" data-l1key="type" value="info" disabled style="margin-bottom : 5px;" />';
-	tr += '<span class="subType" subType="' + init(_cmd.subType) + ' "  disabled></span>';
+	tr += '<div class="col-sm-9">';
+	tr += '<span class="type disabled" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>';
+    tr += '<span class="subType" subType="' + init(_cmd.subType) + '"></span>';
+	tr += '</div>';
 	tr += '</td>';
 	tr += '<td>';
 	if (init(_cmd.subType) == 'numeric' || init(_cmd.subType) == 'slider') {

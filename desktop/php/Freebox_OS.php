@@ -197,14 +197,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
 	<!-- Page de présentation de l'équipement -->
 	<div class="col-xs-12 eqLogic" style="display: none;">
 		<!-- barre de gestion de l'équipement -->
-		<div class="input-group pull-right" style="display:inline-flex;">
-			<span class="input-group-btn">
+		<div class="input-group pull-right">
+			<div class="input-group text-right">
 				<a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fa fa-cogs"></i><span class="hidden-xs"> {{Configuration avancée}}</span>
 				</a><a class="btn btn-sm btn-info eqLogicAction Equipement"><i class="fas fa-search"></i><span class="hidden-xs"> {{Recherche des équipements supplémentaires}}</span>
 				</a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}
 				</a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i> {{Supprimer}}
 				</a>
-			</span>
+			</div>
 		</div>
 		<!-- Onglets -->
 		<ul class="nav nav-tabs" role="tablist">

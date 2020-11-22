@@ -192,7 +192,6 @@ class Free_Template
 				array('operation' => "#value# == 'whitelist'", 'state_light' => '<i class=\'icon_orange icon fas fa-wifi\'></i>')
 			)
 		);
-
 		return $return;
 	}
 }

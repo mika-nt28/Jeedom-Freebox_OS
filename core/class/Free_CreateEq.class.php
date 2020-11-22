@@ -397,7 +397,7 @@ class Free_CreateEq
     }
     private static function createEq_netshare($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['downloadsName']);
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['netshareName']);
         $updateicon = false;
         $_order = 1;
         if (version_compare(jeedom::version(), "4", "<")) {
@@ -438,9 +438,9 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '│──────────> Boucle pour Création des commandes : ' . $name);
             $netshareSTATUS = $netshare->AddCommand($name, $Logical_ID, "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', $icon, 0, 'default', 'default', '0', $_order, $updateicon, true);
             $_order++;
-            $netshare->AddCommand('Activer ' . $name, $Logical_ID . '_on', 'action', 'other', $template, null, 'LIGHT_ON', 1, $netshareSTATUS, '', 0, $icon . $color_on, 0, 'default', 'default', $_order, '0', $updateicon, false);
+            $netshare->AddCommand('Activer ' . $name, $Logical_ID . 'On', 'action', 'other', $template, null, 'LIGHT_ON', 1, $netshareSTATUS, '', 0, $icon . $color_on, 0, 'default', 'default', $_order, '0', $updateicon, false);
             $_order++;
-            $netshare->AddCommand('Désactiver ' . $name, $Logical_ID  . '_off', 'action', 'other', $template, null, 'LIGHT_OFF', 1, $netshareSTATUS, '', 0, $icon . $color_off, 0, 'default', 'default', $_order, '0', $updateicon, false);
+            $netshare->AddCommand('Désactiver ' . $name, $Logical_ID  . 'Off', 'action', 'other', $template, null, 'LIGHT_OFF', 1, $netshareSTATUS, '', 0, $icon . $color_off, 0, 'default', 'default', $_order, '0', $updateicon, false);
             $_order++;
 
             $boucle_num++;

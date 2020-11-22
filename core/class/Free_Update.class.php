@@ -72,6 +72,10 @@ class Free_Update
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
+            case 'netshare':
+                Free_Update::update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                break;
             case 'network':
             case 'networkwifiguest':
                 if ($logicalId != 'refresh') {
@@ -149,6 +153,35 @@ class Free_Update
                     $Free_API->universal_put($parametre, 'download', null, null, null);
                     break;
             }
+        }
+    }
+    private static function update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    {
+        switch ($logicalId) {
+            case "FTP_enabledOn":
+                $Free_API->universal_put(true, 'netshare', 'ftp/config', null, 'enabled', null);
+                break;
+            case "FTP_enabledOff":
+                $Free_API->universal_put(false, 'netshare', 'ftp/config', null, 'enabled', null);
+                break;
+            case "file_share_enabledOn":
+                $Free_API->universal_put(true, 'netshare', 'netshare/samba', null, 'file_share_enabled', null);
+                break;
+            case "file_share_enabledOff":
+                $Free_API->universal_put(false, 'netshare', 'netshare/samba', null, 'file_share_enabled', null);
+                break;
+            case "mac_share_enabledOn":
+                $Free_API->universal_put(true, 'netshare', 'netshare/afp', null, 'enabled', null);
+                break;
+            case "mac_share_enabledOff":
+                $Free_API->universal_put(false, 'netshare', 'netshare/afp', null, 'enabled', null);
+                break;
+            case "print_share_enabledOn":
+                $Free_API->universal_put(true, 'netshare', 'netshare/samba', null, 'print_share_enabled', null);
+                break;
+            case "print_share_enabledOff":
+                $Free_API->universal_put(false, 'netshare', 'netshare/samba', null, 'print_share_enabled', null);
+                break;
         }
     }
     private static function update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $network)

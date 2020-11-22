@@ -340,6 +340,9 @@ class Free_API
             case 'network_ping':
                 $config = 'api/v8/lan/' . $update_type;
                 break;
+            case 'netshare':
+                $config = 'api/v8/' . $update_type;
+                break;
             case 'network_ID':
                 $config = 'api/v8/lan/browser/' . $update_type  . $id;
                 break;
@@ -460,6 +463,10 @@ class Free_API
                 $config = 'api/v8/lcd/config';
                 $config_commande = 'hide_wifi_key';
                 break;
+            case 'netshare':
+                $config = 'api/v8/' . $id;
+                $config_commande = $_options;
+                break;
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
@@ -560,7 +567,7 @@ class Free_API
         } elseif ($parametre === 0) {
             $parametre = false;
         }
-        if ($update == 'parental' || $update == 'donwload') {
+        if ($update == 'parental') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
         } else if ($update == 'WakeonLAN') {
             $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $_options_2), $fonction);
@@ -630,15 +637,15 @@ class Free_API
 
                         if ($result['result'][$k]['type'] == 'missed') {
                             $cptAppel_missed++;
-                            $listNumber_missed .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
+                            $listNumber_missed .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                         if ($result['result'][$k]['type'] == 'accepted') {
                             $cptAppel_accepted++;
-                            $listNumber_accepted .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
+                            $listNumber_accepted .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                         if ($result['result'][$k]['type'] == 'outgoing') {
                             $cptAppel_outgoing++;
-                            $listNumber_outgoing .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
+                            $listNumber_outgoing .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                     }
                 }
@@ -649,6 +656,19 @@ class Free_API
             return $retourFbx;
         } else
             return false;
+    }
+
+    function fmt_duree($duree)
+    {
+        if (floor($duree) == 0) return '0s';
+        $h = floor($duree / 3600);
+        $m = floor(($duree % 3600) / 60);
+        $s = $duree % 60;
+        $fmt = '';
+        if ($h > 0) $fmt .= $h . 'h ';
+        if ($m > 0) $fmt .= $m . 'min ';
+        if ($s > 0) $fmt .= $s . 's';
+        return ($fmt);
     }
 
     public function mac_filter_list()

@@ -258,23 +258,23 @@ function addCmdToTable(_cmd) {
 	tr += '<td style="min-width:70px;width:70px;">';
 	tr += '<span class="cmdAttr" data-l1key="id" ></span>';
 	tr += '</td>';
-	tr += '<td style="min-width:650px;width:750px;">';
+	tr += '<td style="min-width:750px;width:850px;">';
 	tr += '<div class="row">';
-	tr += '<div class="col-xs-2">';
-	tr += '<a class="cmdAction btn btn-default btn-sm" data-l1key="chooseIcon"><i class="fa fa-flag"></i> {{Icône}}</a>';
-	tr += '<span class="cmdAttr" data-l1key="display" data-l2key="icon" style="margin-left : 10px;"></span>';
-	tr += '</div>';
 	tr += '<div class="col-xs-9">';
 	tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom de la commande}}">';
 	tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display : none;margin-top : 5px;" title="{{Commande information liée}}">';
 	tr += '<option value="">{{Aucune}}</option>';
 	tr += '</select>';
 	tr += '</div>';
+	tr += '<div class="col-xs-3">';
+	tr += '<a class="cmdAction btn btn-default btn-sm" data-l1key="chooseIcon" title="Changer l\'icône"><i class="fa fa-flag"></i> {{Icône}}</a>';
+	tr += '<span class="cmdAttr" data-l1key="display" data-l2key="icon" style="margin-left : 10px;"></span>';
+	tr += '</div>';
 	tr += '</div>';
 	tr += '</td>';
 	tr += '<td>';
-	tr += '<span class="type" type="' + init(_cmd.type) + '" disabled>' + jeedom.cmd.availableType() + '</span>';
-    tr += '<span class="subType" subType="' + init(_cmd.subType) + ' "  disabled></span>';
+	tr += '<span class="type" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>';
+	tr += '<span class="subType" subType="' + init(_cmd.subType) + '"></span>';
 	tr += '</td>';
 	tr += '<td style="min-width:140px;width:140px;">';
 	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';
@@ -294,10 +294,10 @@ function addCmdToTable(_cmd) {
 	tr += '</td>';
 	tr += '<td>';
 	if (is_numeric(_cmd.id)) {
-		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> ';
-		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>';
+		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure" title="Configuration avancée"><i class="fas fa-cogs"></i></a> ';
+		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test" title="Tester la commande"><i class="fas fa-rss"></i> {{Tester}}</a>';
 	}
-	tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i></td>';
+	tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="Supprimer la commande"></i></td>';
 	tr += '</tr>';
 	$('#table_cmd tbody').append(tr);
 	var tr = $('#table_cmd tbody tr').last();

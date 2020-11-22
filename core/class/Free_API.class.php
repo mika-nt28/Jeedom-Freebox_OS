@@ -637,15 +637,15 @@ class Free_API
 
                         if ($result['result'][$k]['type'] == 'missed') {
                             $cptAppel_missed++;
-                            $listNumber_missed .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
+                            $listNumber_missed .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                         if ($result['result'][$k]['type'] == 'accepted') {
                             $cptAppel_accepted++;
-                            $listNumber_accepted .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
+                            $listNumber_accepted .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                         if ($result['result'][$k]['type'] == 'outgoing') {
                             $cptAppel_outgoing++;
-                            $listNumber_outgoing .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $result['result'][$k]['duration'] . "s";
+                            $listNumber_outgoing .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                     }
                 }
@@ -656,6 +656,19 @@ class Free_API
             return $retourFbx;
         } else
             return false;
+    }
+
+    function fmt_duree($duree)
+    {
+        if (floor($duree) == 0) return '0s';
+        $h = floor($duree / 3600);
+        $m = floor(($duree % 3600) / 60);
+        $s = $duree % 60;
+        $fmt = '';
+        if ($h > 0) $fmt .= $h . 'h ';
+        if ($m > 0) $fmt .= $m . 'min ';
+        if ($s > 0) $fmt .= $s . 's';
+        return ($fmt);
     }
 
     public function mac_filter_list()

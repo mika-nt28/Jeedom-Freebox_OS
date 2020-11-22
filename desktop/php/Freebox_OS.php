@@ -198,7 +198,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 	?>
 	<!-- Page de présentation de l'équipement -->
 	<div class="col-xs-12 eqLogic" style="display: none;">
-		<div class="input-group text-right">
+		<div class="input-group pull-right" style="display:inline-flex;">
 			<span class="input-group-btn">
 				<!-- Les balises <a></a> sont volontairement fermées à la ligne suivante pour éviter les espaces. Ne pas modifier -->
 				<a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure"><i class="fa fa-cogs"></i><span class="hidden-xs"> {{Configuration avancée}}</span>
@@ -214,128 +214,128 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> {{Equipement}}</a></li>
 			<li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fa fa-list-alt"></i> {{Commandes}}</a></li>
 		</ul>
-		<div class="tab-content">
+		<div class="tab-content" style="height:calc(100% - 50px);overflow:auto;overflow-x: hidden;">
 			<!-- Onglet de configuration de l'équipement -->
 			<div role="tabpanel" class="tab-pane active" id="eqlogictab">
-				<div class="row">
-					<!-- Partie gauche de l'onglet "Equipements" -->
-					<!-- Paramètres généraux de l'équipement -->
-					<form class="form-horizontal col-lg-7">
-						<fieldset>
-							<legend> {{}}</legend>
-							<div class="form-group ">
-								<label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
-								<div class="col-sm-7">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
-									<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId" style="display : none;" />
-									<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}" />
-								</div>
+				<br />
+				<!-- Partie gauche de l'onglet "Equipements" -->
+				<!-- Paramètres généraux de l'équipement -->
+				<form class="form-horizontal col-lg-7">
+					<fieldset>
+						<legend> {{}}</legend>
+						<div class="form-group ">
+							<label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
+							<div class="col-sm-7">
+								<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
+								<input type="text" class="eqLogicAttr form-control" data-l1key="logicalId" style="display : none;" />
+								<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}" />
 							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Objet parent}}</label>
-								<div class="col-sm-7">
-									<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
-										<option value="">{{Aucun}}</option>
-										<?php
-										$options = '';
-										foreach ((jeeObject::buildTree(null, false)) as $object) {
-											$decay = $object->getConfiguration('parentNumber');
-											$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $decay) . $object->getName() . '</option>';
-										}
-										echo $options;
-										?>
-									</select>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Catégorie}}</label>
-								<div class="col-sm-9">
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{Objet parent}}</label>
+							<div class="col-sm-7">
+								<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
+									<option value="">{{Aucun}}</option>
 									<?php
-									foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
-										echo '<label class="checkbox-inline">';
-										echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
-										echo '</label>';
+									$options = '';
+									foreach ((jeeObject::buildTree(null, false)) as $object) {
+										$decay = $object->getConfiguration('parentNumber');
+										$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $decay) . $object->getName() . '</option>';
 									}
+									echo $options;
 									?>
-								</div>
+								</select>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Options}}</label>
-								<div class="col-sm-7">
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked />{{Activer}}</label>
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked />{{Visible}}</label>
-								</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{Catégorie}}</label>
+							<div class="col-sm-9">
+								<?php
+								foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
+									echo '<label class="checkbox-inline">';
+									echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
+									echo '</label>';
+								}
+								?>
 							</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{Options}}</label>
+							<div class="col-sm-7">
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked />{{Activer}}</label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked />{{Visible}}</label>
+							</div>
+						</div>
 
-							<!-- Paramètres spéficique de l'équipement -->
-							<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
-							<!-- Champ de saisie du cron d'auto-actualisation + assistant cron -->
-							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Auto-actualisation}}
-									<sup><i class="fas fa-question-circle" title="{{Fréquence de rafraîchissement de l'équipement}}"></i></sup>
-								</label>
-								<div class="col-sm-7">
-									<div class="input-group">
-										<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
-										<span class="input-group-btn">
-											<a class="btn btn-default cursor jeeHelper bt_selectAlertCmd roundedRight" tooltip="{{Aide sur cron}" data-helper="cron">
+						<!-- Paramètres spéficique de l'équipement -->
+						<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
+						<!-- Champ de saisie du cron d'auto-actualisation + assistant cron -->
+						<div class="form-group">
+							<label class="col-sm-3 control-label">{{Auto-actualisation}}
+								<sup><i class="fas fa-question-circle" title="{{Fréquence de rafraîchissement de l'équipement}}"></i></sup>
+							</label>
+							<div class="col-sm-7">
+								<div class="input-group">
+									<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
+									<span class="input-group-btn">
+										<a class="btn btn-default cursor jeeHelper bt_selectAlertCmd roundedRight" tooltip="{{Aide sur cron}" data-helper="cron">
 											<i class="fas fa-question-circle" title="{{Assistant CRON}}"></i>
-											</a>
-										</span>
-									</div>
+										</a>
+									</span>
 								</div>
 							</div>
-							<div class="form-group IPV">
-								<label class="col-sm-3 control-label">{{Affichage IP sur le widget}}
-									<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
-								</label>
-								<div class="col-sm-7">
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
-								</div>
+						</div>
+						<div class="form-group IPV">
+							<label class="col-sm-3 control-label">{{Affichage IP sur le widget}}
+								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
+							</label>
+							<div class="col-sm-7">
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
 							</div>
-						</fieldset>
-					</form>
+						</div>
+					</fieldset>
+				</form>
 
-					<!-- Partie droite de l'onglet "Equipement" -->
-					<!-- Affiche l'icône du plugin par défaut mais vous pouvez y afficher les informations de votre choix -->
-					<form class="form-horizontal col-lg-5">
-						<fieldset>
-							<legend><i class="fas fa-info"></i> {{Informations}}</legend>
-							<div class=" form-group">
-								<label class="col-sm-4 control-label"></label>
-								<div class="col-sm-7 text-center">
-									<img src="plugins/Freebox_OS/core/images/default.png" data-original=".jpg" id="img_device" class="img-responsive" style="width:120px" onerror="this.src='plugins/Freebox_OS/core/images/default.png'" />
-								</div>
+				<!-- Partie droite de l'onglet "Equipement" -->
+				<!-- Affiche l'icône du plugin par défaut mais vous pouvez y afficher les informations de votre choix -->
+				<form class="form-horizontal col-lg-5">
+					<fieldset>
+						<legend><i class="fas fa-info"></i> {{Informations}}</legend>
+						<div class=" form-group">
+							<label class="col-sm-4 control-label"></label>
+							<div class="col-sm-7 text-center">
+								<img src="plugins/Freebox_OS/core/images/default.png" data-original=".jpg" id="img_device" class="img-responsive" style="width:120px" onerror="this.src='plugins/Freebox_OS/core/images/default.png'" />
 							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">{{logicalId équipement}}
-									<sup><i class="fas fa-question-circle" title="{{logicalId de l'équipement Freebox}}"></i></sup>
-								</label>
-								<div class="col-sm-3">
-									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="logicalID" style="font-size : 1em"></span>
-								</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{logicalId équipement}}
+								<sup><i class="fas fa-question-circle" title="{{logicalId de l'équipement Freebox}}"></i></sup>
+							</label>
+							<div class="col-sm-3">
+								<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="logicalID" style="font-size : 1em"></span>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Type d'équipement}}
-									<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
-								</label>
-								<div class="col-sm-3">
-									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type" style="font-size : 1em"></span>
-								</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{Type d'équipement}}
+								<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
+							</label>
+							<div class="col-sm-3">
+								<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type" style="font-size : 1em"></span>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Type d'actions de l'équipement}}
-									<sup><i class="fas fa-question-circle" title="{{Type action Freebox}}"></i></sup>
-								</label>
-								<div class="col-sm-3">
-									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="action"></span>
-								</div>
+						</div>
+						<div class="form-group">
+							<label class="col-sm-4 control-label">{{Type d'actions de l'équipement}}
+								<sup><i class="fas fa-question-circle" title="{{Type action Freebox}}"></i></sup>
+							</label>
+							<div class="col-sm-3">
+								<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="action"></span>
 							</div>
-						</fieldset>
-					</form>
-				</div>
-			</div>
+						</div>
+					</fieldset>
+				</form>
+			</diV>
+
 			<!-- Onglet des commandes de l'équipement -->
 			<div role="tabpanel" class="tab-pane" id="commandtab">
 				<!-- <a class="btn btn-success btn-sm cmdAction pull-right" data-action="add" style="margin-top:5px;"><i class="fa fa-plus-circle"></i> {{Commandes}}</a> -->

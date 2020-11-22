@@ -262,7 +262,7 @@ function addCmdToTable(_cmd) {
 	tr += '<div class="row">';
 	tr += '<div class="col-xs-9">';
 	tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom de la commande}}">';
-	tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display : none;margin-top : 5px;" title="{{Commande information liée}}">';
+	tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" disabled style="display : none;margin-top : 5px;" title="{{Commande information liée}}">';
 	tr += '<option value="">{{Aucune}}</option>';
 	tr += '</select>';
 	tr += '</div>';
@@ -273,8 +273,8 @@ function addCmdToTable(_cmd) {
 	tr += '</div>';
 	tr += '</td>';
 	tr += '<td>';
-	tr += '<span class="type" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>';
-	tr += '<span class="subType" subType="' + init(_cmd.subType) + '"></span>';
+	tr += '<span disabled class="type" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>';
+    tr += '<span disabled class="subType" subType="' + init(_cmd.subType) + '"></span>';
 	tr += '</td>';
 	tr += '<td style="min-width:140px;width:140px;">';
 	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';

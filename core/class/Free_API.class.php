@@ -567,7 +567,7 @@ class Free_API
         } elseif ($parametre === 0) {
             $parametre = false;
         }
-        if ($update == 'parental') {
+        if ($update == 'parental' || $update == 'donwload') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
         } else if ($update == 'WakeonLAN') {
             $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $_options_2), $fonction);

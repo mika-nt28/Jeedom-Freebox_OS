@@ -497,6 +497,8 @@ class Freebox_OS extends eqLogic
 			'homeadaptersName' => 'Home Adapters',
 			'networkID' => 'network',
 			'networkName' => 'Appareils connectés',
+			'netshareID' => 'netshare',
+			'netshareName' => 'Partage Windows - Mac',
 			'networkwifiguestID' => 'networkwifiguest',
 			'networkwifiguestName' => 'Appareils connectés Wifi Invité',
 			'notificationID' => 'notification',

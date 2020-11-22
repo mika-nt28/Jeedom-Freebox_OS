@@ -12,6 +12,12 @@ $('#bt_resetSearch').off('click').on('click', function () {
 	$('#in_searchEqlogic').keyup();
 })
 
+$('.cmdAction[data-action=add]').on('click', function() {
+	addCmdToTable()
+	$('.cmd:last .cmdAttr[data-l1key=type]').trigger('change')
+	modifyWithoutSave = true
+  })
+
 $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _options) {
 	var camera = jQuery.parseJSON(_options);
 	bootbox.confirm("{{Une caméra Freebox a été détectée (<b>" + camera.name + "</b>)<br>Voulez-vous l’ajouter au Plugin Caméra ?}}", function (result) {
@@ -220,10 +226,15 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', functi
 setupPage();
 
 function addCmdToTable(_cmd) {
+	if (!isset(_cmd)) {
+		var _cmd = {};
+	}
+	if (!isset(_cmd.configuration)) {
+		_cmd.configuration = {};
+	}
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
 	}
-
 	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
 	switch (template) {
 		case 'airmedia':
@@ -232,6 +243,7 @@ function addCmdToTable(_cmd) {
 		case 'downloads':
 		case 'homeadapters':
 		case 'network':
+		case 'netshare':
 		case 'networkwifiguest':
 		case 'system':
 		case 'wifi':
@@ -242,64 +254,73 @@ function addCmdToTable(_cmd) {
 			$('.Equipement').hide();
 			break;
 	}
-	if (!isset(_cmd)) {
-		var _cmd = {};
-	}
-	if (!isset(_cmd.configuration)) {
-		_cmd.configuration = {};
-	}
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
-	tr += '<td>';
+	tr += '<td style="min-width:70px;width:70px;">';
 	tr += '<span class="cmdAttr" data-l1key="id" ></span>';
 	tr += '</td>';
-	tr += '<td>';
+	tr += '<td style="min-width:750px;width:850px;">';
 	tr += '<div class="row">';
-	tr += '<div class="col-sm-3">';
-	tr += '<a class="cmdAction btn btn-default btn-sm" data-l1key="chooseIcon"><i class="fas fa-flag"></i> Icône</a>';
+	tr += '<div class="col-xs-9">';
+	tr += '<input class="cmdAttr form-control input-sm" data-l1key="name" placeholder="{{Nom de la commande}}">';
+	tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" disabled style="display : none;margin-top : 5px;" title="{{Commande information liée}}">';
+	tr += '<option value="">{{Aucune}}</option>';
+	tr += '</select>';
+	tr += '</div>';
+	tr += '<div class="col-xs-3">';
+	tr += '<a class="cmdAction btn btn-default btn-sm" data-l1key="chooseIcon" title="Changer l\'icône"><i class="fa fa-flag"></i> {{Icône}}</a>';
 	tr += '<span class="cmdAttr" data-l1key="display" data-l2key="icon" style="margin-left : 10px;"></span>';
 	tr += '</div>';
-	tr += '<div class="col-sm-8">';
-	tr += '<input class="cmdAttr form-control input-sm" data-l1key="name">';
-	tr += '</div>';
 	tr += '</div>';
 	tr += '</td>';
 	tr += '<td>';
-	tr += '<input class="cmdAttr form-control type input-sm" data-l1key="type" value="info" disabled style="margin-bottom : 5px;" />';
-	tr += '<span class="subType" subType="' + init(_cmd.subType) + ' "  disabled></span>';
+	tr += '<span disabled class="type" type="' + init(_cmd.type) + '">' + jeedom.cmd.availableType() + '</span>';
+    tr += '<span disabled class="subType" subType="' + init(_cmd.subType) + '"></span>';
 	tr += '</td>';
-	tr += '<td>';
-	if (init(_cmd.subType) == 'numeric' || init(_cmd.subType) == 'slider') {
-		tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min}}" title="{{Min}}" style="width : 90px;display : inline-block;"> ';
-		tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max}}" title="{{Max}}" style="width : 90px;display : inline-block;"> ';
-		tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="{{Unité}}" title="{{Unité}}" style="width : 90px; display:inline-block"></td>';
-	}
-	tr += '</td>';
-	tr += '<td>';
+	tr += '<td style="min-width:140px;width:140px;">';
 	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isVisible" checked/>{{Afficher}}</label></span> ';
-	if (_cmd.subType == "binary") {
-		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
-		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span> ';
-	}
+	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr checkbox-inline" data-l1key="isHistorized" checked/>{{Historiser}}</label></span> ';
+	tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="display" data-l2key="invertBinary"/>{{Inverser}}</label></span> ';
 	if ((init(_cmd.type) == 'action' && init(_cmd.subType) == 'slider')) {
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertslide"/>{{Inverser Curseur}}</label></span> ';
 	}
-	if ((init(_cmd.type) == 'info' && init(_cmd.subType) == 'numeric')) {
+	if ((init(_cmd.type) == 'info' && init(_cmd.subType) == 'numeric' && (init(_cmd.logicalId) == '2' || init(_cmd.logicalId) == '3'))) {
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertnumeric"/>{{Inverser Valeur}}</label></span> ';
 	}
 	tr += '</td>';
+	tr += '<td style="min-width:200px;">';
+	tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min.}}" title="{{Min.}}" style="width:30%;display:inline-block;"/> ';
+	tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="maxValue" placeholder="{{Max.}}" title="{{Max.}}" style="width:30%;display:inline-block;"/> ';
+	tr += '<input class="cmdAttr form-control input-sm" data-l1key="unite" placeholder="{{Unité}}" title="{{Unité}}" style="width:30%;display:inline-block;"/>';
+	tr += '</td>';
 	tr += '<td>';
 	if (is_numeric(_cmd.id)) {
-		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> ';
-		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>';
+		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure" title="Configuration avancée"><i class="fas fa-cogs"></i></a> ';
+		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test" title="Tester la commande"><i class="fas fa-rss"></i> {{Tester}}</a>';
 	}
-	tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove"></i></td>';
+	tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="Supprimer la commande"></i></td>';
 	tr += '</tr>';
 	$('#table_cmd tbody').append(tr);
-	$('#table_cmd tbody tr').last().setValues(_cmd, '.cmdAttr');
+	var tr = $('#table_cmd tbody tr').last();
+	jeedom.eqLogic.builSelectCmd({
+		id: $('.eqLogicAttr[data-l1key=id]').value(),
+		filter: { type: 'info' },
+		error: function (error) {
+			$('#div_alert').showAlert({ message: error.message, level: 'danger' });
+		},
+		success: function (result) {
+			tr.find('.cmdAttr[data-l1key=value]').append(result);
+			tr.setValues(_cmd, '.cmdAttr');
+			jeedom.cmd.changeType(tr, init(_cmd.subType));
+		}
+	});
+	 $('#table_cmd tbody tr').last().setValues(_cmd, '.cmdAttr');
 	if (isset(_cmd.type)) {
 		$('#table_cmd tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type));
 	}
+   
+
 	jeedom.cmd.changeType($('#table_cmd tbody tr').last(), init(_cmd.subType));
+	
 
 }
 

@@ -69,6 +69,9 @@ class Free_Refresh
                 case 'player':
                     Free_Refresh::refresh_player($Equipement, $Free_API);
                     break;
+                case 'netshare':
+                    Free_Refresh::refresh_netshare($Equipement, $Free_API);
+                    break;
                 case 'network':
                     Free_Refresh::refresh_network_global($Equipement, $Free_API, 'LAN');
                     break;
@@ -445,6 +448,37 @@ class Free_Refresh
                         $cmd->save();
                         log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $value . ' -- Type : ' . $result['host_type']);
                         break;
+                    }
+                }
+            }
+        }
+    }
+
+    private static function refresh_netshare($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('netshare', null, null, 'netshare/samba');
+        $resultmac = $Free_API->universal_get('netshare', null, null, 'netshare/afp');
+        $resultFTP = $Free_API->universal_get('netshare', null, null, 'ftp/config');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "file_share_enabled":
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Fichier Windows : ' . $result['file_share_enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['file_share_enabled']);
+                            break;
+                        case "FTP_enabled":
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Fichier Mac : ' . $resultFTP['enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $resultFTP['enabled']);
+                            break;
+                        case "mac_share_enabled":
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Fichier Mac : ' . $resultmac['enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $resultmac['enabled']);
+                            break;
+                        case "print_share_enabled":
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Imprimante : ' . $result['print_share_enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['print_share_enabled']);
+                            break;
                     }
                 }
             }

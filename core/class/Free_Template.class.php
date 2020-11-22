@@ -36,6 +36,57 @@ class Free_Template
 			)
 		);
 
+		// Template pour le Partage Imprimante (action)
+		$return['action']['other']['Partage Imprimante'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fas fa-print\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-print\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-print\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
+
+		// Template pour le Partage Windows (action)
+		$return['action']['other']['Partage Fichier Windows'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fas fa-share-alt-square\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-share-alt-square\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-share-alt-square\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
+		// Template pour le Partage FTP (action)
+		$return['action']['other']['Partage FTP'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fas fa-handshake\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-handshake\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-handshake\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
+
+		// Template pour le Partage Mac (action)
+		$return['action']['other']['Partage Fichier Mac'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fas fa-share-alt\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-share-alt\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-share-alt\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
+
 		// Template pour le planning Wifi (action)
 		$return['action']['other']['Planning Wifi'] = array(
 			'template' => 'tmplicon',
@@ -141,6 +192,7 @@ class Free_Template
 				array('operation' => "#value# == 'whitelist'", 'state_light' => '<i class=\'icon_orange icon fas fa-wifi\'></i>')
 			)
 		);
+
 		return $return;
 	}
 }

@@ -51,6 +51,9 @@ class Free_CreateEq
                 Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'LAN', $IsVisible);
                 break;
+            case 'netshare':
+                Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
+                break;
             case 'networkwifiguest':
                 Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'WIFIGUEST', $IsVisible);
@@ -74,6 +77,7 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['phoneName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['netshareName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkwifiguestName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['wifiName']);
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
@@ -92,6 +96,7 @@ class Free_CreateEq
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
                 }
+                Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
                 // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
@@ -388,6 +393,79 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $_networkname);
         Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_netshare($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['downloadsName']);
+        $updateicon = false;
+        $_order = 1;
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $iconPrint = 'fas fa-print';
+            $iconPrintOn = 'fas fa-print';
+            $iconPrintOff = 'fas fa-print';
+            $TemplatenetnetsharePrint = '';
+            $iconfile_share = 'fas fa-share-alt-square';
+            $iconfile_shareOn = 'fas fa-share-alt-square';
+            $iconfile_shareOff = 'fas fa-share-alt-square';
+            $Templatenetfile_share_enabledOnOFF = '';
+            $iconfile_FTP = 'fas fa-handshake';
+            $iconfile_FTPOn = 'fas fa-handshake';
+            $iconfile_FTPOff = 'fas fa-handshake-slash';
+            $Templatenetfile_share_FTPOnOFF = '';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $iconPrint = 'fas fa-print';
+            $iconPrintOn = 'fas fa-print icon_green';
+            $iconPrintOff = 'fas fa-print icon_red';
+            $TemplatenetnetsharePrint = 'Freebox_OS::Partage Imprimante';
+            $iconfile_share = 'fas fa-share-alt-square';
+            $iconfile_shareOn = 'fas fa-share-alt-square icon_green';
+            $iconfile_shareOff = 'fas fa-share-alt-square icon_red';
+            $Templatenetfile_share_enabledOnOFF = 'Freebox_OS::Partage Fichier Windows';
+            $iconfile_mac = 'fas fa-share-alt';
+            $iconfile_macOn = 'fas fa-share-alt icon_green';
+            $iconfile_macOff = 'fas fa-share-alt icon_red';
+            $Templatenetfile_share_macOnOFF = 'Freebox_OS::Partage Fichier Mac';
+            $iconfile_FTP = 'fas fa-handshake';
+            $iconfile_FTPOn = 'fas fa-handshake icon_green';
+            $iconfile_FTPOff = 'fas fa-handshake icon_red';
+            $Templatenetfile_share_FTPOnOFF = 'Freebox_OS::Partage FTP';
+        };
+
+        $netshare = Freebox_OS::AddEqLogic($logicalinfo['netshareName'], $logicalinfo['netshareID'], 'multimedia', false, null, null, null, '5 */12 * * *');
+        // Partage Imprimante
+        $netsharePrint = $netshare->AddCommand('Partage Imprimante', 'print_share_enabled', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', $iconPrint, 0, 'default', 'default', '0', $_order, $updateicon, true);
+        $_order++;
+        $netshare->AddCommand('Activer partage Imprimante', 'print_share_enabled_on', 'action', 'other', $TemplatenetnetsharePrint, null, 'LIGHT_ON', 1, $netsharePrint, '', 0, $iconPrintOn, 0, 'default', 'default', $_order, '0', $updateicon, false);
+        $_order++;
+        $netshare->AddCommand('Désactiver partage Imprimante', 'print_share_enabled_off', 'action', 'other', $TemplatenetnetsharePrint, null, 'LIGHT_OFF', 1, $netsharePrint, '', 0, $iconPrintOff, 0, 'default', 'default', $_order, '0', $updateicon, false);
+        $_order++;
+        // Partage de fichiers Windows
+        $netshareFile = $netshare->AddCommand('Partage de fichiers Windows', 'file_share_enabled', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', $iconfile_share, 0, 'default', 'default', '0', $_order, $updateicon, true);
+        $_order++;
+        $netshare->AddCommand('Activer partage de fichiers Windows', 'file_share_enabled_on', 'action', 'other', $Templatenetfile_share_enabledOnOFF, null, 'LIGHT_ON', 1, $netshareFile, '', 0, $iconfile_shareOn, 0, 'default', 'default', $_order, '0', $updateicon, false);
+        $_order++;
+        $netshare->AddCommand('Désactiver partage de fichiers Windows', 'file_share_enabled_off', 'action', 'other', $Templatenetfile_share_enabledOnOFF, null, 'LIGHT_OFF', 1, $netshareFile, '', 0, $iconfile_shareOff, 0, 'default', 'default', $_order, '0', $updateicon, false);
+        $_order++;
+        // Partage de fichiers Mac
+        $netshareenabled = $netshare->AddCommand('Partage de fichiers Mac', 'mac_share_enabled', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', $iconfile_mac, 0, 'default', 'default', '0', $_order, $updateicon, true);
+        $_order++;
+        $netshare->AddCommand('Activer partage de fichiers Mac', 'mac_share_enabled_on', 'action', 'other', $Templatenetfile_share_macOnOFF, null, 'LIGHT_ON', 1, $netshareenabled, '', 0, $iconfile_macOn, 0, 'default', 'default', $_order, '0', $updateicon, false);
+        $_order++;
+        $netshare->AddCommand('Désactiver partage de fichiers Mac', 'mac_share_enabled_off', 'action', 'other', $Templatenetfile_share_macOnOFF, null, 'LIGHT_OFF', 1, $netshareenabled, '', 0, $iconfile_macOff, 0, 'default', 'default', $_order, '0', $updateicon, false);
+        $_order++;
+        // Partage de fichiers FTP
+        $netshareFTP = $netshare->AddCommand('Partage FTP', 'FTP_enabled', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', $iconfile_FTP, 0, 'default', 'default', '0', $_order, $updateicon, true);
+        $_order++;
+        $netshare->AddCommand('Activer partage FTP', 'FTP_enabled_on', 'action', 'other', $Templatenetfile_share_FTPOnOFF, null, 'LIGHT_ON', 1, $netshareFTP, '', 0, $iconfile_FTPOn, 0, 'default', 'default', $_order, '0', $updateicon, false);
+        $_order++;
+        $netshare->AddCommand('Désactiver partage FTP', 'FTP_enabled_off', 'action', 'other', $Templatenetfile_share_FTPOnOFF, null, 'LIGHT_OFF', 1, $netshareFTP, '', 0, $iconfile_FTPOff, 0, 'default', 'default', $_order, '0', $updateicon, false);
+        $_order++;
+        log::add('Freebox_OS', 'debug', '└─────────');
+
+
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_network_interface($logicalinfo, $templatecore_V4)

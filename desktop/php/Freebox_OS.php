@@ -88,6 +88,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						case 'wifi':
 						case 'player':
 						case 'network':
+						case 'netshare':
 						case 'networkwifiguest':
 							$status = 1;
 							$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
@@ -137,6 +138,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						case 'player':
 						case 'parental':
 						case 'network':
+						case 'netshare':
 						case 'networkwifiguest':
 							break;
 						default:

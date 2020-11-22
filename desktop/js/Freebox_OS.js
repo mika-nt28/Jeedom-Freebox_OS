@@ -243,6 +243,7 @@ function addCmdToTable(_cmd) {
 		case 'downloads':
 		case 'homeadapters':
 		case 'network':
+		case 'netshare':
 		case 'networkwifiguest':
 		case 'system':
 		case 'wifi':

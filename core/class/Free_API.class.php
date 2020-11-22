@@ -341,7 +341,7 @@ class Free_API
                 $config = 'api/v8/lan/' . $update_type;
                 break;
             case 'netshare':
-                $config = 'api/v8/netshare/' . $update_type;
+                $config = 'api/v8/' . $update_type;
                 break;
             case 'network_ID':
                 $config = 'api/v8/lan/browser/' . $update_type  . $id;
@@ -463,6 +463,10 @@ class Free_API
                 $config = 'api/v8/lcd/config';
                 $config_commande = 'hide_wifi_key';
                 break;
+            case 'netshare':
+                $config = 'api/v8/' . $id;
+                $config_commande = $_options;
+                break;
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
@@ -563,7 +567,7 @@ class Free_API
         } elseif ($parametre === 0) {
             $parametre = false;
         }
-        if ($update == 'parental' || $update == 'donwload') {
+        if ($update == 'parental') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
         } else if ($update == 'WakeonLAN') {
             $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $_options_2), $fonction);

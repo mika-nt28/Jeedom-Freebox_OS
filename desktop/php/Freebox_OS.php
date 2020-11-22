@@ -266,17 +266,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						</div>
 
 						<!-- Paramètres spéficique de l'équipement -->
-						<br>
 						<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
-						<div class="form-group IPV">
-							<label class="col-sm-3 control-label">{{Affichage IP sur le widget}}
-								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
-							</label>
-							<div class="col-sm-7">
-								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
-								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
-							</div>
-						</div>
 						<!-- Champ de saisie du cron d'auto-actualisation + assistant cron -->
 						<div class="form-group">
 							<label class="col-sm-3 control-label">{{Auto-actualisation}}
@@ -291,6 +281,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										</a>
 									</span>
 								</div>
+							</div>
+						</div>
+						<div class="form-group IPV">
+							<label class="col-sm-3 control-label">{{Affichage IP sur le widget}}
+								<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
+							</label>
+							<div class="col-sm-7">
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
+								<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
 							</div>
 						</div>
 					</fieldset>
@@ -332,6 +331,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							</div>
 						</div>
 					</fieldset>
+				</form>
 
 			</div>
 			<!-- Onglet des commandes de l'équipement -->
@@ -341,12 +341,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<table id="table_cmd" class="table table-bordered table-condensed">
 					<thead>
 						<tr>
-							<th style="width: 50px;"> ID</th>
-							<th style="width: 550px;">{{Nom}}</th>
-							<th style="width: 250px;">{{Sous-Type}}</th>
-							<th style="width: 350px;">{{Min/Max - Unité}}</th>
+							<th>{{Id}}</th>
+							<th>{{Nom}}</th>
+							<th>{{Type}}</th>
+							<th>{{Options}}</th>
 							<th>{{Paramètres}}</th>
-							<th style="width: 250px;">{{Options}}</th>
+							<th>{{Action}}</th>
 						</tr>
 					</thead>
 					<tbody></tbody>

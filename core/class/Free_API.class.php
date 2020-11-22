@@ -340,6 +340,9 @@ class Free_API
             case 'network_ping':
                 $config = 'api/v8/lan/' . $update_type;
                 break;
+            case 'netshare':
+                $config = 'api/v8/netshare/' . $update_type;
+                break;
             case 'network_ID':
                 $config = 'api/v8/lan/browser/' . $update_type  . $id;
                 break;

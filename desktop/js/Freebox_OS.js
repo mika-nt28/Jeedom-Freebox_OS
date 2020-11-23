@@ -1,3 +1,23 @@
+
+/* This file is part of Jeedom.
+ *
+ * Jeedom is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Jeedom is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+* Fonction permettant l'affichage des commandes dans l'équipement
+*/
 $("#table_cmd").sortable({
 	axis: "y",
 	cursor: "move",
@@ -235,7 +255,7 @@ function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
 	}
-	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+	var template = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 	switch (template) {
 		case 'airmedia':
 		case 'connexion':
@@ -255,7 +275,7 @@ function addCmdToTable(_cmd) {
 			break;
 	}
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
-	tr += '<td style="min-width:70px;width:70px;">';
+	tr += '<td style="min-width:50px;width:70px;">';
 	tr += '<span class="cmdAttr" data-l1key="id" ></span>';
 	tr += '</td>';
 	tr += '<td style="min-width:750px;width:850px;">';

@@ -228,7 +228,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 
-	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+		var template = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 
 	if (template === 'network' || template === 'networkwifiguest') {
 		$('.IPV').show();

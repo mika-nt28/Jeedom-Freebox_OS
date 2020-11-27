@@ -270,7 +270,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 
 								<!-- Paramètres spéficique de l'équipement -->
-								<legend><i class="fas fa-cog"></i> {{Paramètres}}</legend>
+								<legend><i class="fas fa-cogs"></i> {{Paramètres}}</legend>
 								<!-- Champ de saisie du cron d'auto-actualisation + assistant cron -->
 								<div class="form-group">
 									<label class="col-sm-3 control-label">{{Auto-actualisation}}

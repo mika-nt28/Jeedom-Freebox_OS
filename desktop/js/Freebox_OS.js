@@ -16,21 +16,13 @@
  */
 
 /*
-* Fonction permettant l'affichage des commandes dans l'équipement
+* Permet la réorganisation des commandes dans l'équipement
 */
-$("#table_cmd").sortable({
-	axis: "y",
-	cursor: "move",
-	items: ".cmd",
-	placeholder: "ui-state-highlight",
-	tolerance: "intersect",
-	forcePlaceholderSize: true
-});
+$("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
 
-$('#bt_resetSearch').off('click').on('click', function () {
-	$('#in_searchEqlogic').val('')
-	$('#in_searchEqlogic').keyup();
-})
+/*
+* Fonction spécifique Freebox
+*/
 
 $('.cmdAction[data-action=add]').on('click', function() {
 	addCmdToTable()
@@ -72,26 +64,17 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 			});
 		}
 	});
-
 });
 
 $('.authentification').on('click', function () {
-	$('#md_modal').dialog({
-		title: "{{Authentification Freebox}}",
-		height: 700,
-		width: 850
-	});
-	$('#md_modal').load('index.php?v=d&modal=authentification&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
-});
+    $('#md_modal').dialog({title: "{{Authentification Freebox}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Freebox_OS&modal=authentification').dialog('open');
+})
 
 $('.health').on('click', function () {
-	$('#md_modal').dialog({
-		title: "{{Santé Freebox}}",
-		height: 700,
-		width: 850
-	});
-	$('#md_modal').load('index.php?v=d&modal=health&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
-});
+    $('#md_modal').dialog({title: "{{Santé Freebox}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Freebox_OS&modal=health').dialog('open');
+})
 
 $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 	$('#div_alert').showAlert({
@@ -244,7 +227,9 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', functi
 });
 
 setupPage();
-
+/*
+* Fonction permettant l'affichage des commandes dans l'équipement
+*/
 function addCmdToTable(_cmd) {
 	if (!isset(_cmd)) {
 		var _cmd = {};
@@ -338,9 +323,7 @@ function addCmdToTable(_cmd) {
 		$('#table_cmd tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type));
 	}
    
-
 	jeedom.cmd.changeType($('#table_cmd tbody tr').last(), init(_cmd.subType));
-	
 
 }
 

@@ -203,7 +203,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<span class="input-group-btn">
 				<!-- Les balises <a></a> sont volontairement fermées à la ligne suivante pour éviter les espaces. Ne pas modifier -->
 				<a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure" title=" {{Configuration de l'équipement}}"><i class="fa fa-cogs"></i><span class="hidden-xs"> {{Configuration avancée}}</span>
-				</a><a class="btn btn-sm btn-info eqLogicAction Equipement"><i class="fas fa-search" title=" {{Recherche des équipements supplémentaires}}"></i><span class="hidden-xs"> {{Recherche des commandes}}</span>
+				</a><a class="btn btn-sm btn-info eqLogicAction Equipement" title=" {{Recherche les commandes supplémentaire de l'équipement}}"><i class="fas fa-search"></i><span class="hidden-xs"> {{Recherche des commandes}}</span>
 				</a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}
 				</a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i><span class="hidden-xs"> {{Supprimer}}</span>
 				</a>

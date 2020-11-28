@@ -1,16 +1,28 @@
-$("#table_cmd").sortable({
-	axis: "y",
-	cursor: "move",
-	items: ".cmd",
-	placeholder: "ui-state-highlight",
-	tolerance: "intersect",
-	forcePlaceholderSize: true
-});
 
-$('#bt_resetSearch').off('click').on('click', function () {
-	$('#in_searchEqlogic').val('')
-	$('#in_searchEqlogic').keyup();
-})
+/* This file is part of Jeedom.
+ *
+ * Jeedom is free software: you can redistribute it and/or modify
+ * it under the terms of the GNU General Public License as published by
+ * the Free Software Foundation, either version 3 of the License, or
+ * (at your option) any later version.
+ *
+ * Jeedom is distributed in the hope that it will be useful,
+ * but WITHOUT ANY WARRANTY; without even the implied warranty of
+ * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+ * GNU General Public License for more details.
+ *
+ * You should have received a copy of the GNU General Public License
+ * along with Jeedom. If not, see <http://www.gnu.org/licenses/>.
+ */
+
+/*
+* Permet la réorganisation des commandes dans l'équipement
+*/
+$("#table_cmd").sortable({axis: "y", cursor: "move", items: ".cmd", placeholder: "ui-state-highlight", tolerance: "intersect", forcePlaceholderSize: true});
+
+/*
+* Fonction spécifique Freebox
+*/
 
 $('.cmdAction[data-action=add]').on('click', function() {
 	addCmdToTable()
@@ -52,26 +64,17 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 			});
 		}
 	});
-
 });
 
 $('.authentification').on('click', function () {
-	$('#md_modal').dialog({
-		title: "{{Authentification Freebox}}",
-		height: 700,
-		width: 850
-	});
-	$('#md_modal').load('index.php?v=d&modal=authentification&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
-});
+    $('#md_modal').dialog({title: "{{Authentification Freebox}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Freebox_OS&modal=authentification').dialog('open');
+})
 
 $('.health').on('click', function () {
-	$('#md_modal').dialog({
-		title: "{{Santé Freebox}}",
-		height: 700,
-		width: 850
-	});
-	$('#md_modal').load('index.php?v=d&modal=health&plugin=Freebox_OS&type=Freebox_OS').dialog('open');
-});
+    $('#md_modal').dialog({title: "{{Santé Freebox}}"});
+    $('#md_modal').load('index.php?v=d&plugin=Freebox_OS&modal=health').dialog('open');
+})
 
 $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 	$('#div_alert').showAlert({
@@ -208,7 +211,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 	if ($icon != '' && $icon != null)
 		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 
-	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+		var template = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 
 	if (template === 'network' || template === 'networkwifiguest') {
 		$('.IPV').show();
@@ -224,7 +227,9 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', functi
 });
 
 setupPage();
-
+/*
+* Fonction permettant l'affichage des commandes dans l'équipement
+*/
 function addCmdToTable(_cmd) {
 	if (!isset(_cmd)) {
 		var _cmd = {};
@@ -235,7 +240,7 @@ function addCmdToTable(_cmd) {
 	if (init(_cmd.logicalId) == 'refresh') {
 		return;
 	}
-	var template = $('.eqLogicAttr[data-l1key=logicalId]').val();
+	var template = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 	switch (template) {
 		case 'airmedia':
 		case 'connexion':
@@ -255,7 +260,7 @@ function addCmdToTable(_cmd) {
 			break;
 	}
 	var tr = '<tr class="cmd" data-cmd_id="' + init(_cmd.id) + '">';
-	tr += '<td style="min-width:70px;width:70px;">';
+	tr += '<td style="min-width:50px;width:70px;">';
 	tr += '<span class="cmdAttr" data-l1key="id" ></span>';
 	tr += '</td>';
 	tr += '<td style="min-width:750px;width:850px;">';
@@ -318,9 +323,7 @@ function addCmdToTable(_cmd) {
 		$('#table_cmd tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type));
 	}
    
-
 	jeedom.cmd.changeType($('#table_cmd tbody tr').last(), init(_cmd.subType));
-	
 
 }
 

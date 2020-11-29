@@ -22,7 +22,7 @@ class Free_Update
 {
     public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $_cmd)
     {
-        if ($logicalId != 'refresh') {
+        if ($logicalId != 'refresh' && $logicalId != 'WakeonLAN') {
             log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
             log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
@@ -72,11 +72,18 @@ class Free_Update
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
-            case 'network':
+            case 'netshare':
+                Free_Update::update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
+            case 'network':
             case 'networkwifiguest':
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
+                }
+                if ($logicalId != 'WakeonLAN') {
+                    Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                }
                 break;
             case 'system':
                 Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -148,7 +155,46 @@ class Free_Update
             }
         }
     }
-
+    private static function update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    {
+        switch ($logicalId) {
+            case "FTP_enabledOn":
+                $Free_API->universal_put(true, 'netshare', 'ftp/config', null, 'enabled', null);
+                break;
+            case "FTP_enabledOff":
+                $Free_API->universal_put(false, 'netshare', 'ftp/config', null, 'enabled', null);
+                break;
+            case "file_share_enabledOn":
+                $Free_API->universal_put(true, 'netshare', 'netshare/samba', null, 'file_share_enabled', null);
+                break;
+            case "file_share_enabledOff":
+                $Free_API->universal_put(false, 'netshare', 'netshare/samba', null, 'file_share_enabled', null);
+                break;
+            case "mac_share_enabledOn":
+                $Free_API->universal_put(true, 'netshare', 'netshare/afp', null, 'enabled', null);
+                break;
+            case "mac_share_enabledOff":
+                $Free_API->universal_put(false, 'netshare', 'netshare/afp', null, 'enabled', null);
+                break;
+            case "print_share_enabledOn":
+                $Free_API->universal_put(true, 'netshare', 'netshare/samba', null, 'print_share_enabled', null);
+                break;
+            case "print_share_enabledOff":
+                $Free_API->universal_put(false, 'netshare', 'netshare/samba', null, 'print_share_enabled', null);
+                break;
+        }
+    }
+    private static function update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $network)
+    {
+        switch ($logicalId) {
+            case "search":
+                Free_CreateEq::createEq($network, false);
+                break;
+            case "WakeonLAN":
+                $Free_API->universal_put(null, $logicalId, $_options['mac_address'], null, null, null, $_options['password']);
+                break;
+        }
+    }
     private static function update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
         $cmd = cmd::byid($_cmd->getvalue());
@@ -207,6 +253,16 @@ class Free_Update
     {
         if ($logicalId != 'refresh') {
             switch ($logicalId) {
+                case 'mac_filter_state':
+                    $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state');
+                    break;
+                case 'add_del_mac';
+                    if ($_options['function'] == null || $_options['filter'] == null || $_options['mac_address'] == null) {
+                        log::add('Freebox_OS', 'error', 'Méthode Filtrage  ou type de Filtrage incorrect ');
+                        break;
+                    }
+
+                    $Free_API->universal_put(null, 'wifi', $_options, null, 'mac_filter');
                 case 'wifiOn':
                     $Free_API->universal_put(1, 'wifi', null, null, 'config');
                     break;

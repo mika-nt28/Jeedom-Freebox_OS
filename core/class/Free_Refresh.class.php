@@ -69,6 +69,9 @@ class Free_Refresh
                 case 'player':
                     Free_Refresh::refresh_player($Equipement, $Free_API);
                     break;
+                case 'netshare':
+                    Free_Refresh::refresh_netshare($Equipement, $Free_API);
+                    break;
                 case 'network':
                     Free_Refresh::refresh_network_global($Equipement, $Free_API, 'LAN');
                     break;
@@ -79,24 +82,7 @@ class Free_Refresh
                     Free_Refresh::refresh_system($Equipement, $Free_API);
                     break;
                 case 'wifi':
-                    foreach ($Equipement->getCmd('info') as $Command) {
-                        if (is_object($Command)) {
-                            switch ($Command->getLogicalId()) {
-                                case "wifiStatut":
-                                    $result = $Free_API->universal_get('wifi', null, null, 'config');
-                                    $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-                                    break;
-                                case "wifiPlanning":
-                                    $result = $Free_API->universal_get('wifi', null, null, 'planning');
-                                    $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-                                    break;
-                                case "wifiWPS":
-                                    $result = $Free_API->universal_get('wifi', null, null, 'wps/config');
-                                    $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result);
-                                    break;
-                            }
-                        }
-                    }
+                    Free_Refresh::refresh_wifi($Equipement, $Free_API);
                     break;
                 default:
                     Free_Refresh::refresh_default($Equipement, $Free_API);
@@ -136,7 +122,7 @@ class Free_Refresh
                         case "state":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
                             break;
-                        case "rx_max_rate_lte": // toute la partie çG
+                        case "rx_max_rate_lte": // toute la partie 4G
                             Free_Refresh::refresh_connexion_4G($Equipement, $Free_API);
                             break;
                         case "ping": // toute la partie CONFIG
@@ -468,6 +454,37 @@ class Free_Refresh
         }
     }
 
+    private static function refresh_netshare($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('netshare', null, null, 'netshare/samba');
+        $resultmac = $Free_API->universal_get('netshare', null, null, 'netshare/afp');
+        $resultFTP = $Free_API->universal_get('netshare', null, null, 'ftp/config');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "file_share_enabled":
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Fichier Windows : ' . $result['file_share_enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['file_share_enabled']);
+                            break;
+                        case "FTP_enabled":
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Fichier Mac : ' . $resultFTP['enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $resultFTP['enabled']);
+                            break;
+                        case "mac_share_enabled":
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Fichier Mac : ' . $resultmac['enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $resultmac['enabled']);
+                            break;
+                        case "print_share_enabled":
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Imprimante : ' . $result['print_share_enabled']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['print_share_enabled']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+
     private static function refresh_system($Equipement, $Free_API)
     {
         log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système');
@@ -778,5 +795,51 @@ class Free_Refresh
         }
 
         if (isset($results_playerID) && $cmd_powerState) $Equipement->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $results_playerID['power_state']);
+    }
+
+    private static function refresh_wifi($Equipement, $Free_API)
+    {
+        $listmac = $Free_API->mac_filter_list();
+        if ($listmac != false) {
+            log::add('Freebox_OS', 'debug', '>───────── Liste Noire : ' . $listmac['listmac_blacklist']);
+            log::add('Freebox_OS', 'debug', '>───────── Liste Blanche : ' . $listmac['listmac_whitelist']);
+        }
+        $result_config = $Free_API->universal_get('wifi', null, null, 'config');
+        $value = 0;
+        foreach ($Equipement->getCmd('info') as $Command) {
+            if (is_object($Command)) {
+                switch ($Command->getLogicalId()) {
+                    case "listblack":
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $listmac['listmac_blacklist']);
+                        break;
+                    case "listwhite":
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $listmac['listmac_whitelist']);
+                        break;
+                    case "wifiStatut":
+                        if ($result_config['result']['enabled']) {
+                            $value = 1;
+                        }
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
+                        break;
+                    case "wifiPlanning":
+                        $result = $Free_API->universal_get('wifi', null, null, 'planning');
+                        if ($result['result']['use_planning']) {
+                            $value = 1;
+                        }
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
+                        break;
+                    case "wifiWPS":
+                        $result = $Free_API->universal_get('wifi', null, null, 'wps/config');
+                        if ($result['result']['enabled']) {
+                            $value = 1;
+                        }
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
+                        break;
+                    case "wifimac_filter_state":
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result_config['result']['mac_filter_state']);
+                        break;
+                }
+            }
+        }
     }
 }

@@ -283,6 +283,7 @@ class Free_CreateTil
                         $parameter['id'] = 'FreeboxCamera_' . $Command['ep_id'];
                         $parameter['room'] = $Equipement['group']['label'];
                         $parameter['url'] = $Command['value'];
+                        log::add('Freebox_OS', 'debug', '>> ================ >> ' . $parameter['name']);
                         log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
                         log::add('Freebox_OS', 'debug', '│ Id : ' . $parameter['id']);
 

@@ -165,44 +165,58 @@ class Freebox_OS extends eqLogic
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', '│ Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
+		log::add('Freebox_OS', 'debug', '>> ================ >> Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
 		if (!is_object($EqLogic)) {
 
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
-			if ($_Room == null) {
-				$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+			$checks = self::all();
+			$Nameexist = false;
+			foreach ($checks as $check) {
+				if ($check->getName() == $Name) {
+					if ($check->getLogicalId($_logicalId)) {
+						$Nameexist = true;
+					}
+				}
+			}
+			if ($Nameexist) {
+				log::add('Freebox_OS', 'error', 'Un équipement portant ce nom et un id incorrect (' . $Name . ' / ' . $_logicalId . ') existe déjà, il est impossible de créer l\'équipement');
+				return false;
 			} else {
-				// Fonction NON désactiver A TRAITER => Pose des soucis chez certain utilisateurs (Voir Fil d'actualité du Plugin)
-				$defaultRoom = intval($_Room);
-			}
-			if ($defaultRoom != null) {
-				$EqLogic->setObject_id($defaultRoom);
-			}
-			$EqLogic->setEqType_name('Freebox_OS');
-			$EqLogic->setIsEnable(1);
-			$EqLogic->setIsVisible(0);
-			$EqLogic->setName($Name);
-			if ($category != null) {
-				$EqLogic->setcategory($category, 1);
-			}
+				if ($_Room == null) {
+					$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+				} else {
+					// Fonction NON désactiver A TRAITER => Pose des soucis chez certain utilisateurs (Voir Fil d'actualité du Plugin)
+					$defaultRoom = intval($_Room);
+				}
+				if ($defaultRoom != null) {
+					$EqLogic->setObject_id($defaultRoom);
+				}
+				$EqLogic->setEqType_name('Freebox_OS');
+				$EqLogic->setIsEnable(1);
+				$EqLogic->setIsVisible(0);
+				$EqLogic->setName($Name);
+				if ($category != null) {
+					$EqLogic->setcategory($category, 1);
+				}
 
-			if ($_autorefresh != null) {
-				$EqLogic->setConfiguration('autorefresh', $_autorefresh);
-			} else {
-				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
-			}
-			if ($tiles == true) {
-				$EqLogic->setConfiguration('type', $eq_type);
-				$EqLogic->setConfiguration('action', $eq_action);
-				if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
-					$EqLogic->setConfiguration('action', $logicalID_equip);
+				if ($_autorefresh != null) {
+					$EqLogic->setConfiguration('autorefresh', $_autorefresh);
+				} else {
+					$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 				}
-				if ($Player != null) {
-					$EqLogic->setConfiguration('player', $Player);
+				if ($tiles == true) {
+					$EqLogic->setConfiguration('type', $eq_type);
+					$EqLogic->setConfiguration('action', $eq_action);
+					if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
+						$EqLogic->setConfiguration('action', $logicalID_equip);
+					}
+					if ($Player != null) {
+						$EqLogic->setConfiguration('player', $Player);
+					}
 				}
+				$EqLogic->save();
 			}
-			$EqLogic->save();
 		}
 		$EqLogic->setConfiguration('logicalID', $_logicalId);
 		if ($_autorefresh == null) {
@@ -233,7 +247,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi: ' . $_calculValueOffset . '/' . $_historizeRound);
 
@@ -299,7 +313,14 @@ class Freebox_OS extends eqLogic
 				}
 				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
 			}
+			if ($request != null) {
+				$Command->setConfiguration('request', $request);
+			}
 			$Command->save();
+
+			if ($_order != null) {
+				$Command->setOrder($_order);
+			}
 		}
 		if ($generic_type != null) {
 			$Command->setGeneric_type($generic_type);
@@ -324,9 +345,6 @@ class Freebox_OS extends eqLogic
 		if ($link_logicalId != 'default') {
 			$Command->setconfiguration('logicalId', $link_logicalId);
 		}
-		if ($_order != null) {
-			$Command->setOrder($_order);
-		}
 
 		// Forçage pour mettre à jour l'affichage // Option en cas de Update Plugin
 		if ($forceIcone_widget == true) {
@@ -350,6 +368,9 @@ class Freebox_OS extends eqLogic
 
 		if ($_logicalId === "tempDenied") {
 			$Command->setConfiguration('listValue', '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00');
+		}
+		if ($_logicalId === "mac_filter_state") {
+			$Command->setConfiguration('listValue', 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche');
 		}
 		$Command->save();
 
@@ -476,6 +497,8 @@ class Freebox_OS extends eqLogic
 			'homeadaptersName' => 'Home Adapters',
 			'networkID' => 'network',
 			'networkName' => 'Appareils connectés',
+			'netshareID' => 'netshare',
+			'netshareName' => 'Partage Windows - Mac',
 			'networkwifiguestID' => 'networkwifiguest',
 			'networkwifiguestName' => 'Appareils connectés Wifi Invité',
 			'notificationID' => 'notification',
@@ -488,6 +511,7 @@ class Freebox_OS extends eqLogic
 			'wifiName' => 'Wifi',
 			'wifiguestID' => 'wifiguest',
 			'wifiguestName' => 'Wifi Invité',
+			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
 			'wifiWPSName' => 'Wifi WPS'
 		);
@@ -515,7 +539,6 @@ class Freebox_OS extends eqLogic
 					break;
 				case 'AirPlay':
 				case 'airmedia':
-				case '':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
 					$eqLogic->setName($logicalinfo['airmediaName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);
@@ -604,5 +627,16 @@ class Freebox_OSCmd extends cmd
 		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
 
 		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
+	}
+
+	public function getWidgetTemplateCode($_version = 'dashboard', $_noCustom = false)
+	{
+		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version, $_noCustom);
+		list($command, $arguments) = explode('?', $this->getConfiguration('request'), 2);
+		if ($command == 'wol')
+			return getTemplate('core', 'scenario', 'cmd.WakeonLAN', 'Freebox_OS');
+		if ($command == 'add_del_mac')
+			return getTemplate('core', 'scenario', 'cmd.mac_filter', 'Freebox_OS');
+		return parent::getWidgetTemplateCode($_version, $_noCustom);
 	}
 }

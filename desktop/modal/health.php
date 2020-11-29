@@ -19,6 +19,7 @@ if (!isConnect('admin')) {
 	throw new Exception('401 - Accès non autorisé');
 }
 $eqLogics = Freebox_OS::byType('Freebox_OS');
+include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 ?>
 
 <table class="table table-condensed tablesorter" id="table_healthFreebox_OS">
@@ -40,22 +41,21 @@ $eqLogics = Freebox_OS::byType('Freebox_OS');
 		<?php
 		foreach ($eqLogics as $eqLogic) {
 			$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-			if (file_exists(dirname(__FILE__) . '/../../core/images/' . $eqLogic->getConfiguration('type') . '.png')) {
-				$image = '<img src="plugins/Freebox_OS/core/images/' . $eqLogic->getConfiguration('type') . '.png' . '" height="35" width="35" style="' . $opacity . '"/>';
-			} else {
-				if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'alarm_control' || $eqLogic->getConfiguration('type') == 'alarm_sensor' || $eqLogic->getConfiguration('type') == 'alarm_remote') {
-					$template = $eqLogic->getConfiguration('type');
-					$icon = $template;
+
+			if ($eqLogic->getConfiguration('type') != 'homeadapters' && $eqLogic->getConfiguration('type') != null) {
+				if (file_exists(dirname(__FILE__) . '/../../core/images/' . $eqLogic->getConfiguration('type') . '.png')) {
+					$icon = $eqLogic->getConfiguration('type');
 				} else {
-					$template = $eqLogic->getLogicalId();
-					if (($eqLogic->getConfiguration('type') == 'info' && $eqLogic->getConfiguration('action') == 'store') || ($eqLogic->getConfiguration('type') == 'light')) {
-						$icon = 'default';
-					} else {
-						$icon = $template;
-					}
+					$icon = 'default';
 				}
-				$image = '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png" height="35" width="35" style="' . $opacity . '" class="' . $opacity . '"/>';
+			} else {
+				if (file_exists(dirname(__FILE__) . '/../../core/images/' . $eqLogic->getLogicalId() . '.png')) {
+					$icon = $template = $eqLogic->getLogicalId();
+				} else {
+					$icon = 'default';
+				}
 			}
+			$image = '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png" height="35" width="35" style="' . $opacity . '" class="' . $opacity . '"/>';
 			echo '<tr><td class="' . $opacity . '" >' . $image . '</td><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('logicalID') . '</span></td>';

@@ -570,7 +570,7 @@ class Free_CreateEq
         };
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
         $system->AddCommand('Nom Freebox', 'name', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 60, '0', $updateicon, true);
-        $system->AddCommand('Mode Feeebox', 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  61, '0', $updateicon, true);
+        $system->AddCommand('Mode Freebox', 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  61, '0', $updateicon, true);
         $system->AddCommand('Ip', 'ip', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  62, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
 

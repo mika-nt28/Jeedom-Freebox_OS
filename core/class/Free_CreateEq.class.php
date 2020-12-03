@@ -707,7 +707,38 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
         Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi);
         Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi);
+        Free_CreateEq::createEq_wifi_ap($logicalinfo, $templatecore_V4, $Wifi);
     }
+
+    private static function createEq_wifi_ap($logicalinfo, $templatecore_V4, $Wifi)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiAPName']);
+
+        $updateicon = false;
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $iconWifi = 'fas fa-wifi';
+            $TemplateWifi = 'default';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $iconWifi = 'fas fa-wifi icon_blue';
+            $TemplateWifi = 'Freebox_OS::Wifi Statut carte';
+        };
+        $order = 50;
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('wifi', null, null, 'ap');
+
+        $nb_card = count($result['result']);
+        if ($result != false) {
+            for ($k = 0; $k < $nb_card; $k++) {
+                log::add('Freebox_OS', 'debug', '│──────────> Nom de la carte ' . $result['result'][$k]['name'] . ' - Id : ' . $result['result'][$k]['id'] . ' - Status : ' . $result['result'][$k]['status']['state']);
+                $Wifi->AddCommand('Etat carte Wifi ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, null, null, 0, $iconWifi, false, 'default', 'default', $order, '0', $updateicon, false, false, true);
+                $order++;
+            }
+        }
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+
 
     private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi)
     {

@@ -805,7 +805,7 @@ class Free_Refresh
             log::add('Freebox_OS', 'debug', '>───────── Liste Blanche : ' . $listmac['listmac_whitelist']);
         }
         $result_config = $Free_API->universal_get('wifi', null, null, 'config');
-        $value = 0;
+        $value = false;
         foreach ($Equipement->getCmd('info') as $Command) {
             if (is_object($Command)) {
                 switch ($Command->getLogicalId()) {
@@ -816,27 +816,35 @@ class Free_Refresh
                         $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $listmac['listmac_whitelist']);
                         break;
                     case "wifiStatut":
+                        $value = false;
                         if ($result_config['result']['enabled']) {
-                            $value = 1;
+                            $value = true;
                         }
                         $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
                         break;
                     case "wifiPlanning":
+                        $value = false;
                         $result = $Free_API->universal_get('wifi', null, null, 'planning');
                         if ($result['result']['use_planning']) {
-                            $value = 1;
+                            $value = true;
                         }
                         $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
                         break;
                     case "wifiWPS":
+                        $value = false;
                         $result = $Free_API->universal_get('wifi', null, null, 'wps/config');
                         if ($result['result']['enabled']) {
-                            $value = 1;
+                            $value = true;
                         }
                         $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $value);
                         break;
                     case "wifimac_filter_state":
                         $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result_config['result']['mac_filter_state']);
+                        break;
+                    default:
+                        $result_ap = $Free_API->universal_get('wifi', null, null, 'ap/' . $Command->getLogicalId());
+                        log::add('Freebox_OS', 'debug', '>───────── Status Carte ' . $result_ap['result']['name'] . ' / ' . $Command->getLogicalId() . ' : ' . $result_ap['result']['status']['state']);
+                        $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result_ap['result']['status']['state']);
                         break;
                 }
             }

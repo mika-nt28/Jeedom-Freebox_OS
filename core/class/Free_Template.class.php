@@ -130,7 +130,28 @@ class Free_Template
 			'test' => array(
 				array('operation' => "#value# == 'allowed'", 'state_light' => '<i class=\'icon_green icon fas fa-user-check\'></i>'),
 				array('operation' => "#value# == 'denied'", 'state_light' => '<i class=\'icon_red icon fas fa-user-lock\'></i>'),
-				array('operation' => "#value# == 'webonly'", 'state_light' => '<i class=\'icon_orange icon fas fa-user-shield\'></i>')
+				array('operation' => "#value# == 'webonly'", 'state_light' => '<i class=\'icon_orange icon fas fa-user-shield\'></i>'),
+				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_orange icon fas fa-question\'></i>')
+			)
+		);
+		// Template pour l'état des cartes Wifi (info)
+		$return['info']['string']['Wifi Statut carte'] = array(
+			'template' => 'tmplmultistate',
+			'replace' => array('#_time_widget_#' => '1'),
+			'test' => array(
+				array('operation' => "#value# == 'scanning'", 'state_light' => '<i class=\'icon_blue icon fas fa-spinner\'></i>'),
+				array('operation' => "#value# == 'no_param'", 'state_light' => '<i class=\'icon_red icon fas fa-exclamation-triangle\'></i>'),
+				array('operation' => "#value# == 'bad_param'", 'state_light' => '<i class=\'icon_orange icon fas fa-exclamation-triangle\'></i>'),
+				array('operation' => "#value# == 'disabled'", 'state_light' => '<i class=\'icon_red icon fas fa-wifi\'></i>'),
+				array('operation' => "#value# == 'disabled_planning'", 'state_light' => '<i class=\'icon_orange icon fas fa-exclamation-triangle\'></i>'),
+				array('operation' => "#value# == 'no_active_bss'", 'state_light' => '<i class=\'icon_orange icon fas fa-exclamation-triangle\'></i>'),
+				array('operation' => "#value# == 'starting'", 'state_light' => '<i class=\'icon_orange icon fas fa-wifi\'></i>'),
+				array('operation' => "#value# == 'acs'", 'state_light' => '<i class=\'icon_blue icon fas fa-wifi\'></i>'),
+				array('operation' => "#value# == 'ht_scan'", 'state_light' => '<i class=\'icon_blue icon fas fa-wifi\'></i>'),
+				array('operation' => "#value# == 'dfs'", 'state_light' => '<i class=\'icon_blue icon fas fa-wifi\'></i>'),
+				array('operation' => "#value# == 'active'", 'state_light' => '<i class=\'icon_green icon fas fa-wifi\'></i>'),
+				array('operation' => "#value# == 'failed'", 'state_light' => '<i class=\'icon_orange icon fas fa-user-shield\'></i>'),
+				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_orange icon fas fa-question\'></i>'),
 			)
 		);
 		// Template pour l'état du contrôle Player' (info)
@@ -140,7 +161,7 @@ class Free_Template
 			'test' => array(
 				array('operation' => "#value# == 'standby'", 'state_light' => '<i class=\'icon_red icon fas fa-power-off\'></i>'),
 				array('operation' => "#value# == 'running'", 'state_light' => '<i class=\'icon_green icon fas fa-power-off\'></i>'),
-				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_orange icon fas fa-question\'></i>')
+				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_orange icon fas fa-question\'></i>'),
 			)
 		);
 		// Template pour l'état de l'alarme' (info)
@@ -155,7 +176,8 @@ class Free_Template
 				array('operation' => "#value# == 'alarm2_arming'", 'state_light' => '<i class=\'icon_orange icon jeedom-lock-partiel\'></i>'),
 				array('operation' => "#value# == 'alarm1_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
 				array('operation' => "#value# == 'alarm2_alert_timer'", 'state_light' => '<i class=\'icon_red icon far fa-clock\'></i>'),
-				array('operation' => "#value# == 'alert'", 'state_light' => '<i class=\'icon_red icon jeedom-alerte2\'></i>')
+				array('operation' => "#value# == 'alert'", 'state_light' => '<i class=\'icon_red icon jeedom-alerte2\'></i>'),
+				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_orange icon fas fa-question\'></i>'),
 			)
 		);
 		// Template pour l'état de l'alarme' (info)

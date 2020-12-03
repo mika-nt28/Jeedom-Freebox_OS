@@ -513,7 +513,9 @@ class Freebox_OS extends eqLogic
 			'wifiguestName' => 'Wifi Invité',
 			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
-			'wifiWPSName' => 'Wifi WPS'
+			'wifiName' => 'Wifi WPS',
+			'wifiAPID' => 'wifiAP',
+			'wifiAPName' => 'Wifi Access Points'
 		);
 	}
 	public static function updateLogicalID($_version, $_update = false)

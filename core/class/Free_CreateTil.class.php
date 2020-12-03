@@ -312,11 +312,26 @@ class Free_CreateTil
                         $_unit = null;
                     }
                     log::add('Freebox_OS', 'debug', '│ Valeur actuelle : ' . $Command['value'] . ' ' . $_unit);
-                    if (isset($Command['ui']['range'][0]) && isset($Command['ui']['range'][1]) && isset($Command['ui']['range'][2]) && isset($Command['ui']['range'][3]) && isset($Command['ui']['range'][4])) {
-                        log::add('Freebox_OS', 'debug', '│ Range : ' . $Command['ui']['range'][0] . '-' . $Command['ui']['range'][1] . '-' . $Command['ui']['range'][2] . '-' . $Command['ui']['range'][3] . $Command['ui']['range'][4] . '-' . $Command['ui']['range'][5] . '-' . $Command['ui']['range'][6]);
-                    }
+                    $order_range = 0;
                     if (isset($Command['ui']['icon_color_range'])) {
-                        log::add('Freebox_OS', 'debug', '│ Range color : ' . $Command['ui']['icon_color_range'][0] . '-' . $Command['ui']['icon_color_range'][1]);
+                        foreach ($Command['ui']['icon_color_range'] as $range) {
+                            log::add('Freebox_OS', 'debug', '│------------> Range Color ' . $order_range . ' : ' . $range);
+                            $order_range++;
+                        }
+                    }
+                    $order_range = 0;
+                    if (isset($Command['ui']['range'])) {
+                        foreach ($Command['ui']['range'] as $range) {
+                            log::add('Freebox_OS', 'debug', '│------------> Range ' . $order_range . ' : ' . $range);
+                            $order_range++;
+                        }
+                    }
+                    $order_range = 0;
+                    if (isset($Command['ui']['icon_range'])) {
+                        foreach ($Command['ui']['icon_range'] as $range) {
+                            log::add('Freebox_OS', 'debug', '│------------> Range Icon ' . $order_range . ' : ' . $range);
+                            $order_range++;
+                        }
                     }
                     switch ($Command['value_type']) {
                         case "void":

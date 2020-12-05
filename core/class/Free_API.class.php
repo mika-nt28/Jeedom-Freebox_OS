@@ -254,13 +254,10 @@ class Free_API
         if ($PortForwarding === false)
             return false;
 
-
         if ($fonction == "get") {
             $result = array();
-            $_ip = cmd::byId($id)->getConfiguration('IPV4', '192.168.0.0');
-
             foreach ($PortForwarding['result'] as $value) {
-                if ($value['lan_ip'] != $_ip) continue;
+                if ($value['host']['id'] != $id) continue;
                 $enabled = "0";
                 if ($value['enabled'] == true) $enabled = "1";
                 array_push($result, array(
@@ -284,6 +281,10 @@ class Free_API
                 $this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => false), "PUT");
                 return true;
             }
+        } elseif ($fonction == "DELETE") {
+            log::add('Freebox_OS', 'debug', '│──────────> Fin Close Session  ' . $fonction);
+            $this->fetch('/api/v8/fw/redir/' . $id, null, "DELETE");
+            return true;
         }
     }
 
@@ -456,7 +457,7 @@ class Free_API
             case 'notification_ID':
                 $config = 'api/v8/notif/targets/' . $id;
                 if ($_options == 'DELETE') {
-                    $fonction = "DELETE";
+                    $fonction = $_options;
                 }
                 break;
             case 'lcd':
@@ -571,6 +572,7 @@ class Free_API
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
         } else if ($update == 'WakeonLAN') {
             $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $_options_2), $fonction);
+            return $return['success'];
         } else if ($update == 'set_tiles') {
             $return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
         } else if ($_options == 'mac_filter') {

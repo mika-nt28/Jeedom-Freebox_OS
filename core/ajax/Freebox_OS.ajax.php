@@ -21,12 +21,16 @@ try {
 		case 'AddPortForwarding':
 			ajax::success($Free_API->PortForwarding(init('id'), "put", init('enabled')));
 			break;
+		case 'DelPortForwarding':
+			ajax::success($Free_API->PortForwarding(init('id'), "DELETE"));
+			break;
 		case 'PortForwarding':
-			ajax::success($Free_API->PortForwarding(init('id'), "get"));
+			$id_logical = cmd::byId(init('id'))->getLogicalId();
+			ajax::success($Free_API->PortForwarding($id_logical, "get"));
 			break;
 		case 'WakeOnLAN':
 			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
-			ajax::success($Free_API->universal_put(null, 'WakeonLAN', $Mac, null, null));
+			ajax::success($Free_API->universal_put(null, 'WakeonLAN', $Mac, null, null, null, init('password')));
 			break;
 		case 'get_airmediareceivers':
 			ajax::success($Free_API->airmedia('receivers', null, null));

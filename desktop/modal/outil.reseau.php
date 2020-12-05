@@ -126,6 +126,7 @@ if (!isConnect('admin')) {
             .append($('<select style="width:100px;" class="redirPort form-control input-sm" data-l1key="enabled">')
                 .append($('<option value="1">').text('Activer'))
                 .append($('<option value="0">').text('Désactiver'))
+                .append($('<option value="3">').text('Supprimer'))
                 .append($('</select>')))
         );
 
@@ -152,8 +153,8 @@ if (!isConnect('admin')) {
         tr.append($('<td>')
             .append($('<input class="redirPort" data-l1key="comment" disabled/>')));
         tr.append($('<td style="width:250px;">')
-            .append($('<a class="btn btn-xs btn-success redirPort fas fa-check-circle" data-action="AddPortForwarding">'))
-            .append($('<a class="btn btn-xs btn-danger redirPort fas fa-minus-circle" data-action="DelPortForwarding">')));
+            .append($('<a class="btn btn-sm btn-success redirPort fas fa-check-circle" data-action="UpdatePortForwarding">')
+                .text('{{ Mise à jour}}')));
         $('#table_cmd tbody').append(tr);
         $('#table_cmd tbody tr:last').setValues(_cmd, '.redirPort');
     }
@@ -193,15 +194,15 @@ if (!isConnect('admin')) {
             }
         });
     });
-    $('.redirPort[data-action=AddPortForwarding]').on('click', function() {
+    $('.redirPort[data-action=UpdatePortForwarding]').on('click', function() {
         $.ajax({
             type: 'POST',
             async: false,
             url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
             data: {
-                action: 'AddPortForwarding',
+                action: 'UpdatePortForwarding',
                 id: $(this).closest('.redir').find('.redirPort[data-l1key=id]').val(),
-                enabled: $(this).closest('.redir').find('.[data-l1key=enabled]').val(),
+                enabled: $(this).closest('.redir').find('.redirPort[data-l1key=enabled]').val(),
             },
             dataType: 'json',
             global: false,
@@ -218,37 +219,6 @@ if (!isConnect('admin')) {
                     if (data.result == true) {
                         $('.EnregistrementDisplay').showAlert({
                             message: "Commande envoyée avec succès ",
-                            level: 'success'
-                        });
-                    }
-                }
-
-            }
-        });
-    });
-    $('.redirPort[data-action=DelPortForwarding]').on('click', function() {
-        $.ajax({
-            type: 'POST',
-            async: false,
-            url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
-            data: {
-                action: 'DelPortForwarding',
-                id: $(this).closest('.redir').find('.redirPort[data-l1key=id]').val(),
-            },
-            dataType: 'json',
-            global: false,
-            error: function(request, status, error) {},
-            success: function(data) {
-                if (data.state != 'ok') {
-                    $('.EnregistrementDisplay').showAlert({
-                        message: data.result,
-                        level: 'danger'
-                    });
-                    return;
-                } else {
-                    if (data.result == true) {
-                        $('.EnregistrementDisplay').showAlert({
-                            message: "Suppression envoyée avec succès ",
                             level: 'success'
                         });
                     }

@@ -18,11 +18,8 @@ try {
 		case 'ask_track_authorization':
 			ajax::success($Free_API->ask_track_authorization());
 			break;
-		case 'AddPortForwarding':
-			ajax::success($Free_API->PortForwarding(init('id'), "put", init('enabled')));
-			break;
-		case 'DelPortForwarding':
-			ajax::success($Free_API->PortForwarding(init('id'), "DELETE"));
+		case 'UpdatePortForwarding':
+			ajax::success($Free_API->PortForwarding(init('id'), "PUT", init('enabled')));
 			break;
 		case 'PortForwarding':
 			$id_logical = cmd::byId(init('id'))->getLogicalId();

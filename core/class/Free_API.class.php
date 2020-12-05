@@ -273,18 +273,17 @@ class Free_API
                 ));
             }
             return $result;
-        } elseif ($fonction == "put") {
+        } elseif ($fonction == "PUT") {
             if ($active == 1) {
-                $this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => true), "PUT");
+                $this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => true), $fonction);
                 return true;
-            } else {
-                $this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => false), "PUT");
+            } elseif ($active == 0) {
+                $this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => false), $fonction);
+                return true;
+            } elseif ($active == 3) {
+                $this->fetch('/api/v8/fw/redir/' . $id, null, "DELETE");
                 return true;
             }
-        } elseif ($fonction == "DELETE") {
-            log::add('Freebox_OS', 'debug', '│──────────> Fin Close Session  ' . $fonction);
-            $this->fetch('/api/v8/fw/redir/' . $id, null, "DELETE");
-            return true;
         }
     }
 

@@ -54,7 +54,7 @@ try {
 			}
 			$objects = $objects . '</select>';
 			$result = array(
-				piece => Free_CreateTil::createTil('Tiles_group'),
+				pieces => Free_CreateTil::createTil('Tiles_group'),
 				objects => $objects,
 				config =>  config::bykey('FREEBOX_PIECE', 'Freebox_OS', "")
 			);

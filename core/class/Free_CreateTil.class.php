@@ -191,6 +191,7 @@ class Free_CreateTil
             if ($group == "" || $group === null) continue;
             if (!in_array($group, $result)) {
                 array_push($result, $group);
+                log::add('Freebox_OS', 'debug', '>───────── Pièce : ' . $group);
             }
         }
         return $result;

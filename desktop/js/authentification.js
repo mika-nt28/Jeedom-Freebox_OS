@@ -142,7 +142,7 @@ function SearchTile_Group() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            pieces = data.result.piece;
+            pieces = data.result.pieces;
             object = data.result.objects;
             $("#table_room tr").remove();
             $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièces Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");

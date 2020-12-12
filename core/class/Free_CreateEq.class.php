@@ -35,7 +35,6 @@ class Free_CreateEq
             case 'connexion':
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 break;
             case 'disk':

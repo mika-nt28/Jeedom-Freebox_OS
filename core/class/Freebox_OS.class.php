@@ -320,6 +320,11 @@ class Freebox_OS extends eqLogic
 			if ($_home_mode_set == 'SetModeAbsent') {
 				$this->setConfiguration('SetModePresent', "NOT");
 			} else {
+				if ($_home_mode_set == 'SetModeAbsent') {
+					$this->setConfiguration('ModeAbsent', $VerifName);
+				} else if ($_home_mode_set == 'SetModeNuit') {
+					$this->setConfiguration('ModeNuit', $VerifName);
+				}
 				$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
 			}
 			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
@@ -421,6 +426,37 @@ class Freebox_OS extends eqLogic
 
 	public function postSave()
 	{
+		if ($this->getConfiguration('type') == 'alarm_control') {
+			log::add('Freebox_OS', 'debug', '│──────────> Update paramétrage spécifique pour Homebridge : ' . $this->getConfiguration('type'));
+			foreach ($this->getCmd('action') as $Command) {
+				if (is_object($Command)) {
+					switch ($Command->getLogicalId()) {
+						case "1":
+							$_home_mode_set = 'SetModeAbsent';
+							$_home_mode = 'ModeAbsent';
+							break;
+						case "2":
+							$_home_mode_set = 'SetModeNuit';
+							$_home_mode = 'ModeNuit';
+							break;
+					}
+					if ($_home_mode_set != null) {
+						log::add('Freebox_OS', 'debug', '│──────────> Mode : ' . $_home_mode_set . 'Nom de la commande ' . $Command->getName());
+						$this->setConfiguration($_home_mode, $Command->getName());
+						$this->save(true);
+						$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $Command->getName());
+						$this->save(true);
+						if ($_home_mode_set == 'SetModeAbsent') {
+							$this->setConfiguration('SetModePresent', "NOT");
+						} else {
+							$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $Command->getName());
+						}
+
+						$_home_mode_set = null;
+					}
+				}
+			}
+		}
 		if ($this->getIsEnable()) {
 			Free_Refresh::RefreshInformation($this->getId());
 		}

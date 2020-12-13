@@ -184,7 +184,8 @@ $('.Equipement').on('click', function () {
 		async: false,
 		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
 		data: {
-			action: 'Search' + $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value()
+			action: 'Search',
+			search: $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value()
 		},
 		dataType: 'json',
 		global: false,

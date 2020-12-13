@@ -681,19 +681,19 @@ class Free_Refresh
 
                                 switch ($data['value']) {
                                     case 'alarm1_arming':
-                                        $_Alarm_mode_value = 'Alarme principale';
+                                        $_Alarm_mode_value = $Equipement->getConfiguration('ModeAbsent');
                                         log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale (arming)');
                                         break;
                                     case 'alarm1_armed':
-                                        $_Alarm_mode_value = 'Alarme principale';
+                                        $_Alarm_mode_value = $Equipement->getConfiguration('ModeAbsent');
                                         log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale (armed)');
                                         break;
                                     case 'alarm2_arming':
-                                        $_Alarm_mode_value = 'Alarme secondaire';
+                                        $_Alarm_mode_value = $Equipement->getConfiguration('ModeNuit');
                                         log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire (arming)');
                                         break;
                                     case 'alarm2_armed':
-                                        $_Alarm_mode_value = 'Alarme secondaire';
+                                        $_Alarm_mode_value = $Equipement->getConfiguration('ModeNuit');
                                         log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire (armed)');
                                         break;
                                     case 'alert':

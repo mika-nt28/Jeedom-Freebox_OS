@@ -49,14 +49,15 @@ try {
 		case 'SearchTile_group':
 			$objects = "";
 			$objects = $objects . '<option value="">Default</option>';
-			foreach (jeeObject::all() as $object) {
-				$objects = $objects . '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+			foreach ((jeeObject::buildTree(null, false)) as $object) {
+				$decay = $object->getConfiguration('parentNumber');
+				$objects .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $decay) . $object->getName() . '</option>';
 			}
 			$objects = $objects . '</select>';
 			$result = array(
-				pieces => Free_CreateTil::createTil('Tiles_group'),
-				objects => $objects,
-				config =>  config::bykey('FREEBOX_PIECE', 'Freebox_OS', "")
+				"pieces" => Free_CreateTil::createTil('Tiles_group'),
+				"objects" => $objects,
+				"config" =>  config::bykey('FREEBOX_PIECE', 'Freebox_OS', "")
 			);
 
 			ajax::success($result);
@@ -66,52 +67,15 @@ try {
 			Free_CreateTV::createTV();
 			ajax::success(true);
 			break;
-		case 'Searchairmedia':
-			Free_CreateEq::createEq('airmedia');
-			ajax::success(true);
-			break;
-		case 'Searchconnexion':
-			Free_CreateEq::createEq('connexion');
-			ajax::success(true);
-			break;
-		case 'Searchdownloads':
-			Free_CreateEq::createEq('downloads');
-			ajax::success(true);
-			break;
-		case 'Searchhomeadapters':
-			Free_CreateTil::createTil('homeadapters_SP');
-			ajax::success(true);
-			break;
-		case 'SearchParental':
-			Free_CreateEq::createEq('parental');
-			ajax::success(true);
-			break;
-		case 'Searchnetwork':
-			Free_CreateEq::createEq('network');
-			ajax::success(true);
-			break;
-		case 'Searchnetshare':
-			Free_CreateEq::createEq('netshare');
-			ajax::success(true);
-			break;
-		case 'Searchnetworkwifiguest':
-			Free_CreateEq::createEq('networkwifiguest');
-			ajax::success(true);
-			break;
-		case 'Searchphone':
-			Free_CreateEq::createEq('phone');
-			ajax::success(true);
-			break;
-		case 'Searchsystem':
-			Free_CreateEq::createEq('system');
-			ajax::success(true);
-			break;
-		case 'Searchwifi':
-			Free_CreateEq::createEq('wifi');
-			ajax::success(true);
-			break;
-		case 'Searchdisk':
-			Free_CreateEq::createEq('disk');
+		case 'Search':
+			if (init('search') == 'homeadapters') {
+				$Search = 'homeadapters_SP';
+				Free_CreateTil::createTil($Search);
+			} else {
+				$Search = init('search');
+				Free_CreateEq::createEq($Search);
+			}
+
 			ajax::success(true);
 			break;
 		case 'GetBox':

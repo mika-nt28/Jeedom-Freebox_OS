@@ -22,7 +22,7 @@ class Free_API
         $this->app_token = config::byKey('FREEBOX_SERVER_APP_TOKEN', 'Freebox_OS');
     }
 
-    public function track_id()
+    public function track_id() //Doit correspondre a la donction "auth" de freboxsession.js homebridge freebox
     {
         try {
             $http = new com_http($this->serveur . '/api/v8/login/authorize/');
@@ -77,7 +77,7 @@ class Free_API
         }
     }
 
-    public function getFreeboxOpenSession()
+    public function getFreeboxOpenSession() //Doit correspondre a la donction session de freboxsession.js homebridge freebox
     {
         try {
             $challenge = cache::byKey('Freebox_OS::Challenge');

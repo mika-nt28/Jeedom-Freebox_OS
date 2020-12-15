@@ -167,7 +167,7 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 
 			});
 			if (!data.result) {
-				window.location.reload();
+				//window.location.reload();
 			}
 		}
 	});

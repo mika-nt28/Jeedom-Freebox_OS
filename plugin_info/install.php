@@ -55,7 +55,7 @@ function Freebox_OS_update()
 	try {
 		$eqs = eqLogic::byType('Freebox_OS');
 		foreach ($eqs as $eq) {
-			if ($eq->setConfiguration('type', 'alarm_control')) {
+			if ($eq->getConfiguration('type') == 'alarm_control') {
 				$eq->save();
 			}
 		}

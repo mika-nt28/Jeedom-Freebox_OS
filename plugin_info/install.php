@@ -57,6 +57,7 @@ function Freebox_OS_update()
 		foreach ($eqs as $eq) {
 			if ($eq->getConfiguration('type') == 'alarm_control') {
 				$eq->save();
+				break;
 			}
 		}
 	} catch (Exception $e) {

@@ -158,8 +158,8 @@ if (!isConnect('admin')) {
 
                 <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connectée, cliquez sur le bouton ci-dessous, sinon cliquez sur suivant}}
                 </div>
-
-                <br />
+                <div class="alert alert-warning Freebox_Autorisation">{{Avertissement ! Le temps de validation sur la Freebox étant de quelques secondes positionnez vous ou une personne tiers devant la box à fin de valider dans ce court délais !}}
+                </div>
 
                 <a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement de l'authentification}} <i class="fas fa-exclamation-circle"></i></a>
             </center>

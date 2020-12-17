@@ -156,7 +156,8 @@ if (!isConnect('admin')) {
 
                 <h3 class="textFreebox">{{}}</h3>
 
-                <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connectée, cliquez sur le bouton si dessous, sinon cliquez sur suivant}}
+                <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connectée, cliquez sur le bouton ci-dessous, sinon cliquez sur suivant
+et le bouton.}}
                 </div>
 
                 <br />

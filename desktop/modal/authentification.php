@@ -149,7 +149,7 @@ if (!isConnect('admin')) {
             <center>
                 <center><i class="fas fa-rss" style="font-size: 8em;"></i></center>
                 <br />
-                <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/authentification.jpg" height="550" width="550" />
+                <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/authentification.jpg" height="450" width="350" />
                 <br />
 
                 <br />

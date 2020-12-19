@@ -341,7 +341,7 @@ class Free_API
             case 'network_ping':
                 $config = 'api/v8/lan/' . $update_type;
                 break;
-            case 'netshare':
+            case 'universalAPI':
                 $config = 'api/v8/' . $update_type;
                 break;
             case 'network_ID':
@@ -377,15 +377,15 @@ class Free_API
             $value = 0;
             switch ($update) {
                 case 'connexion':
-                    if ($update_type == 'lte/config' && $boucle == 4) {
+                    /* if ($update_type == 'lte/config' && $boucle == 4) {
                         if ($result['result']['enabled']) {
                             $value = 1;
                         }
                         log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
                         return $value;
-                    } else {
-                        return $result['result'];
-                    }
+                    } else {*/
+                    return $result['result'];
+                    //}
                     break;
                 case 'disk':
                 case 'network_ping':
@@ -464,7 +464,7 @@ class Free_API
                 $config = 'api/v8/lcd/config';
                 $config_commande = 'hide_wifi_key';
                 break;
-            case 'netshare':
+            case 'universalAPI':
                 $config = 'api/v8/' . $id;
                 $config_commande = $_options;
                 break;

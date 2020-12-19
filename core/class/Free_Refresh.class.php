@@ -456,9 +456,9 @@ class Free_Refresh
 
     private static function refresh_netshare($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('netshare', null, null, 'netshare/samba');
-        $resultmac = $Free_API->universal_get('netshare', null, null, 'netshare/afp');
-        $resultFTP = $Free_API->universal_get('netshare', null, null, 'ftp/config');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'netshare/samba');
+        $resultmac = $Free_API->universal_get('universalAPI', null, null, 'netshare/afp');
+        $resultFTP = $Free_API->universal_get('universalAPI', null, null, 'ftp/config');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {

@@ -341,7 +341,7 @@ class Free_API
             case 'network_ping':
                 $config = 'api/v8/lan/' . $update_type;
                 break;
-            case 'netshare':
+            case 'universalAPI':
                 $config = 'api/v8/' . $update_type;
                 break;
             case 'network_ID':
@@ -377,15 +377,15 @@ class Free_API
             $value = 0;
             switch ($update) {
                 case 'connexion':
-                    if ($update_type == 'lte/config' && $boucle == 4) {
+                    /* if ($update_type == 'lte/config' && $boucle == 4) {
                         if ($result['result']['enabled']) {
                             $value = 1;
                         }
                         log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
                         return $value;
-                    } else {
-                        return $result['result'];
-                    }
+                    } else {*/
+                    return $result['result'];
+                    //}
                     break;
                 case 'disk':
                 case 'network_ping':
@@ -464,7 +464,7 @@ class Free_API
                 $config = 'api/v8/lcd/config';
                 $config_commande = 'hide_wifi_key';
                 break;
-            case 'netshare':
+            case 'universalAPI':
                 $config = 'api/v8/' . $id;
                 $config_commande = $_options;
                 break;
@@ -514,10 +514,14 @@ class Free_API
                 $config = 'api/v8/system/reboot';
                 $fonction = "POST";
                 break;
-            case 'WakeonLAN':
-                $config = 'api/v8/lan/wol/pub/';
-                $fonction = "POST";
-                $config_log = 'Mise à jour de : WakeOnLAN';
+            case 'universal_put':
+                if ($_status_cmd == "DELETE") {
+                    $config = 'api/v8/' . $_options . '/' . $id;
+                    $fonction = 'DELETE';
+                } else {
+                    $config = 'api/v8/' . $_options;
+                    $fonction = "POST";
+                }
                 break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $_options;
@@ -570,8 +574,8 @@ class Free_API
         }
         if ($update == 'parental' || $update == 'donwload') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
-        } else if ($update == 'WakeonLAN') {
-            $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $_options_2), $fonction);
+        } else if ($update == 'universal_put') {
+            $return = $this->fetch('/' . $config,  $_options_2, $fonction);
             return $return['success'];
         } else if ($update == 'set_tiles') {
             $return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");

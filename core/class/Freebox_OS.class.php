@@ -677,6 +677,8 @@ class Freebox_OSCmd extends cmd
 			return getTemplate('core', 'scenario', 'cmd.WakeonLAN', 'Freebox_OS');
 		if ($command == 'add_del_mac')
 			return getTemplate('core', 'scenario', 'cmd.mac_filter', 'Freebox_OS');
+		if ($command == 'add_del_dhcp')
+			return getTemplate('core', 'scenario', 'cmd.dhcp', 'Freebox_OS');
 		return parent::getWidgetTemplateCode($_version, $_noCustom);
 	}
 }

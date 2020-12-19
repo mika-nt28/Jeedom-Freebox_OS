@@ -1,0 +1,51 @@
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">Adresse Mac</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="mac_address" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#mac_address#</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">Méthode</span>
+	<select class="form-control input-sm expressionAttr" data-l1key="options" data-l2key="function" data-cmd_id="#id#" data-uid="#uid#" style="width: 150px">
+      <option value="POST">Ajouter</option>
+      <option value="DELETE">Supprimer</option>
+    </select>
+</div>
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">IP</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="ip" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#ip#</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">Nom</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="name" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#name#</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">Commentaires</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="comment" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#comment#</textarea>
+</div>
+<script>
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=ip]').value('#ip#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=comment]').value('#comment#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=function]').value('#function#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=name]').value('#name#');
+  $('.listEquipementInfo[data-uid=#uid#]').on('click', function () {
+    if ('#message_cmd_subtype#' != '') {
+      jeedom.cmd.getSelectModal({
+        cmd: {
+          type: '#message_cmd_type#',
+          subType: '#message_cmd_subtype#'
+        }
+      }, function (result) {
+        $('.expressionAttr[data-l1key=options][data-l2key=mac_address][data-uid=#uid#]').atCaret('insert', result
+          .human);
+      });
+    } else {
+      jeedom.cmd.getSelectModal({
+        cmd: {
+          type: '#message_cmd_type#'
+        }
+      }, function (result) {
+        $('.expressionAttr[data-l1key=options][data-l2key=mac_address][data-uid=#uid#]').atCaret('insert', result
+          .human);
+      });
+    }
+  });
+</script>

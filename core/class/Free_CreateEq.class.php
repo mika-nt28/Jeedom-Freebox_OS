@@ -467,10 +467,12 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
             $icon_search = 'fas fa-search-plus';
             $icon_wol = 'fas fa-broadcast-tower';
+            $icon_dhcp = 'fas fa-network-wired';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $icon_search = 'fas fa-search-plus icon_green';
             $icon_wol = 'fas fa-broadcast-tower icon_orange';
+            $icon_dhcp = 'fas fa-network-wired icon_blue';
         };
         $updateWidget = false;
         if ($IsVisible == true) {
@@ -481,6 +483,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
+        $network->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -3, '0', true, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#');
         $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_search, 0, 'default', 'default',  -2, '0', true, false, null, true);
         $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -1, '0', true, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);

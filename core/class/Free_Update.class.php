@@ -191,7 +191,30 @@ class Free_Update
                 Free_CreateEq::createEq($network, false);
                 break;
             case "WakeonLAN":
-                $Free_API->universal_put(null, $logicalId, $_options['mac_address'], null, null, null, $_options['password']);
+                if ($_options['mac_address'] == null) {
+                    log::add('Freebox_OS', 'error', 'Adresse mac vide');
+                    break;
+                }
+                $option = null;
+                $option = array(
+                    "mac" => $_options['mac_address'],
+                    "password" => $_options['password']
+                );
+                $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'lan/wol/pub/', null, $option);
+                break;
+            case "add_del_mac":
+                if ($_options['ip'] == null || $_options['mac_address'] == null) {
+                    log::add('Freebox_OS', 'error', 'IP  ou adresse mac vide');
+                    break;
+                }
+                $option = null;
+                $option = array(
+                    "mac" => $_options['mac_address'],
+                    "ip" => $_options['ip'],
+                    "comment" => $_options['comment'],
+                    "hostname" => $_options['name']
+                );
+                $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'dhcp/static_lease/', $_options['function'], $option);
                 break;
         }
     }

@@ -54,8 +54,7 @@ try {
 			$objects = "";
 			$objects = $objects . '<option value="">Default</option>';
 			foreach ((jeeObject::buildTree(null, false)) as $object) {
-				$decay = $object->getConfiguration('parentNumber');
-				$objects .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $decay) . $object->getName() . '</option>';
+				$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration('parentNumber')) . $object->getName() . '</option>';
 			}
 			$objects = $objects . '</select>';
 			$result = array(

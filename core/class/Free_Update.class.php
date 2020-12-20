@@ -212,9 +212,16 @@ class Free_Update
                     "mac" => $_options['mac_address'],
                     "ip" => $_options['ip'],
                     "comment" => $_options['comment'],
-                    "hostname" => $_options['name']
                 );
-                $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'dhcp/static_lease/', $_options['function'], $option);
+                if ($_options['function'] != 'device') {
+                    $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'dhcp/static_lease/', $_options['function'], $option);
+                }
+                $option = array(
+                    "id" => 'ether-' . $_options['mac_address'],
+                    "primary_name" => $_options['name'],
+                    'host_type'  => $_options['type']
+                );
+                $Free_API->universal_put(null, 'universal_put', 'ether-' . $_options['mac_address'], null, 'lan/browser/pub', 'PUT', $option);
                 break;
         }
     }

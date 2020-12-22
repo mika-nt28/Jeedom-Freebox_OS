@@ -142,7 +142,7 @@ function SearchTile_Group() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            pieces = data.result.pieces;
+            piece = data.result.pieces;
             object = data.result.objects;
             $("#table_room tr").remove();
             $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièces Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");
@@ -343,6 +343,7 @@ function GetSetting() {
             logs('debug', "Objet par défaut : " + data.result.Categorie);
 
             console.log(data.result.DeviceName)
+            console.log(data.result.Categorie)
             if (data.result.DeviceName == null || data.result.DeviceName == "") {
                 $('.bt_Freebox_OS_Next').hide();
                 $('.textFreebox').text('Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage');

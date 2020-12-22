@@ -53,12 +53,14 @@ try {
 		case 'SearchTile_group':
 			$objects = "";
 			$objects = $objects . '<option value="">Default</option>';
-			foreach ((jeeObject::buildTree(null, false)) as $object) {
-				$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration('parentNumber')) . $object->getName() . '</option>';
+			foreach (jeeObject::all() as $object) {
+				$options .= '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+				//$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration('parentNumber')) . $object->getName() . '</option>';
+				//'<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
 			}
 			$objects = $objects . '</select>';
 			$result = array(
-				"pieces" => Free_CreateTil::createTil('Tiles_group'),
+				"piece" => Free_CreateTil::createTil('Tiles_group'),
 				"objects" => $objects,
 				"config" =>  config::bykey('FREEBOX_PIECE', 'Freebox_OS', "")
 			);

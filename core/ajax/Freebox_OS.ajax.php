@@ -51,12 +51,11 @@ try {
 			ajax::success($result);
 			break;
 		case 'SearchTile_group':
+			Free_CreateTil::createTil('Tiles_group');
 			$objects = "";
 			$objects = $objects . '<option value="">Default</option>';
 			foreach (jeeObject::all() as $object) {
-				$options .= '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-				//$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration('parentNumber')) . $object->getName() . '</option>';
-				//'<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+				$objects = $objects . '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
 			}
 			$objects = $objects . '</select>';
 			$result = array(
@@ -64,7 +63,6 @@ try {
 				"objects" => $objects,
 				"config" =>  config::bykey('FREEBOX_PIECE', 'Freebox_OS', "")
 			);
-
 			ajax::success($result);
 			break;
 		case 'SearchArchi':

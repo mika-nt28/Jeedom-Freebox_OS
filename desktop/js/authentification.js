@@ -50,6 +50,11 @@ $('.bt_Freebox_OS_ResetConfig').on('click', function () {
     SetDefaultSetting();
 });
 
+$('.bt_Freebox_Room').on('click', function () {
+    logs('debug', "================= Lancement Recherche des pièces");
+    SearchTile_room();
+});
+
 $('.bt_Freebox_OS_Save_room').on('click', function () {
     logs('debug', "================= Sauvegarde des Pièces des Tiles");
     SaveTitelRoom();
@@ -129,8 +134,7 @@ function SearchTile() {
         }
     });
 }
-
-function SearchTile_Group() {
+function SearchTile_room() {
     $.ajax({
         type: "POST",
         url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
@@ -142,7 +146,7 @@ function SearchTile_Group() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            piece = data.result.pieces;
+            pieces = data.result.piece;
             object = data.result.objects;
             $("#table_room tr").remove();
             $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièces Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");
@@ -492,7 +496,7 @@ function getBox(type) {
                 logs('debug', "================= BOX NON COMPATIBLE AVEC LES TILES");
             } else {
                 logs('debug', "================= BOX COMPATIBLE AVEC LES TILES");
-                SearchTile_Group();
+                //SearchTile_room();
             }
         }
     });
@@ -525,7 +529,7 @@ function SaveTitelRoom() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            SearchTile_Group();
+            SearchTile_room();
         }
     });
 }

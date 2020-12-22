@@ -184,7 +184,7 @@ class Free_CreateTil
     public static function createTil_Group($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
-        $tiles = $Free_API->universal_get('tiles');
+        $tiles = $Free_API->universal_get('tiles', '/all');
         $result = [];
         foreach ($tiles as $tile) {
             $group = $tile['group']['label'];

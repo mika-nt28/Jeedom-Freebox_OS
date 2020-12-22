@@ -364,9 +364,11 @@ class Free_API
             case 'PortForwarding':
                 $config = '/api/v8/fw/redir/';
                 $config_log = 'Redirection de port';
+                break;
             case 'upload':
                 $config = 'api/v8/ws/';
                 $config_log = 'Upload Progress tracking API';
+                break;
         }
 
         $result = $this->fetch('/' . $config, $Parameter, $fonction);

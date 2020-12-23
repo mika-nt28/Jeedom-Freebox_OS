@@ -1,0 +1,70 @@
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">IP destination</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="lan_ip" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#lan_ip#</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Activation</span>
+	<select class="form-control input-sm expressionAttr" data-l1key="options" data-l2key="enable_lan" data-cmd_id="#id#" data-uid="#uid#" style="width: 250px">
+      <option value="true">Activer</option>
+      <option value="false">Désactiver</option>
+    </select>
+</div>
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">IP Source</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="src_ip" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">0.0.0.0</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Protocole</span>
+	<select class="form-control input-sm expressionAttr" data-l1key="options" data-l2key="ip_proto" data-cmd_id="#id#" data-uid="#uid#" style="width: 250px">
+      <option value="tcp">TCP</option>
+      <option value="udp">UDP</option>
+    </select>
+</div>
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Port de début</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="wan_port_start" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#wan_port_start#</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Port de fin</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="wan_port_end" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#wan_port_end#</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Port de destination</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="lan_port" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#lan_port#</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Commentaires</span>
+	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="comment" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#comment#</textarea>
+</div>
+<script>
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=lan_ip]').value('#lan_ip#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=enable_lan]').value('#enable_lan#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=src_ip]').value('#src_ip#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=ip_proto]').value('#ip_proto#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=wan_port_start]').value('#wan_port_start#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=wan_port_end]').value('#wan_port_end#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=lan_port]').value('#lan_port#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=comment]').value('#comment#');
+  $('.listEquipementInfo[data-uid=#uid#]').on('click', function () {
+    if ('#message_cmd_subtype#' != '') {
+      jeedom.cmd.getSelectModal({
+        cmd: {
+          type: '#message_cmd_type#',
+          subType: '#message_cmd_subtype#'
+        }
+      }, function (result) {
+        $('.expressionAttr[data-l1key=options][data-l2key=lan_ip][data-uid=#uid#]').atCaret('insert', result
+          .human);
+      });
+    } else {
+      jeedom.cmd.getSelectModal({
+        cmd: {
+          type: '#message_cmd_type#'
+        }
+      }, function (result) {
+        $('.expressionAttr[data-l1key=options][data-l2key=lan_ip][data-uid=#uid#]').atCaret('insert', result
+          .human);
+      });
+    }
+  });
+</script>

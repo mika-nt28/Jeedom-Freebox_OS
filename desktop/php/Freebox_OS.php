@@ -329,6 +329,15 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="action"></span>
 								</div>
 							</div>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Type d'infos d'équipement}}
+									<sup><i class="fas fa-question-circle" title="{{Type d'information Freebox}}"></i></sup>
+								</label>
+								<div class="col-sm-3">
+									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="info" style="font-size : 1em"></span>
+								</div>
+							</div>
+
 					</fieldset>
 				</form>
 				<hr>

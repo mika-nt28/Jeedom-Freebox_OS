@@ -526,8 +526,8 @@ class Free_CreateTil
                                     } elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] == 'Détection') {
                                         $generic_type = 'PRESENCE';
                                         $Templatecore = $templatecore_V4 . 'presence';
-                                        $_home_config_eq = 'Détecteur de Mouvement';
-                                        $invertBinary = 0;
+                                        $_home_config_eq = 'mouv_sensor';
+                                        $invertBinary = 1;
                                     } elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $_eq_action == 'toggle')) {
                                         $generic_type = 'LIGHT_STATE';
                                         $Templatecore = $templatecore_V4 . 'light';

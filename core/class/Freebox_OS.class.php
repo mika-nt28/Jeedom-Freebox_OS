@@ -325,12 +325,15 @@ class Freebox_OS extends eqLogic
 				$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $VerifName);
 				$this->setConfiguration('ModeNuit', $VerifName);
 				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
-			} else if ($_home_config_eq == 'Détecteur de Mouvement') {
-				$this->setConfiguration('type2', $_home_config_eq);
+			} else if ($_home_config_eq == 'mouv_sensor') {
+				$this->setConfiguration('info', $_home_config_eq);
 				log::add('Freebox_OS', 'debug', '│ Paramétrage : ' . $_home_config_eq);
+				if ($invertBinary != null && $SubType == 'binary') {
+					$Command->setdisplay('invertBinary', 1);
+				}
+				$Command->setConfiguration('info', $_home_config_eq);
 			}
 			$this->save(true);
-			//log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
 		}
 		if ($generic_type != null) {
 			$Command->setGeneric_type($generic_type);

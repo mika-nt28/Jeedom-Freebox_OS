@@ -364,6 +364,11 @@ class Free_API
             case 'PortForwarding':
                 $config = '/api/v8/fw/redir/';
                 $config_log = 'Redirection de port';
+                break;
+            case 'upload':
+                $config = 'api/v8/ws/';
+                $config_log = 'Upload Progress tracking API';
+                break;
         }
 
         $result = $this->fetch('/' . $config, $Parameter, $fonction);
@@ -515,9 +520,9 @@ class Free_API
                 $fonction = "POST";
                 break;
             case 'universal_put':
-                if ($_status_cmd == "DELETE") {
+                if ($_status_cmd == "DELETE" || $_status_cmd == "PUT" || $_status_cmd == "device") {
                     $config = 'api/v8/' . $_options . '/' . $id;
-                    $fonction = 'DELETE';
+                    $fonction = $_status_cmd;
                 } else {
                     $config = 'api/v8/' . $_options;
                     $fonction = "POST";

@@ -1,30 +1,59 @@
 <div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
-	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">Adresse Mac</span>
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Adresse Mac</span>
 	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="mac_address" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#mac_address#</textarea>
 </div>
 <div class="input-group input-group-sm" style="width: 100%">
-	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">Méthode</span>
-	<select class="form-control input-sm expressionAttr" data-l1key="options" data-l2key="function" data-cmd_id="#id#" data-uid="#uid#" style="width: 150px">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Méthode</span>
+	<select class="form-control input-sm expressionAttr" data-l1key="options" data-l2key="function" data-cmd_id="#id#" data-uid="#uid#" style="width: 250px">
       <option value="POST">Ajouter</option>
       <option value="DELETE">Supprimer</option>
+      <option value="PUT">Modifier Commentaire</option>
+      <option value="device">Modifier le type de Périphérique</option>
     </select>
 </div>
 <div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
-	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">IP</span>
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">IP</span>
 	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="ip" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#ip#</textarea>
 </div>
 <div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
-	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">Nom</span>
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Nom</span>
 	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="name" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#name#</textarea>
 </div>
 <div class="input-group input-group-sm" style="width: 100%; padding-top: 1px">
-	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 120px">Commentaires</span>
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Commentaires</span>
 	<textarea class="message expressionAttr form-control ta_autosize" data-l1key="options" data-l2key="comment" rows="1" style="resize:vertical;" data-cmd_id="#id#" data-uid="#uid#">#comment#</textarea>
+</div>
+<div class="input-group input-group-sm" style="width: 100%">
+	<span class="input-group-addon roundedLeft" id="basic-addon1" style="width: 150px">Type de Périphérique</span>
+	<select class="form-control input-sm expressionAttr" data-l1key="options" data-l2key="type" data-cmd_id="#id#" data-uid="#uid#" style="width: 250px">
+      <option value="workstation">Ordinateur Fixe</option>
+      <option value="laptop">Ordinateur Portable</option>
+      <option value="smartphone">Smartphone</option>
+      <option value="tablet">Tablette</option>
+      <option value="printer">Imprimante</option>
+      <option value="vg_console">Console de jeux</option>
+      <option value="television">Télévision</option>
+      <option value="nas">NAS</option>
+      <option value="ip_camera">Caméra IP</option>
+      <option value="ip_phone">Téléphone IP</option>
+      <option value="freebox_player">Freebox Player</option>
+      <option value="freebox_hd">Freebox HD</option>
+      <option value="freebox_crystal">Freebox Crystal</option>
+      <option value="freebox_mini">Freebox Mini</option>
+      <option value="freebox_delta">Freebox Delta</option>
+      <option value="freebox_one">Freebox One</option>
+      <option value="freebox_wifi">Freebox Wi-Fi Pop</option>
+      <option value="freebox_pop">Freebox Pop</option>
+      <option value="networking_device">Périphérique réseau</option>
+      <option value="multimedia_device">Périphérique multimédia </option>
+      <option value="other">Autre</option>
+    </select>
 </div>
 <script>
   $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=ip]').value('#ip#');
   $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=comment]').value('#comment#');
   $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=function]').value('#function#');
+  $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=type]').value('#type#');
   $('.expressionAttr[data-uid=#uid#][data-l1key=options][data-l2key=name]').value('#name#');
   $('.listEquipementInfo[data-uid=#uid#]').on('click', function () {
     if ('#message_cmd_subtype#' != '') {

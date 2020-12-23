@@ -184,7 +184,7 @@ class Free_CreateTil
     public static function createTil_Group($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
-        $tiles = $Free_API->universal_get('tiles');
+        $tiles = $Free_API->universal_get('tiles', '/all');
         $result = [];
         foreach ($tiles as $tile) {
             $group = $tile['group']['label'];
@@ -342,7 +342,7 @@ class Free_CreateTil
                             $Link_I = 'default';
                             $IsVisible = 1;
                             $_iconname = '0';
-                            $_home_mode_set = null;
+                            $_home_config_eq = null;
                             if ($Command['name'] == 'up') {
                                 $generic_type = 'FLAP_UP';
                                 $icon = 'fas fa-arrow-up';
@@ -364,14 +364,14 @@ class Free_CreateTil
                                 $Link_I = $Link_I_ALARM;
                                 $_iconname = 1;
                                 $order = 6;
-                                $_home_mode_set = 'SetModeAbsent';
+                                $_home_config_eq = 'SetModeAbsent';
                             } elseif ($Command['name'] == 'alarm2' && $Equipement['type'] = 'alarm_control') {
                                 $generic_type = 'ALARM_SET_MODE';
                                 $icon = 'icon nature-night2 icon_red';
                                 $Link_I = $Link_I_ALARM;
                                 $_iconname = 1;
                                 $order = 7;
-                                $_home_mode_set = 'SetModeNuit';
+                                $_home_config_eq = 'SetModeNuit';
                             } elseif ($Command['name'] == 'off' && $Equipement['type'] = 'alarm_control') {
                                 $generic_type = 'ALARM_RELEASED';
                                 $icon = 'icon jeedom-lock-ouvert icon_green';
@@ -382,7 +382,7 @@ class Free_CreateTil
                                 $IsVisible = 0;
                                 $order = 9;
                             }
-                            $action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $_unit, $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, null, $_iconname, $_home_mode_set);
+                            $action = $Tile->AddCommand($Command['label'], $Command['ep_id'], 'action', 'other', null, $_unit, $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, null, $_iconname, $_home_config_eq);
                             break;
                         case "int":
                             foreach (str_split($Command['ui']['access']) as $access) {
@@ -508,6 +508,7 @@ class Free_CreateTil
                                 $IsVisible_PB = 0;
                                 $unit = null;
                                 $Type_command = null;
+                                $_home_config_eq = null;
                                 if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $_eq_action == 'toggle')) {
                                     $Type_command = 'PB';
                                 }
@@ -525,7 +526,8 @@ class Free_CreateTil
                                     } elseif ($Equipement['type'] == "alarm_sensor" && $Command['name'] == 'trigger' && $Command['label'] == 'Détection') {
                                         $generic_type = 'PRESENCE';
                                         $Templatecore = $templatecore_V4 . 'presence';
-                                        $invertBinary = 0;
+                                        $_home_config_eq = 'mouv_sensor';
+                                        $invertBinary = 1;
                                     } elseif ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $_eq_action == 'toggle')) {
                                         $generic_type = 'LIGHT_STATE';
                                         $Templatecore = $templatecore_V4 . 'light';
@@ -541,7 +543,7 @@ class Free_CreateTil
                                         $invertBinary = 0;
                                     }
 
-                                    $infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $_unit, $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default',  $order, 0, false, true, null);
+                                    $infoCmd = $Tile->AddCommand($Label, $Command['ep_id'], 'info', 'binary', $Templatecore, $_unit, $generic_type, $IsVisible, 'default', $link_logicalId, $invertBinary, null, 0, 'default', 'default',  $order, 0, false, true, null, null, $_home_config_eq);
                                     $Tile->checkAndUpdateCmd($Command['ep_id'], $Command['value']);
                                     if ($_eq_action == 'store') {
                                         $Link_I_store = $infoCmd;

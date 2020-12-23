@@ -247,7 +247,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_mode_set = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi: ' . $_calculValueOffset . '/' . $_historizeRound);
 
@@ -313,21 +313,27 @@ class Freebox_OS extends eqLogic
 				$Command->setOrder($_order);
 			}
 		}
-
-		if ($_home_mode_set != null) { // Compatibilité Homebridge
-			$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
-			$this->save(true);
-			if ($_home_mode_set == 'SetModeAbsent') {
+		if ($_home_config_eq != null) { // Compatibilité Homebridge
+			log::add('Freebox_OS', 'debug', '│ Paramétrage : ' . $_home_config_eq);
+			if ($_home_config_eq == 'SetModeAbsent') {
+				$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $VerifName);
 				$this->setConfiguration('SetModePresent', "NOT");
-			} else {
-				if ($_home_mode_set == 'SetModeAbsent') {
-					$this->setConfiguration('ModeAbsent', $VerifName);
-				} else if ($_home_mode_set == 'SetModeNuit') {
-					$this->setConfiguration('ModeNuit', $VerifName);
+				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : SetModePresent => NOT');
+				$this->setConfiguration('ModeAbsent', $VerifName);
+				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
+			} else if ($_home_config_eq == 'SetModeNuit') {
+				$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $VerifName);
+				$this->setConfiguration('ModeNuit', $VerifName);
+				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
+			} else if ($_home_config_eq == 'mouv_sensor') {
+				$this->setConfiguration('info', $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '│ Paramétrage : ' . $_home_config_eq);
+				if ($invertBinary != null && $SubType == 'binary') {
+					$Command->setdisplay('invertBinary', 1);
 				}
-				$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $VerifName);
+				$Command->setConfiguration('info', $_home_config_eq);
 			}
-			log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_mode_set);
+			$this->save(true);
 		}
 		if ($generic_type != null) {
 			$Command->setGeneric_type($generic_type);
@@ -432,27 +438,27 @@ class Freebox_OS extends eqLogic
 				if (is_object($Command)) {
 					switch ($Command->getLogicalId()) {
 						case "1":
-							$_home_mode_set = 'SetModeAbsent';
+							$_home_config_eq = 'SetModeAbsent';
 							$_home_mode = 'ModeAbsent';
 							break;
 						case "2":
-							$_home_mode_set = 'SetModeNuit';
+							$_home_config_eq = 'SetModeNuit';
 							$_home_mode = 'ModeNuit';
 							break;
 					}
-					if ($_home_mode_set != null) {
-						log::add('Freebox_OS', 'debug', '│──────────> Mode : ' . $_home_mode_set . 'Nom de la commande ' . $Command->getName());
+					if ($_home_config_eq != null) {
+						log::add('Freebox_OS', 'debug', '│──────────> Mode : ' . $_home_config_eq . 'Nom de la commande ' . $Command->getName());
 						$this->setConfiguration($_home_mode, $Command->getName());
 						$this->save(true);
-						$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $Command->getName());
+						$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $Command->getName());
 						$this->save(true);
-						if ($_home_mode_set == 'SetModeAbsent') {
+						if ($_home_config_eq == 'SetModeAbsent') {
 							$this->setConfiguration('SetModePresent', "NOT");
 						} else {
-							$this->setconfiguration($_home_mode_set, $Command->getId() . "|" . $Command->getName());
+							$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $Command->getName());
 						}
 
-						$_home_mode_set = null;
+						$_home_config_eq = null;
 					}
 				}
 			}
@@ -679,6 +685,8 @@ class Freebox_OSCmd extends cmd
 			return getTemplate('core', 'scenario', 'cmd.mac_filter', 'Freebox_OS');
 		if ($command == 'add_del_dhcp')
 			return getTemplate('core', 'scenario', 'cmd.dhcp', 'Freebox_OS');
+		if ($command == 'redir')
+			return getTemplate('core', 'scenario', 'cmd.port_forwarding', 'Freebox_OS');
 		return parent::getWidgetTemplateCode($_version, $_noCustom);
 	}
 }

@@ -752,7 +752,16 @@ class Free_Refresh
                             }
                             break;
                         case 'binary':
-                            $_value = $data['value'];
+                            if ($Equipement->getConfiguration('info') == 'mouv_sensor' && $cmd->getConfiguration('info') == 'mouv_sensor') {
+                                log::add('Freebox_OS', 'debug', '│──────────> Inversion valeur pour les détecteurs de mouvement pour être compatible Homebridge');
+                                $_value = false;
+                                if ($data['value'] == false) {
+                                    $_value = true;
+                                }
+                            } else {
+                                $_value = $data['value'];
+                            }
+
                             break;
                     }
                     $Equipement->checkAndUpdateCmd($data['ep_id'], $_value);

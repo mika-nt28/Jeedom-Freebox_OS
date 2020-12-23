@@ -98,7 +98,8 @@ class Free_CreateEq
                 Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 // TEST
-                // Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
+                //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
+                //Free_CreateEq::createEq_upload($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -468,11 +469,13 @@ class Free_CreateEq
             $icon_search = 'fas fa-search-plus';
             $icon_wol = 'fas fa-broadcast-tower';
             $icon_dhcp = 'fas fa-network-wired';
+            $icon_redir = 'fas fa-project-diagram';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $icon_search = 'fas fa-search-plus icon_green';
             $icon_wol = 'fas fa-broadcast-tower icon_orange';
             $icon_dhcp = 'fas fa-network-wired icon_blue';
+            $icon_redir = 'fas fa-project-diagram icon_blue';
         };
         $updateWidget = false;
         if ($IsVisible == true) {
@@ -483,7 +486,8 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
-        $network->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -3, '0', true, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#');
+        //$network->AddCommand('Redirections des ports', 'redir', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_redir, 0, 'default', 'default',  -4, '0', true, false, null, true, null, null, null, null, null, 'redir?lan_ip=#lan_ip#&enable_lan=#enable_lan#&src_ip=#src_ip#&ip_proto=#ip_proto#&wan_port_start=#wan_port_start#&wan_port_end=#wan_port_end#&lan_port=#lan_port#&comment=#comment#');
+        $network->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -3, '0', true, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#&type=#type#');
         $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_search, 0, 'default', 'default',  -2, '0', true, false, null, true);
         $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -1, '0', true, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
@@ -801,6 +805,13 @@ class Free_CreateEq
         $Wifi->AddCommand('Liste Mac Blanche', 'listwhite', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_white, 0, 'default', 'default',  $order, '0', null, true, false, true, null, null, null, null);
         $order++;
         $Wifi->AddCommand('Liste MAC Noire', 'listblack', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_black, 0, 'default', 'default',  $order, '0', null, true, false, true, null, null, null, null);
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_upload($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['notificationName']);
+        $Free_API = new Free_API();
+        $Free_API->universal_get('upload', null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 }

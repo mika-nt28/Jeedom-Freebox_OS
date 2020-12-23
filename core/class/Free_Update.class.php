@@ -212,9 +212,34 @@ class Free_Update
                     "mac" => $_options['mac_address'],
                     "ip" => $_options['ip'],
                     "comment" => $_options['comment'],
-                    "hostname" => $_options['name']
                 );
-                $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'dhcp/static_lease/', $_options['function'], $option);
+                if ($_options['function'] != 'device') {
+                    $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'dhcp/static_lease/', $_options['function'], $option);
+                }
+                $option = array(
+                    "id" => 'ether-' . $_options['mac_address'],
+                    "primary_name" => $_options['name'],
+                    'host_type'  => $_options['type']
+                );
+                $Free_API->universal_put(null, 'universal_put', 'ether-' . $_options['mac_address'], null, 'lan/browser/pub', 'PUT', $option);
+                break;
+            case "redir":
+                if ($_options['lan_ip'] == null) {
+                    log::add('Freebox_OS', 'error', 'Adresse IP vide');
+                    break;
+                }
+                $option = null;
+                $option = array(
+                    'enabled' =>  $_options['enable_lan'],
+                    'comment' =>  $_options['comment'],
+                    'lan_port' =>  $_options['lan_port'],
+                    'wan_port_end' =>  $_options['wan_port_end'],
+                    'wan_port_start' =>  $_options['wan_port_start'],
+                    'lan_ip' =>  $_options['lan_ip'],
+                    'ip_proto' => $_options['ip_proto'],
+                    'src_ip' =>  $_options['src_ip']
+                );
+                $Free_API->universal_put(null, 'universal_put', null, null, 'fw/redir', 'POST', $option);
                 break;
         }
     }

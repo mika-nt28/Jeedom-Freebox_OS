@@ -27,7 +27,11 @@ try {
 			break;
 		case 'WakeOnLAN':
 			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
-			ajax::success($Free_API->universal_put(null, 'universal_put', $Mac, null, 'lan/wol/pub/', null, init('password')));
+			$option = array(
+				"mac" => cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00'),
+				"password" => init('password')
+			);
+			ajax::success($Free_API->universal_put(null, 'universal_put', $Mac, null, 'lan/wol/pub/', null, $option));
 			break;
 		case 'get_airmediareceivers':
 			ajax::success($Free_API->airmedia('receivers', null, null));
@@ -47,19 +51,18 @@ try {
 			ajax::success($result);
 			break;
 		case 'SearchTile_group':
+			Free_CreateTil::createTil('Tiles_group');
 			$objects = "";
 			$objects = $objects . '<option value="">Default</option>';
-			foreach ((jeeObject::buildTree(null, false)) as $object) {
-				$decay = $object->getConfiguration('parentNumber');
-				$objects .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $decay) . $object->getName() . '</option>';
+			foreach (jeeObject::all() as $object) {
+				$objects = $objects . '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
 			}
 			$objects = $objects . '</select>';
 			$result = array(
-				"pieces" => Free_CreateTil::createTil('Tiles_group'),
+				"piece" => Free_CreateTil::createTil('Tiles_group'),
 				"objects" => $objects,
 				"config" =>  config::bykey('FREEBOX_PIECE', 'Freebox_OS', "")
 			);
-
 			ajax::success($result);
 			break;
 		case 'SearchArchi':

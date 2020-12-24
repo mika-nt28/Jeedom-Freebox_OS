@@ -316,14 +316,14 @@ class Freebox_OS extends eqLogic
 		if ($_home_config_eq != null) { // Compatibilité Homebridge
 			log::add('Freebox_OS', 'debug', '│ Paramétrage : ' . $_home_config_eq);
 			if ($_home_config_eq == 'SetModeAbsent') {
-				$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $VerifName);
+				$this->setConfiguration($_home_config_eq, $Command->getId() . "|" . $Name);
 				$this->setConfiguration('SetModePresent', "NOT");
 				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : SetModePresent => NOT');
-				$this->setConfiguration('ModeAbsent', $VerifName);
+				$this->setConfiguration('ModeAbsent', $Name);
 				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'SetModeNuit') {
-				$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $VerifName);
-				$this->setConfiguration('ModeNuit', $VerifName);
+				$this->setConfiguration($_home_config_eq, $Command->getId() . "|" . $Name);
+				$this->setConfiguration('ModeNuit', $Name);
 				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
@@ -343,20 +343,20 @@ class Freebox_OS extends eqLogic
 		}
 
 		if ($repeatevent == true && $Type == 'info') {
-			$Command->setconfiguration('repeatEventManagement', 'never');
+			$Command->setConfiguration('repeatEventManagement', 'never');
 			log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
 		}
 		if ($valuemin != 'default') {
-			$Command->setconfiguration('minValue', $valuemin);
+			$Command->setConfiguration('minValue', $valuemin);
 		}
 		if ($valuemax != 'default') {
-			$Command->setconfiguration('maxValue', $valuemax);
+			$Command->setConfiguration('maxValue', $valuemax);
 		}
 		if (is_object($link_I) && $Type == 'action') {
 			$Command->setValue($link_I->getId());
 		}
 		if ($link_logicalId != 'default') {
-			$Command->setconfiguration('logicalId', $link_logicalId);
+			$Command->setConfiguration('logicalId', $link_logicalId);
 		}
 
 		// Forçage pour mettre à jour l'affichage // Option en cas de Update Plugin
@@ -450,12 +450,12 @@ class Freebox_OS extends eqLogic
 						log::add('Freebox_OS', 'debug', '│──────────> Mode : ' . $_home_config_eq . 'Nom de la commande ' . $Command->getName());
 						$this->setConfiguration($_home_mode, $Command->getName());
 						$this->save(true);
-						$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $Command->getName());
+						$this->setConfiguration($_home_config_eq, $Command->getId() . "|" . $Command->getName());
 						$this->save(true);
 						if ($_home_config_eq == 'SetModeAbsent') {
 							$this->setConfiguration('SetModePresent', "NOT");
 						} else {
-							$this->setconfiguration($_home_config_eq, $Command->getId() . "|" . $Command->getName());
+							$this->setConfiguration($_home_config_eq, $Command->getId() . "|" . $Command->getName());
 						}
 
 						$_home_config_eq = null;

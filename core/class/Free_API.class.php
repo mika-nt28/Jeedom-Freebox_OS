@@ -395,6 +395,7 @@ class Free_API
                 case 'disk':
                 case 'network_ping':
                 case 'network':
+                case 'notification':
                 case 'wifi':
                     return $result;
                     break;
@@ -566,7 +567,7 @@ class Free_API
                 } elseif ($id != 'refresh') {
                     $id = null;
                 }
-                log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
+                //log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
                 $config = 'api/v8/home/endpoints/';
                 $config_commande = 'enabled';
                 $config_log = 'Mise à jour de : ';

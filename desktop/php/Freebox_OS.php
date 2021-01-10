@@ -318,7 +318,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
 								</label>
 								<div class="col-sm-3">
-									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type" style="font-size : 1em"></span>
+									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type" style="font-size : 1em">
+									</span> <span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type2" style="font-size : 1em">
+									</span>
 								</div>
 							</div>
 							<div class="form-group">

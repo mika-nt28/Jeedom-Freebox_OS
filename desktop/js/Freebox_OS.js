@@ -32,8 +32,10 @@ $('.cmdAction[data-action=add]').on('click', function() {
 
 $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _options) {
 	var camera = jQuery.parseJSON(_options);
-	bootbox.confirm("{{Une caméra Freebox a été détectée (<b>" + camera.name + "</b>)<br>Voulez-vous l’ajouter au Plugin Caméra ?}}", function (result) {
-		if (result) {
+
+
+	//bootbox.confirm("{{Une caméra Freebox a été détectée (<b>" + camera.name + "</b>)<br>Voulez-vous l’ajouter au Plugin Caméra ?}}", function (result) {
+		//if (result) {
 			$.ajax({
 				type: 'POST',
 				url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
@@ -62,8 +64,8 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 					window.location.reload();
 				}
 			});
-		}
-	});
+		//}
+	//});
 });
 
 $('.authentification').on('click', function () {

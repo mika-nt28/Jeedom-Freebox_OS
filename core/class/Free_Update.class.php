@@ -394,11 +394,11 @@ class Free_Update
                 break;
             default:
                 $parametre['value_type'] = 'bool';
-                if ($logicalId_conf >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
+                if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
 
                     log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
 
-                    if ($logicalId == 'PB_On') {
+                    if (stripos($logicalId, 'PB_On')  == 'PB_On') {
                         $parametre['value'] = true;
                     } else {
                         $parametre['value'] = false;

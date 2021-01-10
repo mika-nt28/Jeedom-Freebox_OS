@@ -753,7 +753,7 @@ class Free_Refresh
                             break;
                         case 'binary':
                             if ($Equipement->getConfiguration('info') == 'mouv_sensor' && $cmd->getConfiguration('info') == 'mouv_sensor') {
-                                log::add('Freebox_OS', 'debug', '│──────────> Inversion valeur pour les détecteurs de mouvement pour être compatible Homebridge');
+                                log::add('Freebox_OS', 'debug', '│──────────> Inversion valeur pour les détecteurs de mouvement pour être compatible Homebridge ');
                                 $_value = false;
                                 if ($data['value'] == false) {
                                     $_value = true;
@@ -768,9 +768,38 @@ class Free_Refresh
                 }
             }
         }
+        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type') == 'alarm') {
+            Free_Refresh::refresh_default_nodes($Equipement, $Free_API);
+        }
         //log::add('Freebox_OS', 'debug', '└─────────');
     }
-
+    private static function refresh_default_nodes($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
+        foreach ($result as $_eq) {
+            if ($_eq['id'] == $Equipement->getLogicalId()) {
+                $_eq_data = $_eq['show_endpoints'];
+                foreach ($_eq_data as $Cmd) {
+                    foreach ($Equipement->getCmd('info') as $Command) {
+                        if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
+                            if ($Command->getConfiguration('info') == 'mouv_sensor') {
+                                $_value = false;
+                                if ($Cmd['value'] == false) {
+                                    $_value = true;
+                                }
+                            } else {
+                                $_value = $Cmd['value'];
+                            }
+                            //log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $Cmd['value'] . ' -- Type Info : ' . $Command->getConfiguration('info'));
+                            $Equipement->checkAndUpdateCmd($Cmd['id'], $_value);
+                            break;
+                        }
+                    }
+                }
+                break;
+            }
+        }
+    }
     private static function refresh_player($Equipement, $Free_API)
     {
         if ($Equipement->getConfiguration('player') == 'OK') {

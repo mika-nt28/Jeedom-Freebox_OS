@@ -206,7 +206,6 @@ class Free_CreateTil
         $boucle_num = 1; // 1 = Tiles - 2 = Node 
         while ($boucle_num <= 2) {
             if ($boucle_num == 2) {
-                //log::add('Freebox_OS', 'debug', '>> ================ >> TYPE DE CREATION : ' . 'nodes');
                 $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
                 $_eq_type_home = 'nodes';
             } else if ($boucle_num == 1) {
@@ -278,10 +277,12 @@ class Free_CreateTil
                         "'" => ' '
                     );
                     $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);
-                    $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, $room);
-                    /* } elseif ($_eq_type == 'camera' && $boucle_num == 2) {
-                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, $room);
-                    }*/
+                    if ($_eq_type != 'camera' && $boucle_num != 2) {
+                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default');
+                    } else {
+                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default');
+                    }
+
                     $_eqLogic = null;
                     $Setting_mouv_sensor = null;
                     foreach ($_eq_data as $Command) {

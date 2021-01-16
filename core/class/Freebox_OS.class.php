@@ -689,18 +689,23 @@ class Freebox_OSCmd extends cmd
 		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 	}
 
-	public function getWidgetTemplateCode($_version = 'dashboard')
-	{
-		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version);
+    public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '') {
+        $data = null;
+        if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version, $_clean, $_widgetName);
 		list($command, $arguments) = explode('?', $this->getConfiguration('request'), 2);
 		if ($command == 'wol')
-			return getTemplate('core', 'scenario', 'cmd.WakeonLAN', 'Freebox_OS');
+            $data = getTemplate('core', 'scenario', 'cmd.WakeonLAN', 'Freebox_OS');
 		if ($command == 'add_del_mac')
-			return getTemplate('core', 'scenario', 'cmd.mac_filter', 'Freebox_OS');
+            $data = getTemplate('core', 'scenario', 'cmd.mac_filter', 'Freebox_OS');
 		if ($command == 'add_del_dhcp')
-			return getTemplate('core', 'scenario', 'cmd.dhcp', 'Freebox_OS');
+            $data = getTemplate('core', 'scenario', 'cmd.dhcp', 'Freebox_OS');
 		if ($command == 'redir')
-			return getTemplate('core', 'scenario', 'cmd.port_forwarding', 'Freebox_OS');
-		return parent::getWidgetTemplateCode($_version);
+            $data = getTemplate('core', 'scenario', 'cmd.port_forwarding', 'Freebox_OS');
+        if (!is_null($data)) {
+            if (version_compare(jeedom::version(),'4.2.0','>=')) {
+                if(!is_array($data)) return array('template' => $data, 'isCoreWidget' => false);
+            } else return $data;
+        }
+        return parent::getWidgetTemplateCode($_version, $_clean, $_widgetName);
 	}
 }

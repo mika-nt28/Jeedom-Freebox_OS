@@ -689,9 +689,9 @@ class Freebox_OSCmd extends cmd
 		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
 	}
 
-	public function getWidgetTemplateCode($_version = 'dashboard', $_noCustom = false)
+	public function getWidgetTemplateCode($_version = 'dashboard')
 	{
-		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version, $_noCustom);
+		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version);
 		list($command, $arguments) = explode('?', $this->getConfiguration('request'), 2);
 		if ($command == 'wol')
 			return getTemplate('core', 'scenario', 'cmd.WakeonLAN', 'Freebox_OS');
@@ -701,6 +701,6 @@ class Freebox_OSCmd extends cmd
 			return getTemplate('core', 'scenario', 'cmd.dhcp', 'Freebox_OS');
 		if ($command == 'redir')
 			return getTemplate('core', 'scenario', 'cmd.port_forwarding', 'Freebox_OS');
-		return parent::getWidgetTemplateCode($_version, $_noCustom);
+		return parent::getWidgetTemplateCode($_version);
 	}
 }

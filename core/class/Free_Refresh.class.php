@@ -789,11 +789,9 @@ class Free_Refresh
                             $_value = true;
                         }
                     } else {
-                        if ($Cmd['name'] == 'battery' && $Equipement->getConfiguration('type2') != 'kfb') {
-                            $_value = $Cmd['value'] * 10;
+                        $_value = $Cmd['value'];
+                        if ($Cmd['name'] == 'battery') {
                             $Equipement->batteryStatus($_value);
-                        } else {
-                            $_value = $Cmd['value'];
                         }
                     }
                     $Equipement->checkAndUpdateCmd($Cmd['id'], $_value);

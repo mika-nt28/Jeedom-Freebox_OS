@@ -424,7 +424,7 @@ class Free_CreateTil
                                             }
 
                                             if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
-                                                if ($setting['Search'] != 'pir_battery_r_nodes') {
+                                                if ($setting['Search'] != 'pir_battery_r_nodes' && $setting['Search'] != 'kfb_battery_r_nodes') {
                                                     $order = $setting['Order'];
                                                     $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
                                                     $order++;
@@ -476,6 +476,7 @@ class Free_CreateTil
                                                 } else {
                                                     $_eq_type_battery =  $_eq_type;
                                                 }
+
                                                 $battery = Free_CreateTil::Battery_type($_eq_type_battery);
                                                 if ($_eq_type == 'alarm_control') {
                                                     $Tile->batteryStatus($Command['value']);
@@ -781,9 +782,9 @@ class Free_CreateTil
                 $IsHistorized = 1;
                 break;
             case 'alarm_control_battery_r_tiles':
-            case 'alarm_remote_battery_r_tiles':
             case 'pir_battery_r_nodes':
             case 'alarm_sensor_battery_r_tiles':
+            case 'kfb_battery_r_nodes':
                 $Label_I = 'Batterie';
                 $Generic_type_I = 'BATTERY';
                 $Icon_I = 'fas fa-battery-full';
@@ -837,7 +838,6 @@ class Free_CreateTil
                 $ForceLineB = 1;
                 $TypeCMD = 'PB_SP';
                 break;
-
             case 'alarm_alarm_timeout1_rw_nodes':
             case 'alarm_alarm_timeout2_rw_nodes':
             case 'alarm_alarm_timeout3_rw_nodes':
@@ -881,7 +881,7 @@ class Free_CreateTil
             case 'alarm_alarm_sound_w_nodes': // A TRAITER
             case 'alarm_alarm_volume_w_nodes': // A TRAITER
             case 'dws_battery_r_nodes':
-            case 'kfb_battery_r_nodes':
+            case 'alarm_remote_battery_r_tiles':
             case 'alarm_sensor_battery_mouv_sensor_r_tiles':
             case 'kfb__r_nodes':
             case 'kfb_enable_w_nodes':

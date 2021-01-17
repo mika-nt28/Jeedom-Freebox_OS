@@ -772,10 +772,9 @@ class Free_Refresh
                 }
             }
         }
-        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type') == 'alarm') {
+        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb') {
             Free_Refresh::refresh_default_nodes($Equipement, $Free_API);
         }
-        //log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function refresh_default_nodes($Equipement, $Free_API)
     {
@@ -790,7 +789,7 @@ class Free_Refresh
                             $_value = true;
                         }
                     } else {
-                        if ($Cmd['name'] == 'battery') {
+                        if ($Cmd['name'] == 'battery' && $Equipement->getConfiguration('type2') != 'kfb') {
                             $_value = $Cmd['value'] * 10;
                             $Equipement->batteryStatus($_value);
                         } else {

@@ -185,7 +185,7 @@ class Free_Template
 			'template' => 'tmplmultistate',
 			'replace' => array('#_time_widget_#' => '1'),
 			'test' => array(
-				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_green icon jeedom-lock-ouvert\'></i>'),
+				array('operation' => "#value# == 0", 'state_light' => '<i class=\'icon_green icon jeedom-lock-ouvert\'></i>'),
 				array('operation' => "#value# == 2", 'state_light' => '<i class=\'icon_green icon jeedom-lock-ouvert\'></i>'),
 				array('operation' => "#value# == 3", 'state_light' => '<i class=\'icon_red icon nature-night2\'></i>'),
 				array('operation' => "#value# == 1", 'state_light' => '<i class=\'icon_red icon jeedom-lock-ferme\'></i>')

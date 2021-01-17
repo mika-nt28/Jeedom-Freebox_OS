@@ -432,8 +432,15 @@ class Free_CreateTil
                                                     $Name = 'Batterie';
                                                     $_cmd_search = cmd::byEqLogicIdCmdName($Tile->getId(), __($Name, __FILE__));
                                                     if (is_object($_cmd_search)) {
+                                                        if ($_eq_type == "alarm_sensor" && $Command['label'] == 'Détection') {
+                                                            $_eq_type_battery = 'alarm_sensor_mouv_sensor';
+                                                        } else {
+                                                            $_eq_type_battery =  $setting['Search'];
+                                                        }
+                                                        $battery = Free_CreateTil::Battery_type($_eq_type_battery);
                                                         $_cmd_search->setLogicalId($_cmd_ep_id);
                                                         $_cmd_search->setConfiguration('TypeNode', $_eq_type_home);
+                                                        $_cmd_search->setConfiguration("battery_type", $battery);
                                                         $_cmd_search->save();
                                                     } else {
                                                         $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
@@ -1230,6 +1237,8 @@ class Free_CreateTil
                 $Battery = '2 x CR123A';
                 break;
             case 'alarm_remote':
+            case 'kfb_battery_r_nodes':
+            case 'kfb':
             case 'alarm_sensor':
                 $Battery = '1 x CR2450';
                 break;

@@ -671,7 +671,7 @@ class Free_Refresh
                                     }
                                 }
                             }
-                            if ($data['name'] == 'battery' or $data['name'] == 'battery_warning') {
+                            if ($data['name'] == 'battery' || $data['name'] == 'battery_warning') {
                                 $_value = $data['value'];
                                 $Equipement->batteryStatus($_value);
                             }

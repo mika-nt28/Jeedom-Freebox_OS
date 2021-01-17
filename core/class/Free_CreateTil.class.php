@@ -1192,6 +1192,14 @@ class Free_CreateTil
                 $CreateCMD = 'NO SETTING';
                 break;
         }
+        if (version_compare(jeedom::version(), "4.1", "<")) { {
+            if ($IconON == 'fas fa-toggle-on icon_green') {
+                $IconON = 'default';
+            }
+            if ($IconOFF == 'fas fa-toggle-on icon_red') {
+                $IconOFF = 'default';
+            }
+        }
         $Setting = array(
             "CreateCMD" => $CreateCMD,
             "Eq_type_home" =>  $_Eq_type_home,

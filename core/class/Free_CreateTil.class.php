@@ -472,7 +472,7 @@ class Free_CreateTil
                                                 }
                                             }
                                             if ($Command['ui']['access'] === 'w') {
-                                                $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], null, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, null, null, $_eq_type_home);
+                                                $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore_I'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, null, null, $_eq_type_home);
                                             }
 
                                             $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);
@@ -782,7 +782,7 @@ class Free_CreateTil
                 $Order = 64;
                 break;
             case 'alarm_remote_pushed_remote_r_tiles':
-                $Templatecore = 'Freebox_OS::Télécommande Freebox';
+                $Templatecore_I = 'Freebox_OS::Télécommande Freebox';
                 $_Min = '0';
                 $_Max  = 4;
                 $IsVisible_I = 1;

@@ -425,7 +425,7 @@ class Free_CreateTil
 
                                             if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
                                                 if ($setting['Search'] != 'pir_battery_r_nodes') {
-                                                    $order = $setting['Order'];  // ATRAITER
+                                                    $order = $setting['Order'];
                                                     $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
                                                     $order++;
                                                 } else {
@@ -433,6 +433,7 @@ class Free_CreateTil
                                                     $_cmd_search = cmd::byEqLogicIdCmdName($Tile->getId(), __($Name, __FILE__));
                                                     if (is_object($_cmd_search)) {
                                                         $_cmd_search->setLogicalId($_cmd_ep_id);
+                                                        $_cmd_search->setConfiguration('TypeNode', $_eq_type_home);
                                                         $_cmd_search->save();
                                                     } else {
                                                         $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
@@ -440,11 +441,9 @@ class Free_CreateTil
                                                 }
                                                 if ($Command['ui']['access'] === 'rw') {
                                                     $Action =  $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $Templatecore, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $order, $setting['IsHistorized'], false, false, null, true, null, null, null, null, null, null, $_eq_type_home);
-                                                    //$Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $Templatecore, $_unit, $setting['Generic_type'], $setting['IsVisible'], $Link_I_light, $link_logicalId, 0, $setting['Icon'], 0, $setting['Min'], $setting['Max'], $setting['Order'], $setting['IsHistorized'], false, false, null, true, null, null, null, null, null, null, $_eq_type_home);
                                                     Free_CreateTil::Create_linK($Info, $Action);
                                                 }
 
-                                                //Name : hs -- Type (eq) : light -- Action (eq): color_picker -- Index : 2 -- Value Type : int -- Access : rw
                                                 if (($name == "luminosity" || ($_eq_action == "color_picker" || $_eq_action == "heat_picker") && $name  == 'v')) {
                                                     $_cmd = $Tile->getCmd("info", 0);
                                                     $Link_I_light = $Info;

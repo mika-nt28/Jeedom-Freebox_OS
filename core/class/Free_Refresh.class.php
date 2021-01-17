@@ -671,6 +671,10 @@ class Free_Refresh
                                     }
                                 }
                             }
+                            if ($data['name'] == 'battery' or $data['name'] == 'battery_warning') {
+                                $_value = $data['value'];
+                                $Equipement->batteryStatus($_value);
+                            }
                             log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $data['value'] . ' -- valeur Inverser : ' . $cmd->getConfiguration('invertnumeric'));
                             break;
                         case 'string':
@@ -768,35 +772,31 @@ class Free_Refresh
                 }
             }
         }
-        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type') == 'alarm') {
+        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb') {
             Free_Refresh::refresh_default_nodes($Equipement, $Free_API);
         }
-        //log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function refresh_default_nodes($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
-        foreach ($result as $_eq) {
-            if ($_eq['id'] == $Equipement->getLogicalId()) {
-                $_eq_data = $_eq['show_endpoints'];
-                foreach ($_eq_data as $Cmd) {
-                    foreach ($Equipement->getCmd('info') as $Command) {
-                        if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
-                            if ($Command->getConfiguration('info') == 'mouv_sensor') {
-                                $_value = false;
-                                if ($Cmd['value'] == false) {
-                                    $_value = true;
-                                }
-                            } else {
-                                $_value = $Cmd['value'];
-                            }
-                            //log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $Cmd['value'] . ' -- Type Info : ' . $Command->getConfiguration('info'));
-                            $Equipement->checkAndUpdateCmd($Cmd['id'], $_value);
-                            break;
+        $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $Equipement->getLogicalId());
+        $_eq_data = $result['show_endpoints'];
+        foreach ($_eq_data as $Cmd) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
+                    if ($Command->getConfiguration('info') == 'mouv_sensor') {
+                        $_value = false;
+                        if ($Cmd['value'] == false) {
+                            $_value = true;
+                        }
+                    } else {
+                        $_value = $Cmd['value'];
+                        if ($Cmd['name'] == 'battery') {
+                            $Equipement->batteryStatus($_value);
                         }
                     }
+                    $Equipement->checkAndUpdateCmd($Cmd['id'], $_value);
+                    break;
                 }
-                break;
             }
         }
     }

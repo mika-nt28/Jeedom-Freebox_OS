@@ -424,8 +424,8 @@ class Free_CreateTil
                                             }
 
                                             if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
-                                                if ($setting['Search'] != 'pir_battery_r_nodes') {
-                                                    $order = $setting['Order'];  // ATRAITER
+                                                if ($setting['Search'] != 'pir_battery_r_nodes' && $setting['Search'] != 'kfb_battery_r_nodes') {
+                                                    $order = $setting['Order'];
                                                     $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
                                                     $order++;
                                                 } else {
@@ -433,6 +433,7 @@ class Free_CreateTil
                                                     $_cmd_search = cmd::byEqLogicIdCmdName($Tile->getId(), __($Name, __FILE__));
                                                     if (is_object($_cmd_search)) {
                                                         $_cmd_search->setLogicalId($_cmd_ep_id);
+                                                        $_cmd_search->setConfiguration('TypeNode', $_eq_type_home);
                                                         $_cmd_search->save();
                                                     } else {
                                                         $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
@@ -440,11 +441,9 @@ class Free_CreateTil
                                                 }
                                                 if ($Command['ui']['access'] === 'rw') {
                                                     $Action =  $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $Templatecore, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $order, $setting['IsHistorized'], false, false, null, true, null, null, null, null, null, null, $_eq_type_home);
-                                                    //$Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $Templatecore, $_unit, $setting['Generic_type'], $setting['IsVisible'], $Link_I_light, $link_logicalId, 0, $setting['Icon'], 0, $setting['Min'], $setting['Max'], $setting['Order'], $setting['IsHistorized'], false, false, null, true, null, null, null, null, null, null, $_eq_type_home);
                                                     Free_CreateTil::Create_linK($Info, $Action);
                                                 }
 
-                                                //Name : hs -- Type (eq) : light -- Action (eq): color_picker -- Index : 2 -- Value Type : int -- Access : rw
                                                 if (($name == "luminosity" || ($_eq_action == "color_picker" || $_eq_action == "heat_picker") && $name  == 'v')) {
                                                     $_cmd = $Tile->getCmd("info", 0);
                                                     $Link_I_light = $Info;
@@ -477,6 +476,7 @@ class Free_CreateTil
                                                 } else {
                                                     $_eq_type_battery =  $_eq_type;
                                                 }
+
                                                 $battery = Free_CreateTil::Battery_type($_eq_type_battery);
                                                 if ($_eq_type == 'alarm_control') {
                                                     $Tile->batteryStatus($Command['value']);
@@ -782,9 +782,9 @@ class Free_CreateTil
                 $IsHistorized = 1;
                 break;
             case 'alarm_control_battery_r_tiles':
-            case 'alarm_remote_battery_r_tiles':
             case 'pir_battery_r_nodes':
             case 'alarm_sensor_battery_r_tiles':
+            case 'kfb_battery_r_nodes':
                 $Label_I = 'Batterie';
                 $Generic_type_I = 'BATTERY';
                 $Icon_I = 'fas fa-battery-full';
@@ -838,7 +838,6 @@ class Free_CreateTil
                 $ForceLineB = 1;
                 $TypeCMD = 'PB_SP';
                 break;
-
             case 'alarm_alarm_timeout1_rw_nodes':
             case 'alarm_alarm_timeout2_rw_nodes':
             case 'alarm_alarm_timeout3_rw_nodes':
@@ -882,7 +881,7 @@ class Free_CreateTil
             case 'alarm_alarm_sound_w_nodes': // A TRAITER
             case 'alarm_alarm_volume_w_nodes': // A TRAITER
             case 'dws_battery_r_nodes':
-            case 'kfb_battery_r_nodes':
+            case 'alarm_remote_battery_r_tiles':
             case 'alarm_sensor_battery_mouv_sensor_r_tiles':
             case 'kfb__r_nodes':
             case 'kfb_enable_w_nodes':

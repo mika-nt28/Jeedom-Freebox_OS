@@ -1192,47 +1192,43 @@ class Free_CreateTil
                 $CreateCMD = 'NO SETTING';
                 break;
         }
-        if (version_compare(jeedom::version(), "4.1", "<")) { {
-                if ($IconON == 'fas fa-toggle-on icon_green') {
-                    $IconON = 'default';
-                }
-                if ($IconOFF == 'fas fa-toggle-on icon_red') {
-                    $IconOFF = 'default';
-                }
+
+        if (version_compare(jeedom::version(), "4.1", "<")) {
+            if ($IconON == 'fas fa-toggle-on icon_green') {
+                $IconON = 'default';
             }
-            $Setting = array(
-                "CreateCMD" => $CreateCMD,
-                "Eq_type_home" =>  $_Eq_type_home,
-                "Generic_type" => $Generic_type,
-                "Generic_typeON" => $Generic_typeON,
-                "Generic_typeOFF" => $Generic_typeOFF,
-                "Home_config_eq" => $_Home_config_eq,
-                "Icon" => $Icon,
-                "IconON" => $IconON,
-                "IconOFF" => $IconOFF,
-                "Order" => $Order,
-                "Order_A" => $Order_A,
-                "InvertBinary" => $InvertBinary,
-                "IsVisible" => $IsVisible,
-                "IsVisiblePB" => $IsVisible_PB,
-                "Label" => $Label_ETAT,
-                "LabelON" => $LabelON,
-                "LabelOFF" => $LabelOFF,
-                "LogicalIdON" => $LogicalIdON,
-                "LogicalIdOFF" => $LogicalIdOFF,
-                "TypeCMD" => $TypeCMD_BOOL,
-                "Templatecore" => $Templatecore,
-                "TemplatecoreON" => $TemplatecoreON,
-                "TemplatecoreOFF" => $TemplatecoreOFF,
-                "Search" => $Search
-            );
-            if ($CreateCMD === true) {
-                $Value = "";
-            } else {
-                $Value = ' ==> ' . $CreateCMD;
+            if ($IconOFF == 'fas fa-toggle-on icon_red') {
+                $IconOFF = 'default';
             }
-            return $Setting;
         }
+        $Setting = array(
+            "CreateCMD" => $CreateCMD,
+            "Eq_type_home" =>  $_Eq_type_home,
+            "Generic_type" => $Generic_type,
+            "Generic_typeON" => $Generic_typeON,
+            "Generic_typeOFF" => $Generic_typeOFF,
+            "Home_config_eq" => $_Home_config_eq,
+            "Icon" => $Icon,
+            "IconON" => $IconON,
+            "IconOFF" => $IconOFF,
+            "Order" => $Order,
+            "Order_A" => $Order_A,
+            "InvertBinary" => $InvertBinary,
+            "IsVisible" => $IsVisible,
+            "IsVisiblePB" => $IsVisible_PB,
+            "Label" => $Label_ETAT,
+            "LabelON" => $LabelON,
+            "LabelOFF" => $LabelOFF,
+            "LogicalIdON" => $LogicalIdON,
+            "LogicalIdOFF" => $LogicalIdOFF,
+            "TypeCMD" => $TypeCMD_BOOL,
+            "Templatecore" => $Templatecore,
+            "TemplatecoreON" => $TemplatecoreON,
+            "TemplatecoreOFF" => $TemplatecoreOFF,
+            "Search" => $Search
+        );
+
+        return $Setting;
     }
     private static function  Battery_type($Type_eq)
     {

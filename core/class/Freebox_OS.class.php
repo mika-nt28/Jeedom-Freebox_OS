@@ -565,13 +565,15 @@ class Freebox_OS extends eqLogic
 			'phoneName' => 'Téléphone',
 			'systemID' => 'system',
 			'systemName' => 'Système',
+			'VMID' => 'VM',
+			'VMName' => 'VM',
 			'wifiID' => 'wifi',
 			'wifiName' => 'Wifi',
 			'wifiguestID' => 'wifiguest',
 			'wifiguestName' => 'Wifi Invité',
 			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
-			'wifiName' => 'Wifi WPS',
+			'wifiWPSName' => 'Wifi WPS',
 			'wifiAPID' => 'wifiAP',
 			'wifiAPName' => 'Wifi Access Points'
 		);

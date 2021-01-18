@@ -571,7 +571,7 @@ class Freebox_OS extends eqLogic
 			'wifiguestName' => 'Wifi Invité',
 			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
-			'wifiName' => 'Wifi WPS',
+			'wifiWPSName' => 'Wifi WPS',
 			'wifiAPID' => 'wifiAP',
 			'wifiAPName' => 'Wifi Access Points'
 		);

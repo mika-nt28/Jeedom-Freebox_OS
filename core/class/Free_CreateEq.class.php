@@ -100,6 +100,7 @@ class Free_CreateEq
                 // TEST
                 //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 //Free_CreateEq::createEq_upload($logicalinfo, $templatecore_V4);
+                // Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -668,6 +669,13 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
+    private static function createEq_VM($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Recherche des VM');
+        $Free_API = new Free_API();
+        $Free_API->universal_get('vm', null, null, 'null');
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
 
     private static function createEq_wifi($logicalinfo, $templatecore_V4)
     {
@@ -763,7 +771,7 @@ class Free_CreateEq
         $result = $Free_API->universal_get('wifi', null, null, 'bss');
 
         if ($result != false) {
-            foreach ($result as $wifibss) {
+            foreach ($result['result'] as $wifibss) {
                 if ($wifibss['config']['wps_enabled'] != true) continue;
                 $Wifi->AddCommand('On Session WPS ' . $wifibss['shared_bss_params']['ssid'], $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
                 if ($wifibss['config']['use_default_config'] == true) {

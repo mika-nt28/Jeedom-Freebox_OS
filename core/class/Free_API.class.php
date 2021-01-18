@@ -357,7 +357,7 @@ class Free_API
                 $config = 'api/v8/home/tileset' . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
-            case 'vm':
+            case 'VM':
                 $config = 'api/v8/vm';
                 break;
             case 'wifi':

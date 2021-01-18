@@ -100,7 +100,7 @@ class Free_CreateEq
                 // TEST
                 //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 //Free_CreateEq::createEq_upload($logicalinfo, $templatecore_V4);
-                // Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4);
+                //Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -671,9 +671,9 @@ class Free_CreateEq
     }
     private static function createEq_VM($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Recherche des VM');
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['VM']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('vm', null, null, 'null');
+        $result = $Free_API->universal_get('VM', null, null, 'null');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

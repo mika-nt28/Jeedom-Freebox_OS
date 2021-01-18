@@ -565,6 +565,8 @@ class Freebox_OS extends eqLogic
 			'phoneName' => 'Téléphone',
 			'systemID' => 'system',
 			'systemName' => 'Système',
+			'VMID' => 'VM',
+			'VMName' => 'VM',
 			'wifiID' => 'wifi',
 			'wifiName' => 'Wifi',
 			'wifiguestID' => 'wifiguest',

@@ -22,7 +22,7 @@ class Free_API
         $this->app_token = config::byKey('FREEBOX_SERVER_APP_TOKEN', 'Freebox_OS');
     }
 
-    public function track_id()
+    public function track_id() //Doit correspondre a la donction "auth" de freboxsession.js homebridge freebox
     {
         try {
             $http = new com_http($this->serveur . '/api/v8/login/authorize/');
@@ -77,7 +77,7 @@ class Free_API
         }
     }
 
-    public function getFreeboxOpenSession()
+    public function getFreeboxOpenSession() //Doit correspondre a la donction session de freboxsession.js homebridge freebox
     {
         try {
             $challenge = cache::byKey('Freebox_OS::Challenge');
@@ -341,7 +341,7 @@ class Free_API
             case 'network_ping':
                 $config = 'api/v8/lan/' . $update_type;
                 break;
-            case 'netshare':
+            case 'universalAPI':
                 $config = 'api/v8/' . $update_type;
                 break;
             case 'network_ID':
@@ -357,6 +357,9 @@ class Free_API
                 $config = 'api/v8/home/tileset' . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
+            case 'VM':
+                $config = 'api/v8/vm';
+                break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';
@@ -364,6 +367,11 @@ class Free_API
             case 'PortForwarding':
                 $config = '/api/v8/fw/redir/';
                 $config_log = 'Redirection de port';
+                break;
+            case 'upload':
+                $config = 'api/v8/ws/';
+                $config_log = 'Upload Progress tracking API';
+                break;
         }
 
         $result = $this->fetch('/' . $config, $Parameter, $fonction);
@@ -377,19 +385,20 @@ class Free_API
             $value = 0;
             switch ($update) {
                 case 'connexion':
-                    if ($update_type == 'lte/config' && $boucle == 4) {
+                    /* if ($update_type == 'lte/config' && $boucle == 4) {
                         if ($result['result']['enabled']) {
                             $value = 1;
                         }
                         log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
                         return $value;
-                    } else {
-                        return $result['result'];
-                    }
+                    } else {*/
+                    return $result['result'];
+                    //}
                     break;
                 case 'disk':
                 case 'network_ping':
                 case 'network':
+                case 'notification':
                 case 'wifi':
                     return $result;
                     break;
@@ -464,7 +473,7 @@ class Free_API
                 $config = 'api/v8/lcd/config';
                 $config_commande = 'hide_wifi_key';
                 break;
-            case 'netshare':
+            case 'universalAPI':
                 $config = 'api/v8/' . $id;
                 $config_commande = $_options;
                 break;
@@ -514,10 +523,14 @@ class Free_API
                 $config = 'api/v8/system/reboot';
                 $fonction = "POST";
                 break;
-            case 'WakeonLAN':
-                $config = 'api/v8/lan/wol/pub/';
-                $fonction = "POST";
-                $config_log = 'Mise à jour de : WakeOnLAN';
+            case 'universal_put':
+                if ($_status_cmd == "DELETE" || $_status_cmd == "PUT" || $_status_cmd == "device") {
+                    $config = 'api/v8/' . $_options . '/' . $id;
+                    $fonction = $_status_cmd;
+                } else {
+                    $config = 'api/v8/' . $_options;
+                    $fonction = "POST";
+                }
                 break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $_options;
@@ -557,7 +570,7 @@ class Free_API
                 } elseif ($id != 'refresh') {
                     $id = null;
                 }
-                log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
+                //log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
                 $config = 'api/v8/home/endpoints/';
                 $config_commande = 'enabled';
                 $config_log = 'Mise à jour de : ';
@@ -570,8 +583,8 @@ class Free_API
         }
         if ($update == 'parental' || $update == 'donwload') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
-        } else if ($update == 'WakeonLAN') {
-            $return = $this->fetch('/' . $config, array("mac" => $id, "password" => $_options_2), $fonction);
+        } else if ($update == 'universal_put') {
+            $return = $this->fetch('/' . $config,  $_options_2, $fonction);
             return $return['success'];
         } else if ($update == 'set_tiles') {
             $return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");

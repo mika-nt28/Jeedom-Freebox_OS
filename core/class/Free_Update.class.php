@@ -159,28 +159,28 @@ class Free_Update
     {
         switch ($logicalId) {
             case "FTP_enabledOn":
-                $Free_API->universal_put(true, 'netshare', 'ftp/config', null, 'enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', 'ftp/config', null, 'enabled', null);
                 break;
             case "FTP_enabledOff":
-                $Free_API->universal_put(false, 'netshare', 'ftp/config', null, 'enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', 'ftp/config', null, 'enabled', null);
                 break;
             case "file_share_enabledOn":
-                $Free_API->universal_put(true, 'netshare', 'netshare/samba', null, 'file_share_enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'file_share_enabled', null);
                 break;
             case "file_share_enabledOff":
-                $Free_API->universal_put(false, 'netshare', 'netshare/samba', null, 'file_share_enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'file_share_enabled', null);
                 break;
             case "mac_share_enabledOn":
-                $Free_API->universal_put(true, 'netshare', 'netshare/afp', null, 'enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', 'netshare/afp', null, 'enabled', null);
                 break;
             case "mac_share_enabledOff":
-                $Free_API->universal_put(false, 'netshare', 'netshare/afp', null, 'enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', 'netshare/afp', null, 'enabled', null);
                 break;
             case "print_share_enabledOn":
-                $Free_API->universal_put(true, 'netshare', 'netshare/samba', null, 'print_share_enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'print_share_enabled', null);
                 break;
             case "print_share_enabledOff":
-                $Free_API->universal_put(false, 'netshare', 'netshare/samba', null, 'print_share_enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'print_share_enabled', null);
                 break;
         }
     }
@@ -191,7 +191,55 @@ class Free_Update
                 Free_CreateEq::createEq($network, false);
                 break;
             case "WakeonLAN":
-                $Free_API->universal_put(null, $logicalId, $_options['mac_address'], null, null, null, $_options['password']);
+                if ($_options['mac_address'] == null) {
+                    log::add('Freebox_OS', 'error', 'Adresse mac vide');
+                    break;
+                }
+                $option = null;
+                $option = array(
+                    "mac" => $_options['mac_address'],
+                    "password" => $_options['password']
+                );
+                $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'lan/wol/pub/', null, $option);
+                break;
+            case "add_del_mac":
+                if ($_options['ip'] == null || $_options['mac_address'] == null) {
+                    log::add('Freebox_OS', 'error', 'IP  ou adresse mac vide');
+                    break;
+                }
+                $option = null;
+                $option = array(
+                    "mac" => $_options['mac_address'],
+                    "ip" => $_options['ip'],
+                    "comment" => $_options['comment'],
+                );
+                if ($_options['function'] != 'device') {
+                    $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'dhcp/static_lease/', $_options['function'], $option);
+                }
+                $option = array(
+                    "id" => 'ether-' . $_options['mac_address'],
+                    "primary_name" => $_options['name'],
+                    'host_type'  => $_options['type']
+                );
+                $Free_API->universal_put(null, 'universal_put', 'ether-' . $_options['mac_address'], null, 'lan/browser/pub', 'PUT', $option);
+                break;
+            case "redir":
+                if ($_options['lan_ip'] == null) {
+                    log::add('Freebox_OS', 'error', 'Adresse IP vide');
+                    break;
+                }
+                $option = null;
+                $option = array(
+                    'enabled' =>  $_options['enable_lan'],
+                    'comment' =>  $_options['comment'],
+                    'lan_port' =>  $_options['lan_port'],
+                    'wan_port_end' =>  $_options['wan_port_end'],
+                    'wan_port_start' =>  $_options['wan_port_start'],
+                    'lan_ip' =>  $_options['lan_ip'],
+                    'ip_proto' => $_options['ip_proto'],
+                    'src_ip' =>  $_options['src_ip']
+                );
+                $Free_API->universal_put(null, 'universal_put', null, null, 'fw/redir', 'POST', $option);
                 break;
         }
     }
@@ -346,11 +394,11 @@ class Free_Update
                 break;
             default:
                 $parametre['value_type'] = 'bool';
-                if ($logicalId_conf >= 0 && ($logicalId == 'PB_On' || $logicalId == 'PB_Off')) {
+                if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
 
                     log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
 
-                    if ($logicalId == 'PB_On') {
+                    if (stripos($logicalId, 'PB_On')  == 'PB_On') {
                         $parametre['value'] = true;
                     } else {
                         $parametre['value'] = false;

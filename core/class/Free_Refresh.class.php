@@ -456,9 +456,9 @@ class Free_Refresh
 
     private static function refresh_netshare($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('netshare', null, null, 'netshare/samba');
-        $resultmac = $Free_API->universal_get('netshare', null, null, 'netshare/afp');
-        $resultFTP = $Free_API->universal_get('netshare', null, null, 'ftp/config');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'netshare/samba');
+        $resultmac = $Free_API->universal_get('universalAPI', null, null, 'netshare/afp');
+        $resultFTP = $Free_API->universal_get('universalAPI', null, null, 'ftp/config');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -671,6 +671,10 @@ class Free_Refresh
                                     }
                                 }
                             }
+                            if ($data['name'] == 'battery' || $data['name'] == 'battery_warning') {
+                                $_value = $data['value'];
+                                $Equipement->batteryStatus($_value);
+                            }
                             log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $data['value'] . ' -- valeur Inverser : ' . $cmd->getConfiguration('invertnumeric'));
                             break;
                         case 'string':
@@ -681,19 +685,19 @@ class Free_Refresh
 
                                 switch ($data['value']) {
                                     case 'alarm1_arming':
-                                        $_Alarm_mode_value = 'Alarme principale';
+                                        $_Alarm_mode_value = $Equipement->getConfiguration('ModeAbsent');
                                         log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale (arming)');
                                         break;
                                     case 'alarm1_armed':
-                                        $_Alarm_mode_value = 'Alarme principale';
+                                        $_Alarm_mode_value = $Equipement->getConfiguration('ModeAbsent');
                                         log::add('Freebox_OS', 'debug', '│ Mode 1 : Alarme principale (armed)');
                                         break;
                                     case 'alarm2_arming':
-                                        $_Alarm_mode_value = 'Alarme secondaire';
+                                        $_Alarm_mode_value = $Equipement->getConfiguration('ModeNuit');
                                         log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire (arming)');
                                         break;
                                     case 'alarm2_armed':
-                                        $_Alarm_mode_value = 'Alarme secondaire';
+                                        $_Alarm_mode_value = $Equipement->getConfiguration('ModeNuit');
                                         log::add('Freebox_OS', 'debug', '│ Mode 2 : Alarme secondaire (armed)');
                                         break;
                                     case 'alert':
@@ -752,16 +756,50 @@ class Free_Refresh
                             }
                             break;
                         case 'binary':
-                            $_value = $data['value'];
+                            if ($Equipement->getConfiguration('info') == 'mouv_sensor' && $cmd->getConfiguration('info') == 'mouv_sensor') {
+                                log::add('Freebox_OS', 'debug', '│──────────> Inversion valeur pour les détecteurs de mouvement pour être compatible Homebridge ');
+                                $_value = false;
+                                if ($data['value'] == false) {
+                                    $_value = true;
+                                }
+                            } else {
+                                $_value = $data['value'];
+                            }
+
                             break;
                     }
                     $Equipement->checkAndUpdateCmd($data['ep_id'], $_value);
                 }
             }
         }
-        //log::add('Freebox_OS', 'debug', '└─────────');
+        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb') {
+            Free_Refresh::refresh_default_nodes($Equipement, $Free_API);
+        }
     }
-
+    private static function refresh_default_nodes($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $Equipement->getLogicalId());
+        $_eq_data = $result['show_endpoints'];
+        foreach ($_eq_data as $Cmd) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
+                    if ($Command->getConfiguration('info') == 'mouv_sensor') {
+                        $_value = false;
+                        if ($Cmd['value'] == false) {
+                            $_value = true;
+                        }
+                    } else {
+                        $_value = $Cmd['value'];
+                        if ($Cmd['name'] == 'battery') {
+                            $Equipement->batteryStatus($_value);
+                        }
+                    }
+                    $Equipement->checkAndUpdateCmd($Cmd['id'], $_value);
+                    break;
+                }
+            }
+        }
+    }
     private static function refresh_player($Equipement, $Free_API)
     {
         if ($Equipement->getConfiguration('player') == 'OK') {

@@ -31,19 +31,18 @@ if (!isConnect('admin')) {
 <div class=" row row-overflow">
     <div class="col-lg-2">
         <div class="bs-sidebar">
-            <ul class="nav nav-list bs-sidenav">
-                <li class="cursor li_Freebox_OS_Summary active" data-href="home"><a><i class="fab fa-ello"></i> {{Accueil}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="setting"><a><i class="fas fa-cogs"></i> {{Réglages}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="authentification"><a><i class="fas fa-rss"></i> {{Authentification}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="rights"><a><i class="fas fa-balance-scale-right"></i> {{Droits}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="room"><a><i class="far fa-object-group"></i> {{Objets}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="scan"><a><i class="fas fa-search-plus"></i> {{Scan des équipements}}</a></li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="end"><a><i class="fas fa-check"></i> {{Fin}}</a>
+            <ul class="nav nav-list bs-sidenav hidden-xs">
+                <li class="cursor li_Freebox_OS_Summary active" data-href="home" title="{{Accueil}}"><a><i class="fab fa-ello"></i> <span class="hidden-xs"> {{Accueil}}</span></a></li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="setting" title="{{Réglages}}"><a><i class="fas fa-cogs"></i><span class="hidden-xs"> {{Réglages}}</span></a></li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="authentification" title="{{Authentification}}"><a><i class="fas fa-rss"></i><span class="hidden-xs"> {{Authentification}}</span></a> </li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="rights" title="{{Droits}}"><a><i class="fas fa-balance-scale-right"></i><span class="hidden-xs"> {{Droits}}</span></a> </li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="room" title="{{Objets}}"><a><i class="far fa-object-group"></i><span class="hidden-xs"> {{Objets}}</span></a> </li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="scan" title="{{Scan des équipements}}"><a><i class="fas fa-search-plus"></i><span class="hidden-xs"> {{Scan des équipements}}</span></a> </li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="end" title="{{C'est Fini !!}}"><a><i class="fas fa-check"></i><span class="hidden-xs"> {{Fin}}</span></a>
                 </li>
             </ul>
         </div>
     </div>
-
     <div class="col-lg-10" id="div_Freebox_IncludeDisplay">
         <div class="col-md-12 text-center">
             <div id="contenuTextSpan" class="progress">
@@ -52,9 +51,12 @@ if (!isConnect('admin')) {
             </div>
         </div>
         <div class="Freebox_OS_Display home">
-            <div>
-                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
+            <div class="input-group pull-right" style="display:inline-flex;">
+                <span class="input-group-btn">
+                    <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
+                    </a>
+                </span>
             </div>
             <br /><br /> <br />
             <BR>
@@ -68,11 +70,16 @@ if (!isConnect('admin')) {
         </div>
 
         <div class="Freebox_OS_Display setting" style="display:none;">
-            <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
-            <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
-            <a class="btn btn-sm btn-danger pull-right bt_Freebox_OS_ResetConfig"><i class="fas fa-trash"></i> Reset Configuration</a>
-            <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
+            <div class="input-group pull-right" style="display:inline-flex;">
+                <span class="input-group-btn">
+                    <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a class="btn btn-sm btn-danger bt_Freebox_OS_ResetConfig" title="{{Reset de la configuration}}"><i class="fas fa-trash"></i><span class="hidden-xs"> Reset</span>
+                    </a><a class="btn btn-sm btn-success bt_Freebox_OS_Save"><i class="fas fa-save"></i><span class="hidden-xs"> {{Sauvegarder}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
+                    </a>
+                </span>
+            </div>
             <br /><br /> <br />
             <BR>
             <center>
@@ -121,9 +128,11 @@ if (!isConnect('admin')) {
                                 <select id="sel_object_default" class="configKey form-control" data-l1key="defaultParentObject">
                                     <option value="">{{Aucune}}</option>
                                     <?php
-                                    foreach (jeeObject::all() as $object) {
-                                        echo '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
+                                    $options = '';
+                                    foreach ((jeeObject::buildTree(null, false)) as $object) {
+                                        $options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration('parentNumber')) . $object->getName() . '</option>';
                                     }
+                                    echo $options;
                                     ?>
                                 </select>
                             </div>
@@ -139,44 +148,52 @@ if (!isConnect('admin')) {
         </div>
 
         <div class="Freebox_OS_Display authentification" style="display:none;">
-            <div>
-                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
+            <div class="input-group pull-right" style="display:inline-flex;">
+                <span class="input-group-btn">
+                    <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a class="btn btn-sm btn-warning bt_Freebox_Autorisation" title="{{Lancer la procédure d'authentification}}"><i class="fas fa-exclamation-circle"></i><span class="hidden-xs"> {{Lancement de l'authentification}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
+                    </a>
+                </span>
             </div>
             <br /><br /> <br />
             <BR>
             <center>
                 <center><i class="fas fa-rss" style="font-size: 8em;"></i></center>
                 <br />
-                <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/authentification.jpg" height="550" width="550" />
+                <img class="img-responsive center-block hidden-xs" src="plugins/Freebox_OS/core/images/authentification/authentification.jpg" height="450" width="350" />
                 <br />
 
                 <br />
 
                 <h3 class="textFreebox">{{}}</h3>
 
-                <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connectée, cliquez sur le bouton si dessous, sinon cliquez sur suivant}}
+                <div class="alert alert-info Freebox_Autorisation">{{Si votre box n'est pas encore connectée, cliquez sur le bouton ci-dessous, sinon cliquez sur suivant}}
+                </div>
+                <div class="alert alert-warning Freebox_Autorisation">{{Avertissement ! Le temps de validation sur la Freebox étant de quelques secondes positionnez vous ou une personne tiers devant la box afin de valider dans ce court délais !}}
                 </div>
 
-                <br />
-
-                <a class="btn btn-sm btn-warning bt_Freebox_Autorisation">{{Lancement de l'authentification}} <i class="fas fa-exclamation-circle"></i></a>
+                <a class="btn btn-sm btn-warning bt_Freebox_Autorisation" title="{{Lancer la procédure d'authentification}}">{{Lancement de l'authentification}} <i class="fas fa-exclamation-circle"></i></a>
             </center>
         </div>
 
         <div class="Freebox_OS_Display rights" style="display:none;">
-            <div>
-                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
+            <div class="input-group pull-right" style="display:inline-flex;">
+                <span class="input-group-btn">
+                    <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif" title="{{Lancer la vérification des droits}}"><i class="fas fa-balance-scale"></i><span class="hidden-xs"> {{Vérification des droits}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
+                    </a>
+                </span>
             </div>
             <br /><br /> <br />
             <BR>
             <center>
                 <center><i class="fas fa-balance-scale-right" style="font-size: 5em;"></i></center>
                 <br />
-                <img class="img-responsive center-block" src="plugins/Freebox_OS/core/images/authentification/modification_droit.png" height="400" width="400" />
+                <img class="img-responsive center-block hidden-xs" src="plugins/Freebox_OS/core/images/authentification/modification_droit.png" height="400" width="400" />
                 <br />
                 <center>
                     <div class="alert alert-info">{{Se connecter à l’interface de la Freebox puis ouvrir les paramètres de
@@ -195,7 +212,10 @@ if (!isConnect('admin')) {
                     </div>
                 </center>
                 <br />
-                <center><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif">{{Vérification des droits}} <i class="fas fa-balance-scale"></i></a> <a id="bt_Freebox_OS" class="btn btn-sm btn-default bt_Freebox_OS" target='_blank' href='http://mafreebox.freebox.fr'><i class="far fa-hand-point-right"></i> {{Ouvrir Interface Freebox}}</a></center>
+                <center>
+                    <a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif" title="{{Lancer la vérification des droits}}">{{Vérification des droits}} <i class="fas fa-balance-scale"></i>
+                    </a><a id="bt_Freebox_OS" class="btn btn-sm btn-default bt_Freebox_OS" target='_blank' href='http://mafreebox.freebox.fr'><i class="far fa-hand-point-right"></i> {{Ouvrir Interface Freebox}}
+                    </a></center>
                 <br />
                 <table id="table_packages" class="table table-condensed">
                     <thead>
@@ -272,11 +292,15 @@ if (!isConnect('admin')) {
         </div>
 
         <div class="Freebox_OS_Display room" style="display:none;">
-            <div>
-                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
-                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Save_room"><i class="fas fa-save"></i> {{Sauvegarder}}</a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
+            <div class="input-group pull-right" style="display:inline-flex;">
+                <span class="input-group-btn">
+                    <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a class="btn btn-sm btn-warning bt_Freebox_Room" title="{{Lancer le scan des Pièces}}"><i class="fas fa-exclamation-circle"></i><span class="hidden-xs"> {{Recherche des Pièces}}</span>
+                    </a><a class="btn btn-sm btn-success bt_Freebox_OS_Save_room"><i class="fas fa-save"></i><span class="hidden-xs"> {{Sauvegarder}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
+                    </a>
+                </span>
             </div>
             <br /><br /> <br />
             <BR>
@@ -309,10 +333,13 @@ if (!isConnect('admin')) {
             </center>
         </div>
         <div class="Freebox_OS_Display scan" style="display:none;">
-            <div>
-                <a class="btn btn-sm btn-success pull-right bt_Freebox_OS_Next">{{Suivant}} <i class="fas fa-angle-double-right"></i></a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_Previous"><i class="fas fa-angle-double-left"></i> {{Précédent}}</a>
-                <a class="btn btn-sm btn-default pull-right bt_Freebox_OS_doc" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i> {{Documentation}}</a>
+            <div class="input-group pull-right" style="display:inline-flex;">
+                <span class="input-group-btn">
+                    <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
+                    </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
+                    </a>
+                </span>
             </div>
             <br /><br /> <br />
             <BR>

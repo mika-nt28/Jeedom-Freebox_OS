@@ -51,6 +51,19 @@ function Freebox_OS_update()
 		$e = print_r($e, 1);
 		log::add('Freebox_OS', 'error', 'Freebox_OS update ERROR : ' . $e);
 	}
+	//resave eqLogics for new cmd:
+	try {
+		$eqs = eqLogic::byType('Freebox_OS');
+		foreach ($eqs as $eq) {
+			if ($eq->getConfiguration('type') == 'alarm_control') {
+				$eq->save();
+				break;
+			}
+		}
+	} catch (Exception $e) {
+		$e = print_r($e, 1);
+		log::add('Freebox_OS', 'error', 'Freebox update ERROR : ' . $e);
+	}
 }
 function Freebox_OS_remove()
 {

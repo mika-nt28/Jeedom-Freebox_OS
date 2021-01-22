@@ -231,7 +231,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		if ($tiles == true) {
-			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws') {
+			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm') {
 				$EqLogic->setConfiguration('type', $eq_type);
 			} else {
 				$EqLogic->setConfiguration('type2', $eq_type);

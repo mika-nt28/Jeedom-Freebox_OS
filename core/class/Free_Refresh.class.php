@@ -678,7 +678,7 @@ class Free_Refresh
                             log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $data['value'] . ' -- valeur Inverser : ' . $cmd->getConfiguration('invertnumeric'));
                             break;
                         case 'string':
-                            if ($data['name'] == 'state' && $Equipement->getConfiguration('type') == 'alarm_control') {
+                            if ($data['name'] == 'state' && ($Equipement->getConfiguration('type') == 'alarm_control' || $Equipement->getConfiguration('type2') == 'alarm')) {
                                 log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique pour Homebridge : ' . $Equipement->getConfiguration('type'));
                                 $_Alarm_stat_value = '0';
                                 $_Alarm_enable_value = '1';

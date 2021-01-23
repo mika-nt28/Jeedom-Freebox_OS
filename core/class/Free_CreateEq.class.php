@@ -488,9 +488,9 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
         //$network->AddCommand('Redirections des ports', 'redir', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_redir, 0, 'default', 'default',  -4, '0', true, false, null, true, null, null, null, null, null, 'redir?lan_ip=#lan_ip#&enable_lan=#enable_lan#&src_ip=#src_ip#&ip_proto=#ip_proto#&wan_port_start=#wan_port_start#&wan_port_end=#wan_port_end#&lan_port=#lan_port#&comment=#comment#');
-        $network->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -3, '0', true, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#&type=#type#');
-        $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_search, 0, 'default', 'default',  -2, '0', true, false, null, true);
-        $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -1, '0', true, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
+        $network->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -30, '0', true, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#&type=#type#');
+        $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_search, 0, 'default', 'default',  -20, '0', true, false, null, true);
+        $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -10, '0', true, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
 
 

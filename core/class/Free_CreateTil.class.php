@@ -169,7 +169,7 @@ class Free_CreateTil
         $Free_API = new Free_API();
 
         $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
-        $result = $Free_API->universal_get('homeadapters', null, null, null);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {
                 $homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);

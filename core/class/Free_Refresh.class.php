@@ -45,7 +45,7 @@ class Free_Refresh
                     Free_Refresh::refresh_download($Equipement, $Free_API);
                     break;
                 case 'homeadapters':
-                    $result = $Free_API->universal_get('homeadapters', null, null, null);
+                    $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
                     foreach ($Equipement->getCmd('info') as $Command) {
                         foreach ($result as $Cmd) {
                             if ($Cmd['id'] == $Command->getLogicalId()) {

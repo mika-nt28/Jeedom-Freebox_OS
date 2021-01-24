@@ -312,9 +312,6 @@ class Free_API
             case 'download':
                 $config = 'api/v8/downloads/' . $update_type;
                 break;
-            case 'homeadapters':
-                $config = 'api/v8/home/adapters' . $id;
-                break;
             case 'notification':
                 $config = 'api/v8/notif/targets';
                 $config_log = 'Liste des notifications';

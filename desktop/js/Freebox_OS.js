@@ -250,6 +250,7 @@ function addCmdToTable(_cmd) {
 		case 'disk':
 		case 'downloads':
 		case 'homeadapters':
+		case 'LCD':
 		case 'network':
 		case 'netshare':
 		case 'networkwifiguest':

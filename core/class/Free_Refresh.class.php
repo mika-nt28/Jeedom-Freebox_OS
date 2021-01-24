@@ -44,16 +44,22 @@ class Free_Refresh
                 case 'downloads':
                     Free_Refresh::refresh_download($Equipement, $Free_API);
                     break;
+                case 'LCD':
+                    Free_Refresh::refresh_LCD($Equipement, $Free_API);
+                    break;
                 case 'homeadapters':
+                    $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
                     foreach ($Equipement->getCmd('info') as $Command) {
-                        $result = $Free_API->universal_get('homeadapters', $Command->getLogicalId(), null, null);
-                        if ($result != false) {
-                            if ($result['status'] == 'active') {
-                                $homeadapters_value = 1;
-                            } else {
-                                $homeadapters_value = 0;
+                        foreach ($result as $Cmd) {
+                            if ($Cmd['id'] == $Command->getLogicalId()) {
+                                if ($Cmd['status'] == 'active') {
+                                    $homeadapters_value = 1;
+                                } else {
+                                    $homeadapters_value = 0;
+                                }
+                                log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $Cmd['id'] . ' -- Nom : ' . $Cmd['label'] . ' -- Etat : ' . $homeadapters_value);
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $homeadapters_value);
                             }
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $homeadapters_value);
                         }
                     }
                     break;
@@ -352,6 +358,30 @@ class Free_Refresh
                     switch ($Command->getLogicalId()) {
                         case "mode":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['throttling']['mode']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
+    private static function refresh_LCD($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('universalAPI', null, null, 'lcd/config/');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "orientation":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['orientation']);
+                            break;
+                        case "orientation_forced":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['orientation']);
+                            break;
+                        case "brightness":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['brightness']);
+                            break;
+                        case "hide_wifi_key":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['hide_wifi_key']);
                             break;
                     }
                 }

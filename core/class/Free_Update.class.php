@@ -53,6 +53,12 @@ class Free_Update
                 Free_Update::update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
+            case 'LCD':
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                }
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                break;
             case 'homeadapters':
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
@@ -92,7 +98,9 @@ class Free_Update
                 }
                 break;
             case 'wifi':
-                Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             default:
@@ -155,6 +163,7 @@ class Free_Update
             }
         }
     }
+
     private static function update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
@@ -288,12 +297,28 @@ class Free_Update
                 break;
         }
     }
-
-    private static function update_lcd($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
-            case 'hide_wifi_key':
-                $Free_API->universal_put(1, 'lcd', null, null, $logicalId);
+            case 'brightness':
+                log::add('Freebox_OS', 'default', 'TEST ');
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('brightness' => $_options['slider']));
+                break;
+            case 'hide_wifi_keyOn':
+                log::add('Freebox_OS', 'default', 'TEST ');
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => true));
+                break;
+            case 'hide_wifi_keyOff':
+                log::add('Freebox_OS', 'default', 'TEST ');
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => false));
+                break;
+            case 'orientation':
+                if ($_options['select'] != 0) {
+                    $orientation_forced = true;
+                } else {
+                    $orientation_forced = false;
+                }
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('orientation' => $_options['select'], 'orientation_forced' => $orientation_forced));
                 break;
         }
     }

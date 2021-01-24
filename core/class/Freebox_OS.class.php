@@ -391,6 +391,9 @@ class Freebox_OS extends eqLogic
 		if ($_logicalId === "tempDenied") {
 			$Command->setConfiguration('listValue', '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00');
 		}
+		if ($_logicalId === "orientation") {
+			$Command->setConfiguration('listValue', '0|Horizontal;90|90 degrés;180|180 degrés;270|270 degrés');
+		}
 		if ($_logicalId === "mac_filter_state") {
 			$Command->setConfiguration('listValue', 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche');
 		}
@@ -553,6 +556,8 @@ class Freebox_OS extends eqLogic
 			'downloadsName' => 'Téléchargements',
 			'homeadaptersID' => 'homeadapters',
 			'homeadaptersName' => 'Home Adapters',
+			'LCDID' => 'LCD',
+			'LCDName' => 'Afficheur LCD',
 			'networkID' => 'network',
 			'networkName' => 'Appareils connectés',
 			'netshareID' => 'netshare',

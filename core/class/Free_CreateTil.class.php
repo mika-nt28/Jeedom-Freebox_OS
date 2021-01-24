@@ -44,10 +44,10 @@ class Free_CreateTil
                     Free_CreateTil::createTil_Camera();
                     break;
                 case 'homeadapters':
-                    //Free_CreateTil::createTil_homeadapters($logicalinfo, $templatecore_V4);
+                    Free_CreateTil::createTil_homeadapters($logicalinfo, $templatecore_V4);
                     break;
                 case 'homeadapters_SP':
-                    //Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
+                    Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
                     break;
                 case 'Tiles_group':
                     $result = Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);

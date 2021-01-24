@@ -466,10 +466,6 @@ class Free_API
                     $fonction = $_options;
                 }
                 break;
-            case 'lcd':
-                $config = 'api/v8/lcd/config';
-                $config_commande = 'hide_wifi_key';
-                break;
             case 'universalAPI':
                 $config = 'api/v8/' . $id;
                 $config_commande = $_options;

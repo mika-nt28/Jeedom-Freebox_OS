@@ -82,6 +82,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						case 'airmedia':
 						case 'connexion':
 						case 'downloads':
+						case 'LCD':
 						case 'system':
 						case 'disk':
 						case 'phone':
@@ -131,6 +132,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						case 'airmedia':
 						case 'connexion':
 						case 'downloads':
+						case 'LCD':
 						case 'system':
 						case 'disk':
 						case 'phone':

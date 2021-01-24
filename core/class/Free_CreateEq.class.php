@@ -40,6 +40,9 @@ class Free_CreateEq
             case 'disk':
                 Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4);
                 break;
+            case 'LCD':
+                Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4);
+                break;
             case 'downloads':
                 Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
                 break;
@@ -73,12 +76,14 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['airmediaName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl');
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['diskName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['downloadsName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['phoneName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkwifiguestName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['netshareName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['wifiName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['LCDName']);
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
                 log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
@@ -97,6 +102,12 @@ class Free_CreateEq
                 }
                 Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
+                $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
+                if ($Type_box == 'fbxgw1r') {
+                    Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4);
+                } else {
+                    log::add('Freebox_OS', 'debug', '>───────── Type de box compatible pour modifier les réglages de l\'afficheur : ' . $Type_box);
+                }
                 // TEST
                 //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 //Free_CreateEq::createEq_upload($logicalinfo, $templatecore_V4);
@@ -313,6 +324,38 @@ class Free_CreateEq
         $downloads->AddCommand('Activer mode lent', 'slow', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsslow, 0, 'default', 'default',  21, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Activer mode Stop', 'hibernate', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadshibernate, 0, 'default', 'default',  22, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Activer mode Planning', ' schedule', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsschedule, 0, 'default', 'default',  23, '0', $updateicon, false, null, true);
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_LCD($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['LCDName']);
+        $LCD = Freebox_OS::AddEqLogic($logicalinfo['LCDName'], $logicalinfo['LCDID'], 'default', false, null, null, null, '5 */12 * * *');
+        $updateicon = false;
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $iconbrightness = 'fas fa-adjust';
+            $iconWifi = 'fas fa-wifi';
+            $iconWifiOn = 'fas fa-wifi';
+            $iconWifiOff = 'fas fa-wifi';
+            $iconorientation = 'fas fa-map-signs';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $iconbrightness = 'fas fa-adjust icon_green';
+            $iconWifi = 'fas fa-wifi';
+            $iconWifiOn = 'fas fa-wifi icon_green';
+            $iconWifiOff = 'fas fa-wifi icon_red';
+            $iconorientation = 'fas fa-map-signs icon_green';
+        };
+        // Affichage Clef Wifi
+        //$StatusWifi = $LCD->AddCommand('Etat Clef Wifi', 'hide_wifi_key', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, $iconWifi, 'default', 10, 1, $updateicon, true, false, true);
+        //$LCD->AddCommand('Affichage Clef Wifi On', 'hide_wifi_keyOn', 'action', 'other', null, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 11, '0', $updateicon, false, null, true);
+        //$LCD->AddCommand('Affichage Clef Wifi Off', 'hide_wifi_keyOff', 'action', 'other', null, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 12, '0', $updateicon, false, null, true);
+        // Affichage Luminosité 
+        $StatusWifi = $LCD->AddCommand('Etat Lumininosité écran LCD', 'brightness', "info", 'numeric', null, '%', null, 0, '', '', '', $iconbrightness, 0, '0', 100, 20, 2, $updateicon, true, false, true);
+        $LCD->AddCommand('Lumininosité écran LCD', 'brightness', 'action', 'slider', null, '%', null, 1, $StatusWifi, 'default', 0, $iconbrightness, 0, '0', 100, 21, '0', $updateicon, false, null, true, null, 'floor(#value#)');
+        // Affichage Orientation
+        $StatusWifi = $LCD->AddCommand('Etat Orientation', 'orientation', "info", 'string', null, null, null, 0, '', '', '', $iconorientation, 0, '0', 100, 30, 2, $updateicon, true, false, true);
+        $LCD->AddCommand('Orientation', 'orientation', 'action', 'select', null, null, null, 1, $StatusWifi, 'default', 0, $iconorientation, 0, '0', 100, 31, '0', $updateicon, false, null, true, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

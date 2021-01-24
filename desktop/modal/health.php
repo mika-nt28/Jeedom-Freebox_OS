@@ -55,11 +55,16 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 					$icon = 'default';
 				}
 			}
+			if ($eqLogic->getConfiguration('type2') != null) {
+				$type = $eqLogic->getConfiguration('type') . ' / ' . $eqLogic->getConfiguration('type2');
+			} else {
+				$type = $eqLogic->getConfiguration('type');
+			}
 			$image = '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png" height="35" width="35" style="' . $opacity . '" class="' . $opacity . '"/>';
 			echo '<tr><td class="' . $opacity . '" >' . $image . '</td><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('logicalID') . '</span></td>';
-			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('type') . '</span></td>';
+			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $type  . '</span></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('action') . '</span></td>';
 
 			$status = '<span class="label label-success" style="font-size : 1em;cursor:default;">{{OK}}</span>';
@@ -69,7 +74,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 			echo '<td>' . $status . '</td>';
 			$battery_status = '<span class="label label-success" style="font-size : 1em;">{{OK}}</span>';
 			$battery = $eqLogic->getStatus('battery');
-			if (($eqLogic->getConfiguration('type') == 'alarm_sensor' && $battery == '') || $eqLogic->getConfiguration('type') == 'alarm_remote') {
+			if (($eqLogic->getConfiguration('type') == 'alarm_sensor' && $battery == '')) {
 				$battery = 'N/A';
 			}
 			if ($battery == '') {

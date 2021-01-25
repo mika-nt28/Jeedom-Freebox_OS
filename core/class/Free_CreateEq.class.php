@@ -103,7 +103,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
-                if ($Type_box == 'fbxgw1r') {
+                if ($Type_box == 'fbxgw1r' || $Type_box == 'fbxgw2r') {
                     Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4);
                 } else {
                     log::add('Freebox_OS', 'debug', '>───────── Type de box compatible pour modifier les réglages de l\'afficheur : ' . $Type_box);

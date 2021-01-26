@@ -216,8 +216,7 @@ class Free_CreateTil
             foreach ($result as $Equipement) {
                 $_eq_category = true;
                 if ($_eq_type_home == 'nodes') {
-                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera') {
-                        //if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'alarm_remote' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera') {
+                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
                         } else {
@@ -226,7 +225,6 @@ class Free_CreateTil
                         log::add('Freebox_OS', 'debug', '>> ================ >> ' . $Equipement['label'] . ' / ' . $_eq_action . ' / ' . $Equipement['id']);
                     } else {
                         $_eq_category = false;
-                        //log::add('Freebox_OS', 'debug', '>> ============= PAS LANCEMENT === >> ' . $Equipement['category']);
                     }
                 }
 
@@ -643,6 +641,8 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $_Eq_type_home;
+        //Log pour Test (mettre en comment après TEST)
+        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
         switch ($Search) {
             case 'alarm_control_error_r_tiles':
                 $Label_I = $Label_O;
@@ -751,6 +751,8 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $_Eq_type_home;
+        //Log pour Test (mettre en comment après TEST)
+        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting INT pour  : ' . $Search);
         switch ($Search) {
             case 'info_store_slider_rw_tiles':
                 $Label_I = 'Etat volet';
@@ -930,11 +932,6 @@ class Free_CreateTil
             "Iconname" => $_Iconname,
             "TypeCMD" => $TypeCMD
         );
-        if ($CreateCMD === true) {
-            $Value = "";
-        } else {
-            $Value = ' ==> ' . $CreateCMD;
-        }
         return $Setting;
     }
     private static function search_setting_bool($_Eq_action, $Access, $Name, $_Eq_type, $Label_o = null, $_Eq_type_home, $_Cmd_ep_id = null, $Templatecore_V4 = null)
@@ -947,6 +944,8 @@ class Free_CreateTil
             $Setting1 = null;
         }
         $Search = $_Eq_type . '_' . $Name . "_" . $Access . $Setting1 . '_' . $_Eq_type_home;
+        //Log pour Test (mettre en comment après TEST)
+        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting BOOL pour  : ' . $Search);
 
         // Reset Template
         $TemplatecoreON = null;
@@ -1163,7 +1162,7 @@ class Free_CreateTil
                 $Order_A = 61;
                 break;
             case 'info_state_r_tiles':
-            case 'info_state_r_tiles':
+            case 'basic_shutter_state_r_nodes':
                 $Generic_type = 'FLAP_STATE';
                 $Templatecore = 'shutter';
                 break;

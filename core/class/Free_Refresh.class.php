@@ -802,7 +802,7 @@ class Free_Refresh
                 }
             }
         }
-        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type2') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb') {
+        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type2') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb' || $Equipement->getConfiguration('type2') == 'basic_shutter') {
             Free_Refresh::refresh_default_nodes($Equipement, $Free_API);
         }
     }

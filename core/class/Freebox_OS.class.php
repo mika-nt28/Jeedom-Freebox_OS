@@ -235,7 +235,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		if ($tiles == true) {
-			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm') {
+			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter') {
 				$EqLogic->setConfiguration('type', $eq_type);
 			} else {
 				$EqLogic->setConfiguration('type2', $eq_type);
@@ -243,7 +243,9 @@ class Freebox_OS extends eqLogic
 					$EqLogic->setConfiguration('info', 'mouv_sensor');
 				}
 			}
-			$EqLogic->setConfiguration('action', $eq_action);
+			if ($eq_type != 'basic_shutter') {
+				$EqLogic->setConfiguration('action', $eq_action);
+			}
 			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
 				$EqLogic->setConfiguration('action', $logicalID_equip);
 			}

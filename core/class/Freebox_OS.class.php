@@ -25,6 +25,10 @@ class Freebox_OS extends eqLogic
 	/*     * *************************Attributs****************************** */
 
 	/*     * ***********************Methode static*************************** */
+	public static function deadCmd()
+	{
+		return array();
+	}
 	public static function cron()
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');

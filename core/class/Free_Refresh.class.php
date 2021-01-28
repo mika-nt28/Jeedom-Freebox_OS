@@ -781,6 +781,7 @@ class Free_Refresh
                                 $_value = '#' . substr($_value2, -6);
                                 log::add('Freebox_OS', 'debug', '>──────────> Display de Type : ' . $data['ui']['display'] . ' -- Light : ' . $_light . ' -- Valeur : ' . $_value);
                             */
+                                $_value = $data['value'];
                             } else {
                                 $_value = $data['value'];
                             }
@@ -802,7 +803,7 @@ class Free_Refresh
                 }
             }
         }
-        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type2') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb' || $Equipement->getConfiguration('type2') == 'basic_shutter') {
+        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type2') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb' || $Equipement->getConfiguration('type2') == 'basic_shutter' || $Equipement->getConfiguration('type2') == 'light') {
             Free_Refresh::refresh_default_nodes($Equipement, $Free_API);
         }
     }

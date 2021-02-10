@@ -98,6 +98,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
 							echo '<br>';
 							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+							echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
 							echo '</div>';
 							break;
 					}
@@ -155,6 +156,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
 							echo '<br>';
 							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+							echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
 							echo '</div>';
 							break;
 					}
@@ -183,6 +185,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
 						echo '</div>';
 					}
 				}

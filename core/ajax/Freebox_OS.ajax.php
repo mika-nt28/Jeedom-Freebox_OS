@@ -50,6 +50,9 @@ try {
 			$result = Free_CreateTil::createTil();
 			ajax::success($result);
 			break;
+		case 'SearchParental':
+			Free_CreateEq::createEq('parental');
+			break;
 		case 'SearchTile_group':
 			Free_CreateTil::createTil('Tiles_group');
 			$objects = "";

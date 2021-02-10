@@ -60,10 +60,11 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			</div>
 		</div>
 		<!-- Champ de recherche -->
-		<div class="input-group" style="margin:5px;">
+		<div class="input-group" style="margin-bottom:5px;">
 			<input class="form-control roundedLeft" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
 			<div class="input-group-btn">
-				<a id="bt_resetSearch" class="btn roundedRight" style="width:30px"><i class="fas fa-times"></i> </a>
+				<a id="bt_resetObjectSearch" class="btn" style="width:30px"><i class="fas fa-times"></i>
+				</a><a class="btn roundedRight hidden" id="bt_pluginDisplayAsTable" data-coreSupport="1" data-state="0"><i class="fas fa-grip-lines"></i></a>
 			</div>
 		</div>
 		<!-- Liste des équipements du plugin "Mes équipements" -->
@@ -97,6 +98,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
 							echo '<br>';
 							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+							echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
 							echo '</div>';
 							break;
 					}
@@ -117,8 +119,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'alarm_control' || $eqLogic->getConfiguration('type') == 'alarm_sensor' || $eqLogic->getConfiguration('type') == 'alarm_remote') {
+					if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'alarm_control' || $eqLogic->getConfiguration('type') == 'alarm_sensor' || $eqLogic->getConfiguration('type') == 'camera' || $eqLogic->getConfiguration('type') == 'alarm_remote') {
+						//if ($eqLogic->getConfiguration('type') === 'alarm_sensor' && $eqLogic->getConfiguration('type2') === 'dws') {
+						//	$template = $eqLogic->getConfiguration('type2');
+						//} else {
 						$template = $eqLogic->getConfiguration('type');
+						//}
 						$icon = $template;
 					} else {
 						$template = $eqLogic->getLogicalId();
@@ -150,6 +156,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
 							echo '<br>';
 							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+							echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
 							echo '</div>';
 							break;
 					}
@@ -178,6 +185,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
 						echo '</div>';
 					}
 				}

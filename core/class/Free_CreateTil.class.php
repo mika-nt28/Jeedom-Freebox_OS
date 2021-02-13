@@ -44,10 +44,10 @@ class Free_CreateTil
                     Free_CreateTil::createTil_Camera();
                     break;
                 case 'homeadapters':
-                    //Free_CreateTil::createTil_homeadapters($logicalinfo, $templatecore_V4);
+                    Free_CreateTil::createTil_homeadapters($logicalinfo, $templatecore_V4);
                     break;
                 case 'homeadapters_SP':
-                    //Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
+                    Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
                     break;
                 case 'Tiles_group':
                     $result = Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);
@@ -169,7 +169,7 @@ class Free_CreateTil
         $Free_API = new Free_API();
 
         $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
-        $result = $Free_API->universal_get('homeadapters', null, null, null);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {
                 $homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
@@ -215,9 +215,8 @@ class Free_CreateTil
             log::add('Freebox_OS', 'debug', '>> ================ >> TYPE DE CREATION : ' . $_eq_type_home);
             foreach ($result as $Equipement) {
                 $_eq_category = true;
-                if ($_eq_type_home == 'nodes') {
-                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera') {
-                        //if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'alarm_remote' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera') {
+                if ($_eq_type_home == 'nodes') { //
+                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
                         } else {
@@ -226,16 +225,19 @@ class Free_CreateTil
                         log::add('Freebox_OS', 'debug', '>> ================ >> ' . $Equipement['label'] . ' / ' . $_eq_action . ' / ' . $Equipement['id']);
                     } else {
                         $_eq_category = false;
-                        //log::add('Freebox_OS', 'debug', '>> ============= PAS LANCEMENT === >> ' . $Equipement['category']);
                     }
                 }
 
                 if ($_eq_category  === true) {
+                    $_eq_type2 = null;
                     if ($boucle_num == 2) {
                         $_eq_type = $Equipement['category'];
                         $_eq_room = $Equipement['group']['label'];
                         $_eq_data = $Equipement['show_endpoints'];
                         $_eq_node = $Equipement['id'];
+                        if ($Equipement['category'] == 'light') {
+                            $_eq_type2 = $Equipement['category'];
+                        }
                     } else if ($boucle_num == 1) {
                         $_eq_type = $Equipement['type'];
                         $_eq_room = $Equipement['group']['label'];
@@ -278,9 +280,9 @@ class Free_CreateTil
                     );
                     $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);
                     if ($_eq_type != 'camera' && $boucle_num != 2) {
-                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default');
+                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2);
                     } else {
-                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default');
+                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2);
                     }
 
                     $_eqLogic = null;
@@ -643,6 +645,8 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $_Eq_type_home;
+        //Log pour Test (mettre en comment après TEST)
+        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
         switch ($Search) {
             case 'alarm_control_error_r_tiles':
                 $Label_I = $Label_O;
@@ -700,10 +704,10 @@ class Free_CreateTil
 
         if ($_Eq_action == "store_slider" && $Name == 'position') {
             $Setting2 = 'store_slider';
-        } elseif ($Name == "luminosity" || (($_Eq_action == "color_picker" || $_Eq_action == "heat_picker") && $Name == 'v')) {
+        } elseif ($Name == "luminosity" || (($_Eq_action == "color_picker" || $_Eq_action == "heat_picker" || $Setting1 == "light") && $Name == 'v')) {
             $Setting2 = 'slider';
             $Setting1 = 'light';
-        } elseif (($_Eq_action == "color_picker" || $_Eq_action == "heat_picker") && $Name == 'hs') {
+        } elseif (($_Eq_action == "color_picker" || $_Eq_action == "heat_picker" || $Setting1 == "light") && $Name == 'hs') {
             $Setting2 = 'set_color';
             $Setting1 = 'light';
         } elseif ($_Eq_type == "alarm_remote" && $Name == 'pushed') {
@@ -751,6 +755,8 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $_Eq_type_home;
+        //Log pour Test (mettre en comment après TEST)
+        //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting INT pour  : ' . $Search);
         switch ($Search) {
             case 'info_store_slider_rw_tiles':
                 $Label_I = 'Etat volet';
@@ -896,6 +902,8 @@ class Free_CreateTil
             case 'camera_camera_threshold_r _nodes':
             case 'camera_camera_sensitivity_r_nodes':
             case 'camera_camera_threshold_w_nodes':
+            case 'light_set_color_rw_nodes';
+            case 'light_slider_rw_nodes':
                 $CreateCMD = 'PAS DE CREATION';
                 break;
             default:
@@ -930,11 +938,6 @@ class Free_CreateTil
             "Iconname" => $_Iconname,
             "TypeCMD" => $TypeCMD
         );
-        if ($CreateCMD === true) {
-            $Value = "";
-        } else {
-            $Value = ' ==> ' . $CreateCMD;
-        }
         return $Setting;
     }
     private static function search_setting_bool($_Eq_action, $Access, $Name, $_Eq_type, $Label_o = null, $_Eq_type_home, $_Cmd_ep_id = null, $Templatecore_V4 = null)
@@ -947,6 +950,8 @@ class Free_CreateTil
             $Setting1 = null;
         }
         $Search = $_Eq_type . '_' . $Name . "_" . $Access . $Setting1 . '_' . $_Eq_type_home;
+        //Log pour Test (mettre en comment après TEST)
+        //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting BOOL pour  : ' . $Search);
 
         // Reset Template
         $TemplatecoreON = null;
@@ -1163,7 +1168,7 @@ class Free_CreateTil
                 $Order_A = 61;
                 break;
             case 'info_state_r_tiles':
-            case 'info_state_r_tiles':
+            case 'basic_shutter_state_r_nodes':
                 $Generic_type = 'FLAP_STATE';
                 $Templatecore = 'shutter';
                 break;

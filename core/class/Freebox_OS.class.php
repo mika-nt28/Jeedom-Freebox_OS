@@ -25,6 +25,10 @@ class Freebox_OS extends eqLogic
 	/*     * *************************Attributs****************************** */
 
 	/*     * ***********************Methode static*************************** */
+	public static function deadCmd()
+	{
+		return array();
+	}
 	public static function cron()
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
@@ -52,7 +56,7 @@ class Freebox_OS extends eqLogic
 					log::add('Freebox_OS', 'debug', '================= PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state'] . ' ==================');
 				}
 			} catch (Exception $exc) {
-				log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
+				//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
 			}
 		}
 	}
@@ -162,7 +166,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
 	}
 
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', '>> ================ >> Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
@@ -231,7 +235,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		if ($tiles == true) {
-			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm') {
+			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter') {
 				$EqLogic->setConfiguration('type', $eq_type);
 			} else {
 				$EqLogic->setConfiguration('type2', $eq_type);
@@ -239,7 +243,12 @@ class Freebox_OS extends eqLogic
 					$EqLogic->setConfiguration('info', 'mouv_sensor');
 				}
 			}
-			$EqLogic->setConfiguration('action', $eq_action);
+			if ($eq_action != null) {
+				$EqLogic->setConfiguration('action', $eq_action);
+			}
+			if ($type2 != null) {
+				$EqLogic->setConfiguration('type2', $eq_type);
+			}
 			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
 				$EqLogic->setConfiguration('action', $logicalID_equip);
 			}
@@ -390,6 +399,9 @@ class Freebox_OS extends eqLogic
 
 		if ($_logicalId === "tempDenied") {
 			$Command->setConfiguration('listValue', '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00');
+		}
+		if ($_logicalId === "orientation") {
+			$Command->setConfiguration('listValue', '0|Horizontal;90|90 degrés;180|180 degrés;270|270 degrés');
 		}
 		if ($_logicalId === "mac_filter_state") {
 			$Command->setConfiguration('listValue', 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche');
@@ -553,6 +565,8 @@ class Freebox_OS extends eqLogic
 			'downloadsName' => 'Téléchargements',
 			'homeadaptersID' => 'homeadapters',
 			'homeadaptersName' => 'Home Adapters',
+			'LCDID' => 'LCD',
+			'LCDName' => 'Afficheur LCD',
 			'networkID' => 'network',
 			'networkName' => 'Appareils connectés',
 			'netshareID' => 'netshare',

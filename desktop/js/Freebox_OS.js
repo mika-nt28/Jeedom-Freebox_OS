@@ -211,22 +211,38 @@ $('.Equipement').on('click', function () {
 
 $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', function () {
 	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
-	if ($icon != '' && $icon != null)
-		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
+	$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
+	$icon_type2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
+	switch ($icon) {
+		case 'airmedia':
+		case 'connexion':
+		case 'downloads':
+		case 'LCD':
+		case 'system':
+		case 'disk':
+		case 'phone':
+		case 'wifi':
+		case 'player':
+		case 'network':
+		case 'netshare':
+		case 'networkwifiguest':
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
+			break;
+		default:
+			if ($icon_type2 === 'dws') {
+				$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
+			}
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
+			break;
+	}
 
-		var template = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
+	var template = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 
 	if (template === 'network' || template === 'networkwifiguest') {
 		$('.IPV').show();
 	} else {
 		$('.IPV').hide();
 	}
-});
-
-$('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').on('change', function () {
-	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
-	if ($icon != '' && $icon != null)
-		$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 });
 
 setupPage();
@@ -250,6 +266,7 @@ function addCmdToTable(_cmd) {
 		case 'disk':
 		case 'downloads':
 		case 'homeadapters':
+		case 'LCD':
 		case 'network':
 		case 'netshare':
 		case 'networkwifiguest':

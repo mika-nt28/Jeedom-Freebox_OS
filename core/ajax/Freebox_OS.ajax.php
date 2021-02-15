@@ -53,6 +53,9 @@ try {
 		case 'SearchParental':
 			Free_CreateEq::createEq('parental');
 			break;
+		case 'SearchDebugTile':
+			Free_CreateTil::createTil('Tiles_debug');
+			break;
 		case 'SearchTile_group':
 			Free_CreateTil::createTil('Tiles_group');
 			$objects = "";

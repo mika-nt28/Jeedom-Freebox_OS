@@ -58,6 +58,17 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<br>
 				<span>{{Scan}}<br />{{Tiles}}</span>
 			</div>
+			<?php
+			if (log::getLogLevel('Freebox_OS') <= 200) :
+			?>
+				<div class="cursor eqLogicAction logoWarning titleAction" data-action="search_debugTile">
+					<i class="fas fa-question-circle"></i>
+					<br />
+					<span>{{Debug Tiles}}</span>
+				</div>
+			<?php
+			endif;
+			?>
 		</div>
 		<!-- Champ de recherche -->
 		<div class="input-group" style="margin-bottom:5px;">

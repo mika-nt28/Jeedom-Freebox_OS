@@ -142,6 +142,38 @@ $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 
 });
 
+$('.eqLogicAction[data-action=search_debugTile]').on('click', function () {
+	$('#div_alert').showAlert({
+		message: '{{Recherche <b>Debug Tiles</b>}}',
+		level: 'warning'
+	});
+	$.ajax({
+		type: 'POST',
+		async: true,
+		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		data: {
+			action: 'SearchDebugTile'
+		},
+		dataType: 'json',
+		global: false,
+		error: function (request, status, error) {
+			$('#div_alert').showAlert({
+				message: '{{Erreur recherche <b>Debug Tiles</b>}}',
+				level: 'danger'
+			});
+		},
+		success: function (data) {
+			$('#div_alert').showAlert({
+				message: "{{Opération réalisée avec succès. Vous pouvez télécharger les logs}}",
+				level: 'success'
+
+			});
+			window.location.reload();
+		}
+	});
+
+});
+
 $('.eqLogicAction[data-action=tile]').on('click', function () {
 	$('#div_alert').showAlert({
 		message: '{{Recherche des <b>Tiles</b>}}',

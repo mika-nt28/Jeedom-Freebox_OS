@@ -49,6 +49,9 @@ class Free_CreateTil
                 case 'homeadapters_SP':
                     Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
                     break;
+                case 'Tiles_debug':
+                    Free_CreateTil::createTil_debug($logicalinfo, $templatecore_V4);
+                    break;
                 case 'Tiles_group':
                     $result = Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);
                     break;
@@ -182,17 +185,19 @@ class Free_CreateTil
             }
         }
     }
-
-    private static function createTil_nodes($logicalinfo, $templatecore_V4)
+    private static function createTil_debug($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . 'NODES');
+        //log::remove('Freebox_OS');
+        log::add('Freebox_OS', 'debug', '┌───────── LOG DEBUG : ' . 'TILES / NODES');
         $Free_API = new Free_API();
+        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'NODES');
         $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
-        log::add('Freebox_OS', 'debug', '└─────────');
+        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'TILES');
+        $Free_API->universal_get('tiles');
+        log::add('Freebox_OS', 'debug', '└───────── FIN LOG DEBUG : ' . 'TILES / NODES');
     }
     private static function createTil_Tiles($logicalinfo, $templatecore_V4)
     {
-
         $Free_API = new Free_API();
         $WebcamOKAll = false;
         $Link_I_store = null;

@@ -3,10 +3,31 @@ require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function Freebox_OS_install()
 {
 	updateConfig();
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (!is_object($cron)) {
+		$cron = new cron();
+		$cron->setClass('Freebox_OS');
+		$cron->setFunction('RefreshToken');
+		$cron->setEnable(1);
+		$cron->setDeamon(1);
+		$cron->setSchedule('*/30 * * * *');
+		$cron->setTimeout('10');
+		$cron->save();
+	}
 }
 function Freebox_OS_update()
 {
-
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (!is_object($cron)) {
+		$cron = new cron();
+		$cron->setClass('Freebox_OS');
+		$cron->setFunction('RefreshToken');
+		$cron->setEnable(1);
+		$cron->setDeamon(1);
+		$cron->setSchedule('*/30 * * * *');
+		$cron->setTimeout('10');
+		$cron->save();
+	}
 	updateConfig();
 
 	try {
@@ -67,10 +88,11 @@ function Freebox_OS_update()
 }
 function Freebox_OS_remove()
 {
-	while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (is_object($cron)) {
+		$cron->stop();
 		$cron->remove();
-	if (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken')))
-		$cron->remove();
+	}
 }
 
 function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = null, $_calculValueOffset = null, $_historizeRound = null)

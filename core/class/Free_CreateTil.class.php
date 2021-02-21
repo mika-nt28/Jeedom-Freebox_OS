@@ -194,6 +194,8 @@ class Free_CreateTil
         $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'TILES');
         $Free_API->universal_get('tiles');
+        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'CAMERA');
+        $Free_API->universal_get('universalAPI', null, null, 'camera');
         log::add('Freebox_OS', 'debug', '└───────── FIN LOG DEBUG : ' . 'TILES / NODES');
     }
     private static function createTil_Tiles($logicalinfo, $templatecore_V4)

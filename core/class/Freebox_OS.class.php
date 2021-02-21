@@ -133,26 +133,14 @@ class Freebox_OS extends eqLogic
 		self::deamon_stop();
 		if ($deamon_info['launchable'] != 'ok') return;
 		if ($deamon_info['state'] == 'ok') return;
-		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
-		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('Freebox_OS');
-			$cron->setFunction('RefreshToken');
-			$cron->setEnable(1);
-			$cron->setSchedule('*/30 * * * *');
-			$cron->setTimeout('10');
-			$cron->save();
-		}
-		$cron->start();
-		$cron->run();
 	}
 	public static function deamon_stop()
 	{
-		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+		/*$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
 		if (is_object($cron)) {
 			$cron->stop();
 			$cron->remove();
-		}
+		}*/
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}

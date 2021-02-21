@@ -8,10 +8,12 @@ function Freebox_OS_install()
 		$cron->setClass('Freebox_OS');
 		$cron->setFunction('RefreshToken');
 		$cron->setEnable(1);
-		//$cron->setDeamon(1);
+		$cron->setDeamon(1);
 		$cron->setSchedule('*/30 * * * *');
 		$cron->setTimeout('10');
 		$cron->save();
+		$cron->start();
+		$cron->run();
 	}
 	updateConfig();
 }
@@ -23,10 +25,12 @@ function Freebox_OS_update()
 		$cron->setClass('Freebox_OS');
 		$cron->setFunction('RefreshToken');
 		$cron->setEnable(1);
-		//$cron->setDeamon(1);
+		$cron->setDeamon(1);
 		$cron->setSchedule('*/30 * * * *');
 		$cron->setTimeout('10');
 		$cron->save();
+		$cron->start();
+		$cron->run();
 	}
 	updateConfig();
 

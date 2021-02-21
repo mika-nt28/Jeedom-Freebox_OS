@@ -46,10 +46,11 @@ function Freebox_OS_update()
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
-		while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
-			$cron->remove();
+		// Remove ancien refresh => Plus besoin 20210221
+		/*while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
+			$cron->remove();*/
 
-		$eqLogics = eqLogic::byType('Freebox_OS');
+		/*$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			if ($WifiEX != 1) {
 				UpdateLogicId($eqLogic, 'wifiOff', $link_IA); // Amélioration 20200616
@@ -62,7 +63,7 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'rx_used_rate_lte'); // Amélioration 20200831
 			removeLogicId($eqLogic, 'tx_max_rate_lte'); // Amélioration 20200831
 			removeLogicId($eqLogic, 'rx_max_rate_lte'); // Amélioration 20200831
-		}
+		}*/
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);

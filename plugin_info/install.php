@@ -13,7 +13,7 @@ function Freebox_OS_install()
 		$cron->setTimeout('10');
 		$cron->save();
 		$cron->start();
-		$cron->run();
+		//$cron->run();
 	}
 	updateConfig();
 }
@@ -30,7 +30,7 @@ function Freebox_OS_update()
 		$cron->setTimeout('10');
 		$cron->save();
 		$cron->start();
-		$cron->run();
+		//$cron->run();
 	}
 	updateConfig();
 

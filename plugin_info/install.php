@@ -2,11 +2,32 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function Freebox_OS_install()
 {
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (!is_object($cron)) {
+		$cron = new cron();
+		$cron->setClass('Freebox_OS');
+		$cron->setFunction('RefreshToken');
+		$cron->setEnable(1);
+		//$cron->setDeamon(1);
+		$cron->setSchedule('*/30 * * * *');
+		$cron->setTimeout('10');
+		$cron->save();
+	}
 	updateConfig();
 }
 function Freebox_OS_update()
 {
-
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (!is_object($cron)) {
+		$cron = new cron();
+		$cron->setClass('Freebox_OS');
+		$cron->setFunction('RefreshToken');
+		$cron->setEnable(1);
+		//$cron->setDeamon(1);
+		$cron->setSchedule('*/30 * * * *');
+		$cron->setTimeout('10');
+		$cron->save();
+	}
 	updateConfig();
 
 	try {
@@ -25,10 +46,11 @@ function Freebox_OS_update()
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
-		while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
-			$cron->remove();
+		// Remove ancien refresh => Plus besoin 20210221
+		/*while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
+			$cron->remove();*/
 
-		$eqLogics = eqLogic::byType('Freebox_OS');
+		/*$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			if ($WifiEX != 1) {
 				UpdateLogicId($eqLogic, 'wifiOff', $link_IA); // Amélioration 20200616
@@ -41,7 +63,7 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'rx_used_rate_lte'); // Amélioration 20200831
 			removeLogicId($eqLogic, 'tx_max_rate_lte'); // Amélioration 20200831
 			removeLogicId($eqLogic, 'rx_max_rate_lte'); // Amélioration 20200831
-		}
+		}*/
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');
 		Freebox_OS::updateLogicalID(1, true);
@@ -67,10 +89,11 @@ function Freebox_OS_update()
 }
 function Freebox_OS_remove()
 {
-	while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (is_object($cron)) {
+		$cron->stop();
 		$cron->remove();
-	if (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken')))
-		$cron->remove();
+	}
 }
 
 function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = null, $_calculValueOffset = null, $_historizeRound = null)

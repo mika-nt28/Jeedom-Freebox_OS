@@ -33,7 +33,6 @@ class Free_Refresh
 
             switch ($refresh) {
                 case 'airmedia':
-
                     break;
                 case 'connexion':
                     Free_Refresh::refresh_connexion($Equipement, $Free_API);

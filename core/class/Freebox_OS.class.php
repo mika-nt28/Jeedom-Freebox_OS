@@ -33,7 +33,7 @@ class Freebox_OS extends eqLogic
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
-		if ($deamon_info['state'] != 'ok') {
+		if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
 			log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
 			Freebox_OS::deamon_start();
 			$Free_API = new Free_API();
@@ -52,7 +52,7 @@ class Freebox_OS extends eqLogic
 						Free_Refresh::RefreshInformation($eqLogic->getId());
 					}
 				}
-				if ($deamon_info['state'] != 'ok') {
+				if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
 					log::add('Freebox_OS', 'debug', '================= PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state'] . ' ==================');
 				}
 			} catch (Exception $exc) {
@@ -135,24 +135,18 @@ class Freebox_OS extends eqLogic
 		if ($deamon_info['state'] == 'ok') return;
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
 		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('Freebox_OS');
-			$cron->setFunction('RefreshToken');
-			$cron->setEnable(1);
-			$cron->setSchedule('*/30 * * * *');
-			$cron->setTimeout('10');
-			$cron->save();
+			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
-		$cron->start();
+		//$cron->start();
 		$cron->run();
 	}
 	public static function deamon_stop()
 	{
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
-		if (is_object($cron)) {
-			$cron->stop();
-			$cron->remove();
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
+		$cron->halt();
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}

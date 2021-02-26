@@ -29,6 +29,7 @@ class Free_CreateTil
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         log::add('Freebox_OS', 'debug', '>───────── Type de box compatible Tiles ? : ' . $Type_box);
+        $Free_API = new Free_API();
         if ($Type_box == 'OK' || $create == "box") {
             $logicalinfo = Freebox_OS::getlogicalinfo();
             if (version_compare(jeedom::version(), "4", "<")) {
@@ -38,25 +39,25 @@ class Free_CreateTil
             };
             switch ($create) {
                 case 'box':
-                    Free_CreateTil::createTil_modelBox();
+                    Free_CreateTil::createTil_modelBox($Free_API);
                     break;
                 case 'camera':
                     Free_CreateTil::createTil_Camera();
                     break;
                 case 'homeadapters':
-                    Free_CreateTil::createTil_homeadapters($logicalinfo, $templatecore_V4);
+                    Free_CreateTil::createTil_homeadapters($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 case 'homeadapters_SP':
-                    Free_CreateTil::createTil_homeadapters_SP($logicalinfo, $templatecore_V4);
+                    Free_CreateTil::createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 case 'Tiles_debug':
-                    Free_CreateTil::createTil_debug($logicalinfo, $templatecore_V4);
+                    Free_CreateTil::createTil_debug($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 case 'Tiles_group':
-                    $result = Free_CreateTil::createTil_Group($logicalinfo, $templatecore_V4);
+                    $result = Free_CreateTil::createTil_Group($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 default:
-                    $result = Free_CreateTil::createTil_Tiles($logicalinfo, $templatecore_V4);
+                    $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
                     break;
             }
             if (isset($result['result'])) {
@@ -77,9 +78,9 @@ class Free_CreateTil
             return;
         }
     }
-    private static function createTil_modelBox()
+    private static function createTil_modelBox($Free_API)
     {
-        $Free_API = new Free_API();
+        //$Free_API = new Free_API();
         $result = $Free_API->universal_get('system', null, null);
         if ($result['board_name'] == 'fbxgw7r') {
             $Type_box = 'OK';
@@ -146,9 +147,8 @@ class Free_CreateTil
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    public static function createTil_Group($logicalinfo, $templatecore_V4)
+    public static function createTil_Group($Free_API, $logicalinfo, $templatecore_V4)
     {
-        $Free_API = new Free_API();
         $tiles = $Free_API->universal_get('tiles', '/all');
         $result = [];
         foreach ($tiles as $tile) {
@@ -162,15 +162,13 @@ class Free_CreateTil
         return $result;
     }
 
-    private static function createTil_homeadapters($logicalinfo, $templatecore_V4)
+    private static function createTil_homeadapters($Free_API, $logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '>───────── Création équipement : Home Adapters');
         Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
     }
-    public static function createTil_homeadapters_SP($logicalinfo, $templatecore_V4)
+    public static function createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4)
     {
-        $Free_API = new Free_API();
-
         $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
@@ -185,20 +183,20 @@ class Free_CreateTil
             }
         }
     }
-    private static function createTil_debug($logicalinfo, $templatecore_V4)
+    private static function createTil_debug($Free_API, $logicalinfo, $templatecore_V4)
     {
         //log::remove('Freebox_OS');
         log::add('Freebox_OS', 'debug', '┌───────── LOG DEBUG : ' . 'TILES / NODES');
-        $Free_API = new Free_API();
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'NODES');
         $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'TILES');
         $Free_API->universal_get('tiles');
+        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'CAMERA');
+        $Free_API->universal_get('universalAPI', null, null, 'camera');
         log::add('Freebox_OS', 'debug', '└───────── FIN LOG DEBUG : ' . 'TILES / NODES');
     }
-    private static function createTil_Tiles($logicalinfo, $templatecore_V4)
+    private static function createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4)
     {
-        $Free_API = new Free_API();
         $WebcamOKAll = false;
         $Link_I_store = null;
         $Link_I_ALARM = null;
@@ -312,7 +310,7 @@ class Free_CreateTil
                                 $_eqLogic == $_eq_type;
                                 $command['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Command['label']);
                                 $parameter['name'] = $Command['label'];
-                                $parameter['id'] = 'FreeboxCamera_' . $_cmd_ep_id;
+                                $parameter['id'] = 'FreeboxCamera_' . $_eq_node;
                                 $parameter['room'] = $_eq_room;
                                 $parameter['url'] = $Command['value'];
                                 log::add('Freebox_OS', 'debug', '>> ================ >> ' . $parameter['name']);

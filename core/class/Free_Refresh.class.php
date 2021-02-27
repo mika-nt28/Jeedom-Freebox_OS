@@ -684,6 +684,10 @@ class Free_Refresh
                         $_value_history = $data['history'][$nb_pushed_k]['value'];
                         log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
                     };
+                    if ($data['name'] == 'battery' || $data['name'] == 'battery_warning') {
+                        $_value = $data['value'];
+                        $Equipement->batteryStatus($_value);
+                    }
 
                     switch ($cmd->getSubType()) {
                         case 'numeric':
@@ -699,10 +703,6 @@ class Free_Refresh
                                         $_value = $data['value'];
                                     }
                                 }
-                            }
-                            if ($data['name'] == 'battery' || $data['name'] == 'battery_warning') {
-                                $_value = $data['value'];
-                                $Equipement->batteryStatus($_value);
                             }
                             log::add('Freebox_OS', 'debug', '│──────────> Valeur : ' . $_value . ' -- valeur Box : ' . $data['value'] . ' -- valeur Inverser : ' . $cmd->getConfiguration('invertnumeric'));
                             break;

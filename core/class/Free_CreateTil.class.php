@@ -124,9 +124,6 @@ class Free_CreateTil
             $EqLogic->setconfiguration("password", $password);
             $EqLogic->setconfiguration("videoFramerate", 15);
             $EqLogic->setconfiguration("device", "rocketcam");
-            $EqLogic->setconfiguration("streamRTSP", 1);
-            $URL_snaphot = "img/snapshot.cgi?size=4&quality=1";
-            $EqLogic->setconfiguration("urlStream", $URL_snaphot);
             $URLrtsp = init('url');
             $URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
             $URLrtsp = str_replace($username, "#username#", $URLrtsp);
@@ -142,7 +139,8 @@ class Free_CreateTil
         $URLrtsp = str_replace($password, "#password#", $URLrtsp);
         $URLrtsp = str_replace($username, "#username#", $URLrtsp);
         $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
-        log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp . ' - URL de snaphot : ' . $URL_snaphot);
+        $EqLogic->setconfiguration("streamRTSP", 1);
+        log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp);
         $EqLogic->save();
         log::add('Freebox_OS', 'debug', '└─────────');
     }

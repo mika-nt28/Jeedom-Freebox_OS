@@ -108,11 +108,11 @@ class Free_CreateEq
                     Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
                     Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 } else {
-                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['airmediaName']);
-                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['downloadsName']);
-                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
-                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['netshareName']);
-                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['wifiName']);
+                    log::add('Freebox_OS', 'debug', '================= BOX EN MODE BRIDGE : LES ÉQUIPEMENTS SUIVANTS NE SONT PAS CRÉER  ==================');
+                    log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['airmediaName']);
+                    log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['downloadsName']);
+                    log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
+                    log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['netshareName']);
                 }
                 // TEST
                 //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);

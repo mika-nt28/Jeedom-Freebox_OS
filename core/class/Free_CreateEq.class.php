@@ -73,40 +73,46 @@ class Free_CreateEq
                 break;
             default:
                 log::add('Freebox_OS', 'debug', '================= ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS  ==================');
-                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['airmediaName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl');
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['diskName']);
-                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['downloadsName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['phoneName']);
-                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['LCDName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['airmediaName']);
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['downloadsName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['networkwifiguestName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['netshareName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['wifiName']);
-                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['LCDName']);
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
                 log::add('Freebox_OS', 'debug', '====================================================================================');
-                Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
-                if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
-                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
-                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
-                }
-                Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
                 if ($Type_box == 'fbxgw1r' || $Type_box == 'fbxgw2r') {
                     Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4);
                 } else {
                     log::add('Freebox_OS', 'debug', '>───────── Type de box compatible pour modifier les réglages de l\'afficheur : ' . $Type_box);
+                }
+                if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
+                    Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
+                    Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
+                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
+                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
+                    Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
+                    Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
+                } else {
+                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['airmediaName']);
+                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['downloadsName']);
+                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
+                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['netshareName']);
+                    log::add('Freebox_OS', 'debug', '>───────── Type de box en mode routeur pas de création de l\'équipement : ' . $logicalinfo['wifiName']);
                 }
                 // TEST
                 //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);

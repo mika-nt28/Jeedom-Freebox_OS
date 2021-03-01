@@ -30,7 +30,12 @@ class Free_CreateTV
         };
         switch ($create) {
             default:
-                Free_CreateTV::createTV_player($logicalinfo, $templatecore_V4);
+                if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
+                    Free_CreateTV::createTV_player($logicalinfo, $templatecore_V4);
+                } else {
+                    log::add('Freebox_OS', 'debug', '>─────────  ENSEMBLE DES PLAYERS ');
+                    log::add('Freebox_OS', 'debug', '====================================================================================');
+                }
                 break;
         }
     }

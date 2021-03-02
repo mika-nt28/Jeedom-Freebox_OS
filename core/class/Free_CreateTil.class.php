@@ -39,7 +39,7 @@ class Free_CreateTil
             };
             switch ($create) {
                 case 'box':
-                    Free_CreateTil::createTil_modelBox($Free_API);
+                    Free_CreateTil::createTil_modelBox();
                     break;
                 case 'camera':
                     Free_CreateTil::createTil_Camera();
@@ -78,9 +78,9 @@ class Free_CreateTil
             return;
         }
     }
-    private static function createTil_modelBox($Free_API)
+    private static function createTil_modelBox()
     {
-        //$Free_API = new Free_API();
+        $Free_API = new Free_API();
         $result = $Free_API->universal_get('system', null, null);
         if ($result['board_name'] == 'fbxgw7r') {
             $Type_box = 'OK';

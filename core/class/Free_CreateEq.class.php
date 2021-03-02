@@ -94,6 +94,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
                 $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
                 if ($Type_box == 'fbxgw1r' || $Type_box == 'fbxgw2r') {
                     Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4);
@@ -105,14 +106,13 @@ class Free_CreateEq
                     Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
-                    Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
                     Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 } else {
                     log::add('Freebox_OS', 'debug', '================= BOX EN MODE BRIDGE : LES ÉQUIPEMENTS SUIVANTS NE SONT PAS CRÉER  ==================');
                     log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['airmediaName']);
                     log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['downloadsName']);
                     log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
-                    log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['netshareName']);
+                    log::add('Freebox_OS', 'debug', '====================================================================================');
                 }
                 // TEST
                 //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);

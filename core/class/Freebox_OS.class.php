@@ -594,12 +594,12 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '│ Si vide aucun changement nécessaire');
 
 		foreach ($eqLogics as $eqLogic) {
-
-			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
 			$eqName = $eqLogic->getName();
 			if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player') {
 				log::add('Freebox_OS', 'debug', '│ TEST ' . $eqName);
 			}
+			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
+
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId());
 			switch ($eqLogic->getLogicalId()) {
 				case 'airmedia':

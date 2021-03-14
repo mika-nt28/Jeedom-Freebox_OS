@@ -596,11 +596,11 @@ class Freebox_OS extends eqLogic
 		foreach ($eqLogics as $eqLogic) {
 			$eqName = $eqLogic->getName();
 			if ($eqLogic->getConfiguration('type') == 'parental') {
-				log::add('Freebox_OS', 'debug', '│ Parental : ' . $eqName);
 				$type_eq = 'parental';
 			} else if ($eqLogic->getConfiguration('type') == 'player') {
-				log::add('Freebox_OS', 'debug', '│ Player : ' . $eqName);
 				$type_eq = 'player';
+			} else if ($eqLogic->getConfiguration('type') == 'alarm_control') {
+				$type_eq = 'alarm_control';
 			} else {
 				$type_eq = $eqLogic->getLogicalId();
 			}
@@ -614,6 +614,8 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
 					break;
+				case 'alarm_control':
+					// Update spécifique pour l'alarme
 				case 'connexion':
 					$eqLogic->setLogicalId($logicalinfo['connexionID']);
 					$eqLogic->setName($logicalinfo['connexionName']);

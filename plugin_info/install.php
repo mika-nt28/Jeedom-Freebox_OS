@@ -54,15 +54,8 @@ function Freebox_OS_update()
 		foreach ($eqLogics as $eqLogic) {
 			if ($WifiEX != 1) {
 				UpdateLogicId($eqLogic, 'wifiOff', $link_IA); // Amélioration 20200616
-				UpdateLogicId($eqLogic, 'wifiOn', $link_IA); // Amélioration 20200616
-				UpdateLogicId($eqLogic, 'wifiStatut'); // Amélioration 20200820
 			}
-
 			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
-			removeLogicId($eqLogic, 'tx_use_rate_lte'); // Amélioration 20200831
-			removeLogicId($eqLogic, 'rx_used_rate_lte'); // Amélioration 20200831
-			removeLogicId($eqLogic, 'tx_max_rate_lte'); // Amélioration 20200831
-			removeLogicId($eqLogic, 'rx_max_rate_lte'); // Amélioration 20200831
 		}*/
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');
@@ -72,19 +65,6 @@ function Freebox_OS_update()
 	} catch (Exception $e) {
 		$e = print_r($e, 1);
 		log::add('Freebox_OS', 'error', 'Freebox_OS update ERROR : ' . $e);
-	}
-	//resave eqLogics for new cmd:
-	try {
-		$eqs = eqLogic::byType('Freebox_OS');
-		foreach ($eqs as $eq) {
-			if ($eq->getConfiguration('type') == 'alarm_control') {
-				$eq->save();
-				break;
-			}
-		}
-	} catch (Exception $e) {
-		$e = print_r($e, 1);
-		log::add('Freebox_OS', 'error', 'Freebox update ERROR : ' . $e);
 	}
 }
 function Freebox_OS_remove()

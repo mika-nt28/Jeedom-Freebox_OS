@@ -149,7 +149,7 @@ class Free_API
             }
 
             if ($log_update == false) {
-                log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
+                //log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
             };
             log::add('Freebox_OS', 'debug', '│ [Freebox Request Connexion] : ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
             $ch = curl_init();
@@ -208,7 +208,7 @@ class Free_API
                         return false;
                     }
                 }
-                log::add('Freebox_OS', 'debug', '└─────────');
+                //log::add('Freebox_OS', 'debug', '└─────────');
                 return $result;
             }
         } catch (Exception $e) {
@@ -382,15 +382,7 @@ class Free_API
             $value = 0;
             switch ($update) {
                 case 'connexion':
-                    /* if ($update_type == 'lte/config' && $boucle == 4) {
-                        if ($result['result']['enabled']) {
-                            $value = 1;
-                        }
-                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $value);
-                        return $value;
-                    } else {*/
                     return $result['result'];
-                    //}
                     break;
                 case 'disk':
                 case 'network_ping':

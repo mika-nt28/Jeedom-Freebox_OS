@@ -184,14 +184,16 @@ class Free_CreateTil
     private static function createTil_debug($Free_API, $logicalinfo, $templatecore_V4)
     {
         //log::remove('Freebox_OS');
-        log::add('Freebox_OS', 'debug', '┌───────── LOG DEBUG : ' . 'TILES / NODES');
+        log::add('Freebox_OS', 'debug', '********************');
+        log::add('Freebox_OS', 'debug', '******************** LOG DEBUG : ' . 'TILES / NODES ********************');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'NODES');
         $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'TILES');
         $Free_API->universal_get('tiles');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'CAMERA');
         $Free_API->universal_get('universalAPI', null, null, 'camera');
-        log::add('Freebox_OS', 'debug', '└───────── FIN LOG DEBUG : ' . 'TILES / NODES');
+        log::add('Freebox_OS', 'debug', '********************  FIN LOG DEBUG : ' . 'TILES / NODES ********************');
+        log::add('Freebox_OS', 'debug', '********************');
     }
     private static function createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4)
     {
@@ -496,6 +498,7 @@ class Free_CreateTil
                                                 } else {
                                                     log::add('Freebox_OS', 'debug', '│ La valeur de la batterie est nulle ' . $Command['value'] . ' ==> PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
                                                 }
+                                                $Tile->batteryStatus($Command['value']);
                                                 $Tile->setConfiguration("battery_type", $battery);
                                                 $Tile->save();
                                             }
@@ -647,7 +650,7 @@ class Free_CreateTil
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $_Eq_type_home;
         //Log pour Test (mettre en comment après TEST)
-        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
+        //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
         switch ($Search) {
             case 'alarm_control_error_r_tiles':
                 $Label_I = $Label_O;
@@ -1158,7 +1161,6 @@ class Free_CreateTil
                 $Icon = 'far fa-lightbulb';
                 $IconON = 'far fa-lightbulb icon_yellow';
                 $IconOFF = 'far fa-lightbulb icon_red';
-                //$typeCMD_BOOL = 'PB';
                 $Templatecore = $Templatecore_V4 . 'light';
                 $TemplatecoreON = $Templatecore;
                 $TemplatecoreOFF = $TemplatecoreON;
@@ -1173,7 +1175,6 @@ class Free_CreateTil
                 $Generic_type = 'FLAP_STATE';
                 $Templatecore = 'shutter';
                 break;
-                // A TRAITER
             case 'enable_r':
                 $Label_ETAT = 'ETAT Activation';
                 $Generic_type = 'LIGHT_STATE';
@@ -1184,7 +1185,7 @@ class Free_CreateTil
                 $Generic_type = 'SABOTAGE';
                 $InvertBinary = 1;
                 break;
-            case 'alarm_sensor_trigger_r_tiles': // A finaliser => Ouverture
+            case 'alarm_sensor_trigger_r_tiles':
                 $Generic_type = 'OPENING';
                 $Templatecore = $Templatecore_V4 . 'door';
                 break;

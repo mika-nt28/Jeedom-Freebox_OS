@@ -595,13 +595,19 @@ class Freebox_OS extends eqLogic
 
 		foreach ($eqLogics as $eqLogic) {
 			$eqName = $eqLogic->getName();
-			if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player') {
-				log::add('Freebox_OS', 'debug', '│ TEST ' . $eqName);
+			if ($eqLogic->getConfiguration('type') == 'parental') {
+				log::add('Freebox_OS', 'debug', '│ Parental : ' . $eqName);
+				$type_eq = 'parental';
+			} else if ($eqLogic->getConfiguration('type') == 'player') {
+				log::add('Freebox_OS', 'debug', '│ Player : ' . $eqName);
+				$type_eq = 'player';
+			} else {
+				$type_eq = $eqLogic->getLogicalId();
 			}
 			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
 
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId());
-			switch ($eqLogic->getLogicalId()) {
+			switch ($type_eq) {
 				case 'airmedia':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
 					$eqLogic->setName($logicalinfo['airmediaName']);
@@ -632,11 +638,17 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['homeadaptersID']);
 					break;
+				case 'parental':
+					//Pour les contrôles parentaux
+					break;
 				case 'Phone':
 					$eqLogic->setLogicalId($logicalinfo['phoneID']);
 					$eqLogic->setName($logicalinfo['phoneName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['phoneID']);
+					break;
+				case 'player':
+					//Pour les players
 					break;
 				case 'network':
 					$eqLogic->setLogicalId($logicalinfo['networkID']);

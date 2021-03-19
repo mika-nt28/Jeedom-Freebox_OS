@@ -214,7 +214,7 @@ class Freebox_OS extends eqLogic
 					}
 				}
 				if ($eq_group != null) {
-					$EqLogic->setConfiguration('type', $eq_group);
+					$EqLogic->setConfiguration('eq_group', $eq_group);
 				}
 				$EqLogic->save();
 			}

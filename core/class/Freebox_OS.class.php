@@ -656,7 +656,7 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setLogicalId($logicalinfo['homeadaptersID']);
 					//$eqLogic->setName($logicalinfo['homeadaptersName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
-					$eqLogic->setConfiguration('eq_group', 'system');
+					$eqLogic->setConfiguration('eq_group', 'tiles_SP');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['homeadaptersID']);
 					break;
 				case 'parental_controls':

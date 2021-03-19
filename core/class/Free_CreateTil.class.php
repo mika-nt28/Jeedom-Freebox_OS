@@ -167,7 +167,7 @@ class Free_CreateTil
     }
     public static function createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4)
     {
-        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
+        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, null, 'tiles_SP');
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {

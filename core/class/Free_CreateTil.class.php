@@ -57,6 +57,7 @@ class Free_CreateTil
                     $result = Free_CreateTil::createTil_Group($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 default:
+                    Freebox_OS::updateLogicalID('2', true);
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
                     break;
             }

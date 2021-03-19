@@ -611,7 +611,7 @@ class Freebox_OS extends eqLogic
 			}
 			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $eq_version) continue;
 
-			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId());
+			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
 			switch ($type_eq) {
 				case 'airmedia':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);

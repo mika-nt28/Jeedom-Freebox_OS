@@ -160,7 +160,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
 	}
 
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system')
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', '>> ================ >> Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
@@ -212,6 +212,9 @@ class Freebox_OS extends eqLogic
 					if ($Player != null) {
 						$EqLogic->setConfiguration('player', $Player);
 					}
+				}
+				if ($eq_group != null) {
+					$EqLogic->setConfiguration('type', $eq_group);
 				}
 				$EqLogic->save();
 			}
@@ -601,6 +604,8 @@ class Freebox_OS extends eqLogic
 				$type_eq = 'player';
 			} else if ($eqLogic->getConfiguration('type') == 'alarm_control') {
 				$type_eq = 'alarm_control';
+			} else if ($eqLogic->getConfiguration('type') == 'camera') {
+				$type_eq = 'camera';
 			} else {
 				$type_eq = $eqLogic->getLogicalId();
 			}
@@ -616,6 +621,13 @@ class Freebox_OS extends eqLogic
 					break;
 				case 'alarm_control':
 					// Update spécifique pour l'alarme
+					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					$eqLogic->save();
+					break;
+				case 'camera':
+					// Update spécifique pour les caméras
+					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					break;
 				case 'connexion':
 					$eqLogic->setLogicalId($logicalinfo['connexionID']);
 					$eqLogic->setName($logicalinfo['connexionName']);
@@ -628,7 +640,7 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['diskID']);
 					break;
-				case 'Downloads':
+				case 'downloads':
 					$eqLogic->setLogicalId($logicalinfo['downloadsID']);
 					$eqLogic->setName($logicalinfo['downloadsName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);
@@ -642,6 +654,7 @@ class Freebox_OS extends eqLogic
 					break;
 				case 'parental':
 					//Pour les contrôles parentaux
+					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					break;
 				case 'Phone':
 					$eqLogic->setLogicalId($logicalinfo['phoneID']);
@@ -651,6 +664,7 @@ class Freebox_OS extends eqLogic
 					break;
 				case 'player':
 					//Pour les players
+					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					break;
 				case 'network':
 					$eqLogic->setLogicalId($logicalinfo['networkID']);
@@ -676,7 +690,7 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['LCDID']);
 					break;
-				case 'System':
+				case 'system':
 					$eqLogic->setLogicalId($logicalinfo['systemID']);
 					$eqLogic->setName($logicalinfo['systemName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $_version);

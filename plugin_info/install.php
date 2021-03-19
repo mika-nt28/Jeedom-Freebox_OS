@@ -59,7 +59,7 @@ function Freebox_OS_update()
 		}*/
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');
-		Freebox_OS::updateLogicalID(4, true);
+		Freebox_OS::updateLogicalID(2, true);
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {

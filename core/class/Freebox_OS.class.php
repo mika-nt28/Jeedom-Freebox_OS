@@ -597,7 +597,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '│ Si vide aucun changement nécessaire');
 
 		foreach ($eqLogics as $eqLogic) {
-			$eqName = $eqLogic->getName();
+			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
 			if ($eqLogic->getConfiguration('type') == 'parental') {
 				$type_eq = 'parental_controls';
 			} else if ($eqLogic->getConfiguration('type') == 'player') {
@@ -609,7 +609,6 @@ class Freebox_OS extends eqLogic
 			} else {
 				$type_eq = $eqLogic->getLogicalId();
 			}
-			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
 			//if ($eqLogic->getConfiguration('VersionLogicalID', 0) === $eq_version) continue;
 
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ');

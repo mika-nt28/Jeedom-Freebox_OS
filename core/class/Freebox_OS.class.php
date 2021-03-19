@@ -610,7 +610,7 @@ class Freebox_OS extends eqLogic
 				$type_eq = $eqLogic->getLogicalId();
 			}
 			//log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
-			if ($eqLogic->getConfiguration('VersionLogicalID', 0) === $eq_version) continue;
+			//if ($eqLogic->getConfiguration('VersionLogicalID', 0) === $eq_version) continue;
 
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
 			switch ($type_eq) {

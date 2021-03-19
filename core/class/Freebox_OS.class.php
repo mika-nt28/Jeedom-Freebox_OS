@@ -589,7 +589,7 @@ class Freebox_OS extends eqLogic
 			'wifiAPName' => 'Wifi Access Points'
 		);
 	}
-	public static function updateLogicalID($_version, $_update = false)
+	public static function updateLogicalID($eq_version, $_update = false)
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$logicalinfo = Freebox_OS::getlogicalinfo();
@@ -599,7 +599,7 @@ class Freebox_OS extends eqLogic
 		foreach ($eqLogics as $eqLogic) {
 			$eqName = $eqLogic->getName();
 			if ($eqLogic->getConfiguration('type') == 'parental') {
-				$type_eq = 'parental';
+				$type_eq = 'parental_controls';
 			} else if ($eqLogic->getConfiguration('type') == 'player') {
 				$type_eq = 'player';
 			} else if ($eqLogic->getConfiguration('type') == 'alarm_control') {
@@ -609,106 +609,123 @@ class Freebox_OS extends eqLogic
 			} else {
 				$type_eq = $eqLogic->getLogicalId();
 			}
-			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
+			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $eq_version) continue;
 
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId());
 			switch ($type_eq) {
 				case 'airmedia':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
-					$eqLogic->setName($logicalinfo['airmediaName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['airmediaName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
 					break;
 				case 'alarm_control':
 					// Update spécifique pour l'alarme
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'tiles');
 					$eqLogic->save();
 					break;
 				case 'camera':
 					// Update spécifique pour les caméras
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'nodes');
 					break;
 				case 'connexion':
 					$eqLogic->setLogicalId($logicalinfo['connexionID']);
-					$eqLogic->setName($logicalinfo['connexionName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['connexionName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update logicalID : "' . $logicalinfo['connexionID'] . '" et Update name : "' . $logicalinfo['connexionName'] . '"');
 					break;
 				case 'disk':
 					$eqLogic->setLogicalId($logicalinfo['diskID']);
-					$eqLogic->setName($logicalinfo['diskName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['diskName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['diskID']);
 					break;
 				case 'downloads':
 					$eqLogic->setLogicalId($logicalinfo['downloadsID']);
-					$eqLogic->setName($logicalinfo['downloadsName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['downloadsName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['downloadsID']);
 					break;
 				case 'homeadapters':
 					$eqLogic->setLogicalId($logicalinfo['homeadaptersID']);
-					$eqLogic->setName($logicalinfo['homeadaptersName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['homeadaptersName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['homeadaptersID']);
 					break;
-				case 'parental':
+				case 'parental_controls':
 					//Pour les contrôles parentaux
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'parental_controls');
 					break;
 				case 'Phone':
 					$eqLogic->setLogicalId($logicalinfo['phoneID']);
-					$eqLogic->setName($logicalinfo['phoneName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['phoneName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['phoneID']);
 					break;
 				case 'player':
 					//Pour les players
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					break;
 				case 'network':
 					$eqLogic->setLogicalId($logicalinfo['networkID']);
-					$eqLogic->setName($logicalinfo['networkName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['networkName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['networkID']);
 					break;
-				case 'network':
+				case 'netshare':
 					$eqLogic->setLogicalId($logicalinfo['netshareID']);
-					$eqLogic->setName($logicalinfo['networkName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['netshareName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['netshareID']);
 					break;
 				case 'networkwifiguest':
 					$eqLogic->setLogicalId($logicalinfo['networkwifiguestID']);
-					$eqLogic->setName($logicalinfo['networkName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['networkwifiguestName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['networkwifiguestID']);
 					break;
-				case 'networkwifiguest':
+				case 'LCD':
 					$eqLogic->setLogicalId($logicalinfo['LCDID']);
-					$eqLogic->setName($logicalinfo['LCDName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['LCDName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['LCDID']);
 					break;
 				case 'system':
 					$eqLogic->setLogicalId($logicalinfo['systemID']);
-					$eqLogic->setName($logicalinfo['systemName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['systemName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['systemID']);
 					break;
 				case 'wifi':
 					$eqLogic->setLogicalId($logicalinfo['wifiID']);
-					$eqLogic->setName($logicalinfo['wifiName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					//$eqLogic->setName($logicalinfo['wifiName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['wifiID']);
 					break;
 				default:
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					$eqLogic->setConfiguration('eq_group', 'tiles');
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
 					break;
 			}
 
 			if (!$_update) $eqLogic->setName($eqName);
-			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update V' . $_version);
+			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update V' . $eq_version);
 			$eqLogic->save(true);
 			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update save');
 		}

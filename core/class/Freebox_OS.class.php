@@ -622,7 +622,7 @@ class Freebox_OS extends eqLogic
 						// Update spécifique pour l'alarme
 						$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
 						$eqLogic->setConfiguration('eq_group', 'tiles');
-						$eqLogic->save();
+						//$eqLogic->save();
 						break;
 					case 'camera':
 						// Update spécifique pour les caméras

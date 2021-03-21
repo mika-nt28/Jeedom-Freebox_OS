@@ -440,12 +440,16 @@ class Freebox_OS extends eqLogic
 				break;
 		}
 	}
-	public static function deamon()
+	public static function Update()
 	{
-		$queue = cache::byKey("maQueue");
+		log::add('Freebox_OS', 'debug', '[test 1] ');
+		/*$queue = cache::byKey('Freebox_OS::maQueue');
+		if (!is_array($queue)) {
+			return;
+		}
 		foreach ($queue as $cmd) {
 			log::add('Freebox_OS', 'debug', '[test] ' . $cmd);
-		}
+		}*/
 	}
 	public function postSave()
 	{
@@ -719,13 +723,16 @@ class Freebox_OSCmd extends cmd
 		}
 		return false;
 	}
-
-
 	public function execute($_options = array())
 	{
 		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $this->getName() . '(' . $this->getLogicalId() . ') ' . 'de l\'équipement ' . $this->getEqLogic()->getName());
-
-		Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
+		$array = cache::byKey('Freebox_OS::maQueue');
+		if (!is_array($array)) {
+			$array = [];
+		}
+		array_push($array, 'test');
+		cache::set('Freebox_OS::maQueue', $array);
+		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 
 	public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')

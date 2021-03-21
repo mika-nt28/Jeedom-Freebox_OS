@@ -57,6 +57,7 @@ class Free_CreateTil
                     $result = Free_CreateTil::createTil_Group($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 default:
+                    //Freebox_OS::updateLogicalID('2', true);
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
                     break;
             }
@@ -167,7 +168,7 @@ class Free_CreateTil
     }
     public static function createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4)
     {
-        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *');
+        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, null, 'tiles_SP');
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {
@@ -184,14 +185,16 @@ class Free_CreateTil
     private static function createTil_debug($Free_API, $logicalinfo, $templatecore_V4)
     {
         //log::remove('Freebox_OS');
-        log::add('Freebox_OS', 'debug', '┌───────── LOG DEBUG : ' . 'TILES / NODES');
+        log::add('Freebox_OS', 'debug', '********************');
+        log::add('Freebox_OS', 'debug', '******************** LOG DEBUG : ' . 'TILES / NODES ********************');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'NODES');
         $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'TILES');
         $Free_API->universal_get('tiles');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'CAMERA');
         $Free_API->universal_get('universalAPI', null, null, 'camera');
-        log::add('Freebox_OS', 'debug', '└───────── FIN LOG DEBUG : ' . 'TILES / NODES');
+        log::add('Freebox_OS', 'debug', '********************  FIN LOG DEBUG : ' . 'TILES / NODES ********************');
+        log::add('Freebox_OS', 'debug', '********************');
     }
     private static function createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4)
     {
@@ -203,20 +206,20 @@ class Free_CreateTil
         $_eq_room = null;
         $_eq_data = null;
         $_eq_node = null;
-        $_eq_type_home = 'tiles';
+        $eq_group = 'tiles';
         $boucle_num = 1; // 1 = Tiles - 2 = Node 
         while ($boucle_num <= 2) {
             if ($boucle_num == 2) {
                 $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
-                $_eq_type_home = 'nodes';
+                $eq_group = 'nodes';
             } else if ($boucle_num == 1) {
                 $_eq_category = true;
                 $result = $Free_API->universal_get('tiles');
             }
-            log::add('Freebox_OS', 'debug', '>> ================ >> TYPE DE CREATION : ' . $_eq_type_home);
+            log::add('Freebox_OS', 'debug', '>> ================ >> TYPE DE CREATION : ' . $eq_group);
             foreach ($result as $Equipement) {
                 $_eq_category = true;
-                if ($_eq_type_home == 'nodes') { //
+                if ($eq_group == 'nodes') { //
                     if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
@@ -281,9 +284,9 @@ class Free_CreateTil
                     );
                     $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);
                     if ($_eq_type != 'camera' && $boucle_num != 2) {
-                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2);
+                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2, $eq_group);
                     } else {
-                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2);
+                        $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2, $eq_group);
                     }
 
                     $_eqLogic = null;
@@ -407,14 +410,14 @@ class Free_CreateTil
                                         $IsVisible = 0;
                                         $order = 9;
                                     }
-                                    $action = $Tile->AddCommand($Command['label'], $_cmd_ep_id, 'action', 'other', null, $_unit, $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, null, $_iconname, $_home_config_eq, null, null, null, null, null, $_eq_type_home);
+                                    $action = $Tile->AddCommand($Command['label'], $_cmd_ep_id, 'action', 'other', null, $_unit, $generic_type, $IsVisible, $Link_I, $Link_I, 0, $icon, 0, 'default', 'default', $order, 0, false, false, null, $_iconname, $_home_config_eq, null, null, null, null, null, $eq_group);
                                     break;
                                 case "int":
                                     $label = $Command['label'];
                                     $name = $Command['name'];
                                     $link_logicalId = 'default';
                                     foreach (str_split($Command['ui']['access'], 2) as $access) {
-                                        $setting = Free_CreateTil::search_setting_int($_eq_action, $Command['ui']['access'], $label, $_eq_type, $_eq_type_home, $_cmd_ep_id, $Command, $name, $Setting_mouv_sensor);
+                                        $setting = Free_CreateTil::search_setting_int($_eq_action, $Command['ui']['access'], $label, $_eq_type, $eq_group, $_cmd_ep_id, $Command, $name, $Setting_mouv_sensor);
                                         $Templatecore = $setting['Templatecore'];
                                         $Templatecore_I = $setting['Templatecore_I'];
                                         if ($setting['CreateCMD'] == 1) {
@@ -429,7 +432,7 @@ class Free_CreateTil
                                             if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
                                                 if ($setting['Search'] != 'pir_battery_r_nodes' && $setting['Search'] != 'kfb_battery_r_nodes') {
                                                     $order = $setting['Order'];
-                                                    $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
+                                                    $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $eq_group);
                                                     $order++;
                                                 } else {
                                                     $Name = 'Batterie';
@@ -442,15 +445,15 @@ class Free_CreateTil
                                                         }
                                                         $battery = Free_CreateTil::Battery_type($_eq_type_battery);
                                                         $_cmd_search->setLogicalId($_cmd_ep_id);
-                                                        $_cmd_search->setConfiguration('TypeNode', $_eq_type_home);
+                                                        $_cmd_search->setConfiguration('TypeNode', $eq_group);
                                                         $_cmd_search->setConfiguration("battery_type", $battery);
                                                         $_cmd_search->save();
                                                     } else {
-                                                        $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
+                                                        $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $eq_group);
                                                     }
                                                 }
                                                 if ($Command['ui']['access'] === 'rw') {
-                                                    $Action =  $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $Templatecore, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $order, $setting['IsHistorized'], false, false, null, true, null, null, null, null, null, null, $_eq_type_home);
+                                                    $Action =  $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $Templatecore, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $order, $setting['IsHistorized'], false, false, null, true, null, null, null, null, null, null, $eq_group);
                                                     Free_CreateTil::Create_linK($Info, $Action);
                                                 }
 
@@ -475,7 +478,7 @@ class Free_CreateTil
                                                 }
                                             }
                                             if ($Command['ui']['access'] === 'w') {
-                                                $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore_I'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, null, null, $_eq_type_home);
+                                                $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore_I'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, null, null, $eq_group);
                                             }
 
                                             $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);
@@ -496,6 +499,7 @@ class Free_CreateTil
                                                 } else {
                                                     log::add('Freebox_OS', 'debug', '│ La valeur de la batterie est nulle ' . $Command['value'] . ' ==> PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
                                                 }
+                                                $Tile->batteryStatus($Command['value']);
                                                 $Tile->setConfiguration("battery_type", $battery);
                                                 $Tile->save();
                                             }
@@ -515,7 +519,7 @@ class Free_CreateTil
                                         } elseif ($Command['label'] == 'Détection') {
                                             $Setting_mouv_sensor = '_' . 'mouv_sensor';
                                         }
-                                        $setting = Free_CreateTil::search_setting_bool($_eq_action, $access, $Command['name'], $_eq_type, $Command['label'], $_eq_type_home, $_cmd_ep_id, $templatecore_V4);
+                                        $setting = Free_CreateTil::search_setting_bool($_eq_action, $access, $Command['name'], $_eq_type, $Command['label'], $eq_group, $_cmd_ep_id, $templatecore_V4);
                                         $_home_config_eq = $setting['Home_config_eq'];
                                         if ($_eq_type == 'kfb' || $_eq_type == 'pir' || $_eq_type == 'dws' || $_eq_type == 'alarm_remote') {
                                             $_home_config_eq = $_eq_type;
@@ -524,7 +528,7 @@ class Free_CreateTil
 
                                         if ($setting['CreateCMD'] == 1) {
                                             if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
-                                                $infoCmd = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'info', 'binary', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $_eq_type_home, $setting['Eq_type_home']);
+                                                $infoCmd = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'info', 'binary', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                 $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);
                                                 if ($_eq_action == 'store') {
                                                     $Link_I_store = $infoCmd;
@@ -543,18 +547,18 @@ class Free_CreateTil
                                                 }
                                                 if ($Command['ui']['access'] === 'rw') {
                                                     $order_A = $setting['Order_A'];
-                                                    $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $_eq_type_home, $setting['Eq_type_home']);
+                                                    $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                     $order_A++;
-                                                    $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $_eq_type_home, $setting['Eq_type_home']);
+                                                    $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                 }
                                             } else if ($Command['ui']['access'] === 'w') {
                                                 if ($setting['TypeCMD'] != 'PB_SP') {
-                                                    $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $_eq_type_home, $setting['Eq_type_home']);
+                                                    $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                 } else {
                                                     $order_A = $setting['Order_A'];
-                                                    $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $_eq_type_home, $setting['Eq_type_home']);
+                                                    $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                     $order_A++;
-                                                    $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['TemplatecoreOFF'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $_eq_type_home, $setting['Eq_type_home']);
+                                                    $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['TemplatecoreOFF'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                 }
                                             }
                                         }
@@ -562,28 +566,28 @@ class Free_CreateTil
                                     break;
                                 case "string":
                                     foreach (str_split($Command['ui']['access']) as $access) {
-                                        $setting = Free_CreateTil::search_setting_string($_eq_action, $access, $Command['name'], $_eq_type, $Command['label'], $_eq_type_home, $_cmd_ep_id);
+                                        $setting = Free_CreateTil::search_setting_string($_eq_action, $access, $Command['name'], $_eq_type, $Command['label'], $eq_group, $_cmd_ep_id);
                                         $IsVisible = 1;
                                         $generic_type = null;
                                         if ($setting['CreateCMD'] == 1) {
                                             if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
-                                                $info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', 'string', $setting['Templatecore'], $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', 'default', 0, $setting['Icon_I'], 0, 'default', 'default', $setting['Order'], 0, false, true, null, true, null, null, null, null, null, null, $_eq_type_home);
+                                                $info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', 'string', $setting['Templatecore'], $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', 'default', 0, $setting['Icon_I'], 0, 'default', 'default', $setting['Order'], 0, false, true, null, true, null, null, null, null, null, null, $eq_group);
                                                 $Link_I_ALARM = $info;
                                                 if ($Command['name'] == "state" && $_eq_type == 'alarm_control') {
                                                     log::add('Freebox_OS', 'debug', '│──────────> Ajout commande spécifique pour Homebridge');
-                                                    $ALARM_ENABLE = $Tile->AddCommand('Actif', 'ALARM_enable', 'info', 'binary', 'core::lock', null, 'ALARM_ENABLE_STATE', 1, 'default', $_cmd_ep_id, 0, null, 0, 'default', 'default', 1, 1, false, true, null, null, null, null, null, null, null, null, $_eq_type_home);
+                                                    $ALARM_ENABLE = $Tile->AddCommand('Actif', 'ALARM_enable', 'info', 'binary', 'core::lock', null, 'ALARM_ENABLE_STATE', 1, 'default', $_cmd_ep_id, 0, null, 0, 'default', 'default', 1, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
                                                     $Link_I_ALARM_ENABLE = $ALARM_ENABLE;
-                                                    $Tile->AddCommand('Statut', 'ALARM_state', 'info', 'binary', 'core::alert', null, 'ALARM_STATE', 1, 'default', $_cmd_ep_id, 1, null, 0, 'default', 'default',  2, 1, false, true, null, null, null, null, null, null, null, null, $_eq_type_home);
-                                                    $Tile->AddCommand('Mode', 'ALARM_mode', 'info', 'string', null, null, 'ALARM_MODE', 0, 0, $_cmd_ep_id, 0, null, 0, 'default', 'default', 3, 1, false, true, null, null, null, null, null, null, null, null, $_eq_type_home);
+                                                    $Tile->AddCommand('Statut', 'ALARM_state', 'info', 'binary', 'core::alert', null, 'ALARM_STATE', 1, 'default', $_cmd_ep_id, 1, null, 0, 'default', 'default',  2, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
+                                                    $Tile->AddCommand('Mode', 'ALARM_mode', 'info', 'string', null, null, 'ALARM_MODE', 0, 0, $_cmd_ep_id, 0, null, 0, 'default', 'default', 3, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
                                                     log::add('Freebox_OS', 'debug', '│──────────> Fin Ajout commande spécifique pour Homebridge');
                                                 }
 
                                                 if ($Command['ui']['access'] === 'rw') {
-                                                    $action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', 'message', null, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, null, null, null, null, null, null, null, $_eq_type_home);
+                                                    $action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', 'message', null, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, null, null, null, null, null, null, null, $eq_group);
                                                 }
                                             }
                                             if ($Command['ui']['access'] === 'w') {
-                                                $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'action', 'message', null, $_unit, $setting['Generic_type_I'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon_I'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, null, null, null, null, null, null, null, $_eq_type_home);
+                                                $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'action', 'message', null, $_unit, $setting['Generic_type_I'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon_I'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, null, null, null, null, null, null, null, $eq_group);
                                             }
                                         }
                                     }
@@ -625,7 +629,7 @@ class Free_CreateTil
         return $result;
     }
 
-    private static function search_setting_string($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O, $_Eq_type_home, $_Cmd_ep_id)
+    private static function search_setting_string($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O, $eq_group, $_Cmd_ep_id)
     {
         $Setting1 = $_Eq_type;
         $Setting2 = $Name;
@@ -641,13 +645,13 @@ class Free_CreateTil
         $Label = $Label_O;
 
         $CreateCMD = true;
-        if ($_Eq_type_home != null) {
-            $_Eq_type_home = '_' . $_Eq_type_home;
+        if ($eq_group != null) {
+            $_eq_grouo = '_' . $eq_group;
         }
 
-        $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $_Eq_type_home;
+        $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
         //Log pour Test (mettre en comment après TEST)
-        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
+        //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
         switch ($Search) {
             case 'alarm_control_error_r_tiles':
                 $Label_I = $Label_O;
@@ -681,7 +685,7 @@ class Free_CreateTil
         }
         $Setting = array(
             "CreateCMD" => $CreateCMD,
-            "Eq_type_home" =>  $_Eq_type_home,
+            "Eq_type_home" =>  $eq_group,
             "Generic_type" => $Generic_type,
             "Icon" => $Icon,
             "Icon_I" => $Icon_I,
@@ -697,7 +701,7 @@ class Free_CreateTil
         );
         return $Setting;
     }
-    private static function search_setting_int($_Eq_action, $Access, $Label_O, $_Eq_type, $_Eq_type_home, $_Cmd_ep_id = null, $Command = null, $Name, $Setting_mouv_sensor = null)
+    private static function search_setting_int($_Eq_action, $Access, $Label_O, $_Eq_type, $eq_group, $_Cmd_ep_id = null, $Command = null, $Name, $Setting_mouv_sensor = null)
     {
         $Setting1 = $_Eq_type;
         $Setting2 = null;
@@ -715,7 +719,7 @@ class Free_CreateTil
             $Setting2 = 'pushed_remote';
         } elseif ($Name == "battery_warning" || $Label_O == 'Niveau de Batterie') {
             $Setting2 = 'battery';
-            if ($Setting_mouv_sensor == '_mouv_sensor' && $_Eq_type_home == 'tiles') {
+            if ($Setting_mouv_sensor == '_mouv_sensor' && $eq_group == 'tiles') {
                 $Setting2 = $Setting2  . $Setting_mouv_sensor;
             }
         } elseif ($_Eq_type == "alarm"  && ($Name == 'timeout1' || $Name == 'timeout2' || $Name == 'timeout3' || $Name == 'volume' || $Name == 'sound')) {
@@ -751,11 +755,11 @@ class Free_CreateTil
         $Label_I = $Label_sup . $Label_O;
         $Label = $Label_O;
 
-        if ($_Eq_type_home != null) {
-            $_Eq_type_home = '_' . $_Eq_type_home;
+        if ($eq_group != null) {
+            $eq_group = '_' . $eq_group;
         }
 
-        $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $_Eq_type_home;
+        $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
         //Log pour Test (mettre en comment après TEST)
         //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting INT pour  : ' . $Search);
         switch ($Search) {
@@ -913,7 +917,7 @@ class Free_CreateTil
 
         $Setting = array(
             "CreateCMD" => $CreateCMD,
-            "Eq_type_home" =>  $_Eq_type_home,
+            "Eq_type_home" =>  $eq_group,
             "Unit" => $Unit,
             "Min" => $_Min,
             "Max" => $_Max,
@@ -941,7 +945,7 @@ class Free_CreateTil
         );
         return $Setting;
     }
-    private static function search_setting_bool($_Eq_action, $Access, $Name, $_Eq_type, $Label_o = null, $_Eq_type_home, $_Cmd_ep_id = null, $Templatecore_V4 = null)
+    private static function search_setting_bool($_Eq_action, $Access, $Name, $_Eq_type, $Label_o = null, $eq_group, $_Cmd_ep_id = null, $Templatecore_V4 = null)
     {
         if ($Label_o == 'Détection') {
             $Setting1 = '_' . 'mouv_sensor';
@@ -950,7 +954,7 @@ class Free_CreateTil
         } else {
             $Setting1 = null;
         }
-        $Search = $_Eq_type . '_' . $Name . "_" . $Access . $Setting1 . '_' . $_Eq_type_home;
+        $Search = $_Eq_type . '_' . $Name . "_" . $Access . $Setting1 . '_' . $eq_group;
         //Log pour Test (mettre en comment après TEST)
         //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting BOOL pour  : ' . $Search);
 
@@ -1033,7 +1037,7 @@ class Free_CreateTil
                 $Templatecore = 'default';
                 $TemplatecoreON = $Templatecore_V4 . 'binarySwitch';
                 $TemplatecoreOFF = $Templatecore_V4 . 'binarySwitch';
-                $_Eq_type_home = 'nodes';
+                $eq_group = 'nodes';
                 $IsVisible = '0';
                 $IsVisible_PB = 1;
                 switch ($Search) {
@@ -1158,7 +1162,6 @@ class Free_CreateTil
                 $Icon = 'far fa-lightbulb';
                 $IconON = 'far fa-lightbulb icon_yellow';
                 $IconOFF = 'far fa-lightbulb icon_red';
-                //$typeCMD_BOOL = 'PB';
                 $Templatecore = $Templatecore_V4 . 'light';
                 $TemplatecoreON = $Templatecore;
                 $TemplatecoreOFF = $TemplatecoreON;
@@ -1173,7 +1176,6 @@ class Free_CreateTil
                 $Generic_type = 'FLAP_STATE';
                 $Templatecore = 'shutter';
                 break;
-                // A TRAITER
             case 'enable_r':
                 $Label_ETAT = 'ETAT Activation';
                 $Generic_type = 'LIGHT_STATE';
@@ -1184,7 +1186,7 @@ class Free_CreateTil
                 $Generic_type = 'SABOTAGE';
                 $InvertBinary = 1;
                 break;
-            case 'alarm_sensor_trigger_r_tiles': // A finaliser => Ouverture
+            case 'alarm_sensor_trigger_r_tiles':
                 $Generic_type = 'OPENING';
                 $Templatecore = $Templatecore_V4 . 'door';
                 break;
@@ -1209,7 +1211,7 @@ class Free_CreateTil
         }
         $Setting = array(
             "CreateCMD" => $CreateCMD,
-            "Eq_type_home" =>  $_Eq_type_home,
+            "Eq_type_home" =>  $eq_group,
             "Generic_type" => $Generic_type,
             "Generic_typeON" => $Generic_typeON,
             "Generic_typeOFF" => $Generic_typeOFF,

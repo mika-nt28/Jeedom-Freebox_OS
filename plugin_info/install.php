@@ -17,7 +17,7 @@ function Freebox_OS_install()
 	if (!is_object($cron)) {
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');
-		$cron->setFunction('RefreshToken');
+		$cron->setFunction('Update');
 		$cron->setEnable(1);
 		$cron->setDeamon(1);
 		//$cron->setDeamonSleepTime(1);
@@ -44,7 +44,7 @@ function Freebox_OS_update()
 	if (!is_object($cron)) {
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');
-		$cron->setFunction('RefreshToken');
+		$cron->setFunction('Update');
 		$cron->setEnable(1);
 		$cron->setDeamon(1);
 		//$cron->setDeamonSleepTime(1);

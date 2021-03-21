@@ -137,7 +137,12 @@ class Freebox_OS extends eqLogic
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
-		//$cron->start();
+		$cron->run();
+		log::add('Freebox_OS', 'debug', '>> ================ >> CRON: ');
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron introuvable', __FILE__));
+		}
 		$cron->run();
 	}
 	public static function deamon_stop()
@@ -145,6 +150,11 @@ class Freebox_OS extends eqLogic
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
+		}
+		$cron->halt();
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron introuvable', __FILE__));
 		}
 		$cron->halt();
 		$Free_API = new Free_API();
@@ -440,7 +450,22 @@ class Freebox_OS extends eqLogic
 				break;
 		}
 	}
+	public static function FreeboxPUT()
+	{
+		$queue = cache::byKey("maQueue")->getValue();
+		if (!is_array($queue)) {
+			log::add('Freebox_OS', 'debug', '[testNotArray]' . $queue);
+			return;
+		}
+		if ($queue[0] == '') {
+			return;
+		}
 
+		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $queue[0]['Name'] . '(' . $queue[0]['LogicalId'] . ') ' . 'de l\'équipement ' . $queue[0]['NameEqLogic']);
+		Free_Update::UpdateAction($queue[0]['LogicalId'], $queue[0]['SubType'], $queue[0]['Name'], $queue[0]['Value'], $queue[0]['Config'], $queue[0]['EqLogic'], $queue[0]['Options'], $queue[0]['This']);
+		array_shift($queue);
+		cache::set("maQueue", $queue);
+	}
 	public function postSave()
 	{
 		if ($this->getConfiguration('type') == 'alarm_control') {
@@ -715,9 +740,26 @@ class Freebox_OSCmd extends cmd
 	}
 	public function execute($_options = array())
 	{
-		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $this->getName() . '(' . $this->getLogicalId() . ') ' . 'de l\'équipement ' . $this->getEqLogic()->getName());
+		//log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $this->getName());
+		$array = cache::byKey("maQueue")->getValue();
+		if (!is_array($array)) {
+			$array = [];
+		}
+		$upate = array(
+			'This' => $this,
+			'LogicalId' => $this->getLogicalId(),
+			'SubType' => $this->getSubType(),
+			'Name' => $this->getName(),
+			'Value' => $this->getvalue(),
+			'Config' => $this->getConfiguration('logicalId'),
+			'EqLogic' => $this->getEqLogic(),
+			'NameEqLogic' => $this->getEqLogic()->getName(),
+			'Options' => $_options,
+		);
 
-		Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
+		array_push($array, $upate);
+		cache::set("maQueue", $array);
+		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 
 	public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')

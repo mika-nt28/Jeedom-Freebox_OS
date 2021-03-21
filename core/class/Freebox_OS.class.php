@@ -440,7 +440,13 @@ class Freebox_OS extends eqLogic
 				break;
 		}
 	}
-
+	public static function deamon()
+	{
+		$queue = cache::byKey("maQueue");
+		foreach ($queue as $cmd) {
+			log::add('Freebox_OS', 'debug', '[test] ' . $cmd);
+		}
+	}
 	public function postSave()
 	{
 		if ($this->getConfiguration('type') == 'alarm_control') {
@@ -713,6 +719,8 @@ class Freebox_OSCmd extends cmd
 		}
 		return false;
 	}
+
+
 	public function execute($_options = array())
 	{
 		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $this->getName() . '(' . $this->getLogicalId() . ') ' . 'de l\'équipement ' . $this->getEqLogic()->getName());

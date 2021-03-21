@@ -55,6 +55,11 @@ try {
 			break;
 		case 'SearchDebugTile':
 			Free_CreateTil::createTil('Tiles_debug');
+			// A supprimer a la fin des tests 
+			Free_Refresh::RefreshInformation('Tiles_global');
+			break;
+		case 'RefreshTile':
+			Free_Refresh::RefreshInformation('Tiles_global');
 			break;
 		case 'SearchTile_group':
 			Free_CreateTil::createTil('Tiles_group');

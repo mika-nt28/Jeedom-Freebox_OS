@@ -397,8 +397,6 @@ class Freebox_OS extends eqLogic
 		}
 		$Command->save();
 
-		//$Command->save();
-
 		// Création de la commande refresh
 		$createRefreshCmd  = true;
 		$refresh = $this->getCmd(null, 'refresh');
@@ -717,17 +715,9 @@ class Freebox_OSCmd extends cmd
 	}
 	public function execute($_options = array())
 	{
-		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
-		$logicalId = $this->getLogicalId();
-		$logicalId_type = $this->getSubType();
-		$logicalId_value = $this->getvalue();
-		$logicalId_name = $this->getName();
-		$logicalId_conf = $this->getConfiguration('logicalId');
-		$logicalId_eq = $this->getEqLogic();
+		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $this->getName() . '(' . $this->getLogicalId() . ') ' . 'de l\'équipement ' . $this->getEqLogic()->getName());
 
-		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
-
-		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
+		Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 
 	public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')

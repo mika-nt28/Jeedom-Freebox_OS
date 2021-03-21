@@ -397,8 +397,6 @@ class Freebox_OS extends eqLogic
 		}
 		$Command->save();
 
-		//$Command->save();
-
 		// Création de la commande refresh
 		$createRefreshCmd  = true;
 		$refresh = $this->getCmd(null, 'refresh');

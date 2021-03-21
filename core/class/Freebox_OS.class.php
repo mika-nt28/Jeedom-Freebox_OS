@@ -440,7 +440,7 @@ class Freebox_OS extends eqLogic
 				break;
 		}
 	}
-	public static function Update()
+	public static function Deamon_Update()
 	{
 		log::add('Freebox_OS', 'debug', '[test 1] ');
 		/*$queue = cache::byKey('Freebox_OS::maQueue');

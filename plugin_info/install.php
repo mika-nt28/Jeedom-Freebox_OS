@@ -98,7 +98,7 @@ function Freebox_OS_remove()
 		$cron->stop();
 		$cron->remove();
 	}
-	$cron = cron::byClassAndFunction('Freebox_OS', 'Update');
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 	if (is_object($cron)) {
 		$cron->stop();
 		$cron->remove();

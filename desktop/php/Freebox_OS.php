@@ -85,33 +85,21 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'player') {
-						$template = $eqLogic->getConfiguration('type');
-					} else {
-						$template = $eqLogic->getLogicalId();
-					}
-					switch ($template) {
-						case 'airmedia':
-						case 'connexion':
-						case 'downloads':
-						case 'LCD':
-						case 'system':
-						case 'disk':
-						case 'phone':
-						case 'wifi':
-						case 'player':
-						case 'network':
-						case 'netshare':
-						case 'networkwifiguest':
-							$status = 1;
-							$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-							echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-							echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
-							echo '<br>';
-							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-							echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
-							echo '</div>';
-							break;
+					if ($eqLogic->getConfiguration('eq_group') == 'system' || $eqLogic->getConfiguration('eq_group') == null) {
+						if ($eqLogic->getConfiguration('type') == 'player') {
+							$template = $eqLogic->getConfiguration('type');
+						} else {
+							$template = $eqLogic->getLogicalId();
+						}
+
+						$status = 1;
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
+						echo '</div>';
 					}
 				}
 				if ($status == 0) {
@@ -145,31 +133,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							$icon = 'default';
 						}
 					}
-					switch ($template) {
-						case 'airmedia':
-						case 'connexion':
-						case 'downloads':
-						case 'LCD':
-						case 'system':
-						case 'disk':
-						case 'phone':
-						case 'wifi':
-						case 'player':
-						case 'parental':
-						case 'network':
-						case 'netshare':
-						case 'networkwifiguest':
-							break;
-						default:
-							$status = 1;
-							$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-							echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-							echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
-							echo '<br>';
-							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-							echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
-							echo '</div>';
-							break;
+					if ($eqLogic->getConfiguration('eq_group') === 'tiles' || $eqLogic->getConfiguration('eq_group') === 'nodes' || $eqLogic->getConfiguration('eq_group') === 'tiles_SP') {
+
+						$status = 1;
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
+						echo '</div>';
 					}
 				}
 				if ($status == 0) {
@@ -188,7 +161,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'parental') {
+					if ($eqLogic->getConfiguration('eq_group') == 'parental_controls') {
 						$status = 1;
 						$template = $eqLogic->getConfiguration('type');
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';

@@ -23,8 +23,8 @@ class Free_Update
     public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $_cmd)
     {
         if ($logicalId != 'refresh' && $logicalId != 'WakeonLAN') {
-            log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
-            log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
+            //log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
+            //log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
         $Free_API = new Free_API();
         if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player') {

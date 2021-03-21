@@ -461,7 +461,7 @@ class Freebox_OS extends eqLogic
 			return;
 		}
 
-		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $queue[0]['Name'] . '(' . $queue[0]['LogicalId'] . ') ' . 'de l\'équipement ' . $queue[0]['NameEqLogic']);
+		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $queue[0]['Name'] . '(' . $queue[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $queue[0]['NameEqLogic']);
 		Free_Update::UpdateAction($queue[0]['LogicalId'], $queue[0]['SubType'], $queue[0]['Name'], $queue[0]['Value'], $queue[0]['Config'], $queue[0]['EqLogic'], $queue[0]['Options'], $queue[0]['This']);
 		array_shift($queue);
 		cache::set("maQueue", $queue);

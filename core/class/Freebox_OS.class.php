@@ -139,6 +139,11 @@ class Freebox_OS extends eqLogic
 		}
 		//$cron->start();
 		$cron->run();
+		$cron = cron::byClassAndFunction('Freebox_OS', 'Deamon_Update');
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron introuvable', __FILE__));
+		}
+		$cron->run();
 	}
 	public static function deamon_stop()
 	{
@@ -442,7 +447,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function Deamon_Update()
 	{
-		log::add('Freebox_OS', 'debug', '[test 1] ');
+		log::add('Freebox_OS', 'debug', '│──────────> TEST UPDATE: ');
 		/*$queue = cache::byKey('Freebox_OS::maQueue');
 		if (!is_array($queue)) {
 			return;

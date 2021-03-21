@@ -40,7 +40,7 @@ function Freebox_OS_update()
 		$cron->setTimeout('10');
 		$cron->save();
 	}
-	$cron = cron::byClassAndFunction('Freebox_OS', 'Update');
+	$cron = cron::byClassAndFunction('Freebox_OS', 'Deamon_Update');
 	if (!is_object($cron)) {
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');

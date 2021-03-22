@@ -211,9 +211,6 @@ class Freebox_OS extends eqLogic
 					$EqLogic->setConfiguration('player', $Player);
 				}
 			}
-			if ($eq_group != null) {
-				$EqLogic->setConfiguration('eq_group', $eq_group);
-			}
 			try {
 				$EqLogic->save();
 			} catch (Exception $e) {

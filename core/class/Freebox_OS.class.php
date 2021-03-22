@@ -233,6 +233,9 @@ class Freebox_OS extends eqLogic
 				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			}
 		}
+		if ($eq_group != null) {
+			$EqLogic->setConfiguration('eq_group', $eq_group);
+		}
 		if ($tiles == true) {
 			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter') {
 				$EqLogic->setConfiguration('type', $eq_type);
@@ -454,7 +457,7 @@ class Freebox_OS extends eqLogic
 	{
 		$queue = cache::byKey("maQueue")->getValue();
 		if (!is_array($queue)) {
-			log::add('Freebox_OS', 'debug', '[testNotArray]' . $queue);
+			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $queue);
 			return;
 		}
 		if ($queue[0] == '') {

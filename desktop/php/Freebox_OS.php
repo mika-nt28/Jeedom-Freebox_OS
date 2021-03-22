@@ -85,7 +85,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('eq_group') == 'system' || $eqLogic->getConfiguration('eq_group') == null) {
+					if ($eqLogic->getConfiguration('eq_group') === 'system' || $eqLogic->getConfiguration('eq_group') == null) {
 						if ($eqLogic->getConfiguration('type') == 'player') {
 							$template = $eqLogic->getConfiguration('type');
 						} else {

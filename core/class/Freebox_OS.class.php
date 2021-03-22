@@ -639,6 +639,7 @@ class Freebox_OS extends eqLogic
 				case 'camera':
 					// Update spécifique pour les caméras
 					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'nodes');
 					break;
 				case 'connexion':
 					$eqLogic->setLogicalId($logicalinfo['connexionID']);
@@ -669,7 +670,7 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
 					$eqLogic->setConfiguration('eq_group', 'parental_controls');
 					break;
-				case 'Phone':
+				case 'phone':
 					$eqLogic->setLogicalId($logicalinfo['phoneID']);
 					//$eqLogic->setName($logicalinfo['phoneName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);

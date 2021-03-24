@@ -52,6 +52,21 @@ function Freebox_OS_update()
 		$cron->setTimeout('1440');
 		$cron->save();
 	}
+	$Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
+	if ($Type_box == 'OK') {
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+		if (!is_object($cron)) {
+			$cron = new cron();
+			$cron->setClass('Freebox_OS');
+			$cron->setFunction('FreeboxGET');
+			$cron->setEnable(1);
+			$cron->setDeamon(1);
+			//$cron->setDeamonSleepTime(1);
+			$cron->setSchedule('* * * * *');
+			$cron->setTimeout('1440');
+			$cron->save();
+		}
+	}
 	updateConfig();
 
 	try {

@@ -160,7 +160,38 @@ class Freebox_OS extends eqLogic
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}
+	public static function FreeboxPUT()
+	{
+		$queue = cache::byKey("maQueue")->getValue();
+		if (!is_array($queue)) {
+			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $queue);
+			return;
+		}
+		if ($queue[0] == '') {
+			return;
+		}
 
+		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $queue[0]['Name'] . '(' . $queue[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $queue[0]['NameEqLogic']);
+		Free_Update::UpdateAction($queue[0]['LogicalId'], $queue[0]['SubType'], $queue[0]['Name'], $queue[0]['Value'], $queue[0]['Config'], $queue[0]['EqLogic'], $queue[0]['Options'], $queue[0]['This']);
+		array_shift($queue);
+		cache::set("maQueue", $queue);
+	}
+	public static function FreeboxGET()
+	{
+		/*$queue = cache::byKey("maQueue")->getValue();
+		if (!is_array($queue)) {
+			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $queue);
+			return;
+		}
+		if ($queue[0] == '') {
+			return;
+		}*/
+
+		log::add('Freebox_OS', 'debug', '********************  TEST pour l\'info : ');
+		/*Free_Update::UpdateAction($queue[0]['LogicalId'], $queue[0]['SubType'], $queue[0]['Name'], $queue[0]['Value'], $queue[0]['Config'], $queue[0]['EqLogic'], $queue[0]['Options'], $queue[0]['This']);
+		array_shift($queue);
+		cache::set("maQueue", $queue);*/
+	}
 	public static function resetConfig()
 	{
 		config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
@@ -450,22 +481,7 @@ class Freebox_OS extends eqLogic
 				break;
 		}
 	}
-	public static function FreeboxPUT()
-	{
-		$queue = cache::byKey("maQueue")->getValue();
-		if (!is_array($queue)) {
-			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $queue);
-			return;
-		}
-		if ($queue[0] == '') {
-			return;
-		}
 
-		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $queue[0]['Name'] . '(' . $queue[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $queue[0]['NameEqLogic']);
-		Free_Update::UpdateAction($queue[0]['LogicalId'], $queue[0]['SubType'], $queue[0]['Name'], $queue[0]['Value'], $queue[0]['Config'], $queue[0]['EqLogic'], $queue[0]['Options'], $queue[0]['This']);
-		array_shift($queue);
-		cache::set("maQueue", $queue);
-	}
 	public function postSave()
 	{
 		if ($this->getConfiguration('type') == 'alarm_control') {

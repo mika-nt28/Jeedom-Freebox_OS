@@ -87,10 +87,8 @@ function Freebox_OS_update()
 		Freebox_OS::updateLogicalID($eq_version, true);
 		if ($eq_version === '2') {
 			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
-				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
-					config::save('FREEBOX_TILES_CRON', init('1'), 'Freebox_OS');
-					Free_CreateTil::createTil('SetSettingTiles');
-				}
+				config::save('FREEBOX_TILES_CRON', init('1'), 'Freebox_OS');
+				Free_CreateTil::createTil('SetSettingTiles');
 			}
 		}
 

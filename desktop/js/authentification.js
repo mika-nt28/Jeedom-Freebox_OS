@@ -56,9 +56,20 @@ $('.bt_Freebox_Room').on('click', function () {
 });
 
 $('.bt_Freebox_OS_Save_room').on('click', function () {
+    checkvalue = $('.checkbox_freeboxTiles:checked').val();
+    if (checkvalue == null) {
+        logs('debug', "================= Cron Global Titles : NOK");
+        cron_tiles = '0';
+    } else {
+        logs('debug', "================= Cron Global Titles : OK");
+        cron_tiles = '1';
+    };
+    console.log('CRON TILES : ' +cron_tiles)
+    SetSettingTiles(cron_tiles); 
     logs('debug', "================= Sauvegarde des Pièces des Tiles");
-    SaveTitelRoom();
+    //SaveTitelRoom();
 });
+
 
 function updateMenu(objectclass) {
     $('.li_Freebox_OS_Summary.active').removeClass('active');
@@ -346,8 +357,9 @@ function GetSetting() {
             $('#sel_object_default').val(data.result.Categorie);
             logs('debug', "Objet par défaut : " + data.result.Categorie);
 
-            console.log(data.result.DeviceName)
-            console.log(data.result.Categorie)
+            console.log('IP : ' + data.result.ip)
+            console.log('Nom API : ' + data.result.DeviceName)
+            console.log('Objet par défaut : ' + data.result.Categorie)
             if (data.result.DeviceName == null || data.result.DeviceName == "") {
                 $('.bt_Freebox_OS_Next').hide();
                 $('.textFreebox').text('Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage');
@@ -374,6 +386,30 @@ function GetSetting() {
         }
     });
 }
+function GetSettingTiles() {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "GetSettingTiles",
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            if (data.result.CronTiles === '0') {
+                logs('debug', "================= Cron Global Titles ACTIVATION : NOK");
+                console.log('Cron Global Titles ACTIVATION - FALSE - : ' + data.result.CronTiles);
+                $('.checkbox_freeboxTiles').prop('checked', false);
+            } else {
+                logs('debug', "================= Cron Global Titles ACTIVATION : OK");
+                console.log('Cron Global Titles ACTIVATION - TRUE - : ' + data.result.CronTiles);
+                $('.checkbox_freeboxTiles').prop('checked',true);
+            };
+        }
+    });
+}
 
 function SetSetting(ip, VersionAPP, Categorie) {
     $.ajax({
@@ -384,6 +420,23 @@ function SetSetting(ip, VersionAPP, Categorie) {
             ip: ip,
             VersionAPP: VersionAPP,
             Categorie: Categorie,
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            GetSetting();
+        }
+    });
+}
+function SetSettingTiles(CronTiles) {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "SetSettingTiles",
+            cron_tiles: cron_tiles,
         },
         dataType: 'json',
         error: function (request, status, error) {
@@ -493,9 +546,9 @@ function getBox(type) {
                 } else {
                     funPrev()
                 }
-                logs('debug', "================= BOX NON COMPATIBLE AVEC LES TILES");
+                logs('debug', "================= BOX COMPATIBLE AVEC LES TILES : NOK");
             } else {
-                logs('debug', "================= BOX COMPATIBLE AVEC LES TILES");
+                logs('debug', "================= BOX COMPATIBLE AVEC LES TILES : OK");
                 //SearchTile_room();
             }
         }
@@ -559,6 +612,7 @@ function funNext() {
             break;
         case 'room':
             progress(75);
+            GetSettingTiles();
             getBox("next");
             break;
         case 'scan':

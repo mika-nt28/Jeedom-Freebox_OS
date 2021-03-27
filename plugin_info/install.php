@@ -13,11 +13,11 @@ function Freebox_OS_install()
 		$cron->setTimeout('10');
 		$cron->save();
 	}
-	$cron = cron::byClassAndFunction('Freebox_OS', 'Update');
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 	if (!is_object($cron)) {
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');
-		$cron->setFunction('Deamom_Update');
+		$cron->setFunction('FreeboxPUT');
 		$cron->setEnable(1);
 		$cron->setDeamon(1);
 		//$cron->setDeamonSleepTime(1);
@@ -51,21 +51,6 @@ function Freebox_OS_update()
 		$cron->setSchedule('* * * * *');
 		$cron->setTimeout('1440');
 		$cron->save();
-	}
-	$Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
-	if ($Type_box == 'OK') {
-		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
-		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('Freebox_OS');
-			$cron->setFunction('FreeboxGET');
-			$cron->setEnable(1);
-			$cron->setDeamon(1);
-			//$cron->setDeamonSleepTime(1);
-			$cron->setSchedule('* * * * *');
-			$cron->setTimeout('1440');
-			$cron->save();
-		}
 	}
 	updateConfig();
 
@@ -114,6 +99,11 @@ function Freebox_OS_remove()
 		$cron->remove();
 	}
 	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+	if (is_object($cron)) {
+		$cron->stop();
+		$cron->remove();
+	}
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 	if (is_object($cron)) {
 		$cron->stop();
 		$cron->remove();

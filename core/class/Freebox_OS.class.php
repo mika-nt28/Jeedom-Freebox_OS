@@ -48,8 +48,11 @@ class Freebox_OS extends eqLogic
 
 				if ($c->isDue() && $deamon_info['state'] == 'ok') {
 					if ($eqLogic->getIsEnable()) {
-						log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
-						Free_Refresh::RefreshInformation($eqLogic->getId());
+						if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
+						} else {
+							log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
+							Free_Refresh::RefreshInformation($eqLogic->getId());
+						}
 					}
 				}
 				if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
@@ -144,6 +147,13 @@ class Freebox_OS extends eqLogic
 			throw new Exception(__('Tache cron introuvable', __FILE__));
 		}
 		$cron->run();
+		if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+			if (!is_object($cron)) {
+				throw new Exception(__('Tache cron introuvable', __FILE__));
+			}
+			$cron->run();
+		}
 	}
 	public static function deamon_stop()
 	{
@@ -157,6 +167,16 @@ class Freebox_OS extends eqLogic
 			throw new Exception(__('Tache cron introuvable', __FILE__));
 		}
 		$cron->halt();
+		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+				if (!is_object($cron)) {
+					throw new Exception(__('Tache cron introuvable', __FILE__));
+				}
+				$cron->halt();
+			}
+		}
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}
@@ -178,19 +198,10 @@ class Freebox_OS extends eqLogic
 	}
 	public static function FreeboxGET()
 	{
-		/*$queue = cache::byKey("maQueue")->getValue();
-		if (!is_array($queue)) {
-			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $queue);
-			return;
-		}
-		if ($queue[0] == '') {
-			return;
-		}*/
-
-		log::add('Freebox_OS', 'debug', '********************  TEST pour l\'info : ');
-		/*Free_Update::UpdateAction($queue[0]['LogicalId'], $queue[0]['SubType'], $queue[0]['Name'], $queue[0]['Value'], $queue[0]['Config'], $queue[0]['EqLogic'], $queue[0]['Options'], $queue[0]['This']);
-		array_shift($queue);
-		cache::set("maQueue", $queue);*/
+		log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
+		Free_Refresh::RefreshInformation('Tiles_global');
+		log::add('Freebox_OS', 'debug', '********************  FIN CRON UPDATE TILES/NODE ******************** ');
+		sleep(20);
 	}
 	public static function resetConfig()
 	{
@@ -260,9 +271,6 @@ class Freebox_OS extends eqLogic
 			} else {
 				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			}
-		}
-		if ($eq_group != null) {
-			$EqLogic->setConfiguration('eq_group', $eq_group);
 		}
 		if ($tiles == true) {
 			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter') {
@@ -518,7 +526,10 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		if ($this->getIsEnable()) {
-			Free_Refresh::RefreshInformation($this->getId());
+			if (($this->getConfiguration('eq_group') == 'nodes' || $this->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
+			} else {
+				Free_Refresh::RefreshInformation($this->getId());
+			}
 		}
 
 		$createRefreshCmd = true;
@@ -624,6 +635,12 @@ class Freebox_OS extends eqLogic
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$logicalinfo = Freebox_OS::getlogicalinfo();
+		if ($eq_version == 2) {
+			if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+				config::save('FREEBOX_TILES_CRON', init(1), 'Freebox_OS');
+				Free_CreateTil::createTil('SetSettingTiles');
+			}
+		}
 		foreach ($eqLogics as $eqLogic) {
 			if ($eqLogic->getConfiguration('type') === 'parental') {
 				$type_eq = 'parental_controls';

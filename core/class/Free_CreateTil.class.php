@@ -50,6 +50,9 @@ class Free_CreateTil
                 case 'homeadapters_SP':
                     Free_CreateTil::createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4);
                     break;
+                case 'SetSettingTiles':
+                    Free_CreateTil::createTil_SettingTiles($Type_box);
+                    break;
                 case 'Tiles_debug':
                     Free_CreateTil::createTil_debug($Free_API, $logicalinfo, $templatecore_V4);
                     break;
@@ -57,7 +60,6 @@ class Free_CreateTil
                     $result = Free_CreateTil::createTil_Group($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 default:
-                    //Freebox_OS::updateLogicalID('2', true);
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
                     break;
             }
@@ -77,6 +79,33 @@ class Free_CreateTil
                 log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
             }
             return;
+        }
+    }
+    private static function createTil_SettingTiles($Type_box)
+    {
+        if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+            if ($Type_box == 'OK') {
+                $cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+                if (!is_object($cron)) {
+                    $cron = new cron();
+                    $cron->setClass('Freebox_OS');
+                    $cron->setFunction('FreeboxGET');
+                    $cron->setEnable(1);
+                    $cron->setDeamon(1);
+                    //$cron->setDeamonSleepTime(1);
+                    $cron->setSchedule('* * * * *');
+                    $cron->setTimeout('1440');
+                    $cron->save();
+                }
+            }
+            Freebox_OS::deamon_stop();
+            Freebox_OS::deamon_start();
+        } else {
+            $cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+            if (is_object($cron)) {
+                $cron->stop();
+                $cron->remove();
+            }
         }
     }
     private static function createTil_modelBox()
@@ -650,7 +679,6 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
-        //Log pour Test (mettre en comment après TEST)
         //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
         switch ($Search) {
             case 'alarm_control_error_r_tiles':
@@ -760,7 +788,6 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
-        //Log pour Test (mettre en comment après TEST)
         //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting INT pour  : ' . $Search);
         switch ($Search) {
             case 'info_store_slider_rw_tiles':
@@ -955,7 +982,6 @@ class Free_CreateTil
             $Setting1 = null;
         }
         $Search = $_Eq_type . '_' . $Name . "_" . $Access . $Setting1 . '_' . $eq_group;
-        //Log pour Test (mettre en comment après TEST)
         //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting BOOL pour  : ' . $Search);
 
         // Reset Template

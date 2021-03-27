@@ -301,15 +301,12 @@ class Free_Update
     {
         switch ($logicalId) {
             case 'brightness':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('brightness' => $_options['slider']));
                 break;
             case 'hide_wifi_keyOn':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => true));
                 break;
             case 'hide_wifi_keyOff':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => false));
                 break;
             case 'orientation':

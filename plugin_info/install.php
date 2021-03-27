@@ -83,7 +83,16 @@ function Freebox_OS_update()
 		}*/
 
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');
-		Freebox_OS::updateLogicalID('2', true);
+		$eq_version = '2';
+		Freebox_OS::updateLogicalID($eq_version, true);
+		if ($eq_version === '2') {
+			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+					config::save('FREEBOX_TILES_CRON', init('1'), 'Freebox_OS');
+					Free_CreateTil::createTil('SetSettingTiles');
+				}
+			}
+		}
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {

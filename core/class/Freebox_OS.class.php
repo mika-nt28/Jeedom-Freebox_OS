@@ -636,9 +636,11 @@ class Freebox_OS extends eqLogic
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 		if ($eq_version == 2) {
-			if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
-				config::save('FREEBOX_TILES_CRON', init(1), 'Freebox_OS');
-				Free_CreateTil::createTil('SetSettingTiles');
+			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+					config::save('FREEBOX_TILES_CRON', init(1), 'Freebox_OS');
+					Free_CreateTil::createTil('SetSettingTiles');
+				}
 			}
 		}
 		foreach ($eqLogics as $eqLogic) {

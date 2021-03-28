@@ -315,36 +315,33 @@ if (!isConnect('admin')) {
                         <i>{{Uniquement sur la Freebox Delta}}</i>
                     </div>
                     <br>
-                </center>
-
-                <form class="form-horizontal">
                     <fieldset>
-                        <div class="form-group">
-                            <label class="col-md-5 control-label">{{Actualisation Globale des Tiles :}}</label>
-                            <div class="col-md-4">
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-6 control-label roundedLeft">{{Actualisation Globale des Tiles :}}</label>
+                            <div class="col-xs-2">
                                 <input id="checkbox_freeboxTiles" type="checkbox" class="configKey checkbox_freeboxTiles" data-l1key="FREEBOX_TILES_CRON" />
                             </div>
                         </div>
                         <br />
                     </fieldset>
-                </form>
+                    </form>
 
-                <table id="table_room" class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th style="width: 320px">{{Pièce Freebox}}</th>
-                            <th>{{Objets Jeedom}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                <br />
-                <br />
-                <center>
-                    <div class="alert alert-info">{{Une fois lié, cliquez sur le bouton Sauvegarder}}</div>
+                    <table id="table_room" class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th style="width: 320px">{{Pièce Freebox}}</th>
+                                <th>{{Objets Jeedom}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <br />
+                    <br />
+                    <center>
+                        <div class="alert alert-info">{{Une fois lié, cliquez sur le bouton Sauvegarder}}</div>
+                    </center>
                 </center>
-            </center>
         </div>
         <div class="Freebox_OS_Display scan" style="display:none;">
             <div class="input-group pull-right" style="display:inline-flex;">

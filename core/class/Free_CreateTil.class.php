@@ -1200,7 +1200,7 @@ class Free_CreateTil
                 $Order = 60;
                 $Order_A = 61;
                 break;
-            case 'info_switch_w_toggle_tiles';
+            case 'info_switch_r_toggle_tiles';
                 $Label_ETAT = 'Etat';
                 $LabelON = 'On';
                 $LabelOFF = 'Off';

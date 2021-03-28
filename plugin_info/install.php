@@ -70,10 +70,6 @@ function Freebox_OS_update()
 
 		log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
-		// Remove ancien refresh => Plus besoin 20210221
-		/*while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
-			$cron->remove();*/
-
 		/*$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			if ($WifiEX != 1) {

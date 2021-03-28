@@ -1011,6 +1011,9 @@ class Free_CreateTil
         $IsVisible_PB = null;
         switch ($Search) {
             case 'light_switch_state_w_toggle_tiles';
+            case 'info_switch_w_toggle_tiles';
+            case 'info_switch_r_toggle_node';
+            case 'info_switch_w_toggle_node';
             case 'light_switch_state_w_toggle_node':
             case 'light_switch_state_r_toggle_node':
             case 'pir_trigger_r_mouv_sensor_nodes':
@@ -1196,6 +1199,25 @@ class Free_CreateTil
                 $IsVisible = '0';
                 $Order = 60;
                 $Order_A = 61;
+                break;
+            case 'info_switch_w_toggle_tiles';
+                $Label_ETAT = 'Etat';
+                $LabelON = 'On';
+                $LabelOFF = 'Off';
+                $Generic_type = 'GENERIC_INFO';
+                $Generic_typeON = 'ENERGY_ON';
+                $Generic_typeOFF = 'ENERGY_OFF';
+                $Icon = 'fas fa-plug';
+                $IconON = 'far fa-plug icon_green';
+                $IconOFF = 'far fa-plug icon_red';
+                $Templatecore = $Templatecore_V4 . 'prise';
+                $TemplatecoreON = $Templatecore;
+                $TemplatecoreOFF = $TemplatecoreON;
+                $Order = 1;
+                $IsVisible_PB = 1;
+                $IsVisible = '0';
+                $Order = 70;
+                $Order_A = 71;
                 break;
             case 'info_state_r_tiles':
             case 'basic_shutter_state_r_nodes':

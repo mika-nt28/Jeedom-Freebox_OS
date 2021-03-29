@@ -346,7 +346,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="info" style="font-size : 1em"></span>
 								</div>
 							</div>
-
 					</fieldset>
 				</form>
 				<hr>

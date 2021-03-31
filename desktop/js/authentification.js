@@ -145,12 +145,12 @@ function SearchTile() {
         }
     });
 }
-function SearchTile_room() {
+function SearchTile_room() { // Ligne 148
     $.ajax({
         type: "POST",
         url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
         data: {
-            action: "SearchTile_group",
+            action: "SearchTile_group", //Ligne 153
         },
         dataType: 'json',
         error: function (request, status, error) {
@@ -161,7 +161,7 @@ function SearchTile_room() {
             object = data.result.objects;
             $("#table_room tr").remove();
             $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièces Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");
-            for (var i = 0; i < pieces.length; i++) {
+            for (var i = 0; i < pieces.length; i++) { // Ligne 164
                 var piece = pieces[i];
                 var tr = '<tr class="piece">';
                 tr += '<td>';
@@ -582,7 +582,7 @@ function SaveTitelRoom() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            SearchTile_room();
+            //SearchTile_room();
         }
     });
 }

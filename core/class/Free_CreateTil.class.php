@@ -57,7 +57,7 @@ class Free_CreateTil
                     Free_CreateTil::createTil_debug($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 case 'Tiles_group':
-                    $result = Free_CreateTil::createTil_Group($Free_API, $logicalinfo, $templatecore_V4);
+                    $result = Free_CreateTil::createTil_Group();
                     break;
                 default:
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
@@ -175,19 +175,20 @@ class Free_CreateTil
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    public static function createTil_Group($Free_API, $logicalinfo, $templatecore_V4)
+    public static function createTil_Group()
     {
-        $tiles = $Free_API->universal_get('tiles', '/all');
-        $result = [];
+        $Free_API = new Free_API();
+        $tiles  = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/all');
+        $result_GP = [];
         foreach ($tiles as $tile) {
             $group = $tile['group']['label'];
-            if ($group == "" || $group === null) continue;
-            if (!in_array($group, $result)) {
-                array_push($result, $group);
+            if ($group == "" || $group == null) continue;
+            if (!in_array($group, $result_GP)) {
+                array_push($result_GP, $group);
                 log::add('Freebox_OS', 'debug', '>───────── Pièce : ' . $group);
             }
         }
-        return $result;
+        return $result_GP;
     }
 
     private static function createTil_homeadapters($Free_API, $logicalinfo, $templatecore_V4)
@@ -679,7 +680,7 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
-        //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
         switch ($Search) {
             case 'alarm_control_error_r_tiles':
                 $Label_I = $Label_O;
@@ -694,9 +695,11 @@ class Free_CreateTil
                 $IsVisible_I = '0';
                 break;
             case 'alarm_pin_r_nodes':
+            case 'alarm_pin_rnodes':
+            case 'alarm_pin_wnodes':
             case 'alarm_pin_w_nodes':
-            case 'camera_disk_w_nodes':
-            case 'camera_disk_r_nodes':
+            case 'camera_disk_rnodes':
+            case 'camera_disk_wnodes':
                 $CreateCMD = 'PAS DE CREATION';
                 break;
             case 'alarm_control_pin_r_tiles':

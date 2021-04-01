@@ -249,6 +249,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 		case 'airmedia':
 		case 'connexion':
 		case 'downloads':
+		case 'homeadapters':
 		case 'LCD':
 		case 'system':
 		case 'disk':
@@ -261,10 +262,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 			break;
 		default:
-			if ($icon_type2 === 'dws') {
-				$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
-			}
-			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');	
 			break;
 	}
 
@@ -276,6 +274,25 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 		$('.IPV').hide();
 	}
 });
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').on('change', function () {
+	$icon_type2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
+	$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
+	switch ($icon_type2) {
+		case 'basic_shutter':
+		case 'shutter':
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/shutter.png');
+			break;
+		case 'kfb':
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
+			break;
+		case 'dws':
+		case 'plug':
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type2 + '.png');
+			break;
+	}
+
+});
+
 
 setupPage();
 /*

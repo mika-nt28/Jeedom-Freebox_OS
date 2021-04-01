@@ -50,14 +50,16 @@ class Free_CreateTil
                 case 'homeadapters_SP':
                     Free_CreateTil::createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4);
                     break;
+                case 'SetSettingTiles':
+                    Free_CreateTil::createTil_SettingTiles($Type_box);
+                    break;
                 case 'Tiles_debug':
                     Free_CreateTil::createTil_debug($Free_API, $logicalinfo, $templatecore_V4);
                     break;
                 case 'Tiles_group':
-                    $result = Free_CreateTil::createTil_Group($Free_API, $logicalinfo, $templatecore_V4);
+                    $result = Free_CreateTil::createTil_Group();
                     break;
                 default:
-                    //Freebox_OS::updateLogicalID('2', true);
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
                     break;
             }
@@ -77,6 +79,33 @@ class Free_CreateTil
                 log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
             }
             return;
+        }
+    }
+    private static function createTil_SettingTiles($Type_box)
+    {
+        if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+            if ($Type_box == 'OK') {
+                $cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+                if (!is_object($cron)) {
+                    $cron = new cron();
+                    $cron->setClass('Freebox_OS');
+                    $cron->setFunction('FreeboxGET');
+                    $cron->setEnable(1);
+                    $cron->setDeamon(1);
+                    //$cron->setDeamonSleepTime(1);
+                    $cron->setSchedule('* * * * *');
+                    $cron->setTimeout('1440');
+                    $cron->save();
+                }
+            }
+            Freebox_OS::deamon_stop();
+            Freebox_OS::deamon_start();
+        } else {
+            $cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+            if (is_object($cron)) {
+                $cron->stop();
+                $cron->remove();
+            }
         }
     }
     private static function createTil_modelBox()
@@ -146,19 +175,20 @@ class Free_CreateTil
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    public static function createTil_Group($Free_API, $logicalinfo, $templatecore_V4)
+    public static function createTil_Group()
     {
-        $tiles = $Free_API->universal_get('tiles', '/all');
-        $result = [];
+        $Free_API = new Free_API();
+        $tiles  = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/all');
+        $result_GP = [];
         foreach ($tiles as $tile) {
             $group = $tile['group']['label'];
-            if ($group == "" || $group === null) continue;
-            if (!in_array($group, $result)) {
-                array_push($result, $group);
+            if ($group == "" || $group == null) continue;
+            if (!in_array($group, $result_GP)) {
+                array_push($result_GP, $group);
                 log::add('Freebox_OS', 'debug', '>───────── Pièce : ' . $group);
             }
         }
-        return $result;
+        return $result_GP;
     }
 
     private static function createTil_homeadapters($Free_API, $logicalinfo, $templatecore_V4)
@@ -220,7 +250,7 @@ class Free_CreateTil
             foreach ($result as $Equipement) {
                 $_eq_category = true;
                 if ($eq_group == 'nodes') { //
-                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light') {
+                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light' || $Equipement['category'] == 'plug') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
                         } else {
@@ -650,8 +680,7 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
-        //Log pour Test (mettre en comment après TEST)
-        //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
         switch ($Search) {
             case 'alarm_control_error_r_tiles':
                 $Label_I = $Label_O;
@@ -666,9 +695,11 @@ class Free_CreateTil
                 $IsVisible_I = '0';
                 break;
             case 'alarm_pin_r_nodes':
+            case 'alarm_pin_rnodes':
+            case 'alarm_pin_wnodes':
             case 'alarm_pin_w_nodes':
-            case 'camera_disk_w_nodes':
-            case 'camera_disk_r_nodes':
+            case 'camera_disk_rnodes':
+            case 'camera_disk_wnodes':
                 $CreateCMD = 'PAS DE CREATION';
                 break;
             case 'alarm_control_pin_r_tiles':
@@ -760,7 +791,6 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
-        //Log pour Test (mettre en comment après TEST)
         //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting INT pour  : ' . $Search);
         switch ($Search) {
             case 'info_store_slider_rw_tiles':
@@ -955,7 +985,6 @@ class Free_CreateTil
             $Setting1 = null;
         }
         $Search = $_Eq_type . '_' . $Name . "_" . $Access . $Setting1 . '_' . $eq_group;
-        //Log pour Test (mettre en comment après TEST)
         //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting BOOL pour  : ' . $Search);
 
         // Reset Template
@@ -985,6 +1014,9 @@ class Free_CreateTil
         $IsVisible_PB = null;
         switch ($Search) {
             case 'light_switch_state_w_toggle_tiles';
+            case 'info_switch_w_toggle_tiles';
+            case 'info_switch_r_toggle_node';
+            case 'info_switch_w_toggle_node';
             case 'light_switch_state_w_toggle_node':
             case 'light_switch_state_r_toggle_node':
             case 'pir_trigger_r_mouv_sensor_nodes':
@@ -1170,6 +1202,25 @@ class Free_CreateTil
                 $IsVisible = '0';
                 $Order = 60;
                 $Order_A = 61;
+                break;
+            case 'info_switch_r_toggle_tiles';
+                $Label_ETAT = 'Etat';
+                $LabelON = 'On';
+                $LabelOFF = 'Off';
+                $Generic_type = 'GENERIC_INFO';
+                $Generic_typeON = 'ENERGY_ON';
+                $Generic_typeOFF = 'ENERGY_OFF';
+                $Icon = 'fas fa-plug';
+                $IconON = 'fas fa-plug icon_green';
+                $IconOFF = 'fas fa-plug icon_red';
+                $Templatecore = $Templatecore_V4 . 'prise';
+                $TemplatecoreON = $Templatecore;
+                $TemplatecoreOFF = $TemplatecoreON;
+                $Order = 1;
+                $IsVisible_PB = 1;
+                $IsVisible = '0';
+                $Order = 70;
+                $Order_A = 71;
                 break;
             case 'info_state_r_tiles':
             case 'basic_shutter_state_r_nodes':

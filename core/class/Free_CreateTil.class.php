@@ -250,7 +250,7 @@ class Free_CreateTil
             foreach ($result as $Equipement) {
                 $_eq_category = true;
                 if ($eq_group == 'nodes') { //
-                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light') {
+                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light' || $Equipement['category'] == 'plug') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
                         } else {
@@ -1211,8 +1211,8 @@ class Free_CreateTil
                 $Generic_typeON = 'ENERGY_ON';
                 $Generic_typeOFF = 'ENERGY_OFF';
                 $Icon = 'fas fa-plug';
-                $IconON = 'far fa-plug icon_green';
-                $IconOFF = 'far fa-plug icon_red';
+                $IconON = 'fas fa-plug icon_green';
+                $IconOFF = 'fas fa-plug icon_red';
                 $Templatecore = $Templatecore_V4 . 'prise';
                 $TemplatecoreON = $Templatecore;
                 $TemplatecoreOFF = $TemplatecoreON;

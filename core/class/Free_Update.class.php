@@ -32,7 +32,6 @@ class Free_Update
         } else {
             $update = $logicalId_eq->getLogicalId();
         }
-
         switch ($update) {
             case 'airmedia':
                 if ($logicalId != 'refresh') {
@@ -105,7 +104,9 @@ class Free_Update
                 break;
             default:
                 Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf);
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                if ($logicalId == 'refresh' || config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 0) {
+                    Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                }
                 break;
         }
     }
@@ -301,15 +302,12 @@ class Free_Update
     {
         switch ($logicalId) {
             case 'brightness':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('brightness' => $_options['slider']));
                 break;
             case 'hide_wifi_keyOn':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => true));
                 break;
             case 'hide_wifi_keyOff':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => false));
                 break;
             case 'orientation':
@@ -421,8 +419,7 @@ class Free_Update
                 $parametre['value_type'] = 'bool';
                 if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
 
-                    log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
-
+                    //log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
                     if (stripos($logicalId, 'PB_On')  == 'PB_On') {
                         $parametre['value'] = true;
                     } else {

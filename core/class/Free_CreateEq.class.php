@@ -114,10 +114,6 @@ class Free_CreateEq
                     log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
                     log::add('Freebox_OS', 'debug', '====================================================================================');
                 }
-                // TEST
-                //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
-                //Free_CreateEq::createEq_upload($logicalinfo, $templatecore_V4);
-                //Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4);
                 break;
         }
     }

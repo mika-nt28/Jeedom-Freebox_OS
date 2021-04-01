@@ -55,11 +55,6 @@ try {
 			break;
 		case 'SearchDebugTile':
 			Free_CreateTil::createTil('Tiles_debug');
-			// A supprimer a la fin des tests 
-			Free_Refresh::RefreshInformation('Tiles_global');
-			break;
-		case 'RefreshTile':
-			Free_Refresh::RefreshInformation('Tiles_global');
 			break;
 		case 'SearchTile_group':
 			Free_CreateTil::createTil('Tiles_group');
@@ -116,6 +111,20 @@ try {
 				"LogLevel" => log::getLogLevel('Freebox_OS')
 			);
 			ajax::success($result);
+			break;
+		case 'GetSettingTiles':
+			if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+				config::save('FREEBOX_TILES_CRON', '1', 'Freebox_OS');
+			}
+			$result = array(
+				"CronTiles" => config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'),
+			);
+			ajax::success($result);
+			break;
+		case 'SetSettingTiles':
+			config::save('FREEBOX_TILES_CRON', init('cron_tiles'), 'Freebox_OS');
+			Free_CreateTil::createTil('SetSettingTiles');
+			ajax::success(true);
 			break;
 		case 'SetSetting':
 			config::save('FREEBOX_SERVER_IP', init('ip'), 'Freebox_OS');

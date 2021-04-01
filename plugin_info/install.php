@@ -13,11 +13,11 @@ function Freebox_OS_install()
 		$cron->setTimeout('10');
 		$cron->save();
 	}
-	$cron = cron::byClassAndFunction('Freebox_OS', 'Update');
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 	if (!is_object($cron)) {
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');
-		$cron->setFunction('Deamom_Update');
+		$cron->setFunction('FreeboxPUT');
 		$cron->setEnable(1);
 		$cron->setDeamon(1);
 		//$cron->setDeamonSleepTime(1);
@@ -57,7 +57,7 @@ function Freebox_OS_update()
 	try {
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
-		$WifiEX = 0;
+		/*$WifiEX = 0;
 		foreach (eqLogic::byLogicalId('Wifi', 'Freebox_OS', true) as $eqLogic) {
 			$WifiEX = 1;
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Migration Wifi déjà faite (' . $WifiEX . ')');
@@ -66,13 +66,9 @@ function Freebox_OS_update()
 			$Wifi = Freebox_OS::AddEqLogic('Wifi', 'wifi', 'default', false, null, null);
 			$link_IA = $Wifi->getId();
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Création Equipement WIFI -- ID N° : ' . $link_IA);
-		}
+		}*/
 
-		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
-
-		// Remove ancien refresh => Plus besoin 20210221
-		/*while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
-			$cron->remove();*/
+		log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
 		/*$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
@@ -82,8 +78,18 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
 		}*/
 
-		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');
-		Freebox_OS::updateLogicalID('2a', true);
+		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
+		$eq_version = '2';
+		Freebox_OS::updateLogicalID($eq_version, true);
+		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Update paramétrage Plugin tiles');
+		if ($eq_version === '2') {
+			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+					config::save('FREEBOX_TILES_CRON', '1', 'Freebox_OS');
+					Free_CreateTil::createTil('SetSettingTiles');
+				}
+			}
+		}
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {
@@ -99,6 +105,11 @@ function Freebox_OS_remove()
 		$cron->remove();
 	}
 	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+	if (is_object($cron)) {
+		$cron->stop();
+		$cron->remove();
+	}
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 	if (is_object($cron)) {
 		$cron->stop();
 		$cron->remove();

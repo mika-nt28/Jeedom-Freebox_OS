@@ -118,12 +118,24 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'alarm_control' || $eqLogic->getConfiguration('type') == 'alarm_sensor' || $eqLogic->getConfiguration('type') == 'camera' || $eqLogic->getConfiguration('type') == 'alarm_remote') {
-						//if ($eqLogic->getConfiguration('type') === 'alarm_sensor' && $eqLogic->getConfiguration('type2') === 'dws') {
-						//	$template = $eqLogic->getConfiguration('type2');
-						//} else {
+					if ($eqLogic->getConfiguration('type') === 'player' || $eqLogic->getConfiguration('type') === 'alarm_control' || $eqLogic->getConfiguration('type') === 'camera' || $eqLogic->getConfiguration('type') === 'light' || $eqLogic->getConfiguration('type') === 'alarm_remote') {
 						$template = $eqLogic->getConfiguration('type');
-						//}
+						$icon = $template;
+					} elseif ($eqLogic->getConfiguration('type') == 'alarm_sensor') {
+						if ($eqLogic->getConfiguration('type2') == 'dws') {
+							$template = $eqLogic->getConfiguration('type2');
+						} else {
+							$template = $eqLogic->getConfiguration('type');
+						}
+						$icon = $template;
+					} elseif ($eqLogic->getConfiguration('type') == 'info') {
+						if (strpos($eqLogic->getConfiguration('type2'), 'shutter') !== false) {
+							$template = 'shutter';
+						} else if ($eqLogic->getConfiguration('type2') == 'plug') {
+							$template = $eqLogic->getConfiguration('type2');
+						} else {
+							$template  = 'default';
+						}
 						$icon = $template;
 					} else {
 						$template = $eqLogic->getLogicalId();
@@ -334,7 +346,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="info" style="font-size : 1em"></span>
 								</div>
 							</div>
-
 					</fieldset>
 				</form>
 				<hr>

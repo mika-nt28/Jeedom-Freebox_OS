@@ -278,7 +278,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		if ($tiles == true) {
-			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter'  && $eq_type != 'plug') {
+			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter'  && $eq_type != 'opener' && $eq_type != 'plug') {
 				$EqLogic->setConfiguration('type', $eq_type);
 			} else {
 				$EqLogic->setConfiguration('type2', $eq_type);

@@ -250,7 +250,7 @@ class Free_CreateTil
             foreach ($result as $Equipement) {
                 $_eq_category = true;
                 if ($eq_group == 'nodes') { //
-                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light' || $Equipement['category'] == 'plug') {
+                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light' || $Equipement['category'] == 'plug' || $Equipement['category'] = 'opener') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
                         } else {
@@ -595,7 +595,7 @@ class Free_CreateTil
                                     }
                                     break;
                                 case "string":
-                                    foreach (str_split($Command['ui']['access']) as $access) {
+                                    foreach (str_split($Command['ui']['access'], 2) as $access) {
                                         $setting = Free_CreateTil::search_setting_string($_eq_action, $access, $Command['name'], $_eq_type, $Command['label'], $eq_group, $_cmd_ep_id);
                                         $IsVisible = 1;
                                         $generic_type = null;
@@ -613,7 +613,9 @@ class Free_CreateTil
                                                 }
 
                                                 if ($Command['ui']['access'] === 'rw') {
-                                                    $action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', 'message', null, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, null, null, null, null, null, null, null, $eq_group);
+                                                    if ($Command['name'] != 'disk') {
+                                                        $action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', 'message', null, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, null, null, null, null, null, null, null, $eq_group);
+                                                    }
                                                 }
                                             }
                                             if ($Command['ui']['access'] === 'w') {
@@ -676,7 +678,7 @@ class Free_CreateTil
 
         $CreateCMD = true;
         if ($eq_group != null) {
-            $_eq_grouo = '_' . $eq_group;
+            $eq_group = '_' . $eq_group;
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
@@ -694,19 +696,23 @@ class Free_CreateTil
                 $Order = 4;
                 $IsVisible_I = '0';
                 break;
-            case 'alarm_pin_r_nodes':
-            case 'alarm_pin_rnodes':
-            case 'alarm_pin_wnodes':
-            case 'alarm_pin_w_nodes':
-            case 'camera_disk_rnodes':
-            case 'camera_disk_wnodes':
-                $CreateCMD = 'PAS DE CREATION';
-                break;
-            case 'alarm_control_pin_r_tiles':
+            case 'alarm_control_pin_rw_tiles':
                 $IsVisible = '0';
                 $IsVisible_I = '0';
                 $Icon = 'far fa-keyboard icon_green';
                 $Icon_I = 'far fa-keyboard';
+                break;
+            case 'camera_disk_rw_nodes':
+                $IsVisible = '0';
+                $IsVisible_I = '0';
+                $Icon = 'far fa-save icon_green';
+                $Icon_I = 'far fa-save';
+                break;
+            case 'alarm_pin_r_nodes':
+            case 'alarm_pin_rw_nodes':
+            case 'camera_disk_r_nodes':
+            case 'opener_state_r_nodes':
+                $CreateCMD = 'PAS DE CREATION';
                 break;
         }
         if ($CreateCMD === true) {
@@ -791,7 +797,7 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . "_" . $Access  . $eq_group;
-        //log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting INT pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting INT pour  : ' . $Search);
         switch ($Search) {
             case 'info_store_slider_rw_tiles':
                 $Label_I = 'Etat volet';
@@ -923,20 +929,22 @@ class Free_CreateTil
                 $ForceLineB = true;
                 $_Iconname = true;
                 break;
-            case 'alarm_alarm_timeout1_w_nodes': // A TRAITER
-            case 'alarm_alarm_timeout2_w_nodes': // A TRAITER
-            case 'alarm_alarm_timeout3_w_nodes': // A TRAITER
-            case 'alarm_alarm_sound_w_nodes': // A TRAITER
-            case 'alarm_alarm_volume_w_nodes': // A TRAITER
+            case 'alarm_alarm_timeout1_r_nodes':
+            case 'alarm_alarm_timeout2_r_nodes':
+            case 'alarm_alarm_timeout3_r_nodes':
+            case 'alarm_alarm_sound_r_nodes':
+            case 'alarm_alarm_volume_r_nodes':
             case 'dws_battery_r_nodes':
             case 'alarm_remote_battery_r_tiles':
             case 'alarm_sensor_battery_mouv_sensor_r_tiles':
-            case 'kfb__r_nodes':
-            case 'kfb_enable_w_nodes':
+            case 'kfb_pushed_remote_r_nodes':
             case 'alarm_battery_r_nodes':
-            case 'camera_camera_threshold_r _nodes':
-            case 'camera_camera_sensitivity_r_nodes':
-            case 'camera_camera_threshold_w_nodes':
+            case 'camera_threshold_r_nodes':
+            case 'camera_sensitivity_r_nodes':
+            case 'camera_threshold_r_nodes':
+            case 'opener_position_set_rw_nodes':
+            case 'opener_position_set_r_nodes':
+            case 'position_set':
             case 'light_set_color_rw_nodes';
             case 'light_slider_rw_nodes':
                 $CreateCMD = 'PAS DE CREATION';

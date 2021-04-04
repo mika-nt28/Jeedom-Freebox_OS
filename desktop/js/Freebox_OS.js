@@ -287,6 +287,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').on('change', funct
 			break;
 		case 'dws':
 		case 'plug':
+		case'opener':
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type2 + '.png');
 			break;
 	}

@@ -131,7 +131,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					} elseif ($eqLogic->getConfiguration('type') == 'info') {
 						if (strpos($eqLogic->getConfiguration('type2'), 'shutter') !== false) {
 							$template = 'shutter';
-						} else if ($eqLogic->getConfiguration('type2') == 'plug') {
+						} else if ($eqLogic->getConfiguration('type2') == 'plug' || $eqLogic->getConfiguration('type2') == 'opener') {
 							$template = $eqLogic->getConfiguration('type2');
 						} else {
 							$template  = 'default';

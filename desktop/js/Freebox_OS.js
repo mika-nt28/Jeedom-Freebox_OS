@@ -278,15 +278,14 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').on('change', funct
 	$icon_type2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
 	$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
 	switch ($icon_type2) {
-		case 'basic_shutter':
-		case 'shutter':
-			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/shutter.png');
-			break;
 		case 'kfb':
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
 			break;
 		case 'dws':
 		case 'plug':
+		case 'opener':
+		case 'basic_shutter':
+		case 'shutter':
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type2 + '.png');
 			break;
 	}

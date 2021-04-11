@@ -44,7 +44,11 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 
 			if ($eqLogic->getConfiguration('type') != 'homeadapters' && $eqLogic->getConfiguration('type') != null) {
 				if (file_exists(dirname(__FILE__) . '/../../core/images/' . $eqLogic->getConfiguration('type') . '.png')) {
-					$icon = $eqLogic->getConfiguration('type');
+					if (file_exists(dirname(__FILE__) . '/../../core/images/' . $eqLogic->getConfiguration('type2') . '.png')) {
+						$icon = $eqLogic->getConfiguration('type2');
+					} else {
+						$icon = $eqLogic->getConfiguration('type');
+					}
 				} else {
 					$icon = 'default';
 				}
@@ -55,6 +59,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 					$icon = 'default';
 				}
 			}
+
 			if ($eqLogic->getConfiguration('type2') != null) {
 				$type = $eqLogic->getConfiguration('type') . ' / ' . $eqLogic->getConfiguration('type2');
 			} else {
@@ -64,7 +69,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 			echo '<tr><td class="' . $opacity . '" >' . $image . '</td><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('logicalID') . '</span></td>';
-			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $type  . '</span></td>';
+			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $type   . '</span>' . '</td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('action') . '</span></td>';
 
 			$status = '<span class="label label-success" style="font-size : 1em;cursor:default;">{{OK}}</span>';

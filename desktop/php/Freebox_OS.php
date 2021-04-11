@@ -129,9 +129,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						}
 						$icon = $template;
 					} elseif ($eqLogic->getConfiguration('type') == 'info') {
-						if (strpos($eqLogic->getConfiguration('type2'), 'shutter') !== false) {
-							$template = 'shutter';
-						} else if ($eqLogic->getConfiguration('type2') == 'plug') {
+						if ($eqLogic->getConfiguration('type2') == 'plug' || $eqLogic->getConfiguration('type2') == 'shutter' || $eqLogic->getConfiguration('type2') == 'basic_shutter' || $eqLogic->getConfiguration('type2') == 'opener') {
 							$template = $eqLogic->getConfiguration('type2');
 						} else {
 							$template  = 'default';
@@ -324,9 +322,10 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<label class="col-sm-4 control-label">{{Type d'équipement}}
 									<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
 								</label>
-								<div class="col-sm-3">
+								<div class="col-sm-4">
 									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type" style="font-size : 1em">
 									</span> <span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type2" style="font-size : 1em">
+									</span> <span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="info" style="font-size : 1em">
 									</span>
 								</div>
 							</div>
@@ -336,14 +335,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</label>
 								<div class="col-sm-3">
 									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="action"></span>
-								</div>
-							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Type d'infos d'équipement}}
-									<sup><i class="fas fa-question-circle" title="{{Type d'information Freebox}}"></i></sup>
-								</label>
-								<div class="col-sm-3">
-									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="info" style="font-size : 1em"></span>
 								</div>
 							</div>
 					</fieldset>

@@ -427,14 +427,23 @@ class Free_Update
                     }
                     $logicalId = $logicalId_conf;
                 } else {
-                    $parametre['value'] = true;
-                    $Listener = cmd::byId(str_replace('#', '', $_cmd->getValue()));
+                    if ($logicalId == 'PB_UP' || $logicalId == 'PB_DOWN') {
+                        $parametre['value_type'] = 'void';
+                        if ($logicalId == 'PB_UP') {
+                            $parametre['value'] = true;
+                        } else {
+                            $parametre['value'] = false;
+                        }
+                    } else {
+                        $parametre['value'] = true;
+                        $Listener = cmd::byId(str_replace('#', '', $_cmd->getValue()));
 
-                    if (is_object($Listener)) {
-                        $parametre['value'] = $Listener->execCmd();
-                    }
-                    if ($_cmd->getConfiguration('invertslide')) {
-                        $parametre['value'] = !$parametre['value'];
+                        if (is_object($Listener)) {
+                            $parametre['value'] = $Listener->execCmd();
+                        }
+                        if ($_cmd->getConfiguration('invertslide')) {
+                            $parametre['value'] = !$parametre['value'];
+                        }
                     }
                 }
                 break;

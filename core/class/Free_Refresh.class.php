@@ -691,10 +691,11 @@ class Free_Refresh
                 }
                 if ($boucle_num == 1 && $_eq_type == 'camera') {
                 } else {
-                    log::add('Freebox_OS', 'debug', '******************** Update de : ' . $node['label'] . ' / ' . $_eq_node . ' / ' . $_eq_type  . ' (' . $_type_boucle . ') ******************** ');
+
                     $EqLogic = eqLogic::byLogicalId($_eq_node, 'Freebox_OS');
                     if (is_object($EqLogic)) {
                         if ($EqLogic->getIsEnable()) {
+                            log::add('Freebox_OS', 'debug', '******************** Update de : ' . $node['label'] . ' / ' . $_eq_node . ' / ' . $_eq_type  . ' (' . $_type_boucle . ') ******************** ');
                             foreach ($_eq_data as $data) {
                                 if ($boucle_num == 1) {
                                     $_cmd_id = $data['ep_id'];

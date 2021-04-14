@@ -250,7 +250,7 @@ class Free_CreateTil
             foreach ($result as $Equipement) {
                 $_eq_category = true;
                 if ($eq_group == 'nodes') { //
-                    if ($Equipement['category'] == 'alarm' || $Equipement['category'] == 'pir' || $Equipement['category'] == 'dws' || $Equipement['category'] == 'kfb' || $Equipement['category'] == 'camera' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'light' || $Equipement['category'] == 'plug' || $Equipement['category'] = 'opener') {
+                    if ($Equipement['category'] == 'pir' ||  $Equipement['category'] == 'kfb' ||  $Equipement['category'] == 'dws' ||  $Equipement['category'] == 'alarm' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'shutter' || $Equipement['category'] = 'opener'  || $Equipement['category'] == 'plug' ||  $Equipement['category'] == 'camera' || $Equipement['category'] == 'light') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
                         } else {

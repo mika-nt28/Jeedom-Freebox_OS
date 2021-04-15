@@ -778,7 +778,7 @@ class Free_CreateTil
         log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting VOID pour  : ' . $Search);
 
         switch ($Search) {
-            case 'shutter_toggle_w_nodes':
+                /*case 'shutter_toggle_w_nodes':
                 // Toggle UP
                 $Generic_type = 'FLAP_UP';
                 $Icon = 'fas fa-arrow-up';
@@ -793,7 +793,7 @@ class Free_CreateTil
                 $Order2 = 89;
                 // ETAT 
                 $Label_I = "État";
-                break;
+                break;*/
             case 'info_up_store_w_tiles':
                 $Generic_type = 'FLAP_UP';
                 $Icon = 'fas fa-arrow-up';
@@ -848,6 +848,7 @@ class Free_CreateTil
             case 'basic_shutter_down_w_nodes':
             case 'shutter_stop_w_nodes':
             case 'opener_stop_w_nodes':
+            case 'shutter_toggle_w_nodes':
                 $CreateCMD = 'PAS DE CREATION';
                 break;
             default:
@@ -1355,12 +1356,6 @@ class Free_CreateTil
                 $Generic_type = 'FLAP_STATE';
                 $Icon = 'icon jeedom-volet-ouvert';
                 $Templatecore = 'shutter';
-                if ($Search == 'basic_shutter_state_r_nodes') {
-                    $Order = 7;
-                    $TypeCMD_BOOL = 'PB_SP';
-                    $LabelON = 'Haut - Ouvert';
-                    $LabelOFF = 'Bas - Fermée';
-                }
                 break;
             case 'alarm_sensor_cover_r_tiles':
                 $Templatecore = 'alert';

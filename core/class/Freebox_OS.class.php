@@ -202,7 +202,7 @@ class Freebox_OS extends eqLogic
 	{
 		log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
 		Free_Refresh::RefreshInformation('Tiles_global');
-		log::add('Freebox_OS', 'debug', '********************  FIN CRON UPDATE TILES/NODE ******************** ');
+		//log::add('Freebox_OS', 'debug', '********************  FIN CRON UPDATE TILES/NODE ******************** ');
 		sleep(15);
 	}
 	public static function resetConfig()

@@ -141,7 +141,6 @@ class Freebox_OS extends eqLogic
 			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
 		$cron->run();
-		log::add('Freebox_OS', 'debug', '>> ================ >> CRON: ');
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron introuvable', __FILE__));
@@ -200,10 +199,13 @@ class Freebox_OS extends eqLogic
 	}
 	public static function FreeboxGET()
 	{
-		log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
-		Free_Refresh::RefreshInformation('Tiles_global');
-		//log::add('Freebox_OS', 'debug', '********************  FIN CRON UPDATE TILES/NODE ******************** ');
-		sleep(15);
+		try {
+			//log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
+			Free_Refresh::RefreshInformation('Tiles_global');
+			sleep(15);
+		} catch (Exception $exc) {
+			log::add('Freebox_OS', 'error', __('********************  ERREUR CRON UPDATE TILES/NODE ', __FILE__));
+		}
 	}
 	public static function resetConfig()
 	{

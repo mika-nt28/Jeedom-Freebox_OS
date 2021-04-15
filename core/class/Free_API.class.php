@@ -223,11 +223,11 @@ class Free_API
             $Challenge = cache::byKey('Freebox_OS::Challenge');
             if (is_object($Challenge)) {
                 $Challenge->remove();
-                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Challenge');
+                //log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Challenge');
             }
             $session_token = cache::byKey('Freebox_OS::SessionToken');
             if (!is_object($session_token) || $session_token->getValue('') == '') {
-                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Token Vide');
+                //log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Token Vide');
                 return;
             }
 
@@ -239,9 +239,9 @@ class Free_API
 
             if (is_object($SessionToken)) {
                 $SessionToken->remove();
-                log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Token');
+                //log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Token');
             }
-            log::add('Freebox_OS', 'debug', '│──────────> Fin Close Session  ');
+            //log::add('Freebox_OS', 'debug', '│──────────> Fin Close Session  ');
             return $json;
         } catch (Exception $e) {
             log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $e->getCode() . ' ou session déjà fermée');

@@ -856,7 +856,7 @@ class Free_Refresh
                 } else {
                     $_value = $data['value'];
                 }
-                log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
+                //log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
                 break;
         }
         if ($cmd->getConfiguration('TypeNode') == 'nodes') { // 

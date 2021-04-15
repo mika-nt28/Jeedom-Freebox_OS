@@ -709,7 +709,7 @@ class Free_Refresh
                                     $cmd = $EqLogic->getCmd('info', $_cmd_id);
                                     if (is_object($cmd)) {
                                         if ($cmd->getConfiguration('TypeNode') == 'nodes') {
-                                            if ($EqLogic->getConfiguration('type2') == 'pir' || $EqLogic->getConfiguration('type2') == 'dws' || $EqLogic->getConfiguration('type') == 'camera' || $EqLogic->getConfiguration('type2') == 'alarm' || $EqLogic->getConfiguration('type2') == 'kfb' || $EqLogic->getConfiguration('type2') == 'basic_shutter' || $EqLogic->getConfiguration('type2') == 'light') {
+                                            if ($EqLogic->getConfiguration('type2') == 'pir' || $EqLogic->getConfiguration('type2') == 'kfb' || $EqLogic->getConfiguration('type2') == 'dws' || $EqLogic->getConfiguration('type2') == 'alarm' || $EqLogic->getConfiguration('type') == 'camera'  || $EqLogic->getConfiguration('type2') == 'basic_shutter' || $EqLogic->getConfiguration('type2') == 'opener' || $Equipement['category'] == 'shutter'  || $EqLogic->getConfiguration('type2') == 'light') {
                                                 Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, false);
                                             }
                                         } else {
@@ -856,10 +856,15 @@ class Free_Refresh
                 } else {
                     $_value = $data['value'];
                 }
-                //log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
+                log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
                 break;
         }
-        $EqLogic->checkAndUpdateCmd($data['ep_id'], $_value);
+        if ($cmd->getConfiguration('TypeNode') == 'nodes') { // 
+            $_cmd_ep_id = $data['id'];
+        } else {
+            $_cmd_ep_id = $data['ep_id'];
+        }
+        $EqLogic->checkAndUpdateCmd($_cmd_ep_id, $_value);
     }
     private static function refresh_titles($Equipement, $Free_API)
     {

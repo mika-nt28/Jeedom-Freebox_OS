@@ -140,7 +140,7 @@ class Free_API
         }
     }
 
-    public function fetch($api_url, $params = array(), $method = 'GET', $log_update = false, $log_createeq = false)
+    public function fetch($api_url, $params = array(), $method = 'GET', $log_request = false, $log_result = false)
     {
         try {
             $session_token = cache::byKey('Freebox_OS::SessionToken');
@@ -148,10 +148,9 @@ class Free_API
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
 
-            if ($log_update == false) {
-                //log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
+            if ($log_request  != false) {
+                log::add('Freebox_OS', 'debug', '│ [Freebox Request Connexion] : ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
             };
-            log::add('Freebox_OS', 'debug', '│ [Freebox Request Connexion] : ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $this->serveur . $api_url);
             curl_setopt($ch, CURLOPT_HEADER, false);
@@ -175,9 +174,9 @@ class Free_API
                 $errorno = curl_errno($ch);
             }
             curl_close($ch);
-
-            log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
-
+            if ($log_request  != false) {
+                log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
+            }
             if ($errorno !== 0) {
                 return '│ Erreur de connexion cURL vers ' . $this->serveur . $api_url . ': ' . $error;
             } else {
@@ -288,7 +287,7 @@ class Free_API
         }
     }
 
-    public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config')
+    public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true)
     {
         $config_log = null;
         $fonction = "GET";
@@ -370,8 +369,7 @@ class Free_API
                 $config_log = 'Upload Progress tracking API';
                 break;
         }
-
-        $result = $this->fetch('/' . $config, $Parameter, $fonction);
+        $result = $this->fetch('/' . $config, $Parameter, $fonction, $log_request, $log_result);
         if ($result == 'auth_required') {
             $result = $this->fetch('/' . $config, $Parameter, $fonction);
         }

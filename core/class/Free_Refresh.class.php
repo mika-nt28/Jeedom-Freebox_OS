@@ -672,9 +672,9 @@ class Free_Refresh
         $boucle_num = 1; // 1 = Tiles - 2 = Node 
         while ($boucle_num <= 2) {
             if ($boucle_num == 2) {
-                $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
+                $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes', false, false);
             } else if ($boucle_num == 1) {
-                $result = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/all');
+                $result = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/all', false, false);
             }
 
             foreach ($result as $node) {
@@ -689,19 +689,20 @@ class Free_Refresh
                     $_eq_node = $node['node_id'];
                     $_type_boucle = 'TILES';
                 }
+                //log::add('Freebox_OS', 'debug', '******************** Update Boucle : ' . $_type_boucle . ' ******************** ');
                 if ($boucle_num == 1 && $_eq_type == 'camera') {
                 } else {
 
                     $EqLogic = eqLogic::byLogicalId($_eq_node, 'Freebox_OS');
                     if (is_object($EqLogic)) {
                         if ($EqLogic->getIsEnable()) {
-                            log::add('Freebox_OS', 'debug', '******************** Update de : ' . $node['label'] . ' / ' . $_eq_node . ' / ' . $_eq_type  . ' (' . $_type_boucle . ') ******************** ');
+                            //log::add('Freebox_OS', 'debug', '******************** Update de : ' . $node['label'] . ' / ' . $_eq_node . ' / ' . $_eq_type  . ' (' . $_type_boucle . ') ******************** ');
                             foreach ($_eq_data as $data) {
                                 if ($boucle_num == 1) {
                                     $_cmd_id = $data['ep_id'];
                                     $cmd = $EqLogic->getCmd('info', $_cmd_id);
                                     if (is_object($cmd)) {
-                                        Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id);
+                                        Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, false);
                                     }
                                 } else {
                                     $_cmd_id = $data['id'];
@@ -709,7 +710,7 @@ class Free_Refresh
                                     if (is_object($cmd)) {
                                         if ($cmd->getConfiguration('TypeNode') == 'nodes') {
                                             if ($EqLogic->getConfiguration('type2') == 'pir' || $EqLogic->getConfiguration('type2') == 'dws' || $EqLogic->getConfiguration('type') == 'camera' || $EqLogic->getConfiguration('type2') == 'alarm' || $EqLogic->getConfiguration('type2') == 'kfb' || $EqLogic->getConfiguration('type2') == 'basic_shutter' || $EqLogic->getConfiguration('type2') == 'light') {
-                                                Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id);
+                                                Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, false);
                                             }
                                         } else {
                                             //log::add('Freebox_OS', 'debug', '│──────────> Id : ' . $_cmd_id . ' -- AUCUNE MISE A JOUR A FAIRE AVEC LA REQUETE NODE');
@@ -724,7 +725,7 @@ class Free_Refresh
             $boucle_num++;
         }
     }
-    private static function refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id)
+    private static function refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, $log_result = true)
     {
         $_Alarm_mode_value = null;
         $_Alarm_stat_value = null;
@@ -735,7 +736,9 @@ class Free_Refresh
             $nb_pushed = count($data['history']);
             $nb_pushed_k = $nb_pushed - 1;
             $_value_history = $data['history'][$nb_pushed_k]['value'];
-            log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
+            if ($log_result == true) {
+                log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
+            }
         };
         if ($data['name'] == 'battery' || $data['name'] == 'battery_warning') {
             $_value = $data['value'];
@@ -757,7 +760,9 @@ class Free_Refresh
                         }
                     }
                 }
-                log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- valeur Inverser = ' . $cmd->getConfiguration('invertnumeric'));
+                if ($log_result == true) {
+                    log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- valeur Inverser = ' . $cmd->getConfiguration('invertnumeric'));
+                }
                 break;
             case 'string':
                 if ($data['name'] == 'state' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
@@ -804,12 +809,16 @@ class Free_Refresh
                             $_Alarm_log = ' Aucun Mode';
                             break;
                     }
-                    log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique pour Homebridge : ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
+                    if ($log_result == true) {
+                        log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique pour Homebridge : ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
+                    }
                     $EqLogic->checkAndUpdateCmd('ALARM_state', $_Alarm_stat_value);
                     $EqLogic->checkAndUpdateCmd('ALARM_enable', $_Alarm_enable_value);
                     $EqLogic->checkAndUpdateCmd('ALARM_mode', $_Alarm_mode_value);
-                    log::add('Freebox_OS', 'debug', '│ Statut (ALARM_state) = ' . $_Alarm_stat_value . ' / Actif (ALARM_enable) = ' . $_Alarm_enable_value . ' / Mode (ALARM_mode) = ' . $_Alarm_mode_value);
-                    //log::add('Freebox_OS', 'debug', '│──────────> Fin Update commande spécifique pour Homebridge');
+                    if ($log_result == true) {
+                        log::add('Freebox_OS', 'debug', '│ Statut (ALARM_state) = ' . $_Alarm_stat_value . ' / Actif (ALARM_enable) = ' . $_Alarm_enable_value . ' / Mode (ALARM_mode) = ' . $_Alarm_mode_value);
+                        //log::add('Freebox_OS', 'debug', '│──────────> Fin Update commande spécifique pour Homebridge');
+                    }
                 };
 
                 if ($data['ui']['display'] == 'color') {

@@ -189,6 +189,9 @@ class Freebox_OS extends eqLogic
 			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
 			return;
 		}
+		if (!is_object($action[0])) {
+			return;
+		}
 		if ($action[0] == '') {
 			return;
 		}
@@ -202,7 +205,7 @@ class Freebox_OS extends eqLogic
 	{
 		log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
 		Free_Refresh::RefreshInformation('Tiles_global');
-		log::add('Freebox_OS', 'debug', '********************  FIN CRON UPDATE TILES/NODE ******************** ');
+		//log::add('Freebox_OS', 'debug', '********************  FIN CRON UPDATE TILES/NODE ******************** ');
 		sleep(15);
 	}
 	public static function resetConfig()

@@ -246,7 +246,6 @@ class Free_CreateTil
                 $_eq_category = true;
                 $result = $Free_API->universal_get('tiles');
             }
-            log::add('Freebox_OS', 'debug', '>> ================ >> TYPE DE CREATION : ' . $eq_group);
             foreach ($result as $Equipement) {
                 $_eq_category = true;
                 if ($eq_group == 'nodes') { //
@@ -261,11 +260,13 @@ class Free_CreateTil
                         $_eq_category = false;
                     }
                 }
-
-                if ($_eq_category  === true) {
+                if ($_eq_category === true) {
                     $_eq_type2 = null;
                     if ($boucle_num == 2) {
                         $_eq_type = $Equipement['category'];
+                        if (isset($Equipement['props']['Stream'])) {
+                            $_eq_type = 'camera';
+                        }
                         $_eq_room = $Equipement['group']['label'];
                         $_eq_data = $Equipement['show_endpoints'];
                         $_eq_node = $Equipement['id'];
@@ -295,9 +296,7 @@ class Free_CreateTil
                             $_autorefresh = '* * * * *';
                         }
                     } elseif ($_eq_type == 'light') {
-                        $category = 'light';
-                    } elseif ($_eq_action == 'store' ||  $_eq_action == 'store_slider') {
-                        $category = 'opening';
+                        $category = 'light';;
                     } else {
                         $category = 'default';
                     }
@@ -533,7 +532,6 @@ class Free_CreateTil
                                     if ($_eq_type == 'kfb' || $_eq_type == 'pir' || $_eq_type == 'dws' || $_eq_type == 'alarm_remote') {
                                         $_home_config_eq = $_eq_type;
                                     }
-                                    //$IsVisible = $setting['IsVisible'];
 
                                     if ($setting['CreateCMD'] == 1) {
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
@@ -698,6 +696,7 @@ class Free_CreateTil
                 $Icon_I = 'far fa-keyboard';
                 break;
             case 'camera_disk_rw_nodes':
+                $Label_I = $Label_O;
                 $IsVisible = '0';
                 $IsVisible_I = '0';
                 $Icon = 'far fa-save icon_green';
@@ -792,12 +791,12 @@ class Free_CreateTil
                 $_Cmd_ep_id2 = 'PB_DOWN';
                 $Order2 = 89;
                 // ETAT 
-                $Label_I = "État";
+                $Label_I = "Etat";
                 break;*/
             case 'info_up_store_w_tiles':
                 $Generic_type = 'FLAP_UP';
                 $Icon = 'fas fa-arrow-up';
-                $Label_I = "État";
+                $Label_I = "Etat";
                 $TypeCMD_BOOL = 'PB_SP';
                 $Order = 2;
                 break;
@@ -805,14 +804,14 @@ class Free_CreateTil
             case 'info_stop_store_slider_w_tiles':
                 $Generic_type = 'FLAP_STOP';
                 $Icon = 'fas fa-stop';
-                $Label_I = "État";
+                $Label_I = "Etat";
                 $TypeCMD_BOOL = 'PB_SP';
                 $Order = 3;
                 break;
             case 'info_down_store_w_tiles':
                 $Generic_type = 'FLAP_DOWN';
                 $Icon = 'fas fa-arrow-down';
-                $Label_I = "État";
+                $Label_I = "Etat";
                 $TypeCMD_BOOL = 'PB_SP';
                 $Order = 4;
                 break;
@@ -948,7 +947,7 @@ class Free_CreateTil
             case 'light_hs_color_picker_rw_tiles':
                 $Icon_I = 'fas fa-palette';
                 $Icon = 'fas fa-palette icon_green';
-                $Label_I = 'ETAT ' . $Label_O;
+                $Label_I = 'Etat ' . $Label_O;
                 $Label = $Label_O;
                 $Generic_type = 'LIGHT_SET_COLOR';
                 $Generic_type_I = 'LIGHT_COLOR';
@@ -1050,7 +1049,7 @@ class Free_CreateTil
                         break;
                 }
                 $Templatecore = 'button';
-                $Label_I = 'ETAT ' . $Label;
+                $Label_I = 'Etat ' . $Label;
                 $_Min = '0';
                 $TypeCMD = 'action_info';
                 $ForceLineB = true;
@@ -1135,6 +1134,9 @@ class Free_CreateTil
         $TemplatecoreOFF = null;
         $Templatecore = null;
         // Reset Label et logicalId
+        if ((stripos($Label_O, 'État') !== FALSE || stripos($Label_O, 'Etat') !== FALSE)) {
+            $Label_O = str_replace("État", "Etat", $Label_O);
+        }
         $Label_ETAT = $Label_O;
         $LabelON = 'PB_On';
         $LabelOFF = 'PB_Off';
@@ -1205,8 +1207,8 @@ class Free_CreateTil
                         $Icon = 'fas fa-toggle-on';
                         $IconON = 'fas fa-toggle-on icon_green';
                         $IconOFF = 'fas fa-toggle-on icon_red';
-                        $Order = 20;
-                        $Order_A = 21;
+                        $Order = 31;
+                        $Order_A = 32;
                         break;
                     case 'pir_timed_w_nodes':
                     case 'pir_timed_r_nodes':
@@ -1215,24 +1217,24 @@ class Free_CreateTil
                         $Icon = 'fas fa-stopwatch-20';
                         $IconON = 'fas fa-stopwatch-20 icon_green';
                         $IconOFF = 'fas fa-stopwatch-20 icon_red';
-                        $Order = 24;
-                        $Order_A = 25;
+                        $Order = 34;
+                        $Order_A = 35;
                         break;
                     case 'dws_timed_w_nodes':
                     case 'dws_timed_r_nodes':
                         $Icon = 'fas fa-stopwatch-20';
                         $IconON = 'fas fa-stopwatch-20 icon_green';
                         $IconOFF = 'fas fa-stopwatch-20 icon_red';
-                        $Order = 28;
-                        $Order_A = 29;
+                        $Order = 37;
+                        $Order_A = 38;
                         break;
                     case 'pir_alarm1_w_nodes':
                     case 'pir_alarm1_r_nodes':
                         $Icon = 'fas fa-lock';
                         $IconON = 'fas fa-lock icon_green';
                         $IconOFF = 'fas fa-lock icon_red';
-                        $Order = 32;
-                        $Order_A = 33;
+                        $Order = 40;
+                        $Order_A = 41;
                         break;
                     case 'camera_activation_w_nodes':
                     case 'camera_activation_r_nodes':
@@ -1242,72 +1244,72 @@ class Free_CreateTil
                         $Icon = 'fas fa-lock';
                         $IconON = 'fas fa-lock icon_green';
                         $IconOFF = 'fas fa-lock icon_red';
-                        $Order = 32;
-                        $Order_A = 33;
+                        $Order = 43;
+                        $Order_A = 44;
                         break;
                     case 'dws_alarm1_w_nodes':
                     case 'dws_alarm1_r_nodes':
                         $Icon = 'fas fa-lock';
                         $IconON = 'fas fa-lock icon_green';
                         $IconOFF = 'fas fa-lock icon_red';
-                        $Order = 36;
-                        $Order_A = 37;
+                        $Order = 46;
+                        $Order_A = 47;
                         break;
                     case 'pir_alarm2_w_nodes':
                     case 'pir_alarm2_r_nodes':
                         $Icon = 'fas fa-user-lock';
                         $IconON = 'fas fa-user-lock icon_green';
                         $IconOFF = 'fas fa-user-lock icon_red';
-                        $Order = 40;
-                        $Order_A = 41;
+                        $Order = 49;
+                        $Order_A = 50;
                         break;
                     case 'dws_alarm2_w_nodes':
                     case 'dws_alarm2_r_nodes':
                         $Icon = 'fas fa-user-lock';
                         $IconON = 'fas fa-user-lock icon_green';
                         $IconOFF = 'fas fa-user-lock icon_red';
-                        $Order = 44;
-                        $Order_A = 45;
+                        $Order = 52;
+                        $Order_A = 53;
                         break;
                     case 'camera_rtsp_w_nodes':
                     case 'camera_rtsp_r_nodes':
                         $Icon = 'fas fa-external-link-square-alt';
                         $IconON = 'fas fa-external-link-square-alt icon_green';
                         $IconOFF = 'fas fa-external-link-square-alt icon_red';
-                        $Order = 48;
-                        $Order_A = 49;
+                        $Order = 55;
+                        $Order_A = 56;
                         break;
                     case 'camera_detection_w_nodes':
                     case 'camera_detection_r_nodes':
                         $Icon = 'fas fa-running';
                         $IconON = 'fas fa-running icon_green';
                         $IconOFF = 'fas fa-running icon_red';
-                        $Order = 52;
-                        $Order_A = 53;
+                        $Order = 58;
+                        $Order_A = 59;
                         break;
                     case 'camera_quality_w_nodes':
                     case 'camera_quality_r_nodes':
                         $Icon = 'fas fa-video';
                         $IconON = 'fas fa-video icon_green';
                         $IconOFF = 'fas fa-video icon_red';
-                        $Order = 56;
-                        $Order_A = 57;
+                        $Order = 61;
+                        $Order_A = 62;
                         break;
                     case 'camera_flip_w_nodes':
                     case 'camera_flip_r_nodes':
                         $Icon = 'fas fa-undo-alt';
                         $IconON = 'fas fa-undo-alt icon_green';
                         $IconOFF = 'fas fa-undo-alt icon_red';
-                        $Order = 60;
-                        $Order_A = 61;
+                        $Order = 64;
+                        $Order_A = 65;
                         break;
                     case 'camera_sound_detection_w_nodes':
                     case 'camera_sound_detection_r_nodes':
                         $Icon = 'fas fa-microphone-alt';
                         $IconON = 'fas fa-microphone-alt icon_green';
                         $IconOFF = 'fas fa-microphone-alt icon_red';
-                        $Order = 64;
-                        $Order_A = 65;
+                        $Order = 67;
+                        $Order_A = 68;
                         break;
                 }
                 break;
@@ -1330,8 +1332,8 @@ class Free_CreateTil
                 $Order = 1;
                 $IsVisible_PB = 1;
                 $IsVisible = '0';
-                $Order = 60;
-                $Order_A = 61;
+                $Order = 80;
+                $Order_A = 81;
                 break;
             case 'info_switch_toggle_rw_tiles':
                 $Label_ETAT = 'Etat';

@@ -283,16 +283,15 @@ class Freebox_OS extends eqLogic
 			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter' && $eq_type != 'shutter'  && $eq_type != 'opener' && $eq_type != 'plug') {
 				$EqLogic->setConfiguration('type', $eq_type);
 			} else {
-				$EqLogic->setConfiguration('type2', $eq_type);
-				if ($eq_type == 'pir') {
+				if ($eq_type != 1) {
+					$EqLogic->setConfiguration('type2', $eq_type);
+				}
+				if ($eq_type === 'pir') {
 					$EqLogic->setConfiguration('info', 'mouv_sensor');
 				}
 			}
 			if ($eq_action != null) {
 				$EqLogic->setConfiguration('action', $eq_action);
-			}
-			if ($type2 != null) {
-				$EqLogic->setConfiguration('type2', $eq_type);
 			}
 			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
 				$EqLogic->setConfiguration('action', $logicalID_equip);

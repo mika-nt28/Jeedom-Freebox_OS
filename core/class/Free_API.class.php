@@ -174,7 +174,7 @@ class Free_API
                 $errorno = curl_errno($ch);
             }
             curl_close($ch);
-            if ($log_request  != false) {
+            if ($log_result  != false) {
                 log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
             }
             if ($errorno !== 0) {
@@ -565,16 +565,16 @@ class Free_API
             $parametre = false;
         }
         if ($update == 'parental' || $update == 'donwload') {
-            $return = $this->fetch('/' . $config . '', $parametre, $fonction, true);
+            $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);
         } else if ($update == 'universal_put') {
-            $return = $this->fetch('/' . $config,  $_options_2, $fonction);
+            $return = $this->fetch('/' . $config,  $_options_2, $fonction, true, true);
             return $return['success'];
         } else if ($update == 'set_tiles') {
-            $return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT");
+            $return = $this->fetch('/' . $config . $nodeId . '/' . $id, $parametre, "PUT", true, true);
         } else if ($_options == 'mac_filter') {
-            $return = $this->fetch('/' . $config  . '/' . $id, $parametre, $fonction);
+            $return = $this->fetch('/' . $config  . '/' . $id, $parametre, $fonction, true, true);
         } else if ($update == 'phone') {
-            $return = $this->fetch('/' . $config . '/', null, $fonction);
+            $return = $this->fetch('/' . $config . '/', null, $fonction, true, true);
         } else {
             if ($config_log != null) {
                 log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);

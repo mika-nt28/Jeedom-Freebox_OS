@@ -534,6 +534,9 @@ class Free_CreateTil
                                     }
 
                                     if ($setting['CreateCMD'] == 1) {
+                                        if ($_cmd_ep_id === 0) {
+                                            $_cmd_ep_id_link = '0';
+                                        }
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
                                             $infoCmd = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'info', 'binary', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                             $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);
@@ -554,18 +557,18 @@ class Free_CreateTil
                                             }
                                             if ($Command['ui']['access'] === 'rw') {
                                                 $order_A = $setting['Order_A'];
-                                                $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
+                                                $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id_link, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                 $order_A++;
-                                                $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
+                                                $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id_link, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                             }
                                         } else if ($Command['ui']['access'] === 'w') {
                                             if ($setting['TypeCMD'] != 'PB_SP') {
                                                 $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                             } else {
                                                 $order_A = $setting['Order_A'];
-                                                $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
+                                                $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id_link, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                 $order_A++;
-                                                $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['TemplatecoreOFF'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
+                                                $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['TemplatecoreOFF'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id_link, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                             }
                                         }
                                     }
@@ -782,16 +785,16 @@ class Free_CreateTil
                 $Generic_type = 'FLAP_UP';
                 $Icon = 'fas fa-arrow-up';
                 $Label_O = 'Haut - Ouvert';
-                $_Cmd_ep_id = 'PB_UP';
+                $_Cmd_ep_id = 'PB_UP'.$_Cmd_ep_id;
                 $Order = 8;
                 // Toggle DOWN
                 $Generic_type2 = 'FLAP_DOWN';
                 $Icon2 = 'fas fa-arrow-down';
                 $Label_O2 = 'Bas - Fermée';
-                $_Cmd_ep_id2 = 'PB_DOWN';
+                $_Cmd_ep_id2 = 'PB_DOWN'.$_Cmd_ep_id';
                 $Order2 = 89;
                 // ETAT 
-                $Label_I = "Etat";
+                $Label_I = "Etat Toggle";
                 break;*/
             case 'info_up_store_w_tiles':
                 $Generic_type = 'FLAP_UP';

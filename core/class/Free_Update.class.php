@@ -375,12 +375,12 @@ class Free_Update
                 log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- valeur Inversé  : ' . $_cmd->getConfiguration('invertslide') . ' -- valeur  : ' . $parametre['value'] . ' -- valeur slider : ' . $_options['slider']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
                     $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
-                    if ($cmd !== false) {
+                    /*if ($cmd !== false) {
                         if ($cmd->execCmd() == 0) {
                             $_execute = 0;
                             log::add('Freebox_OS', 'debug', '│ Pas d\'action car l\'équipement est éteint');
                         }
-                    }
+                    }*/
                 }
                 break;
             case 'color':
@@ -418,7 +418,6 @@ class Free_Update
             default:
                 $parametre['value_type'] = 'bool';
                 if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
-
                     //log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
                     if (stripos($logicalId, 'PB_On')  == 'PB_On') {
                         $parametre['value'] = true;

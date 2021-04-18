@@ -400,7 +400,12 @@ class Free_API
                     if ($config_log != null && $id != null && $id != '/all') {
                         log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
                     }
-                    return $result['result'];
+                    if (isset($result['result'])) {
+                        return $result['result'];
+                    } else {
+                        $result = null;
+                        return $result;
+                    }
                     break;
             }
 

@@ -248,8 +248,9 @@ class Free_CreateTil
             }
             foreach ($result as $Equipement) {
                 $_eq_category = true;
-                if ($eq_group == 'nodes') { //
-                    if ($Equipement['category'] == 'pir' ||  $Equipement['category'] == 'kfb' ||  $Equipement['category'] == 'dws' ||  $Equipement['category'] == 'alarm' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'shutter' || $Equipement['category'] = 'opener'  || $Equipement['category'] == 'plug' ||  $Equipement['category'] == 'camera' || $Equipement['category'] == 'light') {
+                if ($eq_group == 'nodes') {
+                    $_eq_type = $Equipement['category'];
+                    if ($Equipement['category'] === 'pir' ||  $Equipement['category'] === 'kfb' ||  $Equipement['category'] === 'dws' ||  $Equipement['category'] === 'alarm' || $Equipement['category'] === 'basic_shutter' || $Equipement['category'] === 'shutter' || $Equipement['category'] === 'opener'  || $Equipement['category'] === 'plug' ||  $Equipement['category'] === 'camera' || $Equipement['category'] === 'light') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
                         } else {
@@ -264,13 +265,10 @@ class Free_CreateTil
                     $_eq_type2 = null;
                     if ($boucle_num == 2) {
                         $_eq_type = $Equipement['category'];
-                        if (isset($Equipement['props']['Stream'])) {
-                            $_eq_type = 'camera';
-                        }
                         $_eq_room = $Equipement['group']['label'];
                         $_eq_data = $Equipement['show_endpoints'];
                         $_eq_node = $Equipement['id'];
-                        if ($Equipement['category'] == 'light') {
+                        if ($Equipement['category'] === 'light') {
                             $_eq_type2 = $Equipement['category'];
                         }
                     } else if ($boucle_num == 1) {

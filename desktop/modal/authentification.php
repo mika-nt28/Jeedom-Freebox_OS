@@ -231,9 +231,9 @@ if (!isConnect('admin')) {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Parental</td>
+                            <td><b>Parental</b></td>
                             <td id="parental" class="alert-danger">NOK</td>
-                            <td>{{Accès au contrôle parental (obsolète}})</td>
+                            <td>{{Accès au contrôle parental}}</td>
                             <td>TV</td>
                             <td id="tv" class="alert-danger">NOK</td>
                             <td>{{Accès au guide TV}}</td>
@@ -279,7 +279,7 @@ if (!isConnect('admin')) {
                             <td>{{Programmation des enregistrements}}</td>
                         </tr>
                         <tr>
-                            <td>VM</td>
+                            <td><b>VM</b></td>
                             <td id="vm" class="alert-danger">NOK</td>
                             <td>{{Contrôle de la VM</td>
                             <td><b>Download</b></td>

@@ -85,6 +85,7 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['netshareName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['wifiName']);
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
+                log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES VM');
                 log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
@@ -114,6 +115,7 @@ class Free_CreateEq
                     log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
                     log::add('Freebox_OS', 'debug', '====================================================================================');
                 }
+                Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4);
                 break;
         }
     }
@@ -717,8 +719,34 @@ class Free_CreateEq
     private static function createEq_VM($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['VM']);
+        $updateicon = false;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('VM', null, null, 'null');
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $VMOn = 'fas fa-play';
+            $VMOff = 'fas fa-stop';
+            $VMRestart = 'fas fa-sync icon_red';
+            $TemplateVM = 'default';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $VMOn = 'fas fa-play icon_green';
+            $VMOff = 'fas fa-stop icon_red';
+            $VMRestart = 'fas fa-sync icon_red';
+            $TemplateVM = 'Freebox_OS::VM';
+        };
+        if ($result != null) {
+            foreach ($result as $Equipement) {
+                $_VM = Freebox_OS::AddEqLogic($Equipement['cloudinit_hostname'], 'VM_' . $Equipement['id'], 'multimedia', true, 'VM', null, $Equipement['id'], '*/5 * * * *', null, null);
+                $_VM->AddCommand('CPU(s)', 'vcpus', 'info', 'numeric',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false);
+                $_VM->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 11, '0', $updateicon, false);
+                $_VM->AddCommand('Mémoire', 'memory', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mo', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false);
+                $_VM->AddCommand('Status', 'status', 'info', 'string', $TemplateVM, null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', 13, '0', $updateicon, false);
+                $_VM->AddCommand('Start', 'start', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOn, 0, 'default', 'default', 14, '0', $updateicon, false);
+                $_VM->AddCommand('Stop', 'stop', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOff, 0, 'default', 'default', 15, '0', $updateicon, false);
+                $_VM->AddCommand('Redémarrer', 'restart', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMRestart, 0, 'default', 'default', 16, '0', $updateicon, false);
+            }
+        }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

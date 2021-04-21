@@ -354,7 +354,7 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'VM':
-                $config = 'api/v8/vm';
+                $config = 'api/v8/vm' . $id;
                 break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $update_type;
@@ -520,6 +520,10 @@ class Free_API
                     $fonction = "POST";
                 }
                 break;
+            case 'VM':
+                $config = 'api/v8/vm/' . $id . '/' . $_options_2;
+                $fonction = "POST";
+                break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $_options;
                 if ($_options == 'planning') {
@@ -569,7 +573,7 @@ class Free_API
         } elseif ($parametre === 0) {
             $parametre = false;
         }
-        if ($update == 'parental' || $update == 'donwload') {
+        if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);
         } else if ($update == 'universal_put') {
             $return = $this->fetch('/' . $config,  $_options_2, $fonction, true, true);

@@ -27,7 +27,7 @@ class Free_Update
             //log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
         $Free_API = new Free_API();
-        if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player') {
+        if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player'  || $logicalId_eq->getConfiguration('type') == 'VM') {
             $update = $logicalId_eq->getconfiguration('type');
         } else {
             $update = $logicalId_eq->getLogicalId();
@@ -96,6 +96,10 @@ class Free_Update
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 }
                 break;
+            case 'VM':
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
+                }
             case 'wifi':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -110,7 +114,10 @@ class Free_Update
                 break;
         }
     }
-
+    private static function update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update)
+    {
+        $Free_API->universal_put(null, $logicalId_eq->getconfiguration('type'), $logicalId_eq->getConfiguration('action'), null, null, null, $logicalId);
+    }
     private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
         $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");

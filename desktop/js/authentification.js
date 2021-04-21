@@ -507,7 +507,9 @@ function GetSessionData() {
                     permissions.camera &&
                     permissions.downloader &&
                     permissions.home &&
+                    permissions.parental &&
                     permissions.player &&
+                    permissions.vm &&
                     permissions.profile &&
                     permissions.settings) {
                     logs('debug', "================= Les droits sont OK");

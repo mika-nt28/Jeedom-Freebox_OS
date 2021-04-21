@@ -28,7 +28,7 @@ class Free_Refresh
             Free_Refresh::refresh_titles_global($Equipement, $Free_API);
         }
         if (is_object($Equipement) && $Equipement->getIsEnable()) {
-            if ($Equipement->getConfiguration('type') == 'player' || $Equipement->getConfiguration('type') == 'parental') {
+            if ($Equipement->getConfiguration('type') == 'player' || $Equipement->getConfiguration('type') == 'parental' || $Equipement->getConfiguration('type') == 'VM') {
                 $refresh = $Equipement->getConfiguration('type');
             } else {
                 $refresh = $Equipement->getLogicalId();
@@ -87,6 +87,9 @@ class Free_Refresh
                     break;
                 case 'system':
                     Free_Refresh::refresh_system($Equipement, $Free_API);
+                    break;
+                case 'VM':
+                    Free_Refresh::refresh_VM($Equipement, $Free_API);
                     break;
                 case 'wifi':
                     Free_Refresh::refresh_wifi($Equipement, $Free_API);
@@ -941,7 +944,30 @@ class Free_Refresh
 
         if (isset($results_playerID) && $cmd_powerState) $Equipement->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $results_playerID['power_state']);
     }
-
+    private static function refresh_VM($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('VM', $Equipement->getConfiguration('action'));
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "mac":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
+                            break;
+                        case "memory":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['memory']);
+                            break;
+                        case "status":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']);
+                            break;
+                        case "vcpus":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['vcpus']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
     private static function refresh_wifi($Equipement, $Free_API)
     {
         $listmac = $Free_API->mac_filter_list();

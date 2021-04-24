@@ -36,7 +36,7 @@ class Free_CreateTV
     }
     private static function createTV_player($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Player');
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['playerName']);
         $Free_API = new Free_API();
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
@@ -92,6 +92,8 @@ class Free_CreateTV
                     log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- L\'Id est vide donc pas de création de l\'équipement (mettre sous tension le player pour résoudre ce problème)');
                 }
             }
+        } else {
+            log::add('Freebox_OS', 'debug', '│ PAS DE ' . $logicalinfo['playerName'] . ' SUR VOTRE BOX ');
         }
 
         log::add('Freebox_OS', 'debug', '└─────────');

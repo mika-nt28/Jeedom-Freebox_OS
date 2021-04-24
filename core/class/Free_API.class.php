@@ -391,7 +391,12 @@ class Free_API
                     break;
                 case 'system':
                     if ($boucle != null) {
-                        return $result['result'][$boucle];
+                        if (isset($result['result'][$boucle])) {
+                            return $result['result'][$boucle];
+                        } else {
+                            $result = null;
+                            return $result;
+                        }
                     } else {
                         return $result['result'];
                     }

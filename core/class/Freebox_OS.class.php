@@ -620,6 +620,8 @@ class Freebox_OS extends eqLogic
 			'notificationName' => 'notification',
 			'phoneID' => 'phone',
 			'phoneName' => 'Téléphone',
+			'playerID' => 'player',
+			'playerName' => 'Player',
 			'systemID' => 'system',
 			'systemName' => 'Système',
 			'VMID' => 'VM',

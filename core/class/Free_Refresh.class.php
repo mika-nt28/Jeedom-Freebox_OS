@@ -216,7 +216,11 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "link_type":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
+                            if (isset($result['link_type'])) {
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(),);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
+                            }
                             break;
                         case "sfp_present":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_present']);
@@ -228,10 +232,18 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
                             break;
                         case "sfp_pwr_tx":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
+                            if (isset($result['sfp_pwr_tx'])) {
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(),);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
+                            }
                             break;
                         case "sfp_pwr_rx":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
+                            if (isset($result['sfp_pwr_rx'])) {
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(),);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
+                            }
                             break;
                     }
                 }
@@ -514,14 +526,21 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['print_share_enabled']);
                             break;
                         case "smbv2_enabled":
-                            log::add('Freebox_OS', 'debug', '│──────────> Etat Samba SMBv2 : ' . $result['smbv2_enabled']);
-                            if ($result['smbv2_enabled'] == true) {
-                                Free_Refresh::removeLogicId($Equipement, 'print_share_enabledOn');
-                                Free_Refresh::removeLogicId($Equipement, 'print_share_enabledOff');
-                                Free_Refresh::removeLogicId($Equipement, 'print_share_enabled');
+                            if (isset($result['smbv2_enabled'])) {
+                                log::add('Freebox_OS', 'debug', '│──────────> Etat Samba SMBv2 : ' . $result['smbv2_enabled']);
+                                if ($result['smbv2_enabled'] == true) {
+                                    Free_Refresh::removeLogicId($Equipement, 'print_share_enabledOn');
+                                    Free_Refresh::removeLogicId($Equipement, 'print_share_enabledOff');
+                                    Free_Refresh::removeLogicId($Equipement, 'print_share_enabled');
+                                }
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['smbv2_enabled']);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, 'smbv2_enabledOn');
+                                Free_Refresh::removeLogicId($Equipement, 'smbv2_enabledOff');
+                                Free_Refresh::removeLogicId($Equipement, 'smbv2_enabled');
                             }
 
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['smbv2_enabled']);
+
                             break;
                     }
                 }

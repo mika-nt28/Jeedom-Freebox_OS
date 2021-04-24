@@ -248,8 +248,9 @@ class Free_CreateTil
             }
             foreach ($result as $Equipement) {
                 $_eq_category = true;
-                if ($eq_group == 'nodes') { //
-                    if ($Equipement['category'] == 'pir' ||  $Equipement['category'] == 'kfb' ||  $Equipement['category'] == 'dws' ||  $Equipement['category'] == 'alarm' || $Equipement['category'] == 'basic_shutter' || $Equipement['category'] == 'shutter' || $Equipement['category'] = 'opener'  || $Equipement['category'] == 'plug' ||  $Equipement['category'] == 'camera' || $Equipement['category'] == 'light') {
+                if ($eq_group == 'nodes') {
+                    $_eq_type = $Equipement['category'];
+                    if ($Equipement['category'] === 'pir' ||  $Equipement['category'] === 'kfb' ||  $Equipement['category'] === 'dws' ||  $Equipement['category'] === 'alarm' || $Equipement['category'] === 'basic_shutter' || $Equipement['category'] === 'shutter' || $Equipement['category'] === 'opener'  || $Equipement['category'] === 'plug' ||  $Equipement['category'] === 'camera' || $Equipement['category'] === 'light') {
                         if (isset($Equipement['action'])) {
                             $_eq_action = $Equipement['action'];
                         } else {
@@ -264,13 +265,10 @@ class Free_CreateTil
                     $_eq_type2 = null;
                     if ($boucle_num == 2) {
                         $_eq_type = $Equipement['category'];
-                        if (isset($Equipement['props']['Stream'])) {
-                            $_eq_type = 'camera';
-                        }
                         $_eq_room = $Equipement['group']['label'];
                         $_eq_data = $Equipement['show_endpoints'];
                         $_eq_node = $Equipement['id'];
-                        if ($Equipement['category'] == 'light') {
+                        if ($Equipement['category'] === 'light') {
                             $_eq_type2 = $Equipement['category'];
                         }
                     } else if ($boucle_num == 1) {
@@ -393,31 +391,23 @@ class Free_CreateTil
                             }
                             switch ($Command['value_type']) {
                                 case "void":
-                                    //$generic_type = null;
-                                    //$icon = null;
-                                    //$order = null;
-                                    $Link_I = 'default';
-                                    //$IsVisible = 1;
-                                    //$_iconname = '0';
-                                    //$_home_config_eq = null;
+                                    $_cmd_ep_id_link = 'default';
                                     $setting = Free_CreateTil::search_setting_void($_eq_action, $Command['ui']['access'], $Command['name'], $_eq_type, $Command['label'], $eq_group, $_cmd_ep_id, $templatecore_V4);
                                     if ($Command['name'] == 'up' || $Command['name'] == 'stop' || $Command['name'] == 'down') {
-                                        //$Link_I = $Link_I_store;
+                                        //$_cmd_ep_id_link = $Link_I_store;
                                     } elseif (($Command['name'] == 'alarm1' && $_eq_type = 'alarm_control') || ($Command['name'] == 'alarm2' && $_eq_type = 'alarm_control')) {
-                                        $Link_I = $Link_I_ALARM;
+                                        $_cmd_ep_id_link = $Link_I_ALARM;
                                     } elseif ($Command['name'] == 'off' && $_eq_type = 'alarm_control') {
-                                        $Link_I = $Link_I_ALARM_ENABLE;
+                                        $_cmd_ep_id_link = $Link_I_ALARM_ENABLE;
+                                    } elseif (stripos($setting['Label'], 'PB_UP') || stripos($setting['Label2'], 'PB_DOWN')) {
+                                        if ($_cmd_ep_id === 0) {
+                                            $_cmd_ep_id_link = '0';
+                                        }
                                     }
-                                    $action = $Tile->AddCommand($setting['Label'], $setting['Cmd_ep_id'], 'action', $setting['SubType'], $setting['Templatecore'], null, $setting['Generic_type'], $setting['IsVisible'], $Link_I, $Link_I, 0, $setting['Icon'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, $setting['Iconname'], $setting['Home_config_eq'], null, null, null, null, null, $eq_group);
+                                    $action = $Tile->AddCommand($setting['Label'], $setting['Cmd_ep_id'], 'action', $setting['SubType'], $setting['Templatecore'], null, $setting['Generic_type'], $setting['IsVisible'], $_cmd_ep_id_link, $_cmd_ep_id_link, 0, $setting['Icon'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, $setting['Iconname'], $setting['Home_config_eq'], null, null, null, null, null, $eq_group);
                                     if ($setting['Label2'] != null) {
                                         $action2 = null;
-                                        $action2 = $Tile->AddCommand($setting['Label2'], $setting['Cmd_ep_id2'], 'action', $setting['SubType'], $setting['Templatecore'], null, $setting['Generic_type2'], $setting['IsVisible'], $Link_I, $Link_I, 0, $setting['Icon2'], 0, 'default', 'default', $setting['Order2'], 0, false, false, null, $setting['Iconname'], $setting['Home_config_eq'], null, null, null, null, null, $eq_group);
-                                    }
-                                    if ($setting['TypeCMD'] == 'PB_SP') {
-                                        $info_link = cmd::byEqLogicIdCmdName($Tile->getId(), __($setting['Label_I'], __FILE__));
-                                        if ($info_link  != null) {
-                                            Free_CreateTil::Create_linK($info_link, $action);
-                                        }
+                                        $action2 = $Tile->AddCommand($setting['Label2'], $setting['Cmd_ep_id2'], 'action', $setting['SubType'], $setting['Templatecore'], null, $setting['Generic_type2'], $setting['IsVisible'], $_cmd_ep_id_link, $_cmd_ep_id_link, 0, $setting['Icon2'], 0, 'default', 'default', $setting['Order2'], 0, false, false, null, $setting['Iconname'], $setting['Home_config_eq'], null, null, null, null, null, $eq_group);
                                     }
                                     break;
                                 case "int":
@@ -534,6 +524,9 @@ class Free_CreateTil
                                     }
 
                                     if ($setting['CreateCMD'] == 1) {
+                                        if ($_cmd_ep_id === 0) {
+                                            $_cmd_ep_id_link = '0';
+                                        }
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
                                             $infoCmd = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'info', 'binary', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                             $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);
@@ -554,18 +547,18 @@ class Free_CreateTil
                                             }
                                             if ($Command['ui']['access'] === 'rw') {
                                                 $order_A = $setting['Order_A'];
-                                                $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
+                                                $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id_link, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                 $order_A++;
-                                                $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
+                                                $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], $Link_I_light, $_cmd_ep_id_link, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                             }
                                         } else if ($Command['ui']['access'] === 'w') {
                                             if ($setting['TypeCMD'] != 'PB_SP') {
                                                 $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', 'other', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                             } else {
                                                 $order_A = $setting['Order_A'];
-                                                $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
+                                                $Tile->AddCommand($setting['LabelON'], $setting['LogicalIdON'], 'action', 'other', $setting['TemplatecoreON'], $_unit, $setting['Generic_typeON'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id_link, $setting['InvertBinary'], $setting['IconON'], 1, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                                 $order_A++;
-                                                $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['TemplatecoreOFF'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
+                                                $Tile->AddCommand($setting['LabelOFF'], $setting['LogicalIdOFF'], 'action', 'other', $setting['TemplatecoreOFF'], $_unit, $setting['Generic_typeOFF'], $setting['IsVisiblePB'], 'default', $_cmd_ep_id_link, $setting['InvertBinary'], $setting['IconOFF'], 0, 'default', 'default', $order_A, 0, false, false, null, null, null, null, null, null, null, null, $eq_group, $setting['Eq_type_home']);
                                             }
                                         }
                                     }
@@ -777,22 +770,22 @@ class Free_CreateTil
         log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting VOID pour  : ' . $Search);
 
         switch ($Search) {
-                /*case 'shutter_toggle_w_nodes':
+            case 'shutter_toggle_w_nodes':
                 // Toggle UP
                 $Generic_type = 'FLAP_UP';
                 $Icon = 'fas fa-arrow-up';
                 $Label_O = 'Haut - Ouvert';
-                $_Cmd_ep_id = 'PB_UP';
+                $_Cmd_ep_id = 'PB_UP' . $_Cmd_ep_id;
                 $Order = 8;
                 // Toggle DOWN
                 $Generic_type2 = 'FLAP_DOWN';
                 $Icon2 = 'fas fa-arrow-down';
                 $Label_O2 = 'Bas - Fermée';
-                $_Cmd_ep_id2 = 'PB_DOWN';
+                $_Cmd_ep_id2 = 'PB_DOWN' . $_Cmd_ep_id;
                 $Order2 = 89;
                 // ETAT 
-                $Label_I = "Etat";
-                break;*/
+                //$Label_I = "Etat Toggle";
+                break;
             case 'info_up_store_w_tiles':
                 $Generic_type = 'FLAP_UP';
                 $Icon = 'fas fa-arrow-up';

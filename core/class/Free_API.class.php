@@ -338,7 +338,7 @@ class Free_API
                 $config = 'api/v8/lan/' . $update_type;
                 break;
             case 'universalAPI':
-                $config = 'api/v8/' . $update_type;
+                $config = 'api/v8/' . $update_type . $id;
                 break;
             case 'network_ID':
                 $config = 'api/v8/lan/browser/' . $update_type  . $id;
@@ -352,9 +352,6 @@ class Free_API
             case 'tiles':
                 $config = 'api/v8/home/tileset' . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
-                break;
-            case 'VM':
-                $config = 'api/v8/vm';
                 break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $update_type;
@@ -391,7 +388,12 @@ class Free_API
                     break;
                 case 'system':
                     if ($boucle != null) {
-                        return $result['result'][$boucle];
+                        if (isset($result['result'][$boucle])) {
+                            return $result['result'][$boucle];
+                        } else {
+                            $result = null;
+                            return $result;
+                        }
                     } else {
                         return $result['result'];
                     }
@@ -400,7 +402,12 @@ class Free_API
                     if ($config_log != null && $id != null && $id != '/all') {
                         log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
                     }
-                    return $result['result'];
+                    if (isset($result['result'])) {
+                        return $result['result'];
+                    } else {
+                        $result = null;
+                        return $result;
+                    }
                     break;
             }
 
@@ -441,6 +448,9 @@ class Free_API
     {
         $fonction = "PUT";
         $config_log = null;
+        if ($id != null) {
+            $id = $id . '/';
+        }
         switch ($update) {
             case '4G':
                 $config = 'api/v8/connection/lte/config';
@@ -457,14 +467,14 @@ class Free_API
                 }
                 break;
             case 'universalAPI':
-                $config = 'api/v8/' . $id;
+                $config = 'api/v8' . $id;
                 $config_commande = $_options;
                 break;
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
 
-                $jsontestprofile = $this->fetch("/api/v8/network_control/" . $id);
+                $jsontestprofile = $this->fetch("/api/v8/network_control" . $id);
                 $jsontestprofile = $jsontestprofile['result'];
                 if ($parametre == "denied") {
                     $jsontestprofile['override_until'] = 0;
@@ -484,16 +494,16 @@ class Free_API
                     $jsontestprofile['override'] = false;
                 }
                 $parametre = $jsontestprofile;
-                $config = "api/v8/network_control/" . $id;
+                $config = "api/v8/network_control" . $id;
                 break;
             case 'player_ID_ctrl':
-                $config = 'api/v8/player/' . $id . '/api/v6/control/mediactrl';
+                $config = 'api/v8/player' . $id . '/api/v6/control/mediactrl';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 $config_commande = 'name';
                 $fonction = "POST";
                 break;
             case 'player_ID_open':
-                $config = 'api/v8/player/' . $id . '/api/v6/control/open';
+                $config = 'api/v8/player' . $id . '/api/v6/control/open';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 $config_commande = 'url';
                 $fonction = "POST";
@@ -508,12 +518,16 @@ class Free_API
                 break;
             case 'universal_put':
                 if ($_status_cmd == "DELETE" || $_status_cmd == "PUT" || $_status_cmd == "device") {
-                    $config = 'api/v8/' . $_options . '/' . $id;
+                    $config = 'api/v8/' . $_options  . $id;
                     $fonction = $_status_cmd;
                 } else {
                     $config = 'api/v8/' . $_options;
                     $fonction = "POST";
                 }
+                break;
+            case 'VM':
+                $config = 'api/v8/vm' . $id . '/' . $_options_2;
+                $fonction = "POST";
                 break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $_options;
@@ -564,7 +578,7 @@ class Free_API
         } elseif ($parametre === 0) {
             $parametre = false;
         }
-        if ($update == 'parental' || $update == 'donwload') {
+        if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);
         } else if ($update == 'universal_put') {
             $return = $this->fetch('/' . $config,  $_options_2, $fonction, true, true);
@@ -579,7 +593,7 @@ class Free_API
             if ($config_log != null) {
                 log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
             }
-            $return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction);
+            $return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction, true, true);
 
             if ($return === false) {
                 return false;

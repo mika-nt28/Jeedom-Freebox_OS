@@ -61,6 +61,18 @@ class Free_Template
 				'#_time_widget_#' => '1'
 			)
 		);
+		// Template pour Activer SMBv2
+		$return['action']['other']['Activer SMBv2'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fab fa-creative-commons-share\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fab fa-creative-commons-share\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fab fa-creative-commons-share\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
 		// Template pour le Partage FTP (action)
 		$return['action']['other']['Partage FTP'] = array(
 			'template' => 'tmplicon',
@@ -121,6 +133,17 @@ class Free_Template
 				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-broadcast-tower\'></i>',
 				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-broadcast-tower\'></i>',
 				'#_time_widget_#' => '1'
+			)
+		);
+		// Template pour l'état des VM (info)
+		$return['info']['string']['VM'] = array(
+			'template' => 'tmplmultistate',
+			'replace' => array('#_time_widget_#' => '1'),
+			'test' => array(
+				array('operation' => "#value# == 'stopped'", 'state_light' => '<i class=\'icon_red icon fas fa-stop\'></i>'),
+				array('operation' => "#value# == 'running'", 'state_light' => '<i class=\'icon_green icon fas fa-play\'></i>'),
+				array('operation' => "#value# == 'starting'", 'state_light' => '<i class=\'icon_orange icon fas fa-play\'></i>'),
+				array('operation' => "#value# == 'stopping'", 'state_light' => '<i class=\'icon_orange icon fas fa-stop\'></i>')
 			)
 		);
 		// Template pour l'état du contrôle Parental' (info)

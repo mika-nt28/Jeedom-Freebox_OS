@@ -27,7 +27,7 @@ class Free_Update
             //log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
         $Free_API = new Free_API();
-        if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player') {
+        if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player'  || $logicalId_eq->getConfiguration('type') == 'VM') {
             $update = $logicalId_eq->getconfiguration('type');
         } else {
             $update = $logicalId_eq->getLogicalId();
@@ -96,6 +96,10 @@ class Free_Update
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 }
                 break;
+            case 'VM':
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
+                }
             case 'wifi':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -110,7 +114,10 @@ class Free_Update
                 break;
         }
     }
-
+    private static function update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update)
+    {
+        $Free_API->universal_put(null, $logicalId_eq->getconfiguration('type'), $logicalId_eq->getConfiguration('action'), null, null, null, $logicalId);
+    }
     private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
         $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");
@@ -191,6 +198,12 @@ class Free_Update
                 break;
             case "print_share_enabledOff":
                 $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'print_share_enabled', null);
+                break;
+            case "smbv2_enabledOn":
+                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'smbv2_enabled', null, true);
+                break;
+            case "smbv2_enabledOff":
+                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'smbv2_enabled', null, true);
                 break;
         }
     }
@@ -375,12 +388,12 @@ class Free_Update
                 log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- valeur Inversé  : ' . $_cmd->getConfiguration('invertslide') . ' -- valeur  : ' . $parametre['value'] . ' -- valeur slider : ' . $_options['slider']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
                     $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
-                    if ($cmd !== false) {
+                    /*if ($cmd !== false) {
                         if ($cmd->execCmd() == 0) {
                             $_execute = 0;
                             log::add('Freebox_OS', 'debug', '│ Pas d\'action car l\'équipement est éteint');
                         }
-                    }
+                    }*/
                 }
                 break;
             case 'color':
@@ -418,7 +431,6 @@ class Free_Update
             default:
                 $parametre['value_type'] = 'bool';
                 if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
-
                     //log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
                     if (stripos($logicalId, 'PB_On')  == 'PB_On') {
                         $parametre['value'] = true;
@@ -427,9 +439,11 @@ class Free_Update
                     }
                     $logicalId = $logicalId_conf;
                 } else {
-                    if ($logicalId == 'PB_UP' || $logicalId == 'PB_DOWN') {
+                    if (stripos($logicalId, 'PB_UP') || stripos($logicalId, 'PB_DOWN')) {
+                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ') : ' . $logicalId_conf);
                         $parametre['value_type'] = 'void';
-                        if ($logicalId == 'PB_UP') {
+                        $logicalId = $logicalId_conf;
+                        if (stripos($logicalId, 'PB_UP')) {
                             $parametre['value'] = true;
                         } else {
                             $parametre['value'] = false;

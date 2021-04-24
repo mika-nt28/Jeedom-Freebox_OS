@@ -28,7 +28,7 @@ class Free_Refresh
             Free_Refresh::refresh_titles_global($Equipement, $Free_API);
         }
         if (is_object($Equipement) && $Equipement->getIsEnable()) {
-            if ($Equipement->getConfiguration('type') == 'player' || $Equipement->getConfiguration('type') == 'parental') {
+            if ($Equipement->getConfiguration('type') == 'player' || $Equipement->getConfiguration('type') == 'parental' || $Equipement->getConfiguration('type') == 'VM') {
                 $refresh = $Equipement->getConfiguration('type');
             } else {
                 $refresh = $Equipement->getLogicalId();
@@ -87,6 +87,9 @@ class Free_Refresh
                     break;
                 case 'system':
                     Free_Refresh::refresh_system($Equipement, $Free_API);
+                    break;
+                case 'VM':
+                    Free_Refresh::refresh_VM($Equipement, $Free_API);
                     break;
                 case 'wifi':
                     Free_Refresh::refresh_wifi($Equipement, $Free_API);
@@ -213,7 +216,11 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "link_type":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
+                            if (isset($result['link_type'])) {
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
+                            }
                             break;
                         case "sfp_present":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_present']);
@@ -225,10 +232,18 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
                             break;
                         case "sfp_pwr_tx":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
+                            if (isset($result['sfp_pwr_tx'])) {
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
+                            }
                             break;
                         case "sfp_pwr_rx":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
+                            if (isset($result['sfp_pwr_rx'])) {
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
+                            }
                             break;
                     }
                 }
@@ -499,7 +514,7 @@ class Free_Refresh
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['file_share_enabled']);
                             break;
                         case "FTP_enabled":
-                            log::add('Freebox_OS', 'debug', '│──────────> Partage Fichier Mac : ' . $resultFTP['enabled']);
+                            log::add('Freebox_OS', 'debug', '│──────────> Partage Fichier FTP : ' . $resultFTP['enabled']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $resultFTP['enabled']);
                             break;
                         case "mac_share_enabled":
@@ -510,9 +525,35 @@ class Free_Refresh
                             log::add('Freebox_OS', 'debug', '│──────────> Partage Imprimante : ' . $result['print_share_enabled']);
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['print_share_enabled']);
                             break;
+                        case "smbv2_enabled":
+                            if (isset($result['smbv2_enabled'])) {
+                                log::add('Freebox_OS', 'debug', '│──────────> Etat Samba SMBv2 : ' . $result['smbv2_enabled']);
+                                if ($result['smbv2_enabled'] == true) {
+                                    Free_Refresh::removeLogicId($Equipement, 'print_share_enabledOn');
+                                    Free_Refresh::removeLogicId($Equipement, 'print_share_enabledOff');
+                                    Free_Refresh::removeLogicId($Equipement, 'print_share_enabled');
+                                }
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['smbv2_enabled']);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, 'smbv2_enabledOn');
+                                Free_Refresh::removeLogicId($Equipement, 'smbv2_enabledOff');
+                                Free_Refresh::removeLogicId($Equipement, 'smbv2_enabled');
+                            }
+
+
+                            break;
                     }
                 }
             }
+        }
+    }
+    private static function removeLogicId($eqLogic, $from)
+    {
+
+        //  suppression fonction
+        $cmd = $eqLogic->getCmd(null, $from);
+        if (is_object($cmd)) {
+            $cmd->remove();
         }
     }
 
@@ -618,6 +659,9 @@ class Free_Refresh
                             case "mode": // toute la partie Info de la Freebox
                                 Free_Refresh::refresh_system_lan($Equipement, $Free_API);
                                 break;
+                            case "lang": // toute la partie Info de la Freebox
+                                Free_Refresh::refresh_system_lang($Equipement, $Free_API);
+                                break;
                         }
                     }
                     break;
@@ -666,7 +710,22 @@ class Free_Refresh
             }
         }
     }
-
+    private static function refresh_system_lang($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('universalAPI', null, null, 'lang');
+        if ($result != false || isset($result['result']) != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "lang":
+                            log::add('Freebox_OS', 'debug', '│──────────> lang : ' . $result['lang']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['lang']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
     private static function refresh_titles_global($Equipement, $Free_API)
     {
         $boucle_num = 1; // 1 = Tiles - 2 = Node 
@@ -941,7 +1000,48 @@ class Free_Refresh
 
         if (isset($results_playerID) && $cmd_powerState) $Equipement->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $results_playerID['power_state']);
     }
-
+    private static function refresh_VM($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('universalAPI', $Equipement->getConfiguration('action'), null, 'vm');
+        if ($result != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case 'bind_usb_ports':
+                            $bind_usb_ports = null;
+                            if (isset($result['bind_usb_ports'])) {
+                                foreach ($result['bind_usb_ports'] as $USB) {
+                                    $bind_usb_ports .= '<br>' . $USB;
+                                }
+                            }
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $bind_usb_ports);
+                            break;
+                        case "enable_screen":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['enable_screen']);
+                            break;
+                        case "disk_type":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['disk_type']);
+                            break;
+                        case "mac":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
+                            break;
+                        case "memory":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['memory']);
+                            break;
+                        case "name":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['name']);
+                            break;
+                        case "status":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['status']);
+                            break;
+                        case "vcpus":
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['vcpus']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
     private static function refresh_wifi($Equipement, $Free_API)
     {
         $listmac = $Free_API->mac_filter_list();

@@ -188,6 +188,9 @@ class Freebox_OS extends eqLogic
 			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
 			return;
 		}
+		if (!isset($action[0])) {
+			return;
+		}
 		if ($action[0] == '') {
 			return;
 		}
@@ -283,9 +286,7 @@ class Freebox_OS extends eqLogic
 			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter' && $eq_type != 'shutter'  && $eq_type != 'opener' && $eq_type != 'plug') {
 				$EqLogic->setConfiguration('type', $eq_type);
 			} else {
-				if ($eq_type != 1) {
-					$EqLogic->setConfiguration('type2', $eq_type);
-				}
+				$EqLogic->setConfiguration('type2', $eq_type);
 				if ($eq_type === 'pir') {
 					$EqLogic->setConfiguration('info', 'mouv_sensor');
 				}
@@ -293,7 +294,7 @@ class Freebox_OS extends eqLogic
 			if ($eq_action != null) {
 				$EqLogic->setConfiguration('action', $eq_action);
 			}
-			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
+			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player' || $EqLogic->getConfiguration('type', $eq_type) == 'VM') {
 				$EqLogic->setConfiguration('action', $logicalID_equip);
 			}
 		}
@@ -307,7 +308,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
 
@@ -622,6 +623,8 @@ class Freebox_OS extends eqLogic
 			'notificationName' => 'notification',
 			'phoneID' => 'phone',
 			'phoneName' => 'Téléphone',
+			'playerID' => 'player',
+			'playerName' => 'Player',
 			'systemID' => 'system',
 			'systemName' => 'Système',
 			'VMID' => 'VM',

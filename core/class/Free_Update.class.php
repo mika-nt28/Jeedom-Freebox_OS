@@ -439,9 +439,10 @@ class Free_Update
                     }
                     $logicalId = $logicalId_conf;
                 } else {
-                    if ($logicalId == 'PB_UP' || $logicalId == 'PB_DOWN') {
+                    if (stripos($logicalId, 'PB_UP') || stripos($logicalId, 'PB_DOWN')) {
                         $parametre['value_type'] = 'void';
-                        if ($logicalId == 'PB_UP') {
+                        $logicalId = $logicalId_conf;
+                        if (stripos($logicalId, 'PB_UP')) {
                             $parametre['value'] = true;
                         } else {
                             $parametre['value'] = false;

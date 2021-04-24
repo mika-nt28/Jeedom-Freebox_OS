@@ -217,7 +217,7 @@ class Free_Refresh
                     switch ($Command->getLogicalId()) {
                         case "link_type":
                             if (isset($result['link_type'])) {
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(),);
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
                             } else {
                                 Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
                             }
@@ -233,14 +233,14 @@ class Free_Refresh
                             break;
                         case "sfp_pwr_tx":
                             if (isset($result['sfp_pwr_tx'])) {
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(),);
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
                             } else {
                                 Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
                             }
                             break;
                         case "sfp_pwr_rx":
                             if (isset($result['sfp_pwr_rx'])) {
-                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(),);
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
                             } else {
                                 Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
                             }
@@ -659,6 +659,9 @@ class Free_Refresh
                             case "mode": // toute la partie Info de la Freebox
                                 Free_Refresh::refresh_system_lan($Equipement, $Free_API);
                                 break;
+                            case "lang": // toute la partie Info de la Freebox
+                                Free_Refresh::refresh_system_lang($Equipement, $Free_API);
+                                break;
                         }
                     }
                     break;
@@ -707,7 +710,22 @@ class Free_Refresh
             }
         }
     }
-
+    private static function refresh_system_lang($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('universalAPI', null, null, 'lang');
+        if ($result != false || isset($result['result']) != false) {
+            foreach ($Equipement->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "lang":
+                            log::add('Freebox_OS', 'debug', '│──────────> lang : ' . $result['lang']);
+                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['lang']);
+                            break;
+                    }
+                }
+            }
+        }
+    }
     private static function refresh_titles_global($Equipement, $Free_API)
     {
         $boucle_num = 1; // 1 = Tiles - 2 = Node 
@@ -984,7 +1002,7 @@ class Free_Refresh
     }
     private static function refresh_VM($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('VM', $Equipement->getConfiguration('action'));
+        $result = $Free_API->universal_get('universalAPI', $Equipement->getConfiguration('action'), null, 'vm');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {

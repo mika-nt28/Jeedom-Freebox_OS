@@ -457,7 +457,7 @@ class Free_CreateEq
         $netshare = Freebox_OS::AddEqLogic($logicalinfo['netshareName'], $logicalinfo['netshareID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $boucle_num = 1; // 1 = Partage Imprimante - 2 = Partage de fichiers Windows - 3 = Partage Fichier Mac - 4 = Partage Fichier FTP
         $_order = 1;
-        while ($boucle_num <= 4) {
+        while ($boucle_num <= 5) {
             if ($boucle_num == 1) {
                 $name = 'Partage Imprimante';
                 $Logical_ID = 'print_share_enabled';
@@ -478,6 +478,11 @@ class Free_CreateEq
                 $Logical_ID = 'FTP_enabled';
                 $icon = 'fas fa-handshake';
                 $template = 'Freebox_OS::Partage FTP';
+            } else if ($boucle_num == 5) {
+                $name = 'SMBv2';
+                $Logical_ID = 'smbv2_enabled';
+                $icon = 'fab fa-creative-commons-share';
+                $template = 'Freebox_OS::Activer SMBv2';
             }
             log::add('Freebox_OS', 'debug', '│──────────> Boucle pour Création des commandes : ' . $name);
             $netshareSTATUS = $netshare->AddCommand($name, $Logical_ID, "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', $icon, 0, 'default', 'default', '0', $_order, $updateicon, true);
@@ -738,13 +743,17 @@ class Free_CreateEq
         if ($result != null) {
             foreach ($result as $Equipement) {
                 $_VM = Freebox_OS::AddEqLogic($Equipement['cloudinit_hostname'], 'VM_' . $Equipement['id'], 'multimedia', true, 'VM', null, $Equipement['id'], '*/5 * * * *', null, null);
-                $_VM->AddCommand('CPU(s)', 'vcpus', 'info', 'numeric',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false);
-                $_VM->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 11, '0', $updateicon, false);
-                $_VM->AddCommand('Mémoire', 'memory', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mo', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false);
-                $_VM->AddCommand('Status', 'status', 'info', 'string', $TemplateVM, null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', 13, '0', $updateicon, false);
-                $_VM->AddCommand('Start', 'start', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOn, 0, 'default', 'default', 14, '0', $updateicon, false);
-                $_VM->AddCommand('Stop', 'stop', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOff, 0, 'default', 'default', 15, '0', $updateicon, false);
-                $_VM->AddCommand('Redémarrer', 'restart', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMRestart, 0, 'default', 'default', 16, '0', $updateicon, false);
+                $_VM->AddCommand('CPU(s)', 'vcpus', 'info', 'numeric',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 11, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Mémoire', 'memory', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mo', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('USB', 'bind_usb_ports', 'info', 'string',  null, null, 'default', 1, 'default', 'default', 0, 'default', 1, 'default', 'default', 13, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Ecran virtuel', 'enable_screen', 'info', 'binary',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', '0', 'default', 'default', 14, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Nom', 'name', 'info', 'string',  null, null, 'default', 0, 'default', 'default', 0, 'default', 1, 'default', 'default', 15, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Type de disque', 'disk_type', 'info', 'string',  null, null, 'default', 0, 'default', 'default', 0, 'default', 1, 'default', 'default', 16, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Status', 'status', 'info', 'string', $TemplateVM, null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', 1, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Start', 'start', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOn, 0, 'default', 'default', 2, '0', $updateicon, false);
+                $_VM->AddCommand('Stop', 'stop', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOff, 0, 'default', 'default', 3, '0', $updateicon, false);
+                $_VM->AddCommand('Redémarrer', 'restart', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMRestart, 0, 'default', 'default', 4, '0', $updateicon, false);
             }
         }
         log::add('Freebox_OS', 'debug', '└─────────');

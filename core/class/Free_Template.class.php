@@ -61,6 +61,18 @@ class Free_Template
 				'#_time_widget_#' => '1'
 			)
 		);
+		// Template pour Activer SMBv2
+		$return['action']['other']['Activer SMBv2'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_blue icon fab fa-creative-commons-share\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fab fa-creative-commons-share\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fab fa-creative-commons-share\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
 		// Template pour le Partage FTP (action)
 		$return['action']['other']['Partage FTP'] = array(
 			'template' => 'tmplicon',

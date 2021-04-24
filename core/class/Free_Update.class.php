@@ -440,6 +440,7 @@ class Free_Update
                     $logicalId = $logicalId_conf;
                 } else {
                     if (stripos($logicalId, 'PB_UP') || stripos($logicalId, 'PB_DOWN')) {
+                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ') : ' . $logicalId_conf);
                         $parametre['value_type'] = 'void';
                         $logicalId = $logicalId_conf;
                         if (stripos($logicalId, 'PB_UP')) {

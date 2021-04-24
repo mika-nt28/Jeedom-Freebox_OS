@@ -593,7 +593,7 @@ class Free_API
             if ($config_log != null) {
                 log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
             }
-            $return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction);
+            $return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction, true, true);
 
             if ($return === false) {
                 return false;

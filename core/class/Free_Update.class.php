@@ -199,6 +199,12 @@ class Free_Update
             case "print_share_enabledOff":
                 $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'print_share_enabled', null);
                 break;
+            case "smbv2_enabledOn":
+                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'smbv2_enabled', null, true);
+                break;
+            case "smbv2_enabledOff":
+                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'smbv2_enabled', null, true);
+                break;
         }
     }
     private static function update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $network)

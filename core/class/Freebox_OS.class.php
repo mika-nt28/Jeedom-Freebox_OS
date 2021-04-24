@@ -188,6 +188,9 @@ class Freebox_OS extends eqLogic
 			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
 			return;
 		}
+		if (!isset($action[0])) {
+			return;
+		}
 		if ($action[0] == '') {
 			return;
 		}

@@ -176,34 +176,34 @@ class Free_Update
     {
         switch ($logicalId) {
             case "FTP_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'ftp/config', null, 'enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'enabled', null, 'ftp/config');
                 break;
             case "FTP_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'ftp/config', null, 'enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'enabled', null, 'ftp/config');
                 break;
             case "file_share_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'file_share_enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'file_share_enabled', null, 'netshare/samba');
                 break;
             case "file_share_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'file_share_enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'file_share_enabled', null, 'netshare/samba');
                 break;
             case "mac_share_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'netshare/afp', null, 'enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'enabled', null, 'netshare/afp');
                 break;
             case "mac_share_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'netshare/afp', null, 'enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'enabled', null, 'netshare/afp');
                 break;
             case "print_share_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'print_share_enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'print_share_enabled', null, 'netshare/samba');
                 break;
             case "print_share_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'print_share_enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'print_share_enabled', null, 'netshare/samba');
                 break;
             case "smbv2_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'smbv2_enabled', null, true);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'smbv2_enabled', null, 'netshare/samba');
                 break;
             case "smbv2_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'smbv2_enabled', null, true);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'smbv2_enabled', null, 'netshare/samba');
                 break;
         }
     }

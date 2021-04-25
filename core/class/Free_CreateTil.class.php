@@ -406,8 +406,7 @@ class Free_CreateTil
                                     }
                                     $action = $Tile->AddCommand($setting['Label'], $setting['Cmd_ep_id'], 'action', $setting['SubType'], $setting['Templatecore'], null, $setting['Generic_type'], $setting['IsVisible'], $_cmd_ep_id_link, $_cmd_ep_id_link, 0, $setting['Icon'], 0, 'default', 'default', $setting['Order'], 0, false, false, null, $setting['Iconname'], $setting['Home_config_eq'], null, null, null, null, null, $eq_group);
                                     if ($setting['Label2'] != null) {
-                                        $action2 = null;
-                                        $action2 = $Tile->AddCommand($setting['Label2'], $setting['Cmd_ep_id2'], 'action', $setting['SubType'], $setting['Templatecore'], null, $setting['Generic_type2'], $setting['IsVisible'], $_cmd_ep_id_link, $_cmd_ep_id_link, 0, $setting['Icon2'], 0, 'default', 'default', $setting['Order2'], 0, false, false, null, $setting['Iconname'], $setting['Home_config_eq'], null, null, null, null, null, $eq_group);
+                                        $Tile->AddCommand($setting['Label2'], $setting['Cmd_ep_id2'], 'action', $setting['SubType'], $setting['Templatecore'], null, $setting['Generic_type2'], $setting['IsVisible'], $_cmd_ep_id_link, $_cmd_ep_id_link, 0, $setting['Icon2'], 0, 'default', 'default', $setting['Order2'], 0, false, false, null, $setting['Iconname'], $setting['Home_config_eq'], null, null, null, null, null, $eq_group);
                                     }
                                     break;
                                 case "int":
@@ -763,8 +762,9 @@ class Free_CreateTil
         $_Iconname = null;
         $Home_config_eq = null;
         $Label_I = null;
-        $Label_O2 = null;
+        $Label_2 = null;
         $_Cmd_ep_id2 = null;
+        $_Cmd_ep_id3 = null;
         $TypeCMD_BOOL = 'null';
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
         log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting VOID pour  : ' . $Search);
@@ -775,13 +775,14 @@ class Free_CreateTil
                 $Generic_type = 'FLAP_UP';
                 $Icon = 'fas fa-arrow-up';
                 $Label_O = 'Haut - Ouvert';
-                $_Cmd_ep_id = 'PB_UP' . $_Cmd_ep_id;
+                $_Cmd_ep_id3 = $_Cmd_ep_id;
+                $_Cmd_ep_id = 'PB_UP' . $_Cmd_ep_id3;
                 $Order = 8;
                 // Toggle DOWN
                 $Generic_type2 = 'FLAP_DOWN';
                 $Icon2 = 'fas fa-arrow-down';
-                $Label_O2 = 'Bas - Fermée';
-                $_Cmd_ep_id2 = 'PB_DOWN' . $_Cmd_ep_id;
+                $Label_2 = 'Bas - Fermée';
+                $_Cmd_ep_id2 = 'PB_DOWN' . $_Cmd_ep_id3;
                 $Order2 = 89;
                 // ETAT 
                 //$Label_I = "Etat Toggle";
@@ -859,7 +860,7 @@ class Free_CreateTil
             "Icon2" => $Icon2,
             "IsVisible" => $IsVisible,
             "Label" => $Label_O,
-            "Label2" => $Label_O2,
+            "Label2" => $Label_2,
             "Label_I" => $Label_I,
             "Cmd_ep_id" => $_Cmd_ep_id,
             "Cmd_ep_id2" => $_Cmd_ep_id2,

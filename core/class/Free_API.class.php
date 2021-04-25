@@ -466,10 +466,7 @@ class Free_API
                     $fonction = $_options;
                 }
                 break;
-            case 'universalAPI':
-                $config = 'api/v8' . $id;
-                $config_commande = $_options;
-                break;
+
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
@@ -516,6 +513,10 @@ class Free_API
                 $config = 'api/v8/system/reboot';
                 $fonction = "POST";
                 break;
+            case 'universalAPI':
+                $config = 'api/v8/' . $_options_2;
+                $config_commande = $_options;
+                break;
             case 'universal_put':
                 if ($_status_cmd == "DELETE" || $_status_cmd == "PUT" || $_status_cmd == "device") {
                     $config = 'api/v8/' . $_options  . $id;
@@ -526,7 +527,7 @@ class Free_API
                 }
                 break;
             case 'VM':
-                $config = 'api/v8/vm' . $id . '/' . $_options_2;
+                $config = 'api/v8/vm/' . $id  . $_options_2;
                 $fonction = "POST";
                 break;
             case 'wifi':
@@ -562,11 +563,6 @@ class Free_API
                 }
                 break;
             case 'set_tiles':
-                if ($id != null) {
-                    $id = $id . '/';
-                } elseif ($id != 'refresh') {
-                    $id = null;
-                }
                 //log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
                 $config = 'api/v8/home/endpoints/';
                 $config_commande = 'enabled';

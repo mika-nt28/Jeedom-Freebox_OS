@@ -108,9 +108,9 @@ class Free_Update
                 break;
             default:
                 Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf);
-                if ($logicalId == 'refresh' || config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 0) {
-                    Free_Refresh::RefreshInformation($logicalId_eq->getId());
-                }
+                //if ($logicalId == 'refresh' || config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 0) {
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                //}
                 break;
         }
     }

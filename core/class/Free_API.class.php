@@ -562,11 +562,6 @@ class Free_API
                 }
                 break;
             case 'set_tiles':
-                if ($id != null) {
-                    $id = $id . '/';
-                } elseif ($id != 'refresh') {
-                    $id = null;
-                }
                 //log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
                 $config = 'api/v8/home/endpoints/';
                 $config_commande = 'enabled';

@@ -34,7 +34,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<span>{{Appairage}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
-				<i class="fas fa-wrench"></i>
+				<i class="fas fa-wrench" title="Cette fonction permet de lancer l'apparaige et paramétrer certaines options"></i>
 				<br>
 				<span>{{Configuration}}</span>
 			</div>
@@ -54,7 +54,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<span>{{Scan}}<br />{{Contrôle parental}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary titleAction" data-action="tile">
-				<i class="fas fa-search"></i>
+				<i class="fas fa-search" title="Cette fonction permet de créer les commandes pour la partie"></i>
 				<br>
 				<span>{{Scan}}<br />{{Tiles}}</span>
 			</div>
@@ -62,7 +62,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			if (log::getLogLevel('Freebox_OS') <= 200) :
 			?>
 				<div class="cursor eqLogicAction logoWarning titleAction" data-action="search_debugTile">
-					<i class="fas fa-question-circle" title="Cette fonction permet juste de lancer l'ensemble des requêtes pour la partie domotique, cela ne créer pas de commande"></i>
+					<i class="fas fa-question-circle" title="Cette fonction permet juste de lancer l'ensemble des requêtes pour la partie domotique, cela ne crée pas de commande"></i>
 					<br />
 					<span>{{Debug Tiles}}</span>
 				</div>

@@ -228,7 +228,8 @@ class Free_Refresh
                         case "sfp_has_signal":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_has_signal']);
                             break;
-                        case "sfp_alim_ok":
+                        case "sfp_ if ($id != null) {
+                            $id = '/' . $id;alim_ok":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
                             break;
                         case "sfp_pwr_tx":
@@ -1002,7 +1003,7 @@ class Free_Refresh
     }
     private static function refresh_VM($Equipement, $Free_API)
     {
-        $result = $Free_API->universal_get('universalAPI', $Equipement->getConfiguration('action'), null, 'vm');
+        $result = $Free_API->universal_get('universalAPI', $Equipement->getConfiguration('action'), null, 'vm/');
         if ($result != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {

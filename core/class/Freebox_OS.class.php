@@ -657,6 +657,8 @@ class Freebox_OS extends eqLogic
 				$type_eq = 'parental_controls';
 			} else if ($eqLogic->getConfiguration('type') === 'player') {
 				$type_eq = 'player';
+			} else if ($eqLogic->getConfiguration('type') === 'VM') {
+				$type_eq = 'VM';
 			} else if ($eqLogic->getConfiguration('type') === 'alarm_control') {
 				$type_eq = 'alarm_control';
 			} else if ($eqLogic->getConfiguration('type') === 'camera') {
@@ -752,6 +754,10 @@ class Freebox_OS extends eqLogic
 				case 'system':
 					$eqLogic->setLogicalId($logicalinfo['systemID']);
 					//$eqLogic->setName($logicalinfo['systemName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'VM':
 					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
 					$eqLogic->setConfiguration('eq_group', 'system');
 					break;

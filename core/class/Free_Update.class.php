@@ -432,18 +432,20 @@ class Free_Update
                 $parametre['value_type'] = 'bool';
                 if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
                     //log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
-                    if (stripos($logicalId, 'PB_On')  == 'PB_On') {
+                    if (stripos($logicalId, 'PB_On')  !== false) {
+                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF (' . $logicalId . ') : ' . $logicalId_conf);
                         $parametre['value'] = true;
                     } else {
                         $parametre['value'] = false;
+                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF (' . $logicalId . ') : ' . $logicalId_conf);
                     }
                     $logicalId = $logicalId_conf;
                 } else {
-                    if (stripos($logicalId, 'PB_UP') || stripos($logicalId, 'PB_DOWN')) {
+                    if (stripos($logicalId, 'PB_UP') !== false || stripos($logicalId, 'PB_DOWN') !== false) {
                         log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ') : ' . $logicalId_conf);
                         $parametre['value_type'] = 'void';
                         $logicalId = $logicalId_conf;
-                        if (stripos($logicalId, 'PB_UP')) {
+                        if (stripos($logicalId, 'PB_UP') !== false) {
                             $parametre['value'] = true;
                         } else {
                             $parametre['value'] = false;

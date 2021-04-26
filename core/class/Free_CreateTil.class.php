@@ -650,7 +650,10 @@ class Free_CreateTil
         if ($eq_group != null) {
             $eq_group = '_' . $eq_group;
         }
-
+        // Reset Label et logicalId
+        if ((stripos($Label_O, 'État') !== FALSE || stripos($Label_O, 'Etat') !== FALSE)) {
+            $Label_O = str_replace("État", "Etat", $Label_O);
+        }
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
         log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
         $IsVisible = 1;
@@ -694,7 +697,7 @@ class Free_CreateTil
                 $Icon = 'far fa-save icon_green';
                 $Icon_I = 'far fa-save';
                 break;
-            case 'shutter_state_r_nodes':
+                /*case 'shutter_state_r_nodes':
                 $Generic_type = 'FLAP_STATE';
                 $Icon = 'icon jeedom-volet-ouvert';
                 $Templatecore = 'shutter';
@@ -702,11 +705,12 @@ class Free_CreateTil
                 $TypeCMD_BOOL = 'PB_SP';
                 $LabelON = 'Haut - Ouvert';
                 $LabelOFF = 'Bas - Fermée';
-                break;
+                break;*/
             case 'alarm_pin_r_nodes':
             case 'alarm_pin_rw_nodes':
             case 'camera_disk_r_nodes':
             case 'opener_state_r_nodes':
+            case 'shutter_state_r_nodes':
                 $CreateCMD = 'PAS DE CREATION';
                 break;
         }

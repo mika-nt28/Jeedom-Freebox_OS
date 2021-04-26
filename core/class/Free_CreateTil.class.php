@@ -399,7 +399,7 @@ class Free_CreateTil
                                         $_cmd_ep_id_link = $Link_I_ALARM;
                                     } elseif ($Command['name'] == 'off' && $_eq_type = 'alarm_control') {
                                         $_cmd_ep_id_link = $Link_I_ALARM_ENABLE;
-                                    } elseif (stripos($setting['Label'], 'PB_UP') || stripos($setting['Label2'], 'PB_DOWN')) {
+                                    } elseif (stripos($setting['Label'], 'PB_UP') !== false || stripos($setting['Label'], 'PB_DOWN' !== false)) {
                                         if ($_cmd_ep_id === 0) {
                                             $_cmd_ep_id_link = '0';
                                         }
@@ -768,26 +768,24 @@ class Free_CreateTil
         $Label_I = null;
         $Label_2 = null;
         $_Cmd_ep_id2 = null;
-        $_Cmd_ep_id3 = null;
         $TypeCMD_BOOL = 'null';
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
         log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting VOID pour  : ' . $Search);
 
         switch ($Search) {
             case 'shutter_toggle_w_nodes':
-                // Toggle UP
-                $Generic_type = 'FLAP_UP';
-                $Icon = 'fas fa-arrow-up';
-                $Label_O = 'Haut - Ouvert';
-                $_Cmd_ep_id3 = $_Cmd_ep_id;
-                $_Cmd_ep_id = 'PB_UP' . $_Cmd_ep_id3;
-                $Order = 8;
                 // Toggle DOWN
                 $Generic_type2 = 'FLAP_DOWN';
                 $Icon2 = 'fas fa-arrow-down';
                 $Label_2 = 'Bas - Fermée';
-                $_Cmd_ep_id2 = 'PB_DOWN' . $_Cmd_ep_id3;
+                $_Cmd_ep_id2 = 'PB_DOWN' . $_Cmd_ep_id;
                 $Order2 = 89;
+                // Toggle UP
+                $Generic_type = 'FLAP_UP';
+                $Icon = 'fas fa-arrow-up';
+                $Label_O = 'Haut - Ouvert';
+                $_Cmd_ep_id = 'PB_UP' . $_Cmd_ep_id;
+                $Order = 8;
                 // ETAT 
                 //$Label_I = "Etat Toggle";
                 break;
@@ -1138,8 +1136,8 @@ class Free_CreateTil
         $Label_ETAT = $Label_O;
         $LabelON = 'PB_On';
         $LabelOFF = 'PB_Off';
-        $LogicalIdON = 'PB_On';
-        $LogicalIdOFF = 'PB_Off';
+        $LogicalIdON = 'PB_On' . $_Cmd_ep_id;;
+        $LogicalIdOFF = 'PB_Off' . $_Cmd_ep_id;;
         $Icon = null;
         $IconON = null;
         $IconOFF = null;
@@ -1187,8 +1185,6 @@ class Free_CreateTil
                 $Label_ETAT =  $Label_O;
                 $LabelON = 'Inclure ' . $Label_O . ' ON';
                 $LabelOFF = 'Exclure ' . $Label_O . ' OFF';
-                $LogicalIdON = 'PB_On' . $_Cmd_ep_id;
-                $LogicalIdOFF = 'PB_Off' . $_Cmd_ep_id;
                 $Generic_type = 'LIGHT_STATE';
                 $Generic_typeON = 'LIGHT_ON';
                 $Generic_typeOFF = 'LIGHT_OFF';
@@ -1315,7 +1311,9 @@ class Free_CreateTil
             case 'light_switch_state_intensity_picker_rw_tiles':
             case 'light_switch_state_heat_picker_rw_tiles':
             case 'light_hs_heat_picker_rw_tiles':
-                $Label_ETAT = 'Etat';
+                if ($Label_O  != 'Etat') {
+                    $Label_ETAT = 'Etat';
+                }
                 $LabelON = 'On';
                 $LabelOFF = 'Off';
                 $Generic_type = 'LIGHT_STATE';
@@ -1334,7 +1332,9 @@ class Free_CreateTil
                 $Order_A = 81;
                 break;
             case 'info_switch_toggle_rw_tiles':
-                $Label_ETAT = 'Etat';
+                if ($Label_O  != 'Etat') {
+                    $Label_ETAT = 'Etat';
+                }
                 $LabelON = 'On';
                 $LabelOFF = 'Off';
                 $Generic_type = 'GENERIC_INFO';

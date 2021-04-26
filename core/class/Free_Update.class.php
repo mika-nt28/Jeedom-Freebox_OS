@@ -440,14 +440,13 @@ class Free_Update
                     log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
                     $logicalId = $logicalId_conf;
                 } else {
-                    if (stripos($logicalId, 'PB_UP') !== false || stripos($logicalId, 'PB_DOWN') !== false) {
+                    if (stripos($logicalId, 'PB_UP') !== false) {
                         $parametre['value_type'] = 'void';
-                        $logicalId = $logicalId_conf;
-                        if (stripos($logicalId, 'PB_UP') !== false) {
-                            $parametre['value'] = true;
-                        } else {
-                            $parametre['value'] = false;
-                        }
+                        $parametre['value'] = true;
+                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
+                    } elseif (stripos($logicalId, 'PB_DOWN') !== false) {
+                        $parametre['value_type'] = 'void';
+                        $parametre['value'] = false;
                         log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
                     } else {
                         $parametre['value'] = true;

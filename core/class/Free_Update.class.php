@@ -443,10 +443,12 @@ class Free_Update
                     if (stripos($logicalId, 'PB_UP') !== false) {
                         $parametre['value_type'] = 'void';
                         $parametre['value'] = true;
+                        $logicalId = $logicalId_conf;
                         log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
                     } elseif (stripos($logicalId, 'PB_DOWN') !== false) {
                         $parametre['value_type'] = 'void';
                         $parametre['value'] = false;
+                        $logicalId = $logicalId_conf;
                         log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
                     } else {
                         $parametre['value'] = true;

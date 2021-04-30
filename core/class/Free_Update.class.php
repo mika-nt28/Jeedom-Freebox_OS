@@ -372,7 +372,7 @@ class Free_Update
 
     private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf)
     {
-        $_execute = 1;
+        //$_execute = 1;
         switch ($logicalId_type) {
             case 'slider':
                 if ($_cmd->getConfiguration('invertslide')) {
@@ -387,7 +387,7 @@ class Free_Update
                 $type = $logicalId_eq->getConfiguration('type');
                 log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- valeur Inversé  : ' . $_cmd->getConfiguration('invertslide') . ' -- valeur  : ' . $parametre['value'] . ' -- valeur slider : ' . $_options['slider']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
-                    $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
+                    // $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
                     /*if ($cmd !== false) {
                         if ($cmd->execCmd() == 0) {
                             $_execute = 0;
@@ -432,24 +432,28 @@ class Free_Update
                 $parametre['value_type'] = 'bool';
                 if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
                     if (stripos($logicalId, 'PB_On')  !== false) {
-
                         $parametre['value'] = true;
+                        $ID_logicalID = substr($logicalId, 5);
                     } else {
                         $parametre['value'] = false;
+                        $ID_logicalID = substr($logicalId, 6);
                     }
+                    log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $ID_logicalID);
                     log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
                     $logicalId = $logicalId_conf;
                 } else {
-                    if (stripos($logicalId, 'PB_UP') !== false) {
+                    if (stripos($logicalId, 'PB_UP') !== false || stripos($logicalId, 'PB_DOWN') !== false) {
                         $parametre['value_type'] = 'void';
-                        $parametre['value'] = true;
-                        $logicalId = $logicalId_conf;
+                        if (stripos($logicalId, 'PB_UP') !== false) {
+                            $parametre['value'] = true;
+                            $logicalId_conf = substr($logicalId, 5);
+                        } else {
+                            $parametre['value'] = false;
+                            $logicalId_conf = substr($logicalId, 7);
+                        }
+                        log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $logicalId_conf);
                         log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
-                    } elseif (stripos($logicalId, 'PB_DOWN') !== false) {
-                        $parametre['value_type'] = 'void';
-                        $parametre['value'] = false;
                         $logicalId = $logicalId_conf;
-                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
                     } else {
                         $parametre['value'] = true;
                         $Listener = cmd::byId(str_replace('#', '', $_cmd->getValue()));
@@ -465,7 +469,8 @@ class Free_Update
                 break;
         }
         if ($logicalId != 'refresh') {
-            if ($_execute == 1) $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
+            //if ($_execute == 1)  
+            $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
         }
     }
 }

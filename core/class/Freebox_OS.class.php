@@ -143,15 +143,17 @@ class Freebox_OS extends eqLogic
 		$cron->run();
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
-			throw new Exception(__('Tache cron introuvable', __FILE__));
+			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		}
 		$cron->run();
-		if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
-			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
-			if (!is_object($cron)) {
-				throw new Exception(__('Tache cron introuvable', __FILE__));
+		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+				if (!is_object($cron)) {
+					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
+				}
+				$cron->run();
 			}
-			$cron->run();
 		}
 	}
 	public static function deamon_stop()

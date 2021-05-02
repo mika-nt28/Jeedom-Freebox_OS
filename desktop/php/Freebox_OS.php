@@ -279,13 +279,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<sup><i class="fas fa-question-circle" title="{{Fréquence de rafraîchissement de l'équipement}}"></i></sup>
 								</label>
 								<div class="col-sm-7">
-									<div class="input-group">
-										<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
+									<div id="CRON_TILES" class="input-group">
+										<input id="CRON_TILES" type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
 										<span class="input-group-btn">
 											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="Assistant cron">
 												<i class="fas fa-question-circle"></i>
 											</a>
 										</span>
+									</div>
+									<div id="CRON_TILES_INFO" class="input-group">
+										<label class="control-label">{{l'Auto-actualisation de l'esemble de la partie domotique est actif}}</label>
 									</div>
 								</div>
 							</div>

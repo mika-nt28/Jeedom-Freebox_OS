@@ -410,6 +410,8 @@ function setupCron($icon,$icon_type) {
 			switch ($icon) {
 				case 'network':
 				case 'networkwifiguest':
+					$('#CRON_TILES').show();
+					$('#CRON_TILES_INFO').hide();
 					$('.IPV').show();
 					break;
 				case 'airmedia':
@@ -425,8 +427,12 @@ function setupCron($icon,$icon_type) {
 				case 'player':
 				case 'netshare':
 				case 'VM':
+					$('.IPV').hide();
+					$('#CRON_TILES').show();
+					$('#CRON_TILES_INFO').hide();
 					break;
 				default:
+					$('.IPV').hide();
 					console.log('CRON TILES : ' + result)
 					if (result == "1") {
 						$('#CRON_TILES').hide();

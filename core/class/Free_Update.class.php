@@ -451,8 +451,7 @@ class Free_Update
                             $parametre['value'] = false;
                             $logicalId_conf = substr($logicalId, 7);
                         }
-                        log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $logicalId_conf);
-                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
+                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' Récupération ID ' . ' avec Id ' . $logicalId_conf . $logicalId_conf . ') : ' . $parametre['value']);
                         $logicalId = $logicalId_conf;
                     } else {
                         $parametre['value'] = true;

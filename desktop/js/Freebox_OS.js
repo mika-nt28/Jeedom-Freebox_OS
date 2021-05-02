@@ -245,6 +245,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 	$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
 	$icon_type2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
+	setupCron($icon,$icon_type);
 	switch ($icon) {
 		case 'airmedia':
 		case 'connexion':
@@ -262,16 +263,8 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 			break;
 		default:
-			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');	
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
 			break;
-	}
-
-	var template = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
-
-	if (template === 'network' || template === 'networkwifiguest') {
-		$('.IPV').show();
-	} else {
-		$('.IPV').hide();
 	}
 });
 $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').on('change', function () {
@@ -393,6 +386,56 @@ function addCmdToTable(_cmd) {
    
 	jeedom.cmd.changeType($('#table_cmd tbody tr').last(), init(_cmd.subType));
 
+}
+function setupCron($icon,$icon_type) {
+	$.ajax({
+		type: "POST",
+		url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+		data: {
+			action: "GetSettingTiles",
+		},
+		dataType: 'json',
+		error: function (request, status, error) {
+			handleAjaxError(request, status, error);
+		},
+		success: function (data) {
+			result = data.result.CronTiles;
+			console.log('Type : ' + $icon +' Type 2 : ' + $icon_type);
+			if ($icon_type === 'VM'|| $icon_type === 'parental'|| $icon_type === 'player') {
+				$icon = $icon_type ;
+			}
+			$('.IPV').hide();
+			$('#CRON_TILES').show();
+			$('#CRON_TILES_INFO').hide();
+			switch ($icon) {
+				case 'network':
+				case 'networkwifiguest':
+					$('.IPV').show();
+					break;
+				case 'airmedia':
+				case 'connexion':
+				case 'downloads':
+				case 'homeadapters':
+				case 'LCD':
+				case 'system':
+				case 'disk':
+				case 'phone':
+				case 'wifi':
+				case 'parental':
+				case 'player':
+				case 'netshare':
+				case 'VM':
+					break;
+				default:
+					console.log('CRON TILES : ' + result)
+					if (result == "1") {
+						$('#CRON_TILES').hide();
+						$('#CRON_TILES_INFO').show();
+					}
+					break;
+			}
+		}
+	});
 }
 
 function setupPage() {

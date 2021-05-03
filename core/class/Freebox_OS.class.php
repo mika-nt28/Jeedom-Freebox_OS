@@ -345,7 +345,11 @@ class Freebox_OS extends eqLogic
 				$Command->setdisplay('invertBinary', 1);
 			}
 			if ($invertSlide != null) {
-				$Command->setdisplay('invertslide', 1);
+				if ($Type == 'action') {
+					$Command->setConfiguration('invertslide', 1);
+				} else {
+					$Command->setDisplay('invertBinary', 1);
+				}
 			}
 			if ($icon != null) {
 				$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');

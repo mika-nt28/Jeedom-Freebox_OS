@@ -349,9 +349,6 @@ function addCmdToTable(_cmd) {
 	if ((init(_cmd.type) == 'action' && init(_cmd.subType) == 'slider')) {
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertslide"/>{{Inverser Curseur}}</label></span> ';
 	}
-	if ((init(_cmd.type) == 'info' && init(_cmd.subType) == 'numeric' && (init(_cmd.logicalId) == '2' || init(_cmd.logicalId) == '3'))) {
-		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertnumeric"/>{{Inverser Valeur}}</label></span> ';
-	}
 	tr += '</td>';
 	tr += '<td style="min-width:200px;">';
 	tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min.}}" title="{{Min.}}" style="width:30%;display:inline-block;"/> ';

@@ -428,7 +428,7 @@ class Free_CreateTil
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
                                             if ($setting['Search'] != 'pir_battery_r_nodes' && $setting['Search'] != 'kfb_battery_r_nodes') {
                                                 $order = $setting['Order'];
-                                                $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $eq_group);
+                                                $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
                                                 $order++;
                                             } else {
                                                 $Name = 'Batterie';
@@ -445,11 +445,11 @@ class Free_CreateTil
                                                     $_cmd_search->setConfiguration("battery_type", $battery);
                                                     $_cmd_search->save();
                                                 } else {
-                                                    $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, null, null, $eq_group);
+                                                    $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
                                                 }
                                             }
                                             if ($Command['ui']['access'] === 'rw') {
-                                                $Action =  $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $Templatecore, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $order, $setting['IsHistorized'], false, false, null, true, null, null, null, null, null, null, $eq_group);
+                                                $Action =  $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $Templatecore, $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $order, $setting['IsHistorized'], false, false, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
                                                 Free_CreateTil::Create_linK($Info, $Action);
                                             }
 
@@ -776,13 +776,13 @@ class Free_CreateTil
             case 'shutter_toggle_w_nodes':
                 // Toggle DOWN
                 $Generic_type2 = 'FLAP_DOWN';
-                $Icon2 = 'fas fa-arrow-down';
+                $Icon2 = 'fas fa-arrow-down icon_green';
                 $Label_2 = 'Bas - Fermée';
                 $_Cmd_ep_id2 = 'PB_DOWN' . $_Cmd_ep_id;
                 $Order2 = 89;
                 // Toggle UP
                 $Generic_type = 'FLAP_UP';
-                $Icon = 'fas fa-arrow-up';
+                $Icon = 'fas fa-arrow-up icon_green';
                 $Label_O = 'Haut - Ouvert';
                 $_Cmd_ep_id = 'PB_UP' . $_Cmd_ep_id;
                 $Order = 8;
@@ -791,7 +791,7 @@ class Free_CreateTil
                 break;
             case 'info_up_store_w_tiles':
                 $Generic_type = 'FLAP_UP';
-                $Icon = 'fas fa-arrow-up';
+                $Icon = 'fas fa-arrow-up icon_green';
                 $Label_I = "Etat";
                 $TypeCMD_BOOL = 'PB_SP';
                 $Order = 2;
@@ -799,14 +799,14 @@ class Free_CreateTil
             case 'info_stop_store_w_tiles':
             case 'info_stop_store_slider_w_tiles':
                 $Generic_type = 'FLAP_STOP';
-                $Icon = 'fas fa-stop';
+                $Icon = 'fas fa-stop icon_red';
                 $Label_I = "Etat";
                 $TypeCMD_BOOL = 'PB_SP';
                 $Order = 3;
                 break;
             case 'info_down_store_w_tiles':
                 $Generic_type = 'FLAP_DOWN';
-                $Icon = 'fas fa-arrow-down';
+                $Icon = 'fas fa-arrow-down icon_green';
                 $Label_I = "Etat";
                 $TypeCMD_BOOL = 'PB_SP';
                 $Order = 4;
@@ -904,7 +904,7 @@ class Free_CreateTil
         $IsHistorized = '0';
         $ForceLineB = 'default';
         $_Iconname = null;
-        $InvertSlide = '0';
+        $InvertSlide = null;
         $SubType = 'slider';
         $SubType_I = 'numeric';
         $Order = null;
@@ -922,6 +922,7 @@ class Free_CreateTil
         switch ($Search) {
             case 'info_position_store_slider_rw_tiles':
                 $Label_I = 'Etat volet';
+                $Label = 'Consigne Ouverture';
                 $Generic_type_I = 'FLAP_STATE';
                 $Generic_type = 'FLAP_SLIDER';
                 $Templatecore = 'shutter';

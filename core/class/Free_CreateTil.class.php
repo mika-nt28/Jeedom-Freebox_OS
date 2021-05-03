@@ -474,7 +474,7 @@ class Free_CreateTil
                                             }
                                         }
                                         if ($Command['ui']['access'] === 'w') {
-                                            $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore_I'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, null, null, $eq_group);
+                                            $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore_I'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
                                         }
 
                                         $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);

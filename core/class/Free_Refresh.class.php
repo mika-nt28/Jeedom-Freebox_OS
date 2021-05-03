@@ -807,7 +807,7 @@ class Free_Refresh
 
         switch ($cmd->getSubType()) {
             case 'numeric':
-                if ($cmd->getConfiguration('invertnumeric')) {
+                if ($cmd->getDisplay('invertBinary')) {
                     $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
                 } else {
                     if ($data['name'] == 'pushed') {

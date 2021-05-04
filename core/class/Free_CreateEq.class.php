@@ -199,13 +199,13 @@ class Free_CreateEq
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         };
-        //$Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
-        // $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateicon, true);
-        //$Connexion->AddCommand('Module Fibre présent', 'sfp_present', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  21, '0', $updateicon, true);
-        //$Connexion->AddCommand('Signal Fibre présent', 'sfp_has_signal', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  22, '0', $updateicon, true);
-        //$Connexion->AddCommand('Etat Alimentation', 'sfp_alim_ok', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  23, '0', $updateicon, true);
-        //$Connexion->AddCommand('Puissance transmise', 'sfp_pwr_tx', 'info', 'numeric', $templatecore_V4 . 'badge', 'dBm', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  24, '0', $updateicon, true, null, null, null, '#value# / 100', '2');
-        //$Connexion->AddCommand('Puissance reçue', 'sfp_pwr_rx', 'info', 'numeric', $templatecore_V4 . 'badge', 'dBm', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  25, '0', $updateicon, true, null, null, null, '#value# / 100', '2');
+        $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
+        $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateicon, true);
+        $Connexion->AddCommand('Module Fibre présent', 'sfp_present', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  21, '0', $updateicon, true);
+        $Connexion->AddCommand('Signal Fibre présent', 'sfp_has_signal', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  22, '0', $updateicon, true);
+        $Connexion->AddCommand('Etat Alimentation', 'sfp_alim_ok', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  23, '0', $updateicon, true);
+        $Connexion->AddCommand('Puissance transmise', 'sfp_pwr_tx', 'info', 'numeric', $templatecore_V4 . 'badge', 'dBm', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  24, '0', $updateicon, true, null, null, null, '#value# / 100', '2');
+        $Connexion->AddCommand('Puissance reçue', 'sfp_pwr_rx', 'info', 'numeric', $templatecore_V4 . 'badge', 'dBm', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  25, '0', $updateicon, true, null, null, null, '#value# / 100', '2');
 
         log::add('Freebox_OS', 'debug', '└─────────');
     }
@@ -236,16 +236,18 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('connexion', null, null, 'xdsl');
         if ($result != false && $result != 'Aucun module 4G détecté') {
-            $_modul = 'Module xdsl : Présent';
-            log::add('Freebox_OS', 'debug', '│──────────> ' . $_modul);
-            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
-            $Connexion->AddCommand('Type de modulation', 'modulation', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  40, '0', null, true);
-            $Connexion->AddCommand('Protocole', 'protocol', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  41, '0', null, true);
+            if ($result['status']['status'] != 'down') {
+                $_modul = 'Module xdsl : Présent';
+                $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
+                $Connexion->AddCommand('Type de modulation', 'modulation', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  40, '0', null, true);
+                $Connexion->AddCommand('Protocole', 'protocol', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  41, '0', null, true);
+            } else {
+                $_modul = 'Module xdsl : Présent mais désactivé - Aucune création des équipements';
+            }
         } else {
             $_modul = 'Module xdsl : Non Présent';
-            log::add('Freebox_OS', 'debug', '│──────────> ' . $_modul);
         }
-
+        log::add('Freebox_OS', 'debug', '│──────────> ' . $_modul);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_disk($logicalinfo, $templatecore_V4)

@@ -228,9 +228,12 @@ class Free_Refresh
                         case "sfp_has_signal":
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_has_signal']);
                             break;
-                        case "sfp_ if ($id != null) {
-                            $id = '/' . $id;alim_ok":
-                            $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
+                        case "sfp_alim_ok":
+                            if (isset($result['sfp_alim_ok'])) {
+                                $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
+                            } else {
+                                Free_Refresh::removeLogicId($Equipement, $Command->getLogicalId());
+                            }
                             break;
                         case "sfp_pwr_tx":
                             if (isset($result['sfp_pwr_tx'])) {

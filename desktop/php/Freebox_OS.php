@@ -288,7 +288,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 										</span>
 									</div>
 									<div id="CRON_TILES_INFO" class="input-group">
-										<label class="control-label">{{l'Auto-actualisation de l'esemble de la partie domotique est actif}}</label>
+										<label class="control-label">{{l’Auto-actualisation de l’ensemble de la partie domotique est actif}}</label>
 									</div>
 								</div>
 							</div>

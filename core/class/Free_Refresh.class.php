@@ -1013,10 +1013,14 @@ class Free_Refresh
                     switch ($Command->getLogicalId()) {
                         case 'bind_usb_ports':
                             $bind_usb_ports = null;
-                            if (isset($result['bind_usb_ports'])) {
-                                foreach ($result['bind_usb_ports'] as $USB) {
-                                    $bind_usb_ports .= '<br>' . $USB;
+                            if ($result['bind_usb_ports'] != null) {
+                                if (isset($result['bind_usb_ports'])) {
+                                    foreach ($result['bind_usb_ports'] as $USB) {
+                                        $bind_usb_ports .= '<br>' . $USB;
+                                    }
                                 }
+                            } else {
+                                $bind_usb_ports .= 'Aucun port USB de connecter';
                             }
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $bind_usb_ports);
                             break;

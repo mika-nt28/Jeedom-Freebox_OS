@@ -7,7 +7,7 @@ $plugin = plugin::byId('Freebox_OS');
 sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
 ?>
-
+<!-- Style pour masquer les équipements -->
 <style type="text/css">
 	.freeOSHidenDiv {
 		display: none;

@@ -112,6 +112,20 @@ try {
 			);
 			ajax::success($result);
 			break;
+		case 'GetSettingTiles':
+			if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+				config::save('FREEBOX_TILES_CRON', '1', 'Freebox_OS');
+			}
+			$result = array(
+				"CronTiles" => config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'),
+			);
+			ajax::success($result);
+			break;
+		case 'SetSettingTiles':
+			config::save('FREEBOX_TILES_CRON', init('cron_tiles'), 'Freebox_OS');
+			Free_CreateTil::createTil('SetSettingTiles');
+			ajax::success(true);
+			break;
 		case 'SetSetting':
 			config::save('FREEBOX_SERVER_IP', init('ip'), 'Freebox_OS');
 			config::save('FREEBOX_SERVER_APP_VERSION', init('VersionAPP'), 'Freebox_OS');

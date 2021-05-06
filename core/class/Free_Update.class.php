@@ -23,16 +23,15 @@ class Free_Update
     public static function UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $_cmd)
     {
         if ($logicalId != 'refresh' && $logicalId != 'WakeonLAN') {
-            log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
-            log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
+            //log::add('Freebox_OS', 'debug', '┌───────── Update commande ');
+            //log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
         $Free_API = new Free_API();
-        if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player') {
+        if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player'  || $logicalId_eq->getConfiguration('type') == 'VM') {
             $update = $logicalId_eq->getconfiguration('type');
         } else {
             $update = $logicalId_eq->getLogicalId();
         }
-
         switch ($update) {
             case 'airmedia':
                 if ($logicalId != 'refresh') {
@@ -97,6 +96,10 @@ class Free_Update
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 }
                 break;
+            case 'VM':
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
+                }
             case 'wifi':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -105,11 +108,16 @@ class Free_Update
                 break;
             default:
                 Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf);
+                //if ($logicalId == 'refresh' || config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 0) {
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                //}
                 break;
         }
     }
-
+    private static function update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update)
+    {
+        $Free_API->universal_put(null, $logicalId_eq->getconfiguration('type'), $logicalId_eq->getConfiguration('action'), null, null, null, $logicalId);
+    }
     private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
         $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");
@@ -168,28 +176,34 @@ class Free_Update
     {
         switch ($logicalId) {
             case "FTP_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'ftp/config', null, 'enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'enabled', null, 'ftp/config');
                 break;
             case "FTP_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'ftp/config', null, 'enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'enabled', null, 'ftp/config');
                 break;
             case "file_share_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'file_share_enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'file_share_enabled', null, 'netshare/samba');
                 break;
             case "file_share_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'file_share_enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'file_share_enabled', null, 'netshare/samba');
                 break;
             case "mac_share_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'netshare/afp', null, 'enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'enabled', null, 'netshare/afp');
                 break;
             case "mac_share_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'netshare/afp', null, 'enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'enabled', null, 'netshare/afp');
                 break;
             case "print_share_enabledOn":
-                $Free_API->universal_put(true, 'universalAPI', 'netshare/samba', null, 'print_share_enabled', null);
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'print_share_enabled', null, 'netshare/samba');
                 break;
             case "print_share_enabledOff":
-                $Free_API->universal_put(false, 'universalAPI', 'netshare/samba', null, 'print_share_enabled', null);
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'print_share_enabled', null, 'netshare/samba');
+                break;
+            case "smbv2_enabledOn":
+                $Free_API->universal_put(true, 'universalAPI', null, null, 'smbv2_enabled', null, 'netshare/samba');
+                break;
+            case "smbv2_enabledOff":
+                $Free_API->universal_put(false, 'universalAPI', null, null, 'smbv2_enabled', null, 'netshare/samba');
                 break;
         }
     }
@@ -301,15 +315,12 @@ class Free_Update
     {
         switch ($logicalId) {
             case 'brightness':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('brightness' => $_options['slider']));
                 break;
             case 'hide_wifi_keyOn':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => true));
                 break;
             case 'hide_wifi_keyOff':
-                log::add('Freebox_OS', 'default', 'TEST ');
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => false));
                 break;
             case 'orientation':
@@ -361,7 +372,7 @@ class Free_Update
 
     private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf)
     {
-        $_execute = 1;
+        //$_execute = 1;
         switch ($logicalId_type) {
             case 'slider':
                 if ($_cmd->getConfiguration('invertslide')) {
@@ -376,13 +387,13 @@ class Free_Update
                 $type = $logicalId_eq->getConfiguration('type');
                 log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- valeur Inversé  : ' . $_cmd->getConfiguration('invertslide') . ' -- valeur  : ' . $parametre['value'] . ' -- valeur slider : ' . $_options['slider']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
-                    $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
-                    if ($cmd !== false) {
+                    // $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
+                    /*if ($cmd !== false) {
                         if ($cmd->execCmd() == 0) {
                             $_execute = 0;
                             log::add('Freebox_OS', 'debug', '│ Pas d\'action car l\'équipement est éteint');
                         }
-                    }
+                    }*/
                 }
                 break;
             case 'color':
@@ -420,30 +431,45 @@ class Free_Update
             default:
                 $parametre['value_type'] = 'bool';
                 if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
-
-                    log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF : ' . $logicalId_conf);
-
-                    if (stripos($logicalId, 'PB_On')  == 'PB_On') {
+                    if (stripos($logicalId, 'PB_On')  !== false) {
                         $parametre['value'] = true;
+                        $ID_logicalID = substr($logicalId, 5);
                     } else {
                         $parametre['value'] = false;
+                        $ID_logicalID = substr($logicalId, 6);
                     }
+                    log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $ID_logicalID);
+                    log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
                     $logicalId = $logicalId_conf;
                 } else {
-                    $parametre['value'] = true;
-                    $Listener = cmd::byId(str_replace('#', '', $_cmd->getValue()));
+                    if (stripos($logicalId, 'PB_UP') !== false || stripos($logicalId, 'PB_DOWN') !== false) {
+                        $parametre['value_type'] = 'void';
+                        if (stripos($logicalId, 'PB_UP') !== false) {
+                            $parametre['value'] = true;
+                            $logicalId_conf = substr($logicalId, 5);
+                        } else {
+                            $parametre['value'] = false;
+                            $logicalId_conf = substr($logicalId, 7);
+                        }
+                        log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP UP/DOWN (' . $logicalId . ' Récupération ID ' . ' avec Id ' . $logicalId_conf . $logicalId_conf . ') : ' . $parametre['value']);
+                        $logicalId = $logicalId_conf;
+                    } else {
+                        $parametre['value'] = true;
+                        $Listener = cmd::byId(str_replace('#', '', $_cmd->getValue()));
 
-                    if (is_object($Listener)) {
-                        $parametre['value'] = $Listener->execCmd();
-                    }
-                    if ($_cmd->getConfiguration('invertslide')) {
-                        $parametre['value'] = !$parametre['value'];
+                        if (is_object($Listener)) {
+                            $parametre['value'] = $Listener->execCmd();
+                        }
+                        if ($_cmd->getConfiguration('invertslide')) {
+                            $parametre['value'] = !$parametre['value'];
+                        }
                     }
                 }
                 break;
         }
         if ($logicalId != 'refresh') {
-            if ($_execute == 1) $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
+            //if ($_execute == 1)  
+            $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
         }
     }
 }

@@ -33,7 +33,7 @@ class Freebox_OS extends eqLogic
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
-		if ($deamon_info['state'] != 'ok') {
+		if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
 			log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
 			Freebox_OS::deamon_start();
 			$Free_API = new Free_API();
@@ -48,11 +48,14 @@ class Freebox_OS extends eqLogic
 
 				if ($c->isDue() && $deamon_info['state'] == 'ok') {
 					if ($eqLogic->getIsEnable()) {
-						log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
-						Free_Refresh::RefreshInformation($eqLogic->getId());
+						if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
+						} else {
+							log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
+							Free_Refresh::RefreshInformation($eqLogic->getId());
+						}
 					}
 				}
-				if ($deamon_info['state'] != 'ok') {
+				if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
 					log::add('Freebox_OS', 'debug', '================= PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state'] . ' ==================');
 				}
 			} catch (Exception $exc) {
@@ -135,28 +138,80 @@ class Freebox_OS extends eqLogic
 		if ($deamon_info['state'] == 'ok') return;
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
 		if (!is_object($cron)) {
-			$cron = new cron();
-			$cron->setClass('Freebox_OS');
-			$cron->setFunction('RefreshToken');
-			$cron->setEnable(1);
-			$cron->setSchedule('*/30 * * * *');
-			$cron->setTimeout('10');
-			$cron->save();
+			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
-		$cron->start();
 		$cron->run();
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
+		}
+		$cron->run();
+		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+				if (!is_object($cron)) {
+					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
+				}
+				$cron->run();
+			}
+		}
 	}
 	public static function deamon_stop()
 	{
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
-		if (is_object($cron)) {
-			$cron->stop();
-			$cron->remove();
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
+		$cron->halt();
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron introuvable', __FILE__));
+		}
+		$cron->halt();
+		cache::set("actionlist ", null);
+
+		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+				if (!is_object($cron)) {
+					throw new Exception(__('Tache cron introuvable', __FILE__));
+				}
+				$cron->halt();
+			}
+		}
+
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 	}
-
+	public static function FreeboxPUT()
+	{
+		$action = cache::byKey("actionlist")->getValue();
+		if (!is_array($action)) {
+			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
+			return;
+		}
+		if (!isset($action[0])) {
+			return;
+		}
+		if ($action[0] == '') {
+			return;
+		}
+		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $action[0]['Name'] . '(' . $action[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
+		Free_Update::UpdateAction($action[0]['LogicalId'], $action[0]['SubType'], $action[0]['Name'], $action[0]['Value'], $action[0]['Config'], $action[0]['EqLogic'], $action[0]['Options'], $action[0]['This']);
+		$action = cache::byKey("actionlist")->getValue();
+		array_shift($action);
+		cache::set("actionlist", $action);
+	}
+	public static function FreeboxGET()
+	{
+		try {
+			//log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
+			Free_Refresh::RefreshInformation('Tiles_global');
+			sleep(15);
+		} catch (Exception $exc) {
+			log::add('Freebox_OS', 'error', __('********************  ERREUR CRON UPDATE TILES/NODE ', __FILE__));
+		}
+	}
 	public static function resetConfig()
 	{
 		config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
@@ -166,7 +221,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
 	}
 
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system')
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', '>> ================ >> Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
@@ -174,51 +229,46 @@ class Freebox_OS extends eqLogic
 
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
-			$checks = self::all();
-			$Nameexist = false;
-			foreach ($checks as $check) {
-				if ($check->getName() == $Name) {
-					if ($check->getLogicalId($_logicalId)) {
-						$Nameexist = true;
-					}
+			if ($_Room == null) {
+				$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
+			} else {
+				// Fonction NON désactiver A TRAITER => Pose des soucis chez certain utilisateurs (Voir Fil d'actualité du Plugin)
+				$defaultRoom = intval($_Room);
+			}
+
+			if ($defaultRoom != null) {
+				$EqLogic->setObject_id($defaultRoom);
+			}
+			$EqLogic->setEqType_name('Freebox_OS');
+			$EqLogic->setIsEnable(1);
+			$EqLogic->setIsVisible(0);
+			$EqLogic->setName($Name);
+			if ($category != null) {
+				$EqLogic->setcategory($category, 1);
+			}
+
+			if ($_autorefresh != null) {
+				$EqLogic->setConfiguration('autorefresh', $_autorefresh);
+			} else {
+				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
+			}
+			if ($tiles == true) {
+				$EqLogic->setConfiguration('type', $eq_type);
+				$EqLogic->setConfiguration('action', $eq_action);
+				if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
+					$EqLogic->setConfiguration('action', $logicalID_equip);
+				}
+				if ($Player != null) {
+					$EqLogic->setConfiguration('player', $Player);
 				}
 			}
-			if ($Nameexist) {
-				log::add('Freebox_OS', 'error', 'Un équipement portant ce nom et un id incorrect (' . $Name . ' / ' . $_logicalId . ') existe déjà, il est impossible de créer l\'équipement');
-				return false;
-			} else {
-				if ($_Room == null) {
-					$defaultRoom = intval(config::byKey('defaultParentObject', "Freebox_OS", '', true));
-				} else {
-					// Fonction NON désactiver A TRAITER => Pose des soucis chez certain utilisateurs (Voir Fil d'actualité du Plugin)
-					$defaultRoom = intval($_Room);
-				}
-				if ($defaultRoom != null) {
-					$EqLogic->setObject_id($defaultRoom);
-				}
-				$EqLogic->setEqType_name('Freebox_OS');
-				$EqLogic->setIsEnable(1);
-				$EqLogic->setIsVisible(0);
-				$EqLogic->setName($Name);
-				if ($category != null) {
-					$EqLogic->setcategory($category, 1);
-				}
-
-				if ($_autorefresh != null) {
-					$EqLogic->setConfiguration('autorefresh', $_autorefresh);
-				} else {
-					$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
-				}
-				if ($tiles == true) {
-					$EqLogic->setConfiguration('type', $eq_type);
-					$EqLogic->setConfiguration('action', $eq_action);
-					if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
-						$EqLogic->setConfiguration('action', $logicalID_equip);
-					}
-					if ($Player != null) {
-						$EqLogic->setConfiguration('player', $Player);
-					}
-				}
+			if ($eq_group != null) {
+				$EqLogic->setConfiguration('eq_group', $eq_group);
+			}
+			try {
+				$EqLogic->save();
+			} catch (Exception $e) {
+				$EqLogic->setName($EqLogic->getName() . ' doublon ' . rand(0, 9999));
 				$EqLogic->save();
 			}
 		}
@@ -235,21 +285,18 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		if ($tiles == true) {
-			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter') {
+			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter' && $eq_type != 'shutter'  && $eq_type != 'opener' && $eq_type != 'plug') {
 				$EqLogic->setConfiguration('type', $eq_type);
 			} else {
 				$EqLogic->setConfiguration('type2', $eq_type);
-				if ($eq_type == 'pir') {
+				if ($eq_type === 'pir') {
 					$EqLogic->setConfiguration('info', 'mouv_sensor');
 				}
 			}
 			if ($eq_action != null) {
 				$EqLogic->setConfiguration('action', $eq_action);
 			}
-			if ($type2 != null) {
-				$EqLogic->setConfiguration('type2', $eq_type);
-			}
-			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
+			if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player' || $EqLogic->getConfiguration('type', $eq_type) == 'VM') {
 				$EqLogic->setConfiguration('action', $logicalID_equip);
 			}
 		}
@@ -263,7 +310,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
 
@@ -298,7 +345,11 @@ class Freebox_OS extends eqLogic
 				$Command->setdisplay('invertBinary', 1);
 			}
 			if ($invertSlide != null) {
-				$Command->setdisplay('invertslide', 1);
+				if ($Type == 'action') {
+					$Command->setConfiguration('invertslide', 1);
+				} else {
+					$Command->setDisplay('invertBinary', 1);
+				}
 			}
 			if ($icon != null) {
 				$Command->setdisplay('icon', '<i class="' . $icon . '"></i>');
@@ -408,8 +459,6 @@ class Freebox_OS extends eqLogic
 		}
 		$Command->save();
 
-		//$Command->save();
-
 		// Création de la commande refresh
 		$createRefreshCmd  = true;
 		$refresh = $this->getCmd(null, 'refresh');
@@ -457,7 +506,7 @@ class Freebox_OS extends eqLogic
 	public function postSave()
 	{
 		if ($this->getConfiguration('type') == 'alarm_control') {
-			log::add('Freebox_OS', 'debug', '│──────────> Update paramétrage spécifique pour Homebridge : ' . $this->getConfiguration('type'));
+			log::add('Freebox_OS', 'debug', '******************** Mise à jour des commandes spécifiques pour Homebridge : ' . $this->getConfiguration('type') . ' **************************************** ');
 			foreach ($this->getCmd('action') as $Command) {
 				if (is_object($Command)) {
 					switch ($Command->getLogicalId()) {
@@ -472,7 +521,7 @@ class Freebox_OS extends eqLogic
 					}
 					if (isset($_home_config_eq)) {
 						if ($_home_config_eq != null) {
-							log::add('Freebox_OS', 'debug', '│──────────> Mode : ' . $_home_config_eq . 'Nom de la commande ' . $Command->getName());
+							log::add('Freebox_OS', 'debug', '│──────────> Mode : ' . $_home_config_eq . '(Commande : ' . $Command->getName() . ')');
 							$this->setConfiguration($_home_mode, $Command->getName());
 							$this->save(true);
 							$this->setConfiguration($_home_config_eq, $Command->getId() . "|" . $Command->getName());
@@ -490,7 +539,10 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		if ($this->getIsEnable()) {
-			Free_Refresh::RefreshInformation($this->getId());
+			if (($this->getConfiguration('eq_group') == 'nodes' || $this->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
+			} else {
+				Free_Refresh::RefreshInformation($this->getId());
+			}
 		}
 
 		$createRefreshCmd = true;
@@ -577,6 +629,8 @@ class Freebox_OS extends eqLogic
 			'notificationName' => 'notification',
 			'phoneID' => 'phone',
 			'phoneName' => 'Téléphone',
+			'playerID' => 'player',
+			'playerName' => 'Player',
 			'systemID' => 'system',
 			'systemName' => 'Système',
 			'VMID' => 'VM',
@@ -592,92 +646,143 @@ class Freebox_OS extends eqLogic
 			'wifiAPName' => 'Wifi Access Points'
 		);
 	}
-	public static function updateLogicalID($_version, $_update = false)
+	public static function updateLogicalID($eq_version, $_update = false)
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$logicalinfo = Freebox_OS::getlogicalinfo();
-		log::add('Freebox_OS', 'debug', '┌───────── Fonction updateLogicalID : Start Update');
-		log::add('Freebox_OS', 'debug', '│ Si vide aucun changement nécessaire');
+		if ($eq_version == 2) {
+			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+					config::save('FREEBOX_TILES_CRON', init(1), 'Freebox_OS');
+					Free_CreateTil::createTil('SetSettingTiles');
+				}
+			}
+		}
 		foreach ($eqLogics as $eqLogic) {
+			if ($eqLogic->getConfiguration('type') === 'parental') {
+				$type_eq = 'parental_controls';
+			} else if ($eqLogic->getConfiguration('type') === 'player') {
+				$type_eq = 'player';
+			} else if ($eqLogic->getConfiguration('type') === 'VM') {
+				$type_eq = 'VM';
+			} else if ($eqLogic->getConfiguration('type') === 'alarm_control') {
+				$type_eq = 'alarm_control';
+			} else if ($eqLogic->getConfiguration('type') === 'camera') {
+				$type_eq = 'camera';
+			} else {
+				$type_eq = $eqLogic->getLogicalId();
+			}
+			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $eq_version) continue;
 
-			if ($eqLogic->getConfiguration('VersionLogicalID', 0) == $_version) continue;
-
-			$eqName = $eqLogic->getName();
-
-			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId());
-			switch ($eqLogic->getLogicalId()) {
-				case 'ADSL':
-				case 'connexion':
-					$eqLogic->setLogicalId($logicalinfo['connexionID']);
-					$eqLogic->setName($logicalinfo['connexionName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update logicalID : "' . $logicalinfo['connexionID'] . '" et Update name : "' . $logicalinfo['connexionName'] . '"');
-					break;
-				case 'AirPlay':
+			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update eqLogic : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
+			switch ($type_eq) {
 				case 'airmedia':
 					$eqLogic->setLogicalId($logicalinfo['airmediaID']);
-					$eqLogic->setName($logicalinfo['airmediaName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['airmediaID']);
+					//$eqLogic->setName($logicalinfo['airmediaName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					break;
-				case 'Disque':
-				case 'Disques':
+				case 'alarm_control':
+					// Update spécifique pour l'alarme
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'tiles');
+					//$eqLogic->save();
+					break;
+				case 'camera':
+					// Update spécifique pour les caméras
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'nodes');
+					break;
+				case 'connexion':
+					$eqLogic->setLogicalId($logicalinfo['connexionID']);
+					//$eqLogic->setName($logicalinfo['connexionName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'disk':
 					$eqLogic->setLogicalId($logicalinfo['diskID']);
-					$eqLogic->setName($logicalinfo['diskName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['diskID']);
+					//$eqLogic->setName($logicalinfo['diskName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					break;
-				case 'Reseau':
-				case 'reseau':
-					$eqLogic->setLogicalId($logicalinfo['networkID']);
-					$eqLogic->setName($logicalinfo['networkName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['networkID']);
-					break;
-				case 'System':
-					$eqLogic->setLogicalId($logicalinfo['systemID']);
-					$eqLogic->setName($logicalinfo['systemName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['systemID']);
-					break;
-				case 'Downloads':
+				case 'downloads':
 					$eqLogic->setLogicalId($logicalinfo['downloadsID']);
-					$eqLogic->setName($logicalinfo['downloadsName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['downloadsID']);
+					//$eqLogic->setName($logicalinfo['downloadsName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					break;
-				case 'Phone':
+				case 'homeadapters':
+					$eqLogic->setLogicalId($logicalinfo['homeadaptersID']);
+					//$eqLogic->setName($logicalinfo['homeadaptersName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'tiles_SP');
+					break;
+				case 'parental_controls':
+					//Pour les contrôles parentaux
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'parental_controls');
+					break;
+				case 'phone':
 					$eqLogic->setLogicalId($logicalinfo['phoneID']);
-					$eqLogic->setName($logicalinfo['phoneName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', 'Fonction updateLogicalID : Update ' . $logicalinfo['phoneID']);
+					//$eqLogic->setName($logicalinfo['phoneName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					break;
-				case 'Wifi':
+				case 'player':
+					//Pour les players
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'network':
+					$eqLogic->setLogicalId($logicalinfo['networkID']);
+					//$eqLogic->setName($logicalinfo['networkName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'netshare':
+					$eqLogic->setLogicalId($logicalinfo['netshareID']);
+					//$eqLogic->setName($logicalinfo['netshareName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'networkwifiguest':
+					$eqLogic->setLogicalId($logicalinfo['networkwifiguestID']);
+					//$eqLogic->setName($logicalinfo['networkwifiguestName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'LCD':
+					$eqLogic->setLogicalId($logicalinfo['LCDID']);
+					//$eqLogic->setName($logicalinfo['LCDName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'system':
+					$eqLogic->setLogicalId($logicalinfo['systemID']);
+					//$eqLogic->setName($logicalinfo['systemName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'VM':
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
 				case 'wifi':
 					$eqLogic->setLogicalId($logicalinfo['wifiID']);
-					$eqLogic->setName($logicalinfo['wifiName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['wifiID']);
-					break;
-				case 'HomeAdapters':
-				case 'Home Adapters':
-				case 'Homeadapters':
-					$eqLogic->setLogicalId($logicalinfo['homeadaptersID']);
-					$eqLogic->setName($logicalinfo['homeadaptersName']);
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
-					log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update ' . $logicalinfo['homeadaptersID']);
+					//$eqLogic->setName($logicalinfo['wifiName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
 					break;
 				default:
-					$eqLogic->setConfiguration('VersionLogicalID', $_version);
+					$eqLogic->setConfiguration('eq_group', 'tiles');
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
 					break;
 			}
-
-			if (!$_update) $eqLogic->setName($eqName);
-			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update V' . $_version);
 			$eqLogic->save(true);
-			log::add('Freebox_OS', 'debug', '│ Fonction updateLogicalID : Update save');
+			log::add('Freebox_OS', 'debug', '│ Fonction pour en version V' . $eq_version  . ' - ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
+			//if (!$_update) $eqLogic->setName($eqName);
+
 		}
-		log::add('Freebox_OS', 'debug', '└─────────');
 	}
 }
 
@@ -692,17 +797,26 @@ class Freebox_OSCmd extends cmd
 	}
 	public function execute($_options = array())
 	{
-		log::add('Freebox_OS', 'debug', '┌───────── Début de Mise à jour ');
-		$logicalId = $this->getLogicalId();
-		$logicalId_type = $this->getSubType();
-		$logicalId_value = $this->getvalue();
-		$logicalId_name = $this->getName();
-		$logicalId_conf = $this->getConfiguration('logicalId');
-		$logicalId_eq = $this->getEqLogic();
+		//log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $this->getName());
+		$array = cache::byKey("actionlist")->getValue();
+		if (!is_array($array)) {
+			$array = [];
+		}
+		$update = array(
+			'This' => $this,
+			'LogicalId' => $this->getLogicalId(),
+			'SubType' => $this->getSubType(),
+			'Name' => $this->getName(),
+			'Value' => $this->getvalue(),
+			'Config' => $this->getConfiguration('logicalId'),
+			'EqLogic' => $this->getEqLogic(),
+			'NameEqLogic' => $this->getEqLogic()->getName(),
+			'Options' => $_options,
+		);
 
-		log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
-
-		Free_Update::UpdateAction($logicalId, $logicalId_type, $logicalId_name, $logicalId_value, $logicalId_conf, $logicalId_eq, $_options, $this);
+		array_push($array, $update);
+		cache::set("actionlist", $array);
+		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 
 	public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')

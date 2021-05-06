@@ -34,7 +34,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<span>{{Appairage}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
-				<i class="fas fa-wrench"></i>
+				<i class="fas fa-wrench" title="Cette fonction permet de lancer l'apparaige et paramétrer certaines options"></i>
 				<br>
 				<span>{{Configuration}}</span>
 			</div>
@@ -54,7 +54,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<span>{{Scan}}<br />{{Contrôle parental}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary titleAction" data-action="tile">
-				<i class="fas fa-search"></i>
+				<i class="fas fa-search" title="Cette fonction permet de créer les commandes pour la partie"></i>
 				<br>
 				<span>{{Scan}}<br />{{Tiles}}</span>
 			</div>
@@ -62,7 +62,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			if (log::getLogLevel('Freebox_OS') <= 200) :
 			?>
 				<div class="cursor eqLogicAction logoWarning titleAction" data-action="search_debugTile">
-					<i class="fas fa-question-circle"></i>
+					<i class="fas fa-question-circle" title="Cette fonction permet juste de lancer l'ensemble des requêtes pour la partie domotique, cela ne crée pas de commande"></i>
 					<br />
 					<span>{{Debug Tiles}}</span>
 				</div>
@@ -85,33 +85,21 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'player') {
-						$template = $eqLogic->getConfiguration('type');
-					} else {
-						$template = $eqLogic->getLogicalId();
-					}
-					switch ($template) {
-						case 'airmedia':
-						case 'connexion':
-						case 'downloads':
-						case 'LCD':
-						case 'system':
-						case 'disk':
-						case 'phone':
-						case 'wifi':
-						case 'player':
-						case 'network':
-						case 'netshare':
-						case 'networkwifiguest':
-							$status = 1;
-							$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-							echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-							echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
-							echo '<br>';
-							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-							echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
-							echo '</div>';
-							break;
+					if ($eqLogic->getConfiguration('eq_group') === 'system' || $eqLogic->getConfiguration('eq_group') == null) {
+						if ($eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'VM') {
+							$template = $eqLogic->getConfiguration('type');
+						} else {
+							$template = $eqLogic->getLogicalId();
+						}
+
+						$status = 1;
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
+						echo '</div>';
 					}
 				}
 				if ($status == 0) {
@@ -130,12 +118,22 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'parental' || $eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'alarm_control' || $eqLogic->getConfiguration('type') == 'alarm_sensor' || $eqLogic->getConfiguration('type') == 'camera' || $eqLogic->getConfiguration('type') == 'alarm_remote') {
-						//if ($eqLogic->getConfiguration('type') === 'alarm_sensor' && $eqLogic->getConfiguration('type2') === 'dws') {
-						//	$template = $eqLogic->getConfiguration('type2');
-						//} else {
+					if ($eqLogic->getConfiguration('type') === 'player' || $eqLogic->getConfiguration('type') === 'alarm_control' || $eqLogic->getConfiguration('type') === 'camera' || $eqLogic->getConfiguration('type') === 'light' || $eqLogic->getConfiguration('type') === 'alarm_remote') {
 						$template = $eqLogic->getConfiguration('type');
-						//}
+						$icon = $template;
+					} elseif ($eqLogic->getConfiguration('type') == 'alarm_sensor') {
+						if ($eqLogic->getConfiguration('type2') == 'dws') {
+							$template = $eqLogic->getConfiguration('type2');
+						} else {
+							$template = $eqLogic->getConfiguration('type');
+						}
+						$icon = $template;
+					} elseif ($eqLogic->getConfiguration('type') == 'info') {
+						if ($eqLogic->getConfiguration('type2') == 'plug' || $eqLogic->getConfiguration('type2') == 'shutter' || $eqLogic->getConfiguration('type2') == 'basic_shutter' || $eqLogic->getConfiguration('type2') == 'opener') {
+							$template = $eqLogic->getConfiguration('type2');
+						} else {
+							$template  = 'default';
+						}
 						$icon = $template;
 					} else {
 						$template = $eqLogic->getLogicalId();
@@ -145,31 +143,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							$icon = 'default';
 						}
 					}
-					switch ($template) {
-						case 'airmedia':
-						case 'connexion':
-						case 'downloads':
-						case 'LCD':
-						case 'system':
-						case 'disk':
-						case 'phone':
-						case 'wifi':
-						case 'player':
-						case 'parental':
-						case 'network':
-						case 'netshare':
-						case 'networkwifiguest':
-							break;
-						default:
-							$status = 1;
-							$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-							echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-							echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
-							echo '<br>';
-							echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-							echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
-							echo '</div>';
-							break;
+					if ($eqLogic->getConfiguration('eq_group') === 'tiles' || $eqLogic->getConfiguration('eq_group') === 'nodes' || $eqLogic->getConfiguration('eq_group') === 'tiles_SP') {
+
+						$status = 1;
+						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+						echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
+						echo '<br>';
+						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
+						echo '</div>';
 					}
 				}
 				if ($status == 0) {
@@ -188,7 +171,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<?php
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') == 'parental') {
+					if ($eqLogic->getConfiguration('eq_group') == 'parental_controls') {
 						$status = 1;
 						$template = $eqLogic->getConfiguration('type');
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
@@ -296,13 +279,16 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<sup><i class="fas fa-question-circle" title="{{Fréquence de rafraîchissement de l'équipement}}"></i></sup>
 								</label>
 								<div class="col-sm-7">
-									<div class="input-group">
-										<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
+									<div id="CRON_TILES" class="input-group">
+										<input id="CRON_TILES" type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
 										<span class="input-group-btn">
 											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="Assistant cron">
 												<i class="fas fa-question-circle"></i>
 											</a>
 										</span>
+									</div>
+									<div id="CRON_TILES_INFO" class="input-group">
+										<label class="control-label">{{l’Auto-actualisation de l’ensemble de la partie domotique est actif}}</label>
 									</div>
 								</div>
 							</div>
@@ -339,9 +325,10 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<label class="col-sm-4 control-label">{{Type d'équipement}}
 									<sup><i class="fas fa-question-circle" title="{{Type équipement Freebox}}"></i></sup>
 								</label>
-								<div class="col-sm-3">
+								<div class="col-sm-4">
 									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type" style="font-size : 1em">
 									</span> <span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="type2" style="font-size : 1em">
+									</span> <span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="info" style="font-size : 1em">
 									</span>
 								</div>
 							</div>
@@ -353,15 +340,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="action"></span>
 								</div>
 							</div>
-							<div class="form-group">
-								<label class="col-sm-4 control-label">{{Type d'infos d'équipement}}
-									<sup><i class="fas fa-question-circle" title="{{Type d'information Freebox}}"></i></sup>
-								</label>
-								<div class="col-sm-3">
-									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="info" style="font-size : 1em"></span>
-								</div>
-							</div>
-
 					</fieldset>
 				</form>
 				<hr>

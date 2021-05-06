@@ -2,17 +2,62 @@
 require_once dirname(__FILE__) . '/../../../core/php/core.inc.php';
 function Freebox_OS_install()
 {
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (!is_object($cron)) {
+		$cron = new cron();
+		$cron->setClass('Freebox_OS');
+		$cron->setFunction('RefreshToken');
+		$cron->setEnable(1);
+		//$cron->setDeamon(1);
+		$cron->setSchedule('*/30 * * * *');
+		$cron->setTimeout('10');
+		$cron->save();
+	}
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+	if (!is_object($cron)) {
+		$cron = new cron();
+		$cron->setClass('Freebox_OS');
+		$cron->setFunction('FreeboxPUT');
+		$cron->setEnable(1);
+		$cron->setDeamon(1);
+		//$cron->setDeamonSleepTime(1);
+		$cron->setSchedule('* * * * *');
+		$cron->setTimeout('1440');
+		$cron->save();
+	}
 	updateConfig();
 }
 function Freebox_OS_update()
 {
-
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (!is_object($cron)) {
+		$cron = new cron();
+		$cron->setClass('Freebox_OS');
+		$cron->setFunction('RefreshToken');
+		$cron->setEnable(1);
+		//$cron->setDeamon(1);
+		$cron->setSchedule('*/30 * * * *');
+		$cron->setTimeout('10');
+		$cron->save();
+	}
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+	if (!is_object($cron)) {
+		$cron = new cron();
+		$cron->setClass('Freebox_OS');
+		$cron->setFunction('FreeboxPUT');
+		$cron->setEnable(1);
+		$cron->setDeamon(1);
+		//$cron->setDeamonSleepTime(1);
+		$cron->setSchedule('* * * * *');
+		$cron->setTimeout('1440');
+		$cron->save();
+	}
 	updateConfig();
 
 	try {
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
-		$WifiEX = 0;
+		/*$WifiEX = 0;
 		foreach (eqLogic::byLogicalId('Wifi', 'Freebox_OS', true) as $eqLogic) {
 			$WifiEX = 1;
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Migration Wifi déjà faite (' . $WifiEX . ')');
@@ -21,56 +66,54 @@ function Freebox_OS_update()
 			$Wifi = Freebox_OS::AddEqLogic('Wifi', 'wifi', 'default', false, null, null);
 			$link_IA = $Wifi->getId();
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Création Equipement WIFI -- ID N° : ' . $link_IA);
-		}
+		}*/
 
-		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
+		log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
-		while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
-			$cron->remove();
-
-		$eqLogics = eqLogic::byType('Freebox_OS');
+		/*$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			if ($WifiEX != 1) {
 				UpdateLogicId($eqLogic, 'wifiOff', $link_IA); // Amélioration 20200616
-				UpdateLogicId($eqLogic, 'wifiOn', $link_IA); // Amélioration 20200616
-				UpdateLogicId($eqLogic, 'wifiStatut'); // Amélioration 20200820
 			}
-
 			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
-			removeLogicId($eqLogic, 'tx_use_rate_lte'); // Amélioration 20200831
-			removeLogicId($eqLogic, 'rx_used_rate_lte'); // Amélioration 20200831
-			removeLogicId($eqLogic, 'tx_max_rate_lte'); // Amélioration 20200831
-			removeLogicId($eqLogic, 'rx_max_rate_lte'); // Amélioration 20200831
-		}
+		}*/
 
-		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Changement de nom de certains équipements');
-		Freebox_OS::updateLogicalID(1, true);
+		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
+		$eq_version = '2';
+		Freebox_OS::updateLogicalID($eq_version, true);
+		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Update paramétrage Plugin tiles');
+		if ($eq_version === '2') {
+			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+					config::save('FREEBOX_TILES_CRON', '1', 'Freebox_OS');
+					Free_CreateTil::createTil('SetSettingTiles');
+				}
+			}
+		}
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {
 		$e = print_r($e, 1);
 		log::add('Freebox_OS', 'error', 'Freebox_OS update ERROR : ' . $e);
 	}
-	//resave eqLogics for new cmd:
-	try {
-		$eqs = eqLogic::byType('Freebox_OS');
-		foreach ($eqs as $eq) {
-			if ($eq->getConfiguration('type') == 'alarm_control') {
-				$eq->save();
-				break;
-			}
-		}
-	} catch (Exception $e) {
-		$e = print_r($e, 1);
-		log::add('Freebox_OS', 'error', 'Freebox update ERROR : ' . $e);
-	}
 }
 function Freebox_OS_remove()
 {
-	while (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshInformation')))
+	$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+	if (is_object($cron)) {
+		$cron->stop();
 		$cron->remove();
-	if (is_object($cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken')))
+	}
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+	if (is_object($cron)) {
+		$cron->stop();
 		$cron->remove();
+	}
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+	if (is_object($cron)) {
+		$cron->stop();
+		$cron->remove();
+	}
 }
 
 function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = null, $_calculValueOffset = null, $_historizeRound = null)

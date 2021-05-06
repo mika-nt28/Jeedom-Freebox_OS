@@ -215,7 +215,8 @@ if (!isConnect('admin')) {
                 <center>
                     <a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif" title="{{Lancer la vérification des droits}}">{{Vérification des droits}} <i class="fas fa-balance-scale"></i>
                     </a><a id="bt_Freebox_OS" class="btn btn-sm btn-default bt_Freebox_OS" target='_blank' href='http://mafreebox.freebox.fr'><i class="far fa-hand-point-right"></i> {{Ouvrir Interface Freebox}}
-                    </a></center>
+                    </a>
+                </center>
                 <br />
                 <table id="table_packages" class="table table-condensed">
                     <thead>
@@ -230,9 +231,9 @@ if (!isConnect('admin')) {
                     </thead>
                     <tbody>
                         <tr>
-                            <td>Parental</td>
+                            <td><b>Parental</b></td>
                             <td id="parental" class="alert-danger">NOK</td>
-                            <td>{{Accès au contrôle parental (obsolète}})</td>
+                            <td>{{Accès au contrôle parental}}</td>
                             <td>TV</td>
                             <td id="tv" class="alert-danger">NOK</td>
                             <td>{{Accès au guide TV}}</td>
@@ -278,7 +279,7 @@ if (!isConnect('admin')) {
                             <td>{{Programmation des enregistrements}}</td>
                         </tr>
                         <tr>
-                            <td>VM</td>
+                            <td><b>VM</b></td>
                             <td id="vm" class="alert-danger">NOK</td>
                             <td>{{Contrôle de la VM</td>
                             <td><b>Download</b></td>
@@ -313,24 +314,34 @@ if (!isConnect('admin')) {
                         <br>
                         <i>{{Uniquement sur la Freebox Delta}}</i>
                     </div>
-                </center>
+                    <br>
+                    <fieldset>
+                        <div class="form-group col-xs-6">
+                            <label class="col-xs-6 control-label roundedLeft">{{Actualisation Globale des Tiles :}}</label>
+                            <div class="col-xs-2">
+                                <input id="checkbox_freeboxTiles" type="checkbox" class="configKey checkbox_freeboxTiles" data-l1key="FREEBOX_TILES_CRON" />
+                            </div>
+                        </div>
+                        <br />
+                    </fieldset>
+                    </form>
 
-                <table id="table_room" class="table table-condensed">
-                    <thead>
-                        <tr>
-                            <th style="width: 320px">{{Pièce Freebox}}</th>
-                            <th>{{Objets Jeedom}}</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-                <br />
-                <br />
-                <center>
-                    <div class="alert alert-info">{{Une fois lié, cliquez sur le bouton Sauvegarder}}</div>
+                    <table id="table_room" class="table table-condensed">
+                        <thead>
+                            <tr>
+                                <th style="width: 320px">{{Pièce Freebox}}</th>
+                                <th>{{Objets Jeedom}}</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                        </tbody>
+                    </table>
+                    <br />
+                    <br />
+                    <center>
+                        <div class="alert alert-info">{{Une fois lié, cliquez sur le bouton Sauvegarder}}</div>
+                    </center>
                 </center>
-            </center>
         </div>
         <div class="Freebox_OS_Display scan" style="display:none;">
             <div class="input-group pull-right" style="display:inline-flex;">

@@ -245,10 +245,12 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 	$icon = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
 	$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
 	$icon_type2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
+	setupCron($icon,$icon_type);
 	switch ($icon) {
 		case 'airmedia':
 		case 'connexion':
 		case 'downloads':
+		case 'homeadapters':
 		case 'LCD':
 		case 'system':
 		case 'disk':
@@ -261,21 +263,28 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
 			break;
 		default:
-			if ($icon_type2 === 'dws') {
-				$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
-			}
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
 			break;
 	}
-
-	var template = $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value();
-
-	if (template === 'network' || template === 'networkwifiguest') {
-		$('.IPV').show();
-	} else {
-		$('.IPV').hide();
-	}
 });
+$('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').on('change', function () {
+	$icon_type2 = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').value();
+	$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
+	switch ($icon_type2) {
+		case 'kfb':
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
+			break;
+		case 'dws':
+		case 'plug':
+		case 'opener':
+		case 'basic_shutter':
+		case 'shutter':
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type2 + '.png');
+			break;
+	}
+
+});
+
 
 setupPage();
 /*
@@ -340,9 +349,6 @@ function addCmdToTable(_cmd) {
 	if ((init(_cmd.type) == 'action' && init(_cmd.subType) == 'slider')) {
 		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertslide"/>{{Inverser Curseur}}</label></span> ';
 	}
-	if ((init(_cmd.type) == 'info' && init(_cmd.subType) == 'numeric' && (init(_cmd.logicalId) == '2' || init(_cmd.logicalId) == '3'))) {
-		tr += '<span><label class="checkbox-inline"><input type="checkbox" class="cmdAttr" data-l1key="configuration" data-l2key="invertnumeric"/>{{Inverser Valeur}}</label></span> ';
-	}
 	tr += '</td>';
 	tr += '<td style="min-width:200px;">';
 	tr += '<input class="cmdAttr form-control input-sm" data-l1key="configuration" data-l2key="minValue" placeholder="{{Min.}}" title="{{Min.}}" style="width:30%;display:inline-block;"/> ';
@@ -377,6 +383,62 @@ function addCmdToTable(_cmd) {
    
 	jeedom.cmd.changeType($('#table_cmd tbody tr').last(), init(_cmd.subType));
 
+}
+function setupCron($icon,$icon_type) {
+	$.ajax({
+		type: "POST",
+		url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+		data: {
+			action: "GetSettingTiles",
+		},
+		dataType: 'json',
+		error: function (request, status, error) {
+			handleAjaxError(request, status, error);
+		},
+		success: function (data) {
+			result = data.result.CronTiles;
+			console.log('Type : ' + $icon +' Type 2 : ' + $icon_type);
+			if ($icon_type === 'VM'|| $icon_type === 'parental'|| $icon_type === 'player') {
+				$icon = $icon_type ;
+			}
+			$('.IPV').hide();
+			$('#CRON_TILES').show();
+			$('#CRON_TILES_INFO').hide();
+			switch ($icon) {
+				case 'network':
+				case 'networkwifiguest':
+					$('#CRON_TILES').show();
+					$('#CRON_TILES_INFO').hide();
+					$('.IPV').show();
+					break;
+				case 'airmedia':
+				case 'connexion':
+				case 'downloads':
+				case 'homeadapters':
+				case 'LCD':
+				case 'system':
+				case 'disk':
+				case 'phone':
+				case 'wifi':
+				case 'parental':
+				case 'player':
+				case 'netshare':
+				case 'VM':
+					$('.IPV').hide();
+					$('#CRON_TILES').show();
+					$('#CRON_TILES_INFO').hide();
+					break;
+				default:
+					$('.IPV').hide();
+					console.log('CRON TILES : ' + result)
+					if (result == "1") {
+						$('#CRON_TILES').hide();
+						$('#CRON_TILES_INFO').show();
+					}
+					break;
+			}
+		}
+	});
 }
 
 function setupPage() {

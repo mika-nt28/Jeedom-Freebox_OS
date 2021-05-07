@@ -48,6 +48,8 @@ $('.bt_Freebox_droitVerif').on('click', function () {
 $('.bt_Freebox_OS_ResetConfig').on('click', function () {
     logs('debug', "================= Reset de la configuration");
     SetDefaultSetting();
+    GetSetting();
+    $('.bt_Freebox_OS_Next').show();
 });
 
 $('.bt_Freebox_Room').on('click', function () {
@@ -368,8 +370,10 @@ function GetSetting() {
                     message: 'Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage',
                     level: 'danger'
                 });
+            } else {
+                $('.textFreebox').text('');
+                $('.Freebox_OK_NEXT').show();
             }
-
             if (data.result.LogLevel == 100) {
                 var debugHides = document.getElementsByClassName('debugFreeOS');
                 for (var i = 0; i < debugHides.length; i++) {
@@ -444,6 +448,7 @@ function SetSettingTiles(CronTiles) {
         },
         success: function (data) {
             GetSetting();
+            $('.Freebox_OK_NEXT').show();
         }
     });
 }

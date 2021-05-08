@@ -569,10 +569,10 @@ class Free_API
                 $config_log = 'Mise à jour de : ';
                 break;
         }
-        if ($parametre === 1) {
-            $parametre = true;
-        } elseif ($parametre === 0) {
-            $parametre = false;
+        if ($parametre['value_type'] === 'bool' && $parametre['value'] === 1) {
+            $parametre['value'] = 'true';
+        } elseif ($parametre['value_type'] === 'bool' && $parametre['value'] === 0) {
+            $parametre['value'] = 'false';
         }
         if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);

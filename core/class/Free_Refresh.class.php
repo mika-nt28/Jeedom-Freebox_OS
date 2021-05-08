@@ -717,6 +717,7 @@ class Free_Refresh
     private static function refresh_system_lang($Equipement, $Free_API)
     {
         $result = $Free_API->universal_get('universalAPI', null, null, 'lang');
+        $result_config2 = $Free_API->universal_get('universalAPI', null, null, 'notif/targets');
         if ($result != false || isset($result['result']) != false) {
             foreach ($Equipement->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -772,7 +773,7 @@ class Free_Refresh
                                     $cmd = $EqLogic->getCmd('info', $_cmd_id);
                                     if (is_object($cmd)) {
                                         if ($cmd->getConfiguration('TypeNode') == 'nodes') {
-                                            if ($EqLogic->getConfiguration('type2') == 'pir' || $EqLogic->getConfiguration('type2') == 'kfb' || $EqLogic->getConfiguration('type2') == 'dws' || $EqLogic->getConfiguration('type2') == 'alarm' || $EqLogic->getConfiguration('type') == 'camera'  || $EqLogic->getConfiguration('type2') == 'basic_shutter' || $EqLogic->getConfiguration('type2') == 'opener' || $Equipement['category'] == 'shutter'  || $EqLogic->getConfiguration('type2') == 'light') {
+                                            if ($EqLogic->getConfiguration('type2') == 'pir' || $EqLogic->getConfiguration('type2') == 'kfb' || $EqLogic->getConfiguration('type2') == 'dws' || $EqLogic->getConfiguration('type2') == 'alarm' || $EqLogic->getConfiguration('type') == 'camera'  || $EqLogic->getConfiguration('type2') == 'basic_shutter' || $EqLogic->getConfiguration('type2') == 'opener' || $Equipement['category'] == 'shutter'  || $EqLogic->getConfiguration('type') == 'light') {
                                                 Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, false);
                                             }
                                         } else {
@@ -942,7 +943,7 @@ class Free_Refresh
                 }
             }
         }
-        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type2') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb' || $Equipement->getConfiguration('type2') == 'basic_shutter' || $Equipement->getConfiguration('type2') == 'light') {
+        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type2') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb' || $Equipement->getConfiguration('type2') == 'basic_shutter') {
             Free_Refresh::refresh_titles_nodes($Equipement, $Free_API, $data['ep_id']);
         }
     }

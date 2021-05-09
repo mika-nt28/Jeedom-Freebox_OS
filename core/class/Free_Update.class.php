@@ -375,9 +375,16 @@ class Free_Update
         //$_execute = 1;
         switch ($logicalId_type) {
             case 'slider':
-                if ($_cmd->getConfiguration('invertslide')) {
-                    log::add('Freebox_OS', 'debug', '│ Inverse Slider ');
-                    $parametre['value'] = ($_cmd->getConfiguration('maxValue') - $_cmd->getConfiguration('minValue')) - $_options['slider'];
+                if ($_cmd->getConfiguration('invertslide') == 1) {
+                    log::add('Freebox_OS', 'debug', '│ Option ETAT Inverser Curseur ACTIVE');
+                    if ($_options['slider'] === $_cmd->getConfiguration('maxValue')) {
+                        $parametre['value'] = $_cmd->getConfiguration('minValue');
+                    } else if ($_options['slider'] === $_cmd->getConfiguration('minValue')) {
+                        $parametre['value'] = $_cmd->getConfiguration('maxValue');
+                    } else {
+                        $parametre['value'] = ($_cmd->getConfiguration('maxValue') - $_cmd->getConfiguration('minValue')) - $_options['slider'];
+                    }
+                    //$parametre['value'] = ($_cmd->getConfiguration('maxValue') - $_cmd->getConfiguration('minValue')) - $_options['slider'];
                 } else {
                     $parametre['value'] = (int) $_options['slider'];
                 }
@@ -385,7 +392,7 @@ class Free_Update
 
                 $action = $logicalId_eq->getConfiguration('action');
                 $type = $logicalId_eq->getConfiguration('type');
-                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- valeur Inversé  : ' . $_cmd->getConfiguration('invertslide') . ' -- valeur  : ' . $parametre['value'] . ' -- valeur slider : ' . $_options['slider']);
+                log::add('Freebox_OS', 'debug', '│ type : ' . $type . ' -- action : ' . $action . ' -- valeur type : ' . $parametre['value_type'] . ' -- Etat Option Inverser  : ' . $_cmd->getConfiguration('invertslide') . ' -- valeur  : ' . $parametre['value'] . ' -- valeur slider : ' . $_options['slider']);
                 if ($action == 'intensity_picker' || $action == 'color_picker') {
                     // $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
                     /*if ($cmd !== false) {

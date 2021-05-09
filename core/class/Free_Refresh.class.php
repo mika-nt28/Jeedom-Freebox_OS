@@ -811,8 +811,14 @@ class Free_Refresh
 
         switch ($cmd->getSubType()) {
             case 'numeric':
-                if ($cmd->getDisplay('invertBinary')) {
-                    $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
+                if ($cmd->getDisplay('invertBinary') == 1) {
+                    if ($data['value'] === $cmd->getConfiguration('maxValue')) {
+                        $_value = $cmd->getConfiguration('minValue');
+                    } else if ($data['value'] === $cmd->getConfiguration('minValue')) {
+                        $_value = $cmd->getConfiguration('maxValue');
+                    } else {
+                        $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
+                    }
                 } else {
                     if ($data['name'] == 'pushed') {
                         $_value = $_value_history;
@@ -825,7 +831,7 @@ class Free_Refresh
                     }
                 }
                 if ($log_result == true) {
-                    log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- valeur Inverser = ' . $cmd->getConfiguration('invertnumeric'));
+                    log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $cmd->getDisplay('invertBinary'));
                 }
                 break;
             case 'string':

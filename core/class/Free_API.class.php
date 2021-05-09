@@ -471,7 +471,7 @@ class Free_API
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
 
-                $jsontestprofile = $this->fetch("/api/v8/network_control" . $id);
+                $jsontestprofile = $this->fetch("/api/v8/network_control/" . $id);
                 $jsontestprofile = $jsontestprofile['result'];
                 if ($parametre == "denied") {
                     $jsontestprofile['override_until'] = 0;
@@ -491,7 +491,7 @@ class Free_API
                     $jsontestprofile['override'] = false;
                 }
                 $parametre = $jsontestprofile;
-                $config = "api/v8/network_control" . $id;
+                $config = "api/v8/network_control/" . $id;
                 break;
             case 'player_ID_ctrl':
                 $config = 'api/v8/player' . $id . '/api/v6/control/mediactrl';
@@ -569,10 +569,10 @@ class Free_API
                 $config_log = 'Mise à jour de : ';
                 break;
         }
-        if ($parametre === 1) {
-            $parametre = true;
-        } elseif ($parametre === 0) {
-            $parametre = false;
+        if ($parametre['value_type'] === 'bool' && $parametre['value'] === 1) {
+            $parametre['value'] = 'true';
+        } elseif ($parametre['value_type'] === 'bool' && $parametre['value'] === 0) {
+            $parametre['value'] = 'false';
         }
         if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);

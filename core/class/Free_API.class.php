@@ -471,7 +471,7 @@ class Free_API
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
 
-                $jsontestprofile = $this->fetch("/api/v8/network_control" . $id);
+                $jsontestprofile = $this->fetch("/api/v8/network_control/" . $id);
                 $jsontestprofile = $jsontestprofile['result'];
                 if ($parametre == "denied") {
                     $jsontestprofile['override_until'] = 0;

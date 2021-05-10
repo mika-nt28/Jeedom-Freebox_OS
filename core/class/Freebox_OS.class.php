@@ -165,7 +165,7 @@ class Freebox_OS extends eqLogic
 		$cron->halt();
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
-			throw new Exception(__('Tache cron introuvable', __FILE__));
+			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		}
 		$cron->halt();
 		cache::set("actionlist ", null);
@@ -174,7 +174,7 @@ class Freebox_OS extends eqLogic
 			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
 				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 				if (!is_object($cron)) {
-					throw new Exception(__('Tache cron introuvable', __FILE__));
+					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				}
 				$cron->halt();
 			}

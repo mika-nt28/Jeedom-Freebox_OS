@@ -573,6 +573,10 @@ class Free_API
             $parametre['value'] = 'true';
         } elseif ($parametre['value_type'] === 'bool' && $parametre['value'] === 0) {
             $parametre['value'] = 'false';
+        } elseif ($parametre == '0') {
+            $parametre = false;
+        } elseif ($parametre == '1') {
+            $parametre = true;
         }
         if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);

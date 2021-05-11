@@ -775,13 +775,13 @@ class Free_CreateTil
         switch ($Search) {
             case 'shutter_toggle_w_nodes':
                 // Toggle DOWN
-                $Generic_type2 = 'FLAP_DOWN';
+                $Generic_type2 = ''; //'FLAP_DOWN';
                 $Icon2 = 'fas fa-arrow-down icon_green';
                 $Label_2 = 'Bas - Fermée';
                 $_Cmd_ep_id2 = 'PB_DOWN' . $_Cmd_ep_id;
                 $Order2 = 89;
                 // Toggle UP
-                $Generic_type = 'FLAP_UP';
+                $Generic_type = ''; //'FLAP_UP';
                 $Icon = 'fas fa-arrow-up icon_green';
                 $Label_O = 'Haut - Ouvert';
                 $_Cmd_ep_id = 'PB_UP' . $_Cmd_ep_id;

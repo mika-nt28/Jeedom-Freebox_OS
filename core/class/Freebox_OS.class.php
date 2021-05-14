@@ -359,9 +359,11 @@ class Freebox_OS extends eqLogic
 			}
 			if ($_iconname != null) {
 				$Command->setdisplay('showIconAndNamedashboard', 1);
+				$Command->setdisplay('showIconAndNamemobile', 1);
 			}
 			if ($_noiconname != null) {
 				$Command->setdisplay('showNameOndashboard', 0);
+				$Command->setdisplay('showNameOnmobile', 0);
 			}
 			if ($_calculValueOffset != null) {
 				$Command->setConfiguration('calculValueOffset', $_calculValueOffset);

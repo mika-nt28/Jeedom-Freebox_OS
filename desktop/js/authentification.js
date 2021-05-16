@@ -402,7 +402,7 @@ function GetSettingTiles() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            if (data.result.CronTiles === '0') {
+            if (data.result.CronTiles == 0) {
                 logs('debug', "================= Cron Global Titles ACTIVATION : NOK");
                 console.log('Cron Global Titles ACTIVATION - FALSE - : ' + data.result.CronTiles);
                 $('.checkbox_freeboxTiles').prop('checked', false);

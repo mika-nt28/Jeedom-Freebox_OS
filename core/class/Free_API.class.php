@@ -339,6 +339,7 @@ class Free_API
                 break;
             case 'universalAPI':
                 $config = 'api/v8/' . $update_type . $id;
+                $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network_ID':
                 $config = 'api/v8/lan/browser/' . $update_type  . $id;

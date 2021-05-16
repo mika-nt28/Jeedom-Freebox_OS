@@ -113,9 +113,6 @@ try {
 			ajax::success($result);
 			break;
 		case 'GetSettingTiles':
-			if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
-				config::save('FREEBOX_TILES_CRON', '1', 'Freebox_OS');
-			}
 			$result = array(
 				"CronTiles" => config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'),
 			);

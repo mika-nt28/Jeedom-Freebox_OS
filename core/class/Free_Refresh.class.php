@@ -892,6 +892,9 @@ class Free_Refresh
                 };
 
                 if ($data['ui']['display'] == 'color') {
+                    $color = Free_Color::hexToRgb($data['value']);
+                    //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
+                    //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);
                     //$color = dechex($data['value']);
                     //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
                     //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);

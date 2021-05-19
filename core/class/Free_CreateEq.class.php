@@ -816,8 +816,8 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 13, '0', $updateicon, false);
         // Wifi WPS
         $WifiWPS = $Wifi->AddCommand('Etat WPS', 'wifiWPS', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 3, $updateicon, true);
-        $Wifi->AddCommand('Wifi WPS On', 'wifiWPSOn', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOn, 0, 'default', 'default', 14, '0', $updateicon, false);
-        $Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
+        //$Wifi->AddCommand('Wifi WPS On', 'wifiWPSOn', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOn, 0, 'default', 'default', 14, '0', $updateicon, false);
+        //$Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
         log::add('Freebox_OS', 'debug', '└─────────');
         Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi);
         Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi);
@@ -869,7 +869,7 @@ class Free_CreateEq
             $iconWifiSessionWPSOff = 'fas fa-link icon_red';
         };
         $order = 30;
-        $Wifi->AddCommand('Wifi Session WPS Off (toutes les sessions)', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
+        $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
         $order++;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('wifi', null, null, 'bss');
@@ -877,9 +877,9 @@ class Free_CreateEq
             foreach ($result['result'] as $wifibss) {
                 if ($wifibss['config']['wps_enabled'] != true) continue;
                 if ($wifibss['config']['use_default_config'] == true) {
-                    $WPSname = 'On Session WPS ' . $wifibss['shared_bss_params']['ssid'];
+                    $WPSname = 'Wifi Session WPS (' . $wifibss['shared_bss_params']['ssid'] . ') On';
                 } else {
-                    $WPSname = 'On Session WPS ' . $wifibss['config']['ssid'];
+                    $WPSname = 'Wifi Session WPS (' . $wifibss['config']['ssid'] . ') On';
                 }
                 $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
                 if ($wifibss['config']['use_default_config'] == true) {

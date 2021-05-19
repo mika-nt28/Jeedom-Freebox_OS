@@ -873,16 +873,15 @@ class Free_CreateEq
         $order++;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('wifi', null, null, 'bss');
-
         if ($result != false) {
             foreach ($result['result'] as $wifibss) {
                 if ($wifibss['config']['wps_enabled'] != true) continue;
                 if ($wifibss['config']['use_default_config'] == true) {
-                    $nameWPS = 'On Session WPS ' . $wifibss['shared_bss_params']['ssid'];
+                    $WPSname = 'On Session WPS ' . $wifibss['shared_bss_params']['ssid'];
                 } else {
-                    $nameWPS = 'On Session WPS ' . $wifibss['config']['ssid'];
+                    $WPSname = 'On Session WPS ' . $wifibss['config']['ssid'];
                 }
-                $Wifi->AddCommand($nameWPS, $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
+                $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
                 if ($wifibss['config']['use_default_config'] == true) {
                     log::add('Freebox_OS', 'debug', '│──────────> Configuration Wifi commune pour l\'ensemble des cartes');
                     break;

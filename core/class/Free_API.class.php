@@ -540,6 +540,7 @@ class Free_API
                     $config_commande = 'bssid';
                 } else if ($_options == 'wps/stop') {
                     $fonction = "POST";
+                    $config_commande = 'session_id';
                 } else if ($_options == 'mac_filter') {
                     $fonction = $id['function'];
                     if ($fonction != 'POST') {
@@ -577,7 +578,9 @@ class Free_API
         } elseif ($parametre == '0') {
             $parametre = false;
         } elseif ($parametre == '1') {
-            $parametre = true;
+            if ($_options != 'wps/stop') {
+                $parametre = true;
+            }
         }
         if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);

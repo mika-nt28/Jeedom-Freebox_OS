@@ -361,7 +361,8 @@ class Free_Update
                     break;
                 case 'wifiSessionWPSOff':
                 case 'wifiWPSOff':
-                    $Free_API->universal_put(0, 'wifi', null, null, 'wps/stop');
+                    $parametre = 1;
+                    $Free_API->universal_put($parametre, 'wifi', null, null, 'wps/stop');
                     break;
                 default:
                     $Free_API->universal_put($logicalId, 'wifi', null, null, 'wps/start');

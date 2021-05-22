@@ -99,7 +99,7 @@ function autorisationFreebox() {
                     level: 'danger'
                 });
                 if (data.result.error_code == "new_apps_denied")
-                    $('.textFreebox').text('L\'association de nouvelles applications est désactivée.Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
+                    $('.textFreebox').text('L\'association de nouvelles applications est désactivée. Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
                 logs('error', "L\'association de nouvelles applications est désactivée ou la version du Freebox Server n'est pas correct");
                 return;
             } else {
@@ -402,7 +402,7 @@ function GetSettingTiles() {
             handleAjaxError(request, status, error);
         },
         success: function (data) {
-            if (data.result.CronTiles === '0') {
+            if (data.result.CronTiles == 0) {
                 logs('debug', "================= Cron Global Titles ACTIVATION : NOK");
                 console.log('Cron Global Titles ACTIVATION - FALSE - : ' + data.result.CronTiles);
                 $('.checkbox_freeboxTiles').prop('checked', false);

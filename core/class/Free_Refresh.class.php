@@ -811,8 +811,14 @@ class Free_Refresh
 
         switch ($cmd->getSubType()) {
             case 'numeric':
-                if ($cmd->getDisplay('invertBinary')) {
-                    $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
+                if ($cmd->getDisplay('invertBinary') == 1) {
+                    if ($data['value'] === $cmd->getConfiguration('maxValue')) {
+                        $_value = $cmd->getConfiguration('minValue');
+                    } else if ($data['value'] === $cmd->getConfiguration('minValue')) {
+                        $_value = $cmd->getConfiguration('maxValue');
+                    } else {
+                        $_value = ($cmd->getConfiguration('maxValue') - $cmd->getConfiguration('minValue')) - $data['value'];
+                    }
                 } else {
                     if ($data['name'] == 'pushed') {
                         $_value = $_value_history;
@@ -825,7 +831,7 @@ class Free_Refresh
                     }
                 }
                 if ($log_result == true) {
-                    log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- valeur Inverser = ' . $cmd->getConfiguration('invertnumeric'));
+                    log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $cmd->getDisplay('invertBinary'));
                 }
                 break;
             case 'string':
@@ -886,6 +892,9 @@ class Free_Refresh
                 };
 
                 if ($data['ui']['display'] == 'color') {
+                    $color = Free_Color::hexToRgb($data['value']);
+                    //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
+                    //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);
                     //$color = dechex($data['value']);
                     //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
                     //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);
@@ -943,7 +952,7 @@ class Free_Refresh
                 }
             }
         }
-        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type2') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb' || $Equipement->getConfiguration('type2') == 'basic_shutter') {
+        if ($Equipement->getConfiguration('type2') == 'pir' || $Equipement->getConfiguration('type2') == 'dws' || $Equipement->getConfiguration('type') == 'camera' || $Equipement->getConfiguration('type2') == 'alarm' || $Equipement->getConfiguration('type2') == 'kfb' || $Equipement->getConfiguration('type2') == 'shutter' || $Equipement->getConfiguration('type2') == 'basic_shutter') {
             Free_Refresh::refresh_titles_nodes($Equipement, $Free_API, $data['ep_id']);
         }
     }

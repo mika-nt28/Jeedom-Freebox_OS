@@ -342,28 +342,17 @@ class Free_CreateEq
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
             $iconbrightness = 'fas fa-adjust';
-            $iconWifi = 'fas fa-wifi';
-            $iconWifiOn = 'fas fa-wifi';
-            $iconWifiOff = 'fas fa-wifi';
             $iconorientation = 'fas fa-map-signs';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $iconbrightness = 'fas fa-adjust icon_green';
-            $iconWifi = 'fas fa-wifi';
-            $iconWifiOn = 'fas fa-wifi icon_green';
-            $iconWifiOff = 'fas fa-wifi icon_red';
             $iconorientation = 'fas fa-map-signs icon_green';
         };
-        // Affichage Clef Wifi
-        //$StatusWifi = $LCD->AddCommand('Etat Clef Wifi', 'hide_wifi_key', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, $iconWifi, 'default', 10, 1, $updateicon, true, false, true);
-        //$LCD->AddCommand('Affichage Clef Wifi On', 'hide_wifi_keyOn', 'action', 'other', null, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 11, '0', $updateicon, false, null, true);
-        //$LCD->AddCommand('Affichage Clef Wifi Off', 'hide_wifi_keyOff', 'action', 'other', null, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 12, '0', $updateicon, false, null, true);
-        // Affichage Luminosité 
-        $StatusWifi = $LCD->AddCommand('Etat Lumininosité écran LCD', 'brightness', "info", 'numeric', null, '%', null, 0, '', '', '', $iconbrightness, 0, '0', 100, 20, 2, $updateicon, true, false, true);
-        $LCD->AddCommand('Lumininosité écran LCD', 'brightness', 'action', 'slider', null, '%', null, 1, $StatusWifi, 'default', 0, $iconbrightness, 0, '0', 100, 21, '0', $updateicon, false, null, true, null, 'floor(#value#)');
+        $StatusLCD = $LCD->AddCommand('Etat Lumininosité écran LCD', 'brightness', "info", 'numeric', null, '%', null, 0, '', '', '', $iconbrightness, 0, '0', 100, 20, 2, $updateicon, true, false, true);
+        $LCD->AddCommand('Lumininosité écran LCD', 'brightness', 'action', 'slider', null, '%', null, 1, $StatusLCD, 'default', 0, $iconbrightness, 0, '0', 100, 21, '0', $updateicon, false, null, true, null, 'floor(#value#)');
         // Affichage Orientation
-        $StatusWifi = $LCD->AddCommand('Etat Orientation', 'orientation', "info", 'string', null, null, null, 0, '', '', '', $iconorientation, 0, '0', 100, 30, 2, $updateicon, true, false, true);
-        $LCD->AddCommand('Orientation', 'orientation', 'action', 'select', null, null, null, 1, $StatusWifi, 'default', 0, $iconorientation, 0, '0', 100, 31, '0', $updateicon, false, null, true, null);
+        $StatusLCD = $LCD->AddCommand('Etat Orientation', 'orientation', "info", 'string', null, null, null, 0, '', '', '', $iconorientation, 0, '0', 100, 30, 2, $updateicon, true, false, true);
+        $LCD->AddCommand('Orientation', 'orientation', 'action', 'select', null, null, null, 1, $StatusLCD, 'default', 0, $iconorientation, 0, '0', 100, 31, '0', $updateicon, false, null, true, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -827,8 +816,8 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 13, '0', $updateicon, false);
         // Wifi WPS
         $WifiWPS = $Wifi->AddCommand('Etat WPS', 'wifiWPS', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 3, $updateicon, true);
-        $Wifi->AddCommand('Wifi WPS On', 'wifiWPSOn', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOn, 0, 'default', 'default', 14, '0', $updateicon, false);
-        $Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
+        //$Wifi->AddCommand('Wifi WPS On', 'wifiWPSOn', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOn, 0, 'default', 'default', 14, '0', $updateicon, false);
+        //$Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
         log::add('Freebox_OS', 'debug', '└─────────');
         Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi);
         Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi);
@@ -880,15 +869,19 @@ class Free_CreateEq
             $iconWifiSessionWPSOff = 'fas fa-link icon_red';
         };
         $order = 30;
-        $Wifi->AddCommand('Wifi Session WPS Off (toutes les sessions)', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
+        $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
         $order++;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('wifi', null, null, 'bss');
-
         if ($result != false) {
             foreach ($result['result'] as $wifibss) {
                 if ($wifibss['config']['wps_enabled'] != true) continue;
-                $Wifi->AddCommand('On Session WPS ' . $wifibss['shared_bss_params']['ssid'], $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
+                if ($wifibss['config']['use_default_config'] == true) {
+                    $WPSname = 'Wifi Session WPS (' . $wifibss['shared_bss_params']['ssid'] . ') On';
+                } else {
+                    $WPSname = 'Wifi Session WPS (' . $wifibss['config']['ssid'] . ') On';
+                }
+                $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
                 if ($wifibss['config']['use_default_config'] == true) {
                     log::add('Freebox_OS', 'debug', '│──────────> Configuration Wifi commune pour l\'ensemble des cartes');
                     break;

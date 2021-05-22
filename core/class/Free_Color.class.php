@@ -21,6 +21,13 @@ require_once __DIR__  . '/../../../../core/php/core.inc.php';
 class Free_Color
 {
 
+	public static function hexToRgb($hex)
+	{
+		list($r, $g, $b) = sscanf($hex, "#%02x%02x%02x");
+		$return = [$r, $g, $b];
+		return $return;
+	}
+
 	/**
 	 * Converts RGB values to XY values
 	 * Based on: http://stackoverflow.com/a/22649803

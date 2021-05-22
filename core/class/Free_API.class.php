@@ -339,6 +339,7 @@ class Free_API
                 break;
             case 'universalAPI':
                 $config = 'api/v8/' . $update_type . $id;
+                $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network_ID':
                 $config = 'api/v8/lan/browser/' . $update_type  . $id;
@@ -539,6 +540,7 @@ class Free_API
                     $config_commande = 'bssid';
                 } else if ($_options == 'wps/stop') {
                     $fonction = "POST";
+                    $config_commande = 'session_id';
                 } else if ($_options == 'mac_filter') {
                     $fonction = $id['function'];
                     if ($fonction != 'POST') {
@@ -573,6 +575,12 @@ class Free_API
             $parametre['value'] = 'true';
         } elseif ($parametre['value_type'] === 'bool' && $parametre['value'] === 0) {
             $parametre['value'] = 'false';
+        } elseif ($parametre == '0') {
+            $parametre = false;
+        } elseif ($parametre == '1') {
+            if ($_options != 'wps/stop') {
+                $parametre = true;
+            }
         }
         if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);

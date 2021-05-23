@@ -127,6 +127,11 @@ class Freebox_OS extends eqLogic
 			$return['state'] = 'nok';
 			return $return;
 		}
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron)) {
+			$return['state'] = 'nok';
+			return $return;
+		}
 		return $return;
 	}
 	public static function deamon_start($_debug = false)
@@ -170,15 +175,15 @@ class Freebox_OS extends eqLogic
 		$cron->halt();
 		cache::set("actionlist ", null);
 
-		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
-			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
-				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
-				if (!is_object($cron)) {
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+		if (!is_object($cron)) {
+			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+				if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == '1') {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				}
-				$cron->halt();
 			}
 		}
+		$cron->halt();
 
 		$Free_API = new Free_API();
 		$Free_API->close_session();

@@ -916,7 +916,16 @@ class Free_Refresh
                 */
                     $_value = $data['value'];
                 } else {
-                    $_value = $data['value'];
+                    if ($data['name'] == 'error' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
+                        if ($data['value'] == null) {
+                            $_value = 'Pas de message d\'erreur';
+                            if ($log_result == true) {
+                                log::add('Freebox_OS', 'debug', '│──────────> Update commande spécifique Message erreur : ' . $EqLogic->getConfiguration('type') . ' -- ' . $data['value']);
+                            }
+                        }
+                    } else {
+                        $_value = $data['value'];
+                    }
                 }
                 break;
             case 'binary':

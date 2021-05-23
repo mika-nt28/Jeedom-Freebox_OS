@@ -602,6 +602,20 @@ class Freebox_OS extends eqLogic
 			self::deamon_stop();
 			log::add('Freebox_OS', 'debug', '[REFRESH TOKEN] : FALSE / ' . $Free_API->getFreeboxOpenSession());
 		}
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
+		}
+		$cron->run();
+		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+				if (!is_object($cron)) {
+					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
+				}
+				$cron->run();
+			}
+		}
 		log::add('Freebox_OS', 'debug', '================= FIN REFRESH TOKEN  ==================');
 	}
 	public static function getlogicalinfo()

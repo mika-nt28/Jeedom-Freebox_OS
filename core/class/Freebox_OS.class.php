@@ -605,6 +605,8 @@ class Freebox_OS extends eqLogic
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
+		} else {
+			$cron->run();
 		}
 		$cron->run();
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
@@ -612,8 +614,9 @@ class Freebox_OS extends eqLogic
 				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 				if (!is_object($cron)) {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
+				} else {
+					$cron->run();
 				}
-				$cron->run();
 			}
 		}
 		log::add('Freebox_OS', 'debug', '================= FIN REFRESH TOKEN  ==================');

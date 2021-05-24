@@ -211,7 +211,7 @@ class Free_Update
     {
         switch ($logicalId) {
             case "search":
-                Free_CreateEq::createEq($network, false);
+                Free_CreateEq::createEq($network, true);
                 break;
             case "WakeonLAN":
                 if ($_options['mac_address'] == null) {

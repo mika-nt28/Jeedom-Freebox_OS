@@ -127,6 +127,11 @@ class Freebox_OS extends eqLogic
 			$return['state'] = 'nok';
 			return $return;
 		}
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron)) {
+			$return['state'] = 'nok';
+			return $return;
+		}
 		return $return;
 	}
 	public static function deamon_start($_debug = false)
@@ -171,7 +176,7 @@ class Freebox_OS extends eqLogic
 		cache::set("actionlist ", null);
 
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
-			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == '1') {
 				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 				if (!is_object($cron)) {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
@@ -310,7 +315,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
 
@@ -356,6 +361,9 @@ class Freebox_OS extends eqLogic
 			}
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
+			}
+			if ($forceLineA != null) {
+				$Command->setdisplay('forceReturnLineAfter', 1);
 			}
 			if ($_iconname != null) {
 				$Command->setdisplay('showIconAndNamedashboard', 1);
@@ -443,6 +451,9 @@ class Freebox_OS extends eqLogic
 
 			if ($forceLineB != null) {
 				$Command->setdisplay('forceReturnLineBefore', 1);
+			}
+			if ($forceLineA != null) {
+				$Command->setdisplay('forceReturnLineAfter', 1);
 			}
 
 			if ($_iconname != null) {
@@ -601,6 +612,22 @@ class Freebox_OS extends eqLogic
 		if ($Free_API->getFreeboxOpenSession() === false) {
 			self::deamon_stop();
 			log::add('Freebox_OS', 'debug', '[REFRESH TOKEN] : FALSE / ' . $Free_API->getFreeboxOpenSession());
+		}
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron)) {
+			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
+		} else {
+			$cron->run();
+		}
+		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+				if (!is_object($cron)) {
+					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
+				} else {
+					$cron->run();
+				}
+			}
 		}
 		log::add('Freebox_OS', 'debug', '================= FIN REFRESH TOKEN  ==================');
 	}

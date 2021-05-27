@@ -553,7 +553,6 @@ class Free_Refresh
     }
     private static function removeLogicId($eqLogic, $from)
     {
-
         //  suppression fonction
         $cmd = $eqLogic->getCmd(null, $from);
         if (is_object($cmd)) {

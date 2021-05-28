@@ -281,7 +281,7 @@ if (!isConnect('admin')) {
                         <tr>
                             <td><b>VM</b></td>
                             <td id="vm" class="alert-danger">NOK</td>
-                            <td>{{Contrôle de la VM</td>
+                            <td>{{Contrôle de la VM}}</td>
                             <td><b>Download</b></td>
                             <td id="downloader" class="alert-danger">NOK</td>
                             <td>{{Accès au gestionnaire de téléchargements}}</td>

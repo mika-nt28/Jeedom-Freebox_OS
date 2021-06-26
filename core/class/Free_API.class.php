@@ -460,7 +460,7 @@ class Free_API
                 break;
             case 'download':
                 $config = 'api/v8/downloads/throttling';
-                $config_commande = 'throttling';
+                $config_commande = $_options_2;
                 break;
             case 'notification_ID':
                 $config = 'api/v8/notif/targets/' . $id;

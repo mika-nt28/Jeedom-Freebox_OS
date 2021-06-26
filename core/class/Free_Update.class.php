@@ -171,6 +171,9 @@ class Free_Update
                     $parametre['is_scheduled'] = true;
                     $Free_API->universal_put($parametre, 'download', null, null, null);
                     break;
+                case 'mode_download':
+                    $Free_API->universal_put($_options['select'], 'download', null, null, null, null, 'throttling');
+                    break;
             }
         }
     }

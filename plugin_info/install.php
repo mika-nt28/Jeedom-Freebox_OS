@@ -73,9 +73,9 @@ function Freebox_OS_update()
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			if ($eqLogic == 'downloads') {
-				//updateLogicalId($eqLogic, ' schedule', 'schedule');
-				//removeLogicId($eqLogic, 'normal');
-				//removeLogicId($eqLogic, 'slow');
+				updateLogicalId($eqLogic, ' schedule', 'schedule');
+				removeLogicId($eqLogic, 'normal');
+				removeLogicId($eqLogic, 'slow');
 				removeLogicId($eqLogic, 'hibernate');
 			}
 		}

@@ -155,12 +155,15 @@ class Free_Update
                     break;
             }
         }
+        if ($logicalId == "schedule") {
+            log::add('Freebox_OS', 'debug', '>───────── TEST : ');
+        }
         if ($result != false) {
             switch ($logicalId) {
                 case "normal":
                 case "slow":
                 case "hibernate":
-                    $parametre['throttling'] = $logicalId;
+                    $parametre = $logicalId;
                     $Free_API->universal_put($parametre, 'download', null, null, null);
                     break;
                 case "schedule":

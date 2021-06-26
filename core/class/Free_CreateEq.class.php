@@ -335,7 +335,7 @@ class Free_CreateEq
         $downloads->AddCommand('Activer mode normal', 'normal', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Activer mode lent', 'slow', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsslow, 0, 'default', 'default',  21, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Activer mode Stop', 'hibernate', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadshibernate, 0, 'default', 'default',  22, '0', $updateicon, false, null, true);
-        $downloads->AddCommand('Activer mode Planning', ' schedule', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsschedule, 0, 'default', 'default',  23, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Activer mode Planning', 'schedule', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsschedule, 0, 'default', 'default',  23, '0', $updateicon, false, null, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_LCD($logicalinfo, $templatecore_V4)

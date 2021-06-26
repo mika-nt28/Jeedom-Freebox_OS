@@ -460,6 +460,7 @@ class Free_API
                 break;
             case 'download':
                 $config = 'api/v8/downloads/throttling';
+                $config_commande = 'throttling';
                 break;
             case 'notification_ID':
                 $config = 'api/v8/notif/targets/' . $id;
@@ -582,7 +583,7 @@ class Free_API
                 $parametre = true;
             }
         }
-        if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
+        if ($update == 'parental' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);
         } else if ($update == 'universal_put') {
             $return = $this->fetch('/' . $config,  $_options_2, $fonction, true, true);

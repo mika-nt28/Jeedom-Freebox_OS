@@ -70,13 +70,15 @@ function Freebox_OS_update()
 
 		log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
-		/*$eqLogics = eqLogic::byType('Freebox_OS');
+		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
-			if ($WifiEX != 1) {
-				UpdateLogicId($eqLogic, 'wifiOff', $link_IA); // Amélioration 20200616
+			if ($eqLogic == 'downloads') {
+				updateLogicalId($eqLogic, ' schedule', 'schedule');
+				removeLogicId($eqLogic, 'normal');
+				removeLogicId($eqLogic, 'slow');
+				removeLogicId($eqLogic, 'hibernate');
 			}
-			removeLogicId($eqLogic, 'wifiOnOff', $link_IA); // Amélioration 20200820
-		}*/
+		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
 		$eq_version = '2';

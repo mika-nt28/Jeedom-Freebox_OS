@@ -138,7 +138,7 @@ class Free_Refresh
                         case "ping": // toute la partie CONFIG
                             Free_Refresh::refresh_connexion_Config($Equipement, $Free_API);
                             break;
-                        case "link_type": // toute la partie Fibre
+                        case "sfp_present": // toute la partie Fibre
                             Free_Refresh::refresh_connexion_FTTH($Equipement, $Free_API);
                             break;
                         case "modulation": // toute la partie XDSL

@@ -185,11 +185,11 @@ class Free_CreateEq
         $Connexion->AddCommand('Proxy Wake on Lan', 'wol', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  10, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
         if ($result['sfp_present'] != null) {
-            Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4);
+            Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result);
         }
         log::add('Freebox_OS', 'debug', '│──────────> ' . $_modul);
     }
-    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
 
@@ -200,7 +200,11 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         };
         $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
-        $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateicon, true);
+        if (isset($result['link_type'])) {
+            $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateicon, true);
+        } else {
+            log::add('Freebox_OS', 'debug', '│──────────>  Fonction type de connexion Fibre non présent');
+        }
         $Connexion->AddCommand('Module Fibre présent', 'sfp_present', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  21, '0', $updateicon, true);
         $Connexion->AddCommand('Signal Fibre présent', 'sfp_has_signal', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  22, '0', $updateicon, true);
         $Connexion->AddCommand('Etat Alimentation', 'sfp_alim_ok', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  23, '0', $updateicon, true);
@@ -288,12 +292,8 @@ class Free_CreateEq
             $iconRSSnb = 'fas fa-rss';
             $iconRSSread = 'fas fa-rss-square';
             $iconconn_ready = 'fas fa-ethernet';
-            $iconthrottling_is_scheduled = 'far fa-calendar-alt';
             $Templatemode = 'default';
             $iconDownloadsnormal = 'fas fa-rocket';
-            $iconDownloadsslow = 'fas fa-download';
-            $iconDownloadshibernate = 'far fa-pause-circle';
-            $iconDownloadsschedule  = 'far fa-calendar-alt';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $iconDownloadsOn = 'fas fa-play icon_green';
@@ -301,12 +301,8 @@ class Free_CreateEq
             $iconRSSnb = 'fas fa-rss icon_green';
             $iconRSSread = 'fas fa-rss-square icon_orange';
             $iconconn_ready = 'fas fa-ethernet icon_green';
-            $iconthrottling_is_scheduled = 'far fa-calendar-alt icon_green';
             $Templatemode = 'Freebox_OS::Mode Téléchargement';
             $iconDownloadsnormal = 'fas fa-rocket icon_green';
-            $iconDownloadsslow = 'fas fa-download icon_green';
-            $iconDownloadshibernate = 'far fa-pause-circle icon_red';
-            $iconDownloadsschedule = 'far fa-calendar-alt icon_green';
         };
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true);
@@ -326,12 +322,11 @@ class Free_CreateEq
         $downloads->AddCommand('Nb de flux RSS', 'nb_rss', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSnb, 0, 'default', 'default',  15, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Nb de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSread, 0, 'default', 'default',  16, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true, null, true);
-        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconthrottling_is_scheduled, 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
-        $downloads->AddCommand('Mode Téléchargement', 'mode', 'info', 'string', $Templatemode, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, true);
-        $downloads->AddCommand('Activer mode normal', 'normal', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true);
-        $downloads->AddCommand('Activer mode lent', 'slow', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsslow, 0, 'default', 'default',  21, '0', $updateicon, false, null, true);
-        $downloads->AddCommand('Activer mode Stop', 'hibernate', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadshibernate, 0, 'default', 'default',  22, '0', $updateicon, false, null, true);
-        $downloads->AddCommand('Activer mode Planning', ' schedule', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsschedule, 0, 'default', 'default',  23, '0', $updateicon, false, null, true);
+        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, 'default', 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
+        $action = $downloads->AddCommand('Mode Téléchargement', 'mode', 'info', 'string', $Templatemode, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, true);
+        $listValue = 'normal|Mode normal;slow|Mode lent;hibernate|Mode Stop;schedule|Mode Planning';
+        $downloads->AddCommand('Choix Mode Téléchargement', 'mode_download', 'action', 'select', null, null, null, 1, $action, 'mode', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
+
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_LCD($logicalinfo, $templatecore_V4)
@@ -352,7 +347,8 @@ class Free_CreateEq
         $LCD->AddCommand('Lumininosité écran LCD', 'brightness', 'action', 'slider', null, '%', null, 1, $StatusLCD, 'default', 0, $iconbrightness, 0, '0', 100, 21, '0', $updateicon, false, null, true, null, 'floor(#value#)');
         // Affichage Orientation
         $StatusLCD = $LCD->AddCommand('Etat Orientation', 'orientation', "info", 'string', null, null, null, 0, '', '', '', $iconorientation, 0, '0', 100, 30, 2, $updateicon, true, false, true);
-        $LCD->AddCommand('Orientation', 'orientation', 'action', 'select', null, null, null, 1, $StatusLCD, 'default', 0, $iconorientation, 0, '0', 100, 31, '0', $updateicon, false, null, true, null);
+        $listValue = '0|Horizontal;90|90 degrés;180|180 degrés;270|270 degrés';
+        $LCD->AddCommand('Orientation', 'orientation', 'action', 'select', null, null, null, 1, $StatusLCD, 'default', 0, $iconorientation, 0, '0', 100, 31, '0', $updateicon, false, null, true, null, null . null, null, null, null, null, null, $listValue);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -383,7 +379,8 @@ class Free_CreateEq
             $StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', 1, 1, false, true, null, true);
             $parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconparent_allowed, 0, 'default', 'default', 2, '0', false, false, null, true);
             $parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconparent_denied, 0, 'default', 'default', 3, '0', false, false, null, true);
-            $parental->AddCommand('Autoriser-Bloquer Temporairement', 'tempDenied', 'action', 'select', null, null, null, 1, $StatusParental, 'parentalStatus', '', $iconparent_temp, 0, 'default', 'default', 4, '0', false, false, '', true);
+            $listValue = '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00';
+            $parental->AddCommand('Autoriser-Bloquer Temporairement', 'tempDenied', 'action', 'select', null, null, null, 1, $StatusParental, 'parentalStatus', '', $iconparent_temp, 0, 'default', 'default', 4, '0', false, false, '', true, null, null, null, null, null, null, null, null, $listValue);
             log::add('Freebox_OS', 'debug', '└─────────');
         }
     }
@@ -914,7 +911,8 @@ class Free_CreateEq
         $order = 40;
         $Statutmac = $Wifi->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order, 1, false, true, null, true);
         $order++;
-        $Wifi->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order, '0', false, false, null, true);
+        $listValue = 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche';
+        $Wifi->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order, '0', false, false, null, true, null, null, null, null, null, null, null, null, $listValue);
         $order++;
         $Wifi->AddCommand('Ajout - Supprimer filtrage Mac', 'add_del_mac', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $iconmac_add_del_mac, 0, 'default', 'default',  $order, '0', true, false, null, true, null, null, null, null, null, 'add_del_mac?mac_address=#mac_address#&function=#function#&filter=#filter#&comment=#comment#');
         $order++;

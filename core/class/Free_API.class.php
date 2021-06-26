@@ -458,9 +458,6 @@ class Free_API
                 $config_log = 'Mise à jour de : Activation 4G';
                 $config_commande = 'enabled';
                 break;
-            case 'download':
-                $config = 'api/v8/downloads/throttling';
-                break;
             case 'notification_ID':
                 $config = 'api/v8/notif/targets/' . $id;
                 if ($_options == 'DELETE') {
@@ -582,7 +579,7 @@ class Free_API
                 $parametre = true;
             }
         }
-        if ($update == 'parental' || $update == 'donwload' || $update == 'VM') {
+        if ($update == 'parental' || $update == 'VM') {
             $return = $this->fetch('/' . $config . '', $parametre, $fonction, true, true);
         } else if ($update == 'universal_put') {
             $return = $this->fetch('/' . $config,  $_options_2, $fonction, true, true);

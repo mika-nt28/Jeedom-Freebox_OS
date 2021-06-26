@@ -155,24 +155,19 @@ class Free_Update
                     break;
             }
         }
-        if ($logicalId == "schedule") {
-            log::add('Freebox_OS', 'debug', '>───────── TEST : ');
-        }
         if ($result != false) {
             switch ($logicalId) {
-                case "normal":
-                case "slow":
-                case "hibernate":
-                    $parametre = $logicalId;
-                    $Free_API->universal_put($parametre, 'download', null, null, null);
-                    break;
-                case "schedule":
-                    $parametre['throttling'] = $logicalId;
-                    $parametre['is_scheduled'] = true;
-                    $Free_API->universal_put($parametre, 'download', null, null, null);
-                    break;
                 case 'mode_download':
-                    $Free_API->universal_put($_options['select'], 'download', null, null, null, null, 'throttling');
+                    if ($_options['select'] == 'slow_planning' || $_options['select'] == 'normal_planning' || $_options['select'] == 'hibernate_planning') {
+                        $parametre = true;
+                    } else {
+                        $parametre = false;
+                    };
+                    $option = array(
+                        "throttling" => $_options['select'],
+                        "is_scheduled" => $parametre,
+                    );
+                    $Free_API->universal_put($_options['select'], 'universal_put', null, null, 'downloads/throttling', 'PUT', $option);
                     break;
             }
         }
@@ -351,7 +346,6 @@ class Free_Update
                         log::add('Freebox_OS', 'error', 'Méthode Filtrage  ou type de Filtrage incorrect ');
                         break;
                     }
-
                     $Free_API->universal_put(null, 'wifi', $_options, null, 'mac_filter');
                 case 'wifiOn':
                     $Free_API->universal_put(1, 'wifi', null, null, 'config');

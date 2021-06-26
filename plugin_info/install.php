@@ -75,7 +75,7 @@ function Freebox_OS_update()
 			updateLogicalId($eqLogic, ' schedule', 'schedule');
 			removeLogicId($eqLogic, 'normal');
 			removeLogicId($eqLogic, 'slow');
-			removeLogicId($eqLogic, 'hibernate');
+			removeLogicId('downloads', 'hibernate');
 		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');

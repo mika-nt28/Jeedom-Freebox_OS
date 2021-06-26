@@ -185,11 +185,11 @@ class Free_CreateEq
         $Connexion->AddCommand('Proxy Wake on Lan', 'wol', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  10, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
         if ($result['sfp_present'] != null) {
-            Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4);
+            Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result);
         }
         log::add('Freebox_OS', 'debug', '│──────────> ' . $_modul);
     }
-    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
 
@@ -200,7 +200,11 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         };
         $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
-        $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateicon, true);
+        if (isset($result['link_type'])) {
+            $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateicon, true);
+        } else {
+            log::add('Freebox_OS', 'debug', '│──────────>  Fonction type de connexion Fibre non présent');
+        }
         $Connexion->AddCommand('Module Fibre présent', 'sfp_present', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  21, '0', $updateicon, true);
         $Connexion->AddCommand('Signal Fibre présent', 'sfp_has_signal', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  22, '0', $updateicon, true);
         $Connexion->AddCommand('Etat Alimentation', 'sfp_alim_ok', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  23, '0', $updateicon, true);

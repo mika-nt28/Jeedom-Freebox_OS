@@ -332,12 +332,10 @@ class Free_CreateEq
         $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true, null, true);
         $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconthrottling_is_scheduled, 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
         $downloads->AddCommand('Mode Téléchargement', 'mode', 'info', 'string', $Templatemode, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, true);
-        $downloads->AddCommand('Activer mode normal', 'normal', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true);
-        $downloads->AddCommand('Activer mode lent', 'slow', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsslow, 0, 'default', 'default',  21, '0', $updateicon, false, null, true);
-        $downloads->AddCommand('Activer mode Stop', 'hibernate', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadshibernate, 0, 'default', 'default',  22, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Activer mode Planning', 'schedule', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsschedule, 0, 'default', 'default',  23, '0', $updateicon, false, null, true);
         $listValue = 'normal|Mode normal;slow|Mode lent;hibernate|Mode Stop';
-        $downloads->AddCommand('Choix Mode Téléchargement', 'mode_download', 'action', 'select', null, null, null, 1, 'default', 'default', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, tru, null, null, null, null, null, null, null, null, $listValue);
+        $downloads->AddCommand('Choix Mode Téléchargement', 'mode_download', 'action', 'select', null, null, null, 1, 'mode', 'mode', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, tru, null, null, null, null, null, null, null, null, $listValue);
+        Free_CreateEq::Create_linK('mode', 'mode_download');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_LCD($logicalinfo, $templatecore_V4)
@@ -938,5 +936,12 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $Free_API->universal_get('upload', null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function Create_linK($info, $action)
+    {
+        if (is_object($info) && is_object($action)) {
+            $action->setValue($info->getId());
+            $action->save();
+        }
     }
 }

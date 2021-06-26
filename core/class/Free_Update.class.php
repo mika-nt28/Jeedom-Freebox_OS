@@ -155,18 +155,24 @@ class Free_Update
                     break;
             }
         }
+        if ($logicalId == "schedule") {
+            log::add('Freebox_OS', 'debug', '>───────── TEST : ');
+        }
         if ($result != false) {
             switch ($logicalId) {
                 case "normal":
                 case "slow":
                 case "hibernate":
-                    $parametre['throttling'] = $logicalId;
+                    $parametre = $logicalId;
                     $Free_API->universal_put($parametre, 'download', null, null, null);
                     break;
                 case "schedule":
                     $parametre['throttling'] = $logicalId;
                     $parametre['is_scheduled'] = true;
                     $Free_API->universal_put($parametre, 'download', null, null, null);
+                    break;
+                case 'mode_download':
+                    $Free_API->universal_put($_options['select'], 'download', null, null, null, null, 'throttling');
                     break;
             }
         }

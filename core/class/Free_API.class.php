@@ -458,10 +458,6 @@ class Free_API
                 $config_log = 'Mise à jour de : Activation 4G';
                 $config_commande = 'enabled';
                 break;
-            case 'download':
-                $config = 'api/v8/downloads/throttling';
-                $config_commande = $_options_2;
-                break;
             case 'notification_ID':
                 $config = 'api/v8/notif/targets/' . $id;
                 if ($_options == 'DELETE') {

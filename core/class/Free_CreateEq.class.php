@@ -292,12 +292,8 @@ class Free_CreateEq
             $iconRSSnb = 'fas fa-rss';
             $iconRSSread = 'fas fa-rss-square';
             $iconconn_ready = 'fas fa-ethernet';
-            $iconthrottling_is_scheduled = 'far fa-calendar-alt';
             $Templatemode = 'default';
             $iconDownloadsnormal = 'fas fa-rocket';
-            $iconDownloadsslow = 'fas fa-download';
-            $iconDownloadshibernate = 'far fa-pause-circle';
-            $iconDownloadsschedule  = 'far fa-calendar-alt';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $iconDownloadsOn = 'fas fa-play icon_green';
@@ -305,12 +301,8 @@ class Free_CreateEq
             $iconRSSnb = 'fas fa-rss icon_green';
             $iconRSSread = 'fas fa-rss-square icon_orange';
             $iconconn_ready = 'fas fa-ethernet icon_green';
-            $iconthrottling_is_scheduled = 'far fa-calendar-alt icon_green';
             $Templatemode = 'Freebox_OS::Mode Téléchargement';
             $iconDownloadsnormal = 'fas fa-rocket icon_green';
-            $iconDownloadsslow = 'fas fa-download icon_green';
-            $iconDownloadshibernate = 'far fa-pause-circle icon_red';
-            $iconDownloadsschedule = 'far fa-calendar-alt icon_green';
         };
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true);
@@ -330,12 +322,11 @@ class Free_CreateEq
         $downloads->AddCommand('Nb de flux RSS', 'nb_rss', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSnb, 0, 'default', 'default',  15, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Nb de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSread, 0, 'default', 'default',  16, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true, null, true);
-        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconthrottling_is_scheduled, 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
-        $downloads->AddCommand('Mode Téléchargement', 'mode', 'info', 'string', $Templatemode, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, true);
-        $downloads->AddCommand('Activer mode Planning', 'schedule', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsschedule, 0, 'default', 'default',  23, '0', $updateicon, false, null, true);
-        $listValue = 'normal|Mode normal;slow|Mode lent;hibernate|Mode Stop';
-        $downloads->AddCommand('Choix Mode Téléchargement', 'mode_download', 'action', 'select', null, null, null, 1, 'mode', 'mode', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, tru, null, null, null, null, null, null, null, null, $listValue);
-        Free_CreateEq::Create_linK('mode', 'mode_download');
+        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, 'default', 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
+        $action = $downloads->AddCommand('Mode Téléchargement', 'mode', 'info', 'string', $Templatemode, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, true);
+        $listValue = 'normal|Mode normal;slow|Mode lent;hibernate|Mode Stop;schedule|Mode Planning';
+        $downloads->AddCommand('Choix Mode Téléchargement', 'mode_download', 'action', 'select', null, null, null, 1, $action, 'mode', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
+
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_LCD($logicalinfo, $templatecore_V4)
@@ -936,12 +927,5 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $Free_API->universal_get('upload', null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
-    }
-    private static function Create_linK($info, $action)
-    {
-        if (is_object($info) && is_object($action)) {
-            $action->setValue($info->getId());
-            $action->save();
-        }
     }
 }

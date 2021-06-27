@@ -154,8 +154,10 @@ class Free_CreateEq
         $updateicon = false;
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
+            $iconspeed = 'fas fa-tachometer-alt';
         } else {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $iconspeed = 'fas fa-tachometer-alt icon_blue';
         };
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('connexion', null, null, 'ftth');
@@ -173,10 +175,10 @@ class Free_CreateEq
             $_bandwidth_up_unit = 'Mb/s';
         }
         $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
-        $Connexion->AddCommand('Débit descendant', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true, null, null, null, '#value# / 1024', '2');
-        $Connexion->AddCommand('Débit montant', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true, null, null, null, '#value# / 1024', '2');
-        $Connexion->AddCommand('Débit descendant (max)', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', $_bandwidth_down_unit, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateicon, true, null, null, null, $_bandwidth_value_down, '2');
-        $Connexion->AddCommand('Débit montant (max)', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', $_bandwidth_up_unit, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateicon, true, null, null, null, $_bandwidth_value_up, '2');
+        $Connexion->AddCommand('Débit descendant', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  1, '0', $updateicon, true, null, true, null, '#value# / 1024', '2');
+        $Connexion->AddCommand('Débit montant', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  2, '0', $updateicon, true, null, true, null, '#value# / 1024', '2');
+        $Connexion->AddCommand('Débit descendant (max)', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', $_bandwidth_down_unit, null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  3, '0', $updateicon, true, null, true, null, $_bandwidth_value_down, '2');
+        $Connexion->AddCommand('Débit montant (max)', 'bandwidth_up', 'info', 'numeric', $templatecore_V4 . 'badge', $_bandwidth_up_unit, null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  4, '0', $updateicon, true, null, true, null, $_bandwidth_value_up, '2');
         $Connexion->AddCommand('Type de connexion', 'media', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateicon, true);
         $Connexion->AddCommand('Etat de la connexion', 'state', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateicon, true);
         $Connexion->AddCommand('IPv4', 'ipv4', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  7, '0', $updateicon, true);
@@ -284,7 +286,7 @@ class Free_CreateEq
     private static function createEq_download($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['downloadsName']);
-        $updateicon = false;
+        $updateicon = true;
         if (version_compare(jeedom::version(), "4", "<")) {
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
             $iconDownloadsOn = 'fas fa-play';
@@ -292,6 +294,12 @@ class Free_CreateEq
             $iconRSSnb = 'fas fa-rss';
             $iconRSSread = 'fas fa-rss-square';
             $iconconn_ready = 'fas fa-ethernet';
+            $icontask = 'fas fa-tasks';
+            $icontask_queued = 'fas fa-tasks';
+            $icontask_error = 'fas fa-tasks';
+            $icondownload = 'fas fa-file-download';
+            $iconspeed = 'fas fa-tachometer-alt';
+            $iconcalendar = 'far fa-calendar-alt icon_green';
             $Templatemode = 'default';
             $iconDownloadsnormal = 'fas fa-rocket';
         } else {
@@ -301,28 +309,34 @@ class Free_CreateEq
             $iconRSSnb = 'fas fa-rss icon_green';
             $iconRSSread = 'fas fa-rss-square icon_orange';
             $iconconn_ready = 'fas fa-ethernet icon_green';
+            $icontask = 'fas fa-tasks icon_green';
+            $icontask_queued = 'fas fa-tasks icon_orange';
+            $icontask_error = 'fas fa-tasks icon_red';
+            $icondownload = 'fas fa-file-download icon_blue';
+            $iconspeed = 'fas fa-tachometer-alt icon_blue';
+            $iconcalendar = 'far fa-calendar-alt icon_green';
             $Templatemode = 'Freebox_OS::Mode Téléchargement';
             $iconDownloadsnormal = 'fas fa-rocket icon_green';
         };
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
-        $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  1, '0', $updateicon, true);
-        $downloads->AddCommand('Nb de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true);
-        $downloads->AddCommand('Nb de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateicon, true);
-        $downloads->AddCommand('Nb de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateicon, true);
-        $downloads->AddCommand('Nb de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateicon, true);
-        $downloads->AddCommand('Nb de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  6, '0', $updateicon, true);
-        $downloads->AddCommand('Nb de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  7, '0', $updateicon, true);
-        $downloads->AddCommand('Nb de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  8, '0', $updateicon, true);
-        $downloads->AddCommand('Nb de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  9, '0', $updateicon, true);
-        $downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 10, '0', $updateicon, true);
-        $downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 11, '0', $updateicon, true, null, null, null, '#value# / 1000', '2');
-        $downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  12, '0', $updateicon, true, null, null, null, '#value# / 1000', '2');
-        $downloads->AddCommand('Start Téléchargement', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsOn, 0, 'default', 'default',  13, '0', $updateicon, false);
-        $downloads->AddCommand('Stop Téléchargement', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsOff, 0, 'default', 'default',  14, '0', $updateicon, false);
+        $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask, 0, 'default', 'default',  1, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Nb de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask,  0, 'default', 'default',  2, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Nb de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask, 0, 'default', 'default',  3, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Nb de tâche(s) en réparation', 'nb_tasks_repairing', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask, 0, 'default', 'default',  4, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Nb de tâche(s) en vérification', 'nb_tasks_checking', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask, 0, 'default', 'default',  5, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Nb de tâche(s) en attente', 'nb_tasks_queued', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask_queued, 0, 'default', 'default',  6, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Nb de tâche(s) en erreur', 'nb_tasks_error', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask_error, 0, 'default', 'default',  7, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Nb de tâche(s) stoppée(s)', 'nb_tasks_stopped', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask_error, 0, 'default', 'default',  8, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Nb de tâche(s) terminée(s)', 'nb_tasks_done', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask, 0, 'default', 'default',  9, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Téléchargement en cours', 'nb_tasks_downloading', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icondownload, 0, 'default', 'default', 10, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Vitesse réception', 'rx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default', 11, '0', $updateicon, true, null, true, null, '#value# / 1000', '2');
+        $downloads->AddCommand('Vitesse émission', 'tx_rate', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  12, '0', $updateicon, true, null, true, null, '#value# / 1000', '2');
+        $downloads->AddCommand('Start Téléchargement', 'start_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsOn, 0, 'default', 'default',  13, '0', $updateicon, false, null, false);
+        $downloads->AddCommand('Stop Téléchargement', 'stop_dl', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $iconDownloadsOff, 0, 'default', 'default',  14, '0', $updateicon, false, null, false);
         $downloads->AddCommand('Nb de flux RSS', 'nb_rss', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSnb, 0, 'default', 'default',  15, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Nb de flux RSS Non Lu', 'nb_rss_items_unread', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconRSSread, 0, 'default', 'default',  16, '0', $updateicon, false, null, true);
         $downloads->AddCommand('Etat connexion', 'conn_ready', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconconn_ready, 0, 'default', 'default',  17, '0', $updateicon, true, null, true);
-        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, 'default', 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
+        $downloads->AddCommand('Etat Planning', 'throttling_is_scheduled', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconcalendar, 0, 'default', 'default',  18, '0', $updateicon, true, null, true);
         $action = $downloads->AddCommand('Mode Téléchargement', 'mode', 'info', 'string', $Templatemode, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  19, '0', $updateicon, true, null, true);
         $listValue = 'normal|Mode normal;slow|Mode lent;hibernate|Mode Stop;schedule|Mode Planning';
         $downloads->AddCommand('Choix Mode Téléchargement', 'mode_download', 'action', 'select', null, null, null, 1, $action, 'mode', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
@@ -740,34 +754,43 @@ class Free_CreateEq
     private static function createEq_VM($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['VMName']);
-        $updateicon = false;
+        $updateicon = true;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'vm');
         if ($result != null) {
+            $VMmemory = 'fas fa-memory';
+            $VMCPU = 'fas fa-microchip';
+            $VMscreen = 'fas fa-desktop';
+            $VMdisk = 'fas fa-hdd';
+            $VMstatus = 'fas fa-info-circle';
             if (version_compare(jeedom::version(), "4", "<")) {
                 log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
                 $VMOn = 'fas fa-play';
                 $VMOff = 'fas fa-stop';
-                $VMRestart = 'fas fa-sync icon_red';
+                $VMRestart = 'fas fa-sync';
+                $VMUSB = 'fab fa-usb';
+                $VMstatus = 'fas fa-info-circle';
                 $TemplateVM = 'default';
             } else {
                 log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
                 $VMOn = 'fas fa-play icon_green';
                 $VMOff = 'fas fa-stop icon_red';
                 $VMRestart = 'fas fa-sync icon_red';
+                $VMUSB = 'fab fa-usb icon_green';
+                $VMstatus = 'fas fa-info-circle icon_green';
                 $TemplateVM = 'Freebox_OS::VM';
             };
 
             foreach ($result as $Equipement) {
                 $_VM = Freebox_OS::AddEqLogic($Equipement['cloudinit_hostname'], 'VM_' . $Equipement['id'], 'multimedia', true, 'VM', null, $Equipement['id'], '*/5 * * * *', null, null);
-                $_VM->AddCommand('CPU(s)', 'vcpus', 'info', 'numeric',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('CPU(s)', 'vcpus', 'info', 'numeric',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, $VMCPU, 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
                 $_VM->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 11, '0', $updateicon, false, false, true);
-                $_VM->AddCommand('Mémoire', 'memory', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mo', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
-                $_VM->AddCommand('USB', 'bind_usb_ports', 'info', 'string',  null, null, 'default', 1, 'default', 'default', 0, 'default', 1, 'default', 'default', 13, '0', $updateicon, false, false, true);
-                $_VM->AddCommand('Ecran virtuel', 'enable_screen', 'info', 'binary',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', '0', 'default', 'default', 14, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Mémoire', 'memory', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mo', 'default', 0, 'default', 'default', 0, $VMmemory, 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('USB', 'bind_usb_ports', 'info', 'string',  null, null, 'default', 1, 'default', 'default', 0, $VMUSB, 1, 'default', 'default', 13, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Ecran virtuel', 'enable_screen', 'info', 'binary',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, $VMscreen, '0', 'default', 'default', 14, '0', $updateicon, false, false, true);
                 $_VM->AddCommand('Nom', 'name', 'info', 'string',  null, null, 'default', 0, 'default', 'default', 0, 'default', 1, 'default', 'default', 15, '0', $updateicon, false, false, true);
-                $_VM->AddCommand('Type de disque', 'disk_type', 'info', 'string',  null, null, 'default', 0, 'default', 'default', 0, 'default', 1, 'default', 'default', 16, '0', $updateicon, false, false, true);
-                $_VM->AddCommand('Status', 'status', 'info', 'string', $TemplateVM, null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', 1, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Type de disque', 'disk_type', 'info', 'string',  null, null, 'default', 0, 'default', 'default', 0, $VMdisk, 1, 'default', 'default', 16, '0', $updateicon, false, false, true);
+                $_VM->AddCommand('Status', 'status', 'info', 'string', $TemplateVM, null, 'default', 1, 'default', 'default', 0, $VMstatus, 0, 'default', 'default', 1, '0', $updateicon, false, false, true);
                 $_VM->AddCommand('Start', 'start', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOn, 0, 'default', 'default', 2, '0', $updateicon, false);
                 $_VM->AddCommand('Stop', 'stop', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOff, 0, 'default', 'default', 3, '0', $updateicon, false);
                 $_VM->AddCommand('Redémarrer', 'restart', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMRestart, 0, 'default', 'default', 4, '0', $updateicon, false);

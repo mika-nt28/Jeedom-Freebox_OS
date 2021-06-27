@@ -71,7 +71,7 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
-		foreach ($eqLogics as $eqLogic) {
+		/*foreach ($eqLogics as $eqLogic) {
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Suppression des commandes :' . $eqLogic);
 			if ($eqLogic == 'downloads') {
 				log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Suppression des commandes');
@@ -80,7 +80,7 @@ function Freebox_OS_update()
 				//removeLogicId($eqLogic, 'slow');
 				//removeLogicId($eqLogic, 'hibernate');
 			}
-		}
+		}*/
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
 		$eq_version = '2';

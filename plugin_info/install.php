@@ -76,9 +76,9 @@ function Freebox_OS_update()
 			if ($eqLogic == 'downloads') {
 				log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Suppression des commandes');
 				//updateLogicalId($eqLogic, ' schedule', 'schedule');
-				removeLogicId($eqLogic, 'normal');
-				removeLogicId($eqLogic, 'slow');
-				removeLogicId($eqLogic, 'hibernate');
+				//removeLogicId($eqLogic, 'normal');
+				//removeLogicId($eqLogic, 'slow');
+				//removeLogicId($eqLogic, 'hibernate');
 			}
 		}
 

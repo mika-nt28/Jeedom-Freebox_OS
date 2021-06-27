@@ -76,17 +76,9 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'slow'); // Amélioration 20210627
 			removeLogicId($eqLogic, 'normal'); // Amélioration 20210627
 			removeLogicId($eqLogic, 'hibernate'); // Amélioration 20210627
+			removeLogicId($eqLogic, 'schedule'); // Amélioration 20210627
+			removeLogicId($eqLogic, ' schedule'); // Amélioration 20210627
 		}
-		/*foreach ($eqLogics as $eqLogic) {
-			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Suppression des commandes :' . $eqLogic);
-			if ($eqLogic == 'downloads') {
-				log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Suppression des commandes');
-				//updateLogicalId($eqLogic, ' schedule', 'schedule');
-				//removeLogicId($eqLogic, 'normal');
-				//removeLogicId($eqLogic, 'slow');
-				//removeLogicId($eqLogic, 'hibernate');
-			}
-		}*/
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
 		$eq_version = '2';

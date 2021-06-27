@@ -72,7 +72,9 @@ function Freebox_OS_update()
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
+			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Suppression des commandes :' . $eqLogic);
 			if ($eqLogic == 'downloads') {
+				log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Suppression des commandes');
 				//updateLogicalId($eqLogic, ' schedule', 'schedule');
 				removeLogicId($eqLogic, 'normal');
 				removeLogicId($eqLogic, 'slow');
@@ -138,7 +140,6 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = nu
 
 function removeLogicId($eqLogic, $from)
 {
-
 	//  suppression fonction
 	$cmd = $eqLogic->getCmd(null, $from);
 	if (is_object($cmd)) {

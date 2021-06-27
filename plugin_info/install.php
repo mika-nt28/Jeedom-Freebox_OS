@@ -74,6 +74,8 @@ function Freebox_OS_update()
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			removeLogicId($eqLogic, 'slow'); // Amélioration 20210627
+			removeLogicId($eqLogic, 'normal'); // Amélioration 20210627
+			removeLogicId($eqLogic, 'hibernate'); // Amélioration 20210627
 		}
 		/*foreach ($eqLogics as $eqLogic) {
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Suppression des commandes :' . $eqLogic);

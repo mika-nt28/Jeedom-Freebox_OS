@@ -71,13 +71,13 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
-		foreach ($eqLogics as $eqLogic) {
-			if ($eqLogic == 'downloads') {
-				updateLogicalId($eqLogic, ' schedule', 'schedule');
-				removeLogicId($eqLogic, 'normal');
-				removeLogicId($eqLogic, 'slow');
-				removeLogicId($eqLogic, 'hibernate');
-			}
+		foreach ($eqLogics as $eqLogic)
+			removeLogicId($eqLogic, 'slow'); // Amélioration 20210627
+			removeLogicId($eqLogic, 'normal'); // Amélioration 20210627
+			removeLogicId($eqLogic, 'hibernate'); // Amélioration 20210627
+			removeLogicId($eqLogic, 'schedule'); // Amélioration 20210627
+			removeLogicId($eqLogic, ' schedule'); // Amélioration 20210627
+
 		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
@@ -136,9 +136,8 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = nu
 	}
 }
 
-function removeLogicId($eqLogic, $from)
+function removeLogicId($eqLogic, $from, $link_IA = null)
 {
-
 	//  suppression fonction
 	$cmd = $eqLogic->getCmd(null, $from);
 	if (is_object($cmd)) {

@@ -1038,7 +1038,7 @@ class Free_Refresh
                                     }
                                 }
                             } else {
-                                $bind_usb_ports .= 'Aucun port USB de connecter';
+                                $bind_usb_ports .= 'Aucun port USB de connecté';
                             }
                             $Equipement->checkAndUpdateCmd($Command->getLogicalId(), $bind_usb_ports);
                             break;

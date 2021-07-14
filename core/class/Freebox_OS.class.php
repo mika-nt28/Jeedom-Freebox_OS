@@ -29,6 +29,7 @@ class Freebox_OS extends eqLogic
 	{
 		return array();
 	}
+	public static $_widgetPossibility = array('custom' => true);
 	public static function cron()
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');

@@ -736,9 +736,9 @@ class Free_API
         if ($result == 'auth_required') {
             $result = $this->fetch('/api/v8/airmedia/' . $config, $parametre, $fonction);
         }
-        if ($result === false)
+        if (!isset($result) || $result === false)
             return false;
-        if ($result['success'])
+        if (isset($result['result']) && $result['success'])
             return $result['result'];
         else
             return false;

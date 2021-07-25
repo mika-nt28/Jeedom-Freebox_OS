@@ -464,7 +464,6 @@ class Free_API
                     $fonction = $_options;
                 }
                 break;
-
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
@@ -525,7 +524,7 @@ class Free_API
                 }
                 break;
             case 'VM':
-                $config = 'api/v8/vm/' . $id  . $_options_2;
+                $config = 'api/v8/vm/' . $id  . '/' . $_options_2;
                 $fonction = "POST";
                 break;
             case 'wifi':

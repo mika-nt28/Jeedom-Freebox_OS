@@ -464,7 +464,6 @@ class Free_API
                     $fonction = $_options;
                 }
                 break;
-
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
@@ -525,7 +524,7 @@ class Free_API
                 }
                 break;
             case 'VM':
-                $config = 'api/v8/vm/' . $id  . $_options_2;
+                $config = 'api/v8/vm/' . $id  . '/' . $_options_2;
                 $fonction = "POST";
                 break;
             case 'wifi':
@@ -736,9 +735,9 @@ class Free_API
         if ($result == 'auth_required') {
             $result = $this->fetch('/api/v8/airmedia/' . $config, $parametre, $fonction);
         }
-        if ($result === false)
+        if (!isset($result) || $result === false)
             return false;
-        if ($result['success'])
+        if (isset($result['result']) && $result['success'])
             return $result['result'];
         else
             return false;

@@ -100,6 +100,7 @@ class Free_Update
                 if ($logicalId != 'refresh') {
                     Free_Update::update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
                 }
+                break;
             case 'wifi':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);

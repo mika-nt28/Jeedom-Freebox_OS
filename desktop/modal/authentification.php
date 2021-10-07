@@ -388,7 +388,7 @@ if (!isConnect('admin')) {
                         </div>
                     </div>
                     <div id="centre">
-                        <div class="thumbnail" style="box-shadow: 2px 2px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/im/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+                        <div class="thumbnail" style="box-shadow: 2px 2px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/img/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
                             <div class="caption">
                                 <h4>{{Mes Equipements Home - Tiles}}</h4>
                                 <p></p>

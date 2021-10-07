@@ -202,13 +202,21 @@ class Free_CreateTil
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {
-                $homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
+                $order = $Equipement['id'] * 10;
+                $Label_ETAT =  $Equipement['label'];
+                $LabelON = $Label_ETAT . ' ON';
+                $LabelOFF = $Label_ETAT . ' OFF';
+                $homeadapters->AddCommand($Label_ETAT, $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
                 if ($Equipement['status'] == 'active') {
                     $homeadapters_value = 1;
                 } else {
                     $homeadapters_value = 0;
                 }
-                $homeadapters->checkAndUpdateCmd($Equipement['id'], $homeadapters_value);
+                //$homeadapters->checkAndUpdateCmd($Equipement['id'], $homeadapters_value);
+                //$order++;
+                //$homeadapters->AddCommand($LabelON, 'PB_On' . $Equipement['id'], 'action', 'other', 'default', 'default', 'default', 1, 'default', 'default', 'default', 'default', 1, 'default', 'default', $order, 0, false, false, null, null, null, null, null, null, null, null, null, null);
+                //$order++;
+                //$homeadapters->AddCommand($LabelOFF, 'PB_Off' . $Equipement['id'], 'action', 'other', 'default', 'default', 'default', 1, 'default', 'default', 'default', 'default', 0, 'default', 'default', $order, 0, false, false, null, null, null, null, null, null, null, null, null, null);
             }
         }
     }

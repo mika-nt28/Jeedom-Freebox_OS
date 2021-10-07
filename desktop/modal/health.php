@@ -43,8 +43,8 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 			$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 
 			if ($eqLogic->getConfiguration('type') != 'homeadapters' && $eqLogic->getConfiguration('type') != null) {
-				if (file_exists(dirname(__FILE__) . '/../../core/images/' . $eqLogic->getConfiguration('type') . '.png')) {
-					if (file_exists(dirname(__FILE__) . '/../../core/images/' . $eqLogic->getConfiguration('type2') . '.png')) {
+				if (file_exists(dirname(__FILE__) . '/../../core/img/' . $eqLogic->getConfiguration('type') . '.png')) {
+					if (file_exists(dirname(__FILE__) . '/../../core/img/' . $eqLogic->getConfiguration('type2') . '.png')) {
 						$icon = $eqLogic->getConfiguration('type2');
 					} else {
 						$icon = $eqLogic->getConfiguration('type');
@@ -53,7 +53,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 					$icon = 'default';
 				}
 			} else {
-				if (file_exists(dirname(__FILE__) . '/../../core/images/' . $eqLogic->getLogicalId() . '.png')) {
+				if (file_exists(dirname(__FILE__) . '/../../core/img/' . $eqLogic->getLogicalId() . '.png')) {
 					$icon = $template = $eqLogic->getLogicalId();
 				} else {
 					$icon = 'default';
@@ -65,7 +65,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 			} else {
 				$type = $eqLogic->getConfiguration('type');
 			}
-			$image = '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png" height="35" width="35" style="' . $opacity . '" class="' . $opacity . '"/>';
+			$image = '<img src="plugins/Freebox_OS/core/img/' . $icon . '.png" height="35" width="35" style="' . $opacity . '" class="' . $opacity . '"/>';
 			echo '<tr><td class="' . $opacity . '" >' . $image . '</td><td><a href="' . $eqLogic->getLinkToConfiguration() . '" style="text-decoration: none;">' . $eqLogic->getHumanName(true) . '</a></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getId() . '</span></td>';
 			echo '<td><span class="label label-info" style="font-size : 1em; cursor : default;">' . $eqLogic->getConfiguration('logicalID') . '</span></td>';

@@ -162,7 +162,7 @@ if (!isConnect('admin')) {
             <center>
                 <center><i class="fas fa-rss" style="font-size: 8em;"></i></center>
                 <br />
-                <img class="img-responsive center-block hidden-xs" src="plugins/Freebox_OS/core/images/authentification/authentification.jpg" height="450" width="350" />
+                <img class="img-responsive center-block hidden-xs" src="plugins/Freebox_OS/core/img/authentification.jpg" height="450" width="350" />
                 <br />
 
                 <br />
@@ -193,7 +193,7 @@ if (!isConnect('admin')) {
             <center>
                 <center><i class="fas fa-balance-scale-right" style="font-size: 5em;"></i></center>
                 <br />
-                <img class="img-responsive center-block hidden-xs" src="plugins/Freebox_OS/core/images/authentification/modification_droit.png" height="400" width="400" />
+                <img class="img-responsive center-block hidden-xs" src="plugins/Freebox_OS/core/img/modification_droit.png" height="400" width="400" />
                 <br />
                 <center>
                     <div class="alert alert-info">{{Se connecter à l’interface de la Freebox puis ouvrir les paramètres de
@@ -364,7 +364,7 @@ if (!isConnect('admin')) {
                 <br />
                 <div>
                     <div id="colonne1">
-                        <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/system.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+                        <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/img/system.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
                             <div class="caption">
                                 <h4>{{Mes Equipements}}</h4>
                                 <p></p>
@@ -376,7 +376,7 @@ if (!isConnect('admin')) {
                         </div>
                     </div>
                     <div id="colonne2">
-                        <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/parental.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+                        <div class="thumbnail" style="box-shadow: 1px 1px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/img/parental.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
                             <div class="caption">
                                 <h4>{{Mes Contrôles parentaux}}</h4>
                                 <p></p>
@@ -388,7 +388,7 @@ if (!isConnect('admin')) {
                         </div>
                     </div>
                     <div id="centre">
-                        <div class="thumbnail" style="box-shadow: 2px 2px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/images/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
+                        <div class="thumbnail" style="box-shadow: 2px 2px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/im/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
                             <div class="caption">
                                 <h4>{{Mes Equipements Home - Tiles}}</h4>
                                 <p></p>

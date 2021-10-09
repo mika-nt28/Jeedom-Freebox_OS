@@ -354,6 +354,16 @@ class Free_API
                 $config = 'api/v8/home/tileset' . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
+            case 'WebSocket':
+                $config = 'api/v8/ws/event';
+                $config_log = 'Traitement de la Mise à jour de WebSocket';
+                $Parameter = array(
+                    "action" => 'notification',
+                    "success" => true,
+                    "source" => 'vm',
+                    "event" => 'VmStateChange',
+                );
+                break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';

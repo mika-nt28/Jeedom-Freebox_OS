@@ -95,7 +95,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						$status = 1;
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
+						echo '<img src="plugins/Freebox_OS/core/img/' . $template . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
 						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
@@ -148,7 +148,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						$status = 1;
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="plugins/Freebox_OS/core/images/' . $icon . '.png"/>';
+						echo '<img src="plugins/Freebox_OS/core/img/' . $icon . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
 						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
@@ -176,7 +176,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						$template = $eqLogic->getConfiguration('type');
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="plugins/Freebox_OS/core/images/' . $template . '.png"/>';
+						echo '<img src="plugins/Freebox_OS/core/img/' . $template . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
 						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
@@ -310,7 +310,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							<div class=" form-group">
 								<label class="col-sm-4 control-label"></label>
 								<div class="col-sm-7 text-center">
-									<img src="plugins/Freebox_OS/core/images/default.png" data-original=".jpg" id="img_device" class="img-responsive" style="width:120px" onerror="this.src='plugins/Freebox_OS/core/images/default.png'" />
+									<img src="plugins/Freebox_OS/core/img/default.png" data-original=".jpg" id="img_device" class="img-responsive" style="width:120px" onerror="this.src='plugins/Freebox_OS/core/img/default.png'" />
 								</div>
 							</div>
 							<div class="form-group">

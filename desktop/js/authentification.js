@@ -106,7 +106,7 @@ function autorisationFreebox() {
                 sendToBdd(data.result);
                 $('.textFreebox').text('{{Merci d\'appuyer sur le bouton V de votre Freebox, afin de confirmer l\'autorisation d\'accès à votre Freebox.}}');
                 logs('debug', '(' + data.result.error_code + ') ' + "Attente appuie sur le bouton V");
-                $('.img-freeboxOS').attr('src', 'plugins/Freebox_OS/core/images/authentification/authentification.jpg');
+                $('.img-freeboxOS').attr('src', 'plugins/Freebox_OS/core/img/authentification.jpg');
                 progress(40);
                 setTimeout(AskTrackAuthorization, 3000);
             }

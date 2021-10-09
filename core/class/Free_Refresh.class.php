@@ -1068,6 +1068,10 @@ class Free_Refresh
             }
         }
     }
+    private static function refresh_WebSocket($Equipement, $Free_API)
+    {
+        $result = $Free_API->universal_get('WebSocket', null, null, null);
+    }
     private static function refresh_wifi($Equipement, $Free_API)
     {
         $listmac = $Free_API->mac_filter_list();

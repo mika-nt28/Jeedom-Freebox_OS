@@ -59,6 +59,9 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'homeadapters':
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_homeadapters($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'parental':
@@ -172,6 +175,21 @@ class Free_Update
                     break;
             }
         }
+    }
+    private static function update_homeadapters($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    {
+        if (stripos($logicalId, 'PB_On')  !== false) {
+            $parametre = 'active';
+            $ID_logicalID = substr($logicalId, 5);
+        } else {
+            $parametre = 'disabled';
+            $ID_logicalID = substr($logicalId, 6);
+        }
+        $option = array(
+            'status' => $parametre,
+        );
+        log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $ID_logicalID);
+        $Free_API->universal_put('default', 'universal_put', $ID_logicalID, null, 'home/adapters/', 'PUT', $option);
     }
 
     private static function update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)

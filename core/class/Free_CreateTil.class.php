@@ -715,11 +715,7 @@ class Free_CreateTil
                 $CreateCMD = 'PAS DE CREATION';
                 break;
         }
-        if ($CreateCMD === true) {
-            $Value = "";
-        } else {
-            $Value = ' ==> ' . $CreateCMD;
-        }
+
         $Setting = array(
             "CreateCMD" => $CreateCMD,
             "Eq_type_home" =>  $eq_group,

@@ -29,12 +29,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<!-- Boutons de gestion du plugin -->
 		<div class="eqLogicThumbnailContainer">
 			<div class="cursor authentification logoWarning">
-				<i class="fas fa-rss"></i>
+				<i class="fas fa-rss" title="Cette fonction permet de lancer l'apparaige et paramétrer certaines options"></i>
 				<br>
 				<span>{{Appairage}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoSecondary" data-action="gotoPluginConf">
-				<i class="fas fa-wrench" title="Cette fonction permet de lancer l'apparaige et paramétrer certaines options"></i>
+				<i class="fas fa-wrench"></i>
 				<br>
 				<span>{{Configuration}}</span>
 			</div>

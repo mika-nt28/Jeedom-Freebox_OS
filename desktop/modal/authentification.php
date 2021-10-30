@@ -36,7 +36,7 @@ if (!isConnect('admin')) {
                 <li class="cursor li_Freebox_OS_Summary" data-href="setting" title="{{Réglages}}"><a><i class="fas fa-cogs"></i><span class="hidden-xs"> {{Réglages}}</span></a></li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="authentification" title="{{Authentification}}"><a><i class="fas fa-rss"></i><span class="hidden-xs"> {{Authentification}}</span></a> </li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="rights" title="{{Droits}}"><a><i class="fas fa-balance-scale-right"></i><span class="hidden-xs"> {{Droits}}</span></a> </li>
-                <li class="cursor li_Freebox_OS_Summary" data-href="room" title="{{Objets}}"><a><i class="far fa-object-group"></i><span class="hidden-xs"> {{Objets}}</span></a> </li>
+                <li class="cursor li_Freebox_OS_Summary" data-href="room" title="{{Objets}}"><a><i class="fas fa-bezier-curve"></i><span class="hidden-xs"> {{Freebox Delta}}</span></a> </li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="scan" title="{{Scan des équipements}}"><a><i class="fas fa-search-plus"></i><span class="hidden-xs"> {{Scan des équipements}}</span></a> </li>
                 <li class="cursor li_Freebox_OS_Summary" data-href="end" title="{{C'est Fini !!}}"><a><i class="fas fa-check"></i><span class="hidden-xs"> {{Fin}}</span></a>
                 </li>
@@ -306,24 +306,35 @@ if (!isConnect('admin')) {
             <br /><br /> <br />
             <BR>
             <center>
-                <center><i class="far fa-object-group" style="font-size: 5em;"></i></center>
+                <center><i class="fas fa-bezier-curve" style="font-size: 5em;"></i></center>
                 <br />
                 <br />
                 <center>
-                    <div class="alert alert-info">{{Cette partie vous permet de lier les pièces de la Freebox des équipements tiles avec les Objets de Jeedom}}
+                    <div class="alert alert-info">{{Cette partie vous permet de paramétrer les options spécifiques}}
                         <br>
                         <i>{{Uniquement sur la Freebox Delta}}</i>
                     </div>
                     <br>
-                    <fieldset>
-                        <div class="form-group col-xs-6">
-                            <label class="col-xs-6 control-label roundedLeft">{{Actualisation Globale des Tiles :}}</label>
-                            <div class="col-xs-2">
-                                <input id="checkbox_freeboxTiles" type="checkbox" class="configKey checkbox_freeboxTiles" data-l1key="FREEBOX_TILES_CRON" />
+                    <form class="form-horizontal">
+                        <fieldset>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">{{Actualisation Globale des Tiles :}}
+                                    <sup><i class="fas fa-question-circle" title="{{si la case est cochée, l'actualisation des tiles est faite de façon globale}}"></i></sup>
+                                </label>
+                                <div class="col-xs-2">
+                                    <input id="checkbox_freeboxTiles" type="checkbox" class="configKey checkbox_freeboxTiles" data-l1key="FREEBOX_TILES_CRON" />
+                                </div>
                             </div>
-                        </div>
-                        <br />
-                    </fieldset>
+                            <div class="form-group">
+                                <label class="col-md-5 control-label">{{Actualisation individuelle des commandes :}}
+                                    <sup><i class="fas fa-question-circle" title="{{si la case est cochée, l'actualisation des commandes info sera faite de façon individuelle}}"></i></sup>
+                                </label>
+                                <div class="col-xs-2">
+                                    <input id="checkbox_freeboxCmdbyCmd" type="checkbox" class="configKey checkbox_freeboxCmdbyCmd" data-l1key="FREEBOX_TILES_CmdbyCmd" />
+                                </div>
+                            </div>
+                            <br />
+                        </fieldset>
                     </form>
 
                     <table id="table_room" class="table table-condensed">
@@ -339,7 +350,7 @@ if (!isConnect('admin')) {
                     <br />
                     <br />
                     <center>
-                        <div class="alert alert-info">{{Une fois lié, cliquez sur le bouton Sauvegarder}}</div>
+                        <div class="alert alert-info">{{Une fois les options choisies , cliquez sur le bouton Sauvegarder}}</div>
                     </center>
                 </center>
         </div>

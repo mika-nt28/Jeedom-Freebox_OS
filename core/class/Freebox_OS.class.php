@@ -212,7 +212,11 @@ class Freebox_OS extends eqLogic
 	{
 		try {
 			//log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
-			Free_Refresh::RefreshInformation('Tiles_global');
+			if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
+				Free_Refresh::RefreshInformation('Tiles_global_CmdbyCmd');
+			} else {
+				Free_Refresh::RefreshInformation('Tiles_global');
+			}
 			sleep(15);
 		} catch (Exception $exc) {
 			log::add('Freebox_OS', 'error', __('********************  ERREUR CRON UPDATE TILES/NODE ', __FILE__));

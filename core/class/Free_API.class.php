@@ -411,7 +411,9 @@ class Free_API
                     break;
                 default:
                     if ($config_log != null && $id != null && $id != '/all') {
-                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
+                        if ($log_result == true) {
+                            log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
+                        }
                     }
                     if (isset($result['result'])) {
                         return $result['result'];

@@ -86,7 +86,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				$status = 0;
 				foreach ($eqLogics as $eqLogic) {
 					if ($eqLogic->getConfiguration('eq_group') === 'system' || $eqLogic->getConfiguration('eq_group') == null) {
-						if ($eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'VM') {
+						if ($eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'VM' || $eqLogic->getConfiguration('type') == 'freeplug') {
 							$template = $eqLogic->getConfiguration('type');
 						} else {
 							$template = $eqLogic->getLogicalId();

@@ -398,7 +398,7 @@ function setupCron($icon,$icon_type) {
 		success: function (data) {
 			result = data.result.CronTiles;
 			console.log('Type : ' + $icon +' Type 2 : ' + $icon_type);
-			if ($icon_type === 'VM'|| $icon_type === 'parental'|| $icon_type === 'player') {
+			if ($icon_type === 'VM'|| $icon_type === 'parental'|| $icon_type === 'player'|| $icon_type === 'freeplug') {
 				$icon = $icon_type ;
 			}
 			$('.IPV').hide();
@@ -418,6 +418,7 @@ function setupCron($icon,$icon_type) {
 				case 'LCD':
 				case 'system':
 				case 'disk':
+				case 'freeplug':
 				case 'phone':
 				case 'wifi':
 				case 'parental':

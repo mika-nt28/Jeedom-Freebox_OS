@@ -212,11 +212,11 @@ class Freebox_OS extends eqLogic
 	{
 		try {
 			//log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
-			if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
-				Free_Refresh::RefreshInformation('Tiles_global_CmdbyCmd');
-			} else {
-				Free_Refresh::RefreshInformation('Tiles_global');
-			}
+			//if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
+			//	Free_Refresh::RefreshInformation('Tiles_global_CmdbyCmd');
+			//} else {
+			Free_Refresh::RefreshInformation('Tiles_global');
+			//	}
 			sleep(15);
 		} catch (Exception $exc) {
 			log::add('Freebox_OS', 'error', __('********************  ERREUR CRON UPDATE TILES/NODE ', __FILE__));
@@ -518,7 +518,7 @@ class Freebox_OS extends eqLogic
 	public function postSave()
 	{
 		if ($this->getConfiguration('type') == 'alarm_control') {
-			log::add('Freebox_OS', 'debug', '******************** Mise à jour des commandes spécifiques pour Homebridge : ' . $this->getConfiguration('type') . ' **************************************** ');
+			log::add('Freebox_OS', 'debug', '******************** Mise à jour des paramètrages spécifiques pour Homebridge : ' . $this->getConfiguration('type') . ' **************************************** ');
 			foreach ($this->getCmd('action') as $Command) {
 				if (is_object($Command)) {
 					switch ($Command->getLogicalId()) {
@@ -549,6 +549,7 @@ class Freebox_OS extends eqLogic
 					}
 				}
 			}
+			log::add('Freebox_OS', 'debug', '**************************************************************************************************** ');
 		}
 		if ($this->getIsEnable()) {
 			if (($this->getConfiguration('eq_group') == 'nodes' || $this->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
@@ -643,6 +644,8 @@ class Freebox_OS extends eqLogic
 			'diskName' => 'Disque Dur',
 			'downloadsID' => 'downloads',
 			'downloadsName' => 'Téléchargements',
+			'freeplugID' => 'freeplug',
+			'freeplugName' => 'freeplug',
 			'homeadaptersID' => 'homeadapters',
 			'homeadaptersName' => 'Home Adapters',
 			'LCDID' => 'LCD',
@@ -736,6 +739,10 @@ class Freebox_OS extends eqLogic
 				case 'downloads':
 					$eqLogic->setLogicalId($logicalinfo['downloadsID']);
 					//$eqLogic->setName($logicalinfo['downloadsName']);
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'freeplug':
 					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
 					$eqLogic->setConfiguration('eq_group', 'system');
 					break;

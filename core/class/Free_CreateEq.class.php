@@ -95,6 +95,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_FreePlug($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
@@ -341,6 +342,25 @@ class Free_CreateEq
         $listValue = 'normal|Mode normal;slow|Mode lent;hibernate|Mode Stop;schedule|Mode Planning';
         $downloads->AddCommand('Choix Mode Téléchargement', 'mode_download', 'action', 'select', null, null, null, 1, $action, 'mode', 0, $iconDownloadsnormal, 0, 'default', 'default',  20, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
 
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+    private static function createEq_FreePlug($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['freeplugName']);
+        $updateicon = false;
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('universalAPI', null, null, 'freeplug', true, true);
+        log::add('Freebox_OS', 'debug', '│──────────>  Freeplug  result fonction : ' . $result['result']['id']);
+        foreach ($result['result'] as $freeplugs) {
+            log::add('Freebox_OS', 'debug', '│──────────>  Freeplug 1 : ' . $freeplugs['id']);
+            foreach ($freeplugs['members'] as $freeplug) {
+                log::add('Freebox_OS', 'debug', '│──────────>  Freeplug 2 : ' . $freeplug['id']);
+                $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugName'], null, null, '*/5 * * * *');
+                $FreePlug->AddCommand('Rôle', 'net_role', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
+                $FreePlug->AddCommand('Débit TX', 'tx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mo', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
+                $FreePlug->AddCommand('Débit RX', 'rx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mo', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
+            }
+        }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_LCD($logicalinfo, $templatecore_V4)
@@ -872,7 +892,6 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-
 
     private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi)
     {

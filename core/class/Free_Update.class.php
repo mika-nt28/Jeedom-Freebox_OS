@@ -27,7 +27,7 @@ class Free_Update
             //log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
         $Free_API = new Free_API();
-        if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player'  || $logicalId_eq->getConfiguration('type') == 'VM') {
+        if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player'  || $logicalId_eq->getConfiguration('type') == 'freeplug' || $logicalId_eq->getConfiguration('type') == 'VM') {
             $update = $logicalId_eq->getconfiguration('type');
         } else {
             $update = $logicalId_eq->getLogicalId();

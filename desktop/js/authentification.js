@@ -66,17 +66,18 @@ $('.bt_Freebox_OS_Save_room').on('click', function () {
         logs('info', "================= Cron Global Titles : OK");
         cron_tiles = '1';
     };
-    checkvalueCmd = $('.checkbox_freeboxCmdbyCmd:checked').val();
+    /*checkvalueCmd = $('.checkbox_freeboxCmdbyCmd:checked').val();
     if (checkvalueCmd == null) {
         logs('info', "================= Actualisation par commande : NOK");
         CmdbyCmd = '0';
     } else {
         logs('info', "================= Actualisation par commande : OK");
         CmdbyCmd  = '1';
-    };
+    };*/
     console.log('CRON TILES : ' + cron_tiles)
-    console.log('CMD BY CMD : ' +CmdbyCmd)
-    SetSettingTiles(cron_tiles, CmdbyCmd);
+    //console.log('CMD BY CMD : ' +CmdbyCmd)
+    //SetSettingTiles(cron_tiles, CmdbyCmd);
+    SetSettingTiles(cron_tiles);
     logs('info', "================= Sauvegarde des Pièces des Tiles");
     //SaveTitelRoom();
 });
@@ -420,7 +421,7 @@ function GetSettingTiles() {
                 console.log('Cron Global Titles ACTIVATION - TRUE - : ' + data.result.CronTiles);
                 $('.checkbox_freeboxTiles').prop('checked',true);
             };
-            if (data.result.CmdbyCmd == 0) {
+            /*if (data.result.CmdbyCmd == 0) {
                 logs('info', "================= Actualisation par commande : NOK");
                 console.log('Actualisation par commande - FALSE - : ' + data.result.CmdbyCmd);
                 $('.checkbox_freeboxCmdbyCmd').prop('checked', false);
@@ -428,7 +429,7 @@ function GetSettingTiles() {
                 logs('info', "================= Actualisation par commande : OK");
                 console.log('Actualisation par commande - TRUE - : ' + data.result.CmdbyCmd);
                 $('.checkbox_freeboxCmdbyCmd').prop('checked',true);
-            };
+            };*/
         }
     });
 }
@@ -459,7 +460,7 @@ function SetSettingTiles(CronTiles) {
         data: {
             action: "SetSettingTiles",
             cron_tiles: cron_tiles,
-            CmdbyCmd: CmdbyCmd,
+            //fCmdbyCmd: CmdbyCmd,
         },
         dataType: 'json',
         error: function (request, status, error) {

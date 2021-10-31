@@ -386,6 +386,10 @@ class Free_API
         }
         if ($result['success']) {
             $value = 0;
+            if ($update_type == 'freeplug') {
+                $update = 'freeplug';
+                log::add('Freebox_OS', 'debug', '│──────────>  Freeplug 1 new: ' . $result);
+            }
             switch ($update) {
                 case 'connexion':
                     return $result['result'];
@@ -394,6 +398,7 @@ class Free_API
                 case 'network_ping':
                 case 'network':
                 case 'notification':
+                case 'freeplug':
                 case 'wifi':
                     return $result;
                     break;
@@ -411,7 +416,7 @@ class Free_API
                     break;
                 default:
                     if ($config_log != null && $id != null && $id != '/all') {
-                        if ($log_result == true) {
+                        if ($log_request == true) {
                             log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
                         }
                     }

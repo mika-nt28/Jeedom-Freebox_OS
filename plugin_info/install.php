@@ -91,9 +91,9 @@ function Freebox_OS_update()
 					Free_CreateTil::createTil('SetSettingTiles');
 				}
 			}
-			if (!is_object(config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS'))) {
+			/*if (!is_object(config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS'))) {
 				config::save('FREEBOX_TILES_CmdbyCmd', '1', 'Freebox_OS');
-			}
+			}*/
 		}
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');

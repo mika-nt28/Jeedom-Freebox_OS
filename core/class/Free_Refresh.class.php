@@ -26,12 +26,12 @@ class Free_Refresh
         $EqLogics = eqlogic::byId($_freeboxID);
         if ($_freeboxID == 'Tiles_global') {
             Free_Refresh::refresh_titles_global($EqLogics, $Free_API);
-        } else if ($_freeboxID == 'Tiles_global_CmdbyCmd') {
-            $log_result = false;
-            Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, $log_result);
+            //} else if ($_freeboxID == 'Tiles_global_CmdbyCmd') {
+            //  $log_result = false;
+            //Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, $log_result);
         }
         if (is_object($EqLogics) && $EqLogics->getIsEnable()) {
-            if ($EqLogics->getConfiguration('type') == 'player' || $EqLogics->getConfiguration('type') == 'parental' || $EqLogics->getConfiguration('type') == 'VM') {
+            if ($EqLogics->getConfiguration('type') == 'player' || $EqLogics->getConfiguration('type') == 'parental' || $EqLogics->getConfiguration('type') == 'freeplug' || $EqLogics->getConfiguration('type') == 'VM') {
                 $refresh = $EqLogics->getConfiguration('type');
             } else {
                 $refresh = $EqLogics->getLogicalId();
@@ -47,6 +47,9 @@ class Free_Refresh
                     break;
                 case 'downloads':
                     Free_Refresh::refresh_download($EqLogics, $Free_API);
+                    break;
+                case 'freeplug':
+                    Free_Refresh::refresh_freeplug($EqLogics, $Free_API);
                     break;
                 case 'LCD':
                     Free_Refresh::refresh_LCD($EqLogics, $Free_API);
@@ -98,11 +101,11 @@ class Free_Refresh
                     Free_Refresh::refresh_wifi($EqLogics, $Free_API);
                     break;
                 default:
-                    if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
-                        Free_Refresh::refresh_titles_CmdbyCmd($EqLogics, $Free_API, true);
-                    } else {
-                        Free_Refresh::refresh_titles($EqLogics, $Free_API);
-                    }
+                    //if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
+                    //  Free_Refresh::refresh_titles_CmdbyCmd($EqLogics, $Free_API, true);
+                    //} else {
+                    Free_Refresh::refresh_titles($EqLogics, $Free_API);
+                    //}
 
 
                     break;
@@ -888,26 +891,30 @@ class Free_Refresh
     {
         $_eqName = $EqLogic->getName();
         $EqLogicID = eqlogic::byId($EqLogic->getId());
+        if ($log_result == true) {
+            log::add('Freebox_OS', 'debug', '******************** UPDATE POUR  : ' . $_eqName . ' **************************************** ');
+        }
         foreach ($EqLogic->getCmd('info') as $Cmd) {
             if ($Cmd->getLogicalId() == 'ALARM_enable' || $Cmd->getLogicalId() == 'ALARM_state' || $Cmd->getLogicalId() == 'ALARM_mode') {
                 //break;
             } else {
-                $result = $Free_API->universal_get('universalAPI', $Cmd->getLogicalId(), null, 'home/endpoints/' . $EqLogic->getLogicalId(), false, false);
+
+                $result = $Free_API->universal_get('universalAPI', $Cmd->getLogicalId(), null, 'home/tileset/' . $EqLogic->getLogicalId(), true, $log_result);
                 if ($Cmd->getLogicalId() == '11' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
                     $Name = 'state';
-                    /*if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '=========================> ───────── STATE ALARME : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
-                    }*/
+                    if ($log_result == true) {
+                        log::add('Freebox_OS', 'debug', '│ =========================> ───────── OPTION SPECIFIQUE POUR STATE ALARME : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
+                    }
                 } else if ($Cmd->getLogicalId() == '2' && ($EqLogic->getConfiguration('type') == 'alarm_remote' || $EqLogic->getConfiguration('type2') == 'kfb')) {
                     $Name = 'pushed';
-                    /*if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '========================= > ───────── A BOUTON TELECOMMANDE : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
-                    }*/
+                    if ($log_result == true) {
+                        log::add('Freebox_OS', 'debug', '│ =========================> ───────── OPTION SPECIFIQUE POUR BOUTON TELECOMMANDE : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
+                    }
                 } else if ($Cmd->getLogicalId() == '13' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
                     $Name = 'error';
-                    /* if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '========================= > ───────── ERREUR ALARME : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
-                    }*/
+                    if ($log_result == true) {
+                        log::add('Freebox_OS', 'debug', '│ =========================> ───────── OPTION SPECIFIQUE POUR ERREUR ALARME : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
+                    }
                 } else {
                     $Name = $Cmd->getName();
                 }
@@ -952,12 +959,16 @@ class Free_Refresh
                 }
             }
         }
+        if ($log_result == true) {
+            log::add('Freebox_OS', 'debug', '**************************************************************************************************** ');
+        }
     }
     private static function refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, $log_result)
     {
         $EqLogics = eqLogic::byType('Freebox_OS');
         foreach ($EqLogics as $EqLogic) {
             if ($EqLogic->getConfiguration('eq_group') == 'tiles' || $EqLogic->getConfiguration('eq_group') == 'nodes') {
+                $_eqName = $EqLogic->getName();
                 if ($log_result == true) {
                     log::add('Freebox_OS', 'debug', '=========================> ───────── UPDATE EQUIPEMENT : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
                 }
@@ -1136,6 +1147,32 @@ class Free_Refresh
         }
 
         if (isset($results_playerID) && $cmd_powerState) $EqLogics->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $results_playerID['power_state']);
+    }
+    private static function refresh_freeplug($EqLogics, $Free_API)
+    {
+        $result = $Free_API->universal_get('universalAPI', $EqLogics->getLogicalId(), null, 'freeplug', true, true);
+        if ($result != false) {
+            foreach ($EqLogics->getCmd('info') as $Command) {
+                if (is_object($Command)) {
+                    switch ($Command->getLogicalId()) {
+                        case "net_role":
+                            if ($result['result']['net_role'] == 'cco') {
+                                $value = 'Coordinateur';
+                            } else {
+                                $value = 'Station';
+                            }
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $value);
+                            break;
+                        case "rx_rate":
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['rx_rate']);
+                            break;
+                        case "tx_rate":
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tx_rate']);
+                            break;
+                    }
+                }
+            }
+        }
     }
     private static function refresh_VM($EqLogics, $Free_API)
     {

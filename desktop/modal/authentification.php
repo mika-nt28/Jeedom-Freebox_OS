@@ -325,14 +325,14 @@ if (!isConnect('admin')) {
                                     <input id="checkbox_freeboxTiles" type="checkbox" class="configKey checkbox_freeboxTiles" data-l1key="FREEBOX_TILES_CRON" />
                                 </div>
                             </div>
-                            <div class="form-group">
+                            <!-- <div class="form-group">
                                 <label class="col-md-5 control-label">{{Actualisation individuelle des commandes :}}
                                     <sup><i class="fas fa-question-circle" title="{{si la case est cochée, l'actualisation des commandes info sera faite de façon individuelle}}"></i></sup>
                                 </label>
                                 <div class="col-xs-2">
                                     <input id="checkbox_freeboxCmdbyCmd" type="checkbox" class="configKey checkbox_freeboxCmdbyCmd" data-l1key="FREEBOX_TILES_CmdbyCmd" />
                                 </div>
-                            </div>
+                            </div> -->
                             <br />
                         </fieldset>
                     </form>

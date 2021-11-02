@@ -388,7 +388,6 @@ class Free_API
             $value = 0;
             if ($update_type == 'freeplug') {
                 $update = 'freeplug';
-                log::add('Freebox_OS', 'debug', '│──────────>  Freeplug 1 new: ' . $result);
             }
             switch ($update) {
                 case 'connexion':

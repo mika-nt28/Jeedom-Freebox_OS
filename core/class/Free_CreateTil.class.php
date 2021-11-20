@@ -475,7 +475,7 @@ class Free_CreateTil
                                             }
                                         }
                                         if ($Command['ui']['access'] === 'w') {
-                                            $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore_I'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
+                                            $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
                                         }
 
                                         $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);
@@ -971,6 +971,7 @@ class Free_CreateTil
                 // Début caméra
             case 'camera_threshold_rw_nodes':
                 $Label_I = 'Etat ' . $Label;
+                $Templatecore = 'button';
                 $_Min = '0';
                 $_Max = 4;
                 $Order = 150;
@@ -978,6 +979,7 @@ class Free_CreateTil
                 break;
             case 'camera_sensitivity_rw_nodes':
                 $Label_I = 'Etat ' . $Label;
+                $Templatecore = 'button';
                 $_Min = '0';
                 $_Max = 4;
                 $Order = 152;
@@ -996,6 +998,7 @@ class Free_CreateTil
                 $Label = 'Volume du Micro';
                 $Icon_I = 'fas fa-volume-up';
                 $Icon = 'fas fa-volume-up icon_green';
+                $Templatecore = 'button';
                 $_Min = '0';
                 $_Max = 100;
                 $Order = 156;
@@ -1006,6 +1009,7 @@ class Free_CreateTil
             case 'camera_sound_trigger_w_nodes':
                 $Label_I = 'Etat Sensibilité du micro';
                 $Label = 'Sensibilité du micro';
+                $Templatecore = 'button';
                 $_Min = '0';
                 $_Max = 4;
                 $Order = 158;

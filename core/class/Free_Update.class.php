@@ -52,6 +52,12 @@ class Free_Update
                 Free_Update::update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
+            case 'freeplug':
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_freeplug($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                }
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                break;
             case 'LCD':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
@@ -61,6 +67,12 @@ class Free_Update
             case 'homeadapters':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_homeadapters($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                }
+                Free_Refresh::RefreshInformation($logicalId_eq->getId());
+                break;
+            case 'player':
+                if ($logicalId != 'refresh') {
+                    Free_Update::update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
@@ -117,10 +129,6 @@ class Free_Update
                 //}
                 break;
         }
-    }
-    private static function update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update)
-    {
-        $Free_API->universal_put(null, $logicalId_eq->getconfiguration('type'), $logicalId_eq->getConfiguration('action'), null, null, null, $logicalId);
     }
     private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
     {
@@ -191,7 +199,32 @@ class Free_Update
         log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $ID_logicalID);
         $Free_API->universal_put('default', 'universal_put', $ID_logicalID, null, 'home/adapters/', 'PUT', $option);
     }
-
+    private static function update_freeplug($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    {
+        $Free_API->universal_put(null, 'universal_put', null, null, 'freeplug/' . $logicalId_eq->getLogicalId() . '/' . $logicalId, 'POST', null);
+    }
+    private static function update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    {
+        switch ($logicalId) {
+            case 'brightness':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('brightness' => $_options['slider']));
+                break;
+            case 'hide_wifi_keyOn':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => true));
+                break;
+            case 'hide_wifi_keyOff':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => false));
+                break;
+            case 'orientation':
+                if ($_options['select'] != 0) {
+                    $orientation_forced = true;
+                } else {
+                    $orientation_forced = false;
+                }
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('orientation' => $_options['select'], 'orientation_forced' => $orientation_forced));
+                break;
+        }
+    }
     private static function update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
@@ -296,12 +329,10 @@ class Free_Update
         $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);
         Free_Refresh::RefreshInformation($logicalId_eq->getId());
     }
-
     private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
         $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
     }
-
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         $result = $Free_API->nb_appel_absence();
@@ -316,7 +347,6 @@ class Free_Update
             }
         }
     }
-
     private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
@@ -331,27 +361,9 @@ class Free_Update
                 break;
         }
     }
-    private static function update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update)
     {
-        switch ($logicalId) {
-            case 'brightness':
-                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('brightness' => $_options['slider']));
-                break;
-            case 'hide_wifi_keyOn':
-                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => true));
-                break;
-            case 'hide_wifi_keyOff':
-                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => false));
-                break;
-            case 'orientation':
-                if ($_options['select'] != 0) {
-                    $orientation_forced = true;
-                } else {
-                    $orientation_forced = false;
-                }
-                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('orientation' => $_options['select'], 'orientation_forced' => $orientation_forced));
-                break;
-        }
+        $Free_API->universal_put(null, $logicalId_eq->getconfiguration('type'), $logicalId_eq->getConfiguration('action'), null, null, null, $logicalId);
     }
     private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {

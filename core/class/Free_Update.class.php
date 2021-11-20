@@ -462,12 +462,12 @@ class Free_Update
                 if ($logicalId_conf >= 0 && (stripos($logicalId, 'PB_On') !== FALSE || stripos($logicalId, 'PB_Off') !== FALSE)) {
                     if (stripos($logicalId, 'PB_On')  !== false) {
                         $parametre['value'] = true;
-                        $ID_logicalID = substr($logicalId, 5);
+                        $logicalId_conf = substr($logicalId, 5);
                     } else {
                         $parametre['value'] = false;
-                        $ID_logicalID = substr($logicalId, 6);
+                        $logicalId_conf = substr($logicalId, 6);
                     }
-                    log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $ID_logicalID);
+                    //log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $logicalId_conf);
                     log::add('Freebox_OS', 'debug', '│ Paramétrage spécifique BP ON/OFF (' . $logicalId . ' avec Id ' . $logicalId_conf . ') : ' . $parametre['value']);
                     $logicalId = $logicalId_conf;
                 } else {

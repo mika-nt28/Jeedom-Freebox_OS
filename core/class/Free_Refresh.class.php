@@ -1002,7 +1002,6 @@ class Free_Refresh
                 //log::add('Freebox_OS', 'debug', '******************** Update Boucle : ' . $_type_boucle . ' ******************** ');
                 if ($boucle_num == 1 && $_eq_type == 'camera') {
                 } else {
-
                     $EqLogic = eqLogic::byLogicalId($_eq_node, 'Freebox_OS');
                     if (is_object($EqLogic)) {
                         if ($EqLogic->getIsEnable()) {

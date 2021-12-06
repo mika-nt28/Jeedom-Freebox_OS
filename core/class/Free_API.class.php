@@ -354,6 +354,16 @@ class Free_API
                 $config = 'api/v8/home/tileset' . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
+            case 'WebSocket':
+                $config = 'api/v8/ws/event';
+                $config_log = 'Traitement de la Mise à jour de WebSocket';
+                $Parameter = array(
+                    "action" => 'notification',
+                    "success" => true,
+                    "source" => 'vm',
+                    "event" => 'VmStateChange',
+                );
+                break;
             case 'wifi':
                 $config = 'api/v8/wifi/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';
@@ -376,6 +386,9 @@ class Free_API
         }
         if ($result['success']) {
             $value = 0;
+            if ($update_type == 'freeplug') {
+                $update = 'freeplug';
+            }
             switch ($update) {
                 case 'connexion':
                     return $result['result'];
@@ -384,6 +397,7 @@ class Free_API
                 case 'network_ping':
                 case 'network':
                 case 'notification':
+                case 'freeplug':
                 case 'wifi':
                     return $result;
                     break;
@@ -401,7 +415,9 @@ class Free_API
                     break;
                 default:
                     if ($config_log != null && $id != null && $id != '/all') {
-                        log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
+                        if ($log_request == true) {
+                            log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
+                        }
                     }
                     if (isset($result['result'])) {
                         return $result['result'];

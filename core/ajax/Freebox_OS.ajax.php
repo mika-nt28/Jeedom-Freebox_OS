@@ -115,11 +115,13 @@ try {
 		case 'GetSettingTiles':
 			$result = array(
 				"CronTiles" => config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'),
+				//"CmdbyCmd" => config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS')
 			);
 			ajax::success($result);
 			break;
 		case 'SetSettingTiles':
 			config::save('FREEBOX_TILES_CRON', init('cron_tiles'), 'Freebox_OS');
+			//config::save('FREEBOX_TILES_CmdbyCmd', init('CmdbyCmd'), 'Freebox_OS');
 			Free_CreateTil::createTil('SetSettingTiles');
 			ajax::success(true);
 			break;

@@ -260,10 +260,10 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 		case 'network':
 		case 'netshare':
 		case 'networkwifiguest':
-			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon + '.png');
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/img/' + $icon + '.png');
 			break;
 		default:
-			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/img/' + $icon_type + '.png');
 			break;
 	}
 });
@@ -272,14 +272,14 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').on('change', funct
 	$icon_type = $('.eqLogicAttr[data-l1key=configuration][data-l2key=type]').value();
 	switch ($icon_type2) {
 		case 'kfb':
-			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type + '.png');
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/img/' + $icon_type + '.png');
 			break;
 		case 'dws':
 		case 'plug':
 		case 'opener':
 		case 'basic_shutter':
 		case 'shutter':
-			$('#img_device').attr("src", 'plugins/Freebox_OS/core/images/' + $icon_type2 + '.png');
+			$('#img_device').attr("src", 'plugins/Freebox_OS/core/img/' + $icon_type2 + '.png');
 			break;
 	}
 
@@ -398,7 +398,7 @@ function setupCron($icon,$icon_type) {
 		success: function (data) {
 			result = data.result.CronTiles;
 			console.log('Type : ' + $icon +' Type 2 : ' + $icon_type);
-			if ($icon_type === 'VM'|| $icon_type === 'parental'|| $icon_type === 'player') {
+			if ($icon_type === 'VM'|| $icon_type === 'parental'|| $icon_type === 'player'|| $icon_type === 'freeplug') {
 				$icon = $icon_type ;
 			}
 			$('.IPV').hide();
@@ -418,6 +418,7 @@ function setupCron($icon,$icon_type) {
 				case 'LCD':
 				case 'system':
 				case 'disk':
+				case 'freeplug':
 				case 'phone':
 				case 'wifi':
 				case 'parental':

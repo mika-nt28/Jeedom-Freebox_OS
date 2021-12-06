@@ -202,13 +202,14 @@ class Free_CreateTil
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {
-                $homeadapters->AddCommand($Equipement['label'], $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
+                $Label_ETAT =  $Equipement['label'];
+                $homeadapters->AddCommand($Label_ETAT, $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
                 if ($Equipement['status'] == 'active') {
                     $homeadapters_value = 1;
                 } else {
                     $homeadapters_value = 0;
                 }
-                $homeadapters->checkAndUpdateCmd($Equipement['id'], $homeadapters_value);
+                //$homeadapters->checkAndUpdateCmd($Equipement['id'], $homeadapters_value);
             }
         }
     }
@@ -474,7 +475,7 @@ class Free_CreateTil
                                             }
                                         }
                                         if ($Command['ui']['access'] === 'w') {
-                                            $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore_I'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
+                                            $Action = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'action', $setting['SubType'], $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', 'default', 0, $setting['Icon'], $setting['ForceLineB'], $setting['Min'], $setting['Max'], $setting['Order'], false, false, null, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
                                         }
 
                                         $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);
@@ -714,11 +715,7 @@ class Free_CreateTil
                 $CreateCMD = 'PAS DE CREATION';
                 break;
         }
-        if ($CreateCMD === true) {
-            $Value = "";
-        } else {
-            $Value = ' ==> ' . $CreateCMD;
-        }
+
         $Setting = array(
             "CreateCMD" => $CreateCMD,
             "Eq_type_home" =>  $eq_group,
@@ -974,6 +971,7 @@ class Free_CreateTil
                 // Début caméra
             case 'camera_threshold_rw_nodes':
                 $Label_I = 'Etat ' . $Label;
+                $Templatecore = 'button';
                 $_Min = '0';
                 $_Max = 4;
                 $Order = 150;
@@ -981,6 +979,7 @@ class Free_CreateTil
                 break;
             case 'camera_sensitivity_rw_nodes':
                 $Label_I = 'Etat ' . $Label;
+                $Templatecore = 'button';
                 $_Min = '0';
                 $_Max = 4;
                 $Order = 152;
@@ -999,6 +998,7 @@ class Free_CreateTil
                 $Label = 'Volume du Micro';
                 $Icon_I = 'fas fa-volume-up';
                 $Icon = 'fas fa-volume-up icon_green';
+                $Templatecore = 'button';
                 $_Min = '0';
                 $_Max = 100;
                 $Order = 156;
@@ -1009,6 +1009,7 @@ class Free_CreateTil
             case 'camera_sound_trigger_w_nodes':
                 $Label_I = 'Etat Sensibilité du micro';
                 $Label = 'Sensibilité du micro';
+                $Templatecore = 'button';
                 $_Min = '0';
                 $_Max = 4;
                 $Order = 158;

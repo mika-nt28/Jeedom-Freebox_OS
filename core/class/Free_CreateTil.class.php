@@ -224,6 +224,8 @@ class Free_CreateTil
         $Free_API->universal_get('tiles');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'CAMERA');
         $Free_API->universal_get('universalAPI', null, null, 'camera');
+        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'HOME ADAPTERS');
+        $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         log::add('Freebox_OS', 'debug', '********************  FIN LOG DEBUG : ' . 'TILES / NODES ********************');
         log::add('Freebox_OS', 'debug', '********************');
     }

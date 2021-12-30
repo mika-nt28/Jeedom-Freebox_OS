@@ -81,7 +81,7 @@ function Freebox_OS_update()
 		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
-		$eq_version = '2';
+		$eq_version = '2.1';
 		Freebox_OS::updateLogicalID($eq_version, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Update paramétrage Plugin tiles');
 		if ($eq_version === '2') {

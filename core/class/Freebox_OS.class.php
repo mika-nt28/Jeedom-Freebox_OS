@@ -690,16 +690,18 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		foreach ($eqLogics as $eqLogic) {
-			if ($eqLogic->getConfiguration('type') === 'parental') {
+			if ($eqLogic->getConfiguration('type') === 'alarm_control') {
+				$type_eq = 'alarm_control';
+			} else if ($eqLogic->getConfiguration('type') === 'camera') {
+				$type_eq = 'camera';
+			} else if ($eqLogic->getConfiguration('type') === 'freeplug') {
+				$type_eq = 'freeplug';
+			} else if ($eqLogic->getConfiguration('type') === 'parental') {
 				$type_eq = 'parental_controls';
 			} else if ($eqLogic->getConfiguration('type') === 'player') {
 				$type_eq = 'player';
 			} else if ($eqLogic->getConfiguration('type') === 'VM') {
 				$type_eq = 'VM';
-			} else if ($eqLogic->getConfiguration('type') === 'alarm_control') {
-				$type_eq = 'alarm_control';
-			} else if ($eqLogic->getConfiguration('type') === 'camera') {
-				$type_eq = 'camera';
 			} else {
 				$type_eq = $eqLogic->getLogicalId();
 			}

@@ -231,12 +231,17 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
 	}
 
+	public static function EqLogic_ID($Name, $_logicalId)
+	{
+		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
+		log::add('Freebox_OS', 'debug', '>> ================ >> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId);
+		return $EqLogic;
+	}
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system')
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', '>> ================ >> Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
+		log::add('Freebox_OS', 'debug', '>> ================ >> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
 		if (!is_object($EqLogic)) {
-
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
 			if ($_Room == null) {
@@ -320,10 +325,9 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatename = null, $name_connectivity_type = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
-
 		$Command = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Command)) {
 			$VerifName = $Name;
@@ -332,6 +336,12 @@ class Freebox_OS extends eqLogic
 			$Command->setLogicalId($_logicalId);
 			$Command->setEqLogic_id($this->getId());
 			$count = 0;
+			if ($name_connectivity_type != null) {
+				if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
+					//log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $name_connectivity_type);
+					$VerifName = $VerifName . ' (' . $name_connectivity_type . ')';
+				}
+			}
 			while (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
 				$count++;
 				$VerifName = $Name . '(' . $count . ')';
@@ -441,6 +451,32 @@ class Freebox_OS extends eqLogic
 		}
 		if ($link_logicalId != 'default') {
 			$Command->setConfiguration('logicalId', $link_logicalId);
+		}
+
+		// Mise à jour des noms de la commande
+		if ($updatename != null) {
+			if ($Name != $Command->getName()) {
+				log::add('Freebox_OS', 'debug', '│ Freebox Name: ' . $Name . ' -- Nom de la commande Jeedom : ' . $Command->getName());
+				$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
+				$Name_wifi = $Name . ' (wifi)';
+				$Name_ethernet = $Name . ' (ethernet)';
+				if ($Name_verif == $Command->getName || $Name_wifi == $Command->getName || $Name_ethernet == $Command->getName) {
+					log::add('Freebox_OS', 'debug', '│ Freebox Name + Connectivity Type : ' . $Name_verif . ' -- Nom de la commande Jeedom : ' . $Command->getName() . ' ==> Identique PAS DE CHANGEMENT');
+				} else {
+					if ($name_connectivity_type != null) {
+						if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name))) {
+							//log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $name_connectivity_type);
+							$Name = $Name_verif;
+						}
+					}
+					if ($Name_verif != $Command->getName()) {
+						//log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $name_connectivity_type);
+						$Command->setName($Name);
+					}
+				}
+			} else {
+				//log::add('Freebox_OS', 'debug', '│ Nom de la commande identique : ' . $Name);
+			}
 		}
 
 		// Forçage pour mettre à jour l'affichage // Option en cas de Update Plugin
@@ -690,16 +726,18 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		foreach ($eqLogics as $eqLogic) {
-			if ($eqLogic->getConfiguration('type') === 'parental') {
+			if ($eqLogic->getConfiguration('type') === 'alarm_control') {
+				$type_eq = 'alarm_control';
+			} else if ($eqLogic->getConfiguration('type') === 'camera') {
+				$type_eq = 'camera';
+			} else if ($eqLogic->getConfiguration('type') === 'freeplug') {
+				$type_eq = 'freeplug';
+			} else if ($eqLogic->getConfiguration('type') === 'parental') {
 				$type_eq = 'parental_controls';
 			} else if ($eqLogic->getConfiguration('type') === 'player') {
 				$type_eq = 'player';
 			} else if ($eqLogic->getConfiguration('type') === 'VM') {
 				$type_eq = 'VM';
-			} else if ($eqLogic->getConfiguration('type') === 'alarm_control') {
-				$type_eq = 'alarm_control';
-			} else if ($eqLogic->getConfiguration('type') === 'camera') {
-				$type_eq = 'camera';
 			} else {
 				$type_eq = $eqLogic->getLogicalId();
 			}

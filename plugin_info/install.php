@@ -81,16 +81,16 @@ function Freebox_OS_update()
 		}
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
-		$eq_version = '2';
+		$eq_version = '2.1';
 		Freebox_OS::updateLogicalID($eq_version, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Update paramétrage Plugin tiles');
 		if ($eq_version === '2') {
-			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+			/*if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
 					config::save('FREEBOX_TILES_CRON', '1', 'Freebox_OS');
 					Free_CreateTil::createTil('SetSettingTiles');
 				}
-			}
+			}*/
 			/*if (!is_object(config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS'))) {
 				config::save('FREEBOX_TILES_CmdbyCmd', '1', 'Freebox_OS');
 			}*/

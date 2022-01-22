@@ -528,7 +528,7 @@ class Free_CreateEq
     }
     private static function createEq_network_interface($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌───────── Recherche des Interfaces réseaux ');
+        log::add('Freebox_OS', 'debug', '┌───────── Recherche des Interfaces réseaux : ' . $logicalinfo['networkName']);
         $Free_API = new Free_API();
         $Free_API->universal_get('network', null, null, 'browser/interfaces');
         log::add('Freebox_OS', 'debug', '└─────────');
@@ -568,19 +568,40 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques : ' . $_networkname);
         $Free_API = new Free_API();
-        $network = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
-        //$network->AddCommand('Redirections des ports', 'redir', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_redir, 0, 'default', 'default',  -4, '0', true, false, null, true, null, null, null, null, null, 'redir?lan_ip=#lan_ip#&enable_lan=#enable_lan#&src_ip=#src_ip#&ip_proto=#ip_proto#&wan_port_start=#wan_port_start#&wan_port_end=#wan_port_end#&lan_port=#lan_port#&comment=#comment#');
+        $network = Freebox_OS::EqLogic_ID($_networkname, $_networkID);
+        // ---> $network->AddCommand('Redirections des ports', 'redir', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_redir, 0, 'default', 'default',  -4, '0', true, false, null, true, null, null, null, null, null, 'redir?lan_ip=#lan_ip#&enable_lan=#enable_lan#&src_ip=#src_ip#&ip_proto=#ip_proto#&wan_port_start=#wan_port_start#&wan_port_end=#wan_port_end#&lan_port=#lan_port#&comment=#comment#');
         $network->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -30, '0', $updateWidget, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#&type=#type#');
-        $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, true, 'default', 'default', 0, $icon_search, true, 'default', 'default',  -20, '0', $updateWidget, false, null, true, null, null, null, null, null, null, null, true);
-        $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -10, '0', $updateWidget, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
+        $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, true, 'default', 'default', 0, $icon_search, true, 'default', 'default',  0, '0', $updateWidget, false, null, true, null, null, null, null, null, null, null, true);
+        $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  0, '0', $updateWidget, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
 
-
         if (isset($result['result'])) {
-
             foreach ($result['result'] as $Equipement) {
                 if ($Equipement['primary_name'] != '') {
-                    $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true);
+                    $replace_device_type = array(
+                        ' ' => ' ',
+                        '/' => ' ',
+                        '/\'+/' => ' ',
+                        '\\' => ' ',
+                        'É' => 'E',
+                        '\"' => ' ',
+                        "\'" => ' ',
+                        "[" => ' ',
+                        "]" => ' ',
+                        "'" => ' '
+                    );
+                    $Equipement['primary_name'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['primary_name']);
+
+                    if (isset($Equipement['access_point'])) {
+                        //log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $Equipement['access_point']['connectivity_type']);
+                        $updatename = true;
+                        $name_connectivity_type = $Equipement['access_point']['connectivity_type'];
+                    } else {
+                        //log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $Equipement['primary_name'] . ' :  APPAREIL NON CONNECTE ACTUELLEMENT');
+                        $updatename = false;
+                        $name_connectivity_type = 'wifi ethernet ?';
+                    }
+                    $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true, null, null, null, null, null, null, null, null, null, null, null, $updatename, $name_connectivity_type);
                     $Command->setConfiguration('host_type', $Equipement['host_type']);
                     if (isset($Equipement['l3connectivities'])) {
                         foreach ($Equipement['l3connectivities'] as $Ip) {

@@ -313,6 +313,8 @@ class Free_CreateTil
                         'É' => 'E',
                         '\"' => ' ',
                         "\'" => ' ',
+                        "[" => ' ',
+                        "]" => ' ',
                         "'" => ' '
                     );
                     $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);

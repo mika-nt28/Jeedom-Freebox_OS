@@ -92,7 +92,7 @@ class Free_CreateTil
                     $cron->setFunction('FreeboxGET');
                     $cron->setEnable(1);
                     $cron->setDeamon(1);
-                    //$cron->setDeamonSleepTime(1);
+                    $cron->setDeamonSleepTime(1);
                     $cron->setSchedule('* * * * *');
                     $cron->setTimeout('1440');
                     $cron->save();

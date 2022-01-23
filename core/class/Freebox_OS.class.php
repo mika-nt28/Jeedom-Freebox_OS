@@ -123,13 +123,13 @@ class Freebox_OS extends eqLogic
 			$return['state'] = 'nok';
 			return $return;
 		}
-		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
-		if (!is_object($cron)) {
+		$cron1 = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+		if (!is_object($cron1)) {
 			$return['state'] = 'nok';
 			return $return;
 		}
-		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
-		if (!is_object($cron)) {
+		$cron2 = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron2)) {
 			$return['state'] = 'nok';
 			return $return;
 		}
@@ -142,47 +142,47 @@ class Freebox_OS extends eqLogic
 		self::deamon_stop();
 		if ($deamon_info['launchable'] != 'ok') return;
 		if ($deamon_info['state'] == 'ok') return;
-		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
-		if (!is_object($cron)) {
+		$cron1 = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+		if (!is_object($cron1)) {
 			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
-		$cron->run();
-		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
-		if (!is_object($cron)) {
+		$cron1->run();
+		$cron2 = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron2)) {
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		}
-		$cron->run();
+		$cron2->run();
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
-				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
-				if (!is_object($cron)) {
+				$cron3 = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+				if (!is_object($cron3)) {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				}
-				$cron->run();
+				$cron3->run();
 			}
 		}
 	}
 	public static function deamon_stop()
 	{
-		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
-		if (!is_object($cron)) {
+		$cron1 = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
+		if (!is_object($cron1)) {
 			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
-		$cron->halt();
-		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
-		if (!is_object($cron)) {
+		$cron1->halt();
+		$cron2 = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (!is_object($cron2)) {
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		}
-		$cron->halt();
+		$cron2->halt();
 		cache::delete("actionlist");
 
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == '1') {
-				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
-				if (!is_object($cron)) {
+				$cron3 = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+				if (!is_object($cron3)) {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				}
-				$cron->halt();
+				$cron3->halt();
 			}
 		}
 

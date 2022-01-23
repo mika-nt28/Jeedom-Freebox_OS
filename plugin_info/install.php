@@ -21,7 +21,7 @@ function Freebox_OS_install()
 		$cron->setFunction('FreeboxPUT');
 		$cron->setEnable(1);
 		$cron->setDeamon(1);
-		$cron->setDeamonSleepTime(1);
+		//$cron->setDeamonSleepTime(1);
 		$cron->setSchedule('* * * * *');
 		$cron->setTimeout('1440');
 		$cron->save();
@@ -48,7 +48,7 @@ function Freebox_OS_update()
 		$cron->setFunction('FreeboxPUT');
 		$cron->setEnable(1);
 		$cron->setDeamon(1);
-		$cron->setDeamonSleepTime(1);
+		//$cron->setDeamonSleepTime(1);
 		$cron->setSchedule('* * * * *');
 		$cron->setTimeout('1440');
 		$cron->save();

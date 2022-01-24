@@ -463,7 +463,8 @@ class Free_Refresh
             $_networkinterface = 'wifiguest';
         }
         $result_network_ping = $Free_API->universal_get('network_ping', null, null, 'browser/' . $_networkinterface);
-
+        $order_count_active = 100;
+        $order_count_noactive = 400;
         if (!$result_network_ping['success']) {
             log::add('Freebox_OS', 'debug', '│===========> RESULTAT  Requête pas correct : ' . $result_network_ping['success']);
         } else {
@@ -496,10 +497,16 @@ class Free_Refresh
                         $cmd->setConfiguration('host_type', $result['host_type']);
                         if (isset($result['active'])) {
                             if ($result['active'] == 'true') {
-                                $cmd->setOrder($cmd->getOrder() % 1000);
+                                $order_count_active++;
+                                //$cmd->setOrder($order_count_active);
+                                $cmd->save();
+                                $cmd->setOrder($cmd->getOrder() % $order_count_active);
                                 $value = true;
                             } else {
-                                $cmd->setOrder($cmd->getOrder() % 1000 + 1000);
+                                $order_count_noactive++;
+                                //$cmd->setOrder($order_count_noactive);
+                                $cmd->save();
+                                $cmd->setOrder($cmd->getOrder() % $order_count_noactive);
                                 $value = 0;
                             }
                         } else {

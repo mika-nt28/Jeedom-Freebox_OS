@@ -509,6 +509,7 @@ class Free_Update
                 break;
         }
         if ($logicalId != 'refresh') {
+            sleep(2);
             //if ($_execute == 1)  
             $Free_API->universal_put($parametre, 'set_tiles', $logicalId, $logicalId_eq->getLogicalId(), null);
         }

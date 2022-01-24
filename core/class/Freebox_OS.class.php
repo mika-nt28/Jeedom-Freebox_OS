@@ -338,7 +338,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatename = null, $name_connectivity_type = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatename = false, $name_connectivity_type = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
 		$Command = $this->getCmd($Type, $_logicalId);
@@ -351,8 +351,10 @@ class Freebox_OS extends eqLogic
 			$count = 0;
 			if ($name_connectivity_type != null) {
 				if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
-					//log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $name_connectivity_type);
 					$VerifName = $VerifName . ' (' . $name_connectivity_type . ')';
+				}
+				if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
+					$VerifName = $VerifName . ' (' . $name_connectivity_type . ' - ' . $_logicalId . ')';
 				}
 			}
 			while (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
@@ -466,25 +468,25 @@ class Freebox_OS extends eqLogic
 			$Command->setConfiguration('logicalId', $link_logicalId);
 		}
 
-		// Mise à jour des noms de la commande
-		if ($updatename != null) {
+		// Mise à jour des noms de la commande pour le metwork
+		if ($updatename != false) {
 			if ($Name != $Command->getName()) {
-				log::add('Freebox_OS', 'debug', '│ Freebox Name: ' . $Name . ' -- Nom de la commande Jeedom : ' . $Command->getName());
+				log::add('Freebox_OS', 'debug', '│=======> Non différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Command->getName());
 				$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
 				$Name_wifi = $Name . ' (wifi)';
 				$Name_ethernet = $Name . ' (ethernet)';
 				if ($Name_verif == $Command->getName || $Name_wifi == $Command->getName || $Name_ethernet == $Command->getName) {
-					log::add('Freebox_OS', 'debug', '│ Freebox Name + Connectivity Type : ' . $Name_verif . ' -- Nom de la commande Jeedom : ' . $Command->getName() . ' ==> Identique PAS DE CHANGEMENT');
 				} else {
 					if ($name_connectivity_type != null) {
 						if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name))) {
-							//log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $name_connectivity_type);
 							$Name = $Name_verif;
 						}
 					}
+					if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name_verif))) {
+						$Name_verif = $Name_verif . ' - (' . $_logicalId . ')';
+					}
 					if ($Name_verif != $Command->getName()) {
-						//log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $name_connectivity_type);
-						$Command->setName($Name);
+						$Command->setName($Name_verif);
 					}
 				}
 			} else {

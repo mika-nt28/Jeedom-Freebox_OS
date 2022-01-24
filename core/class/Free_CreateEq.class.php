@@ -586,18 +586,16 @@ class Free_CreateEq
                         'É' => 'E',
                         '\"' => ' ',
                         "\'" => ' ',
-                        "[" => ' ',
-                        "]" => ' ',
+                        "[" => '',
+                        "]" => '',
                         "'" => ' '
                     );
                     $Equipement['primary_name'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['primary_name']);
 
                     if (isset($Equipement['access_point'])) {
-                        //log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $Equipement['access_point']['connectivity_type']);
                         $updatename = true;
                         $name_connectivity_type = $Equipement['access_point']['connectivity_type'];
                     } else {
-                        //log::add('Freebox_OS', 'debug', '>───────── Type de connection : ' . $Equipement['primary_name'] . ' :  APPAREIL NON CONNECTE ACTUELLEMENT');
                         $updatename = false;
                         $name_connectivity_type = 'wifi ethernet ?';
                     }

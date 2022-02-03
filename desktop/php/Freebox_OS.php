@@ -29,7 +29,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<!-- Boutons de gestion du plugin -->
 		<div class="eqLogicThumbnailContainer">
 			<div class="cursor authentification logoWarning">
-				<i class="fas fa-rss" title="Cette fonction permet de lancer l'apparaige et paramétrer certaines options"></i>
+				<i class="fas fa-rss" title="{{Cette fonction permet de lancer l'apparaige et paramétrer certaines options}}"></i>
 				<br>
 				<span>{{Appairage}}</span>
 			</div>
@@ -54,7 +54,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<span>{{Scan}}<br />{{Contrôle parental}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary titleAction" data-action="tile">
-				<i class="fas fa-search" title="Cette fonction permet de créer les commandes pour la partie"></i>
+				<i class="fas fa-search" title="{{Cette fonction permet de créer les commandes pour la partie}}"></i>
 				<br>
 				<span>{{Scan}}<br />{{Tiles}}</span>
 			</div>
@@ -62,7 +62,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			if (log::getLogLevel('Freebox_OS') <= 200) :
 			?>
 				<div class="cursor eqLogicAction logoWarning titleAction" data-action="search_debugTile">
-					<i class="fas fa-question-circle" title="Cette fonction permet juste de lancer l'ensemble des requêtes pour la partie domotique, cela ne crée pas de commande"></i>
+					<i class="fas fa-question-circle" title="{{Cette fonction permet juste de lancer l'ensemble des requêtes pour la partie domotique, cela ne crée pas de commande}}"></i>
 					<br />
 					<span>{{Debug Tiles}}</span>
 				</div>
@@ -79,46 +79,48 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			</div>
 		</div>
 		<!-- Liste des équipements du plugin "Mes équipements" -->
-		<div class="divEquipements">
-			<legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
-			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
-				<?php
-				$status = 0;
-				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('eq_group') === 'system' || $eqLogic->getConfiguration('eq_group') == null) {
-						if ($eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'VM' || $eqLogic->getConfiguration('type') == 'freeplug') {
-							$template = $eqLogic->getConfiguration('type');
-						} else {
-							$template = $eqLogic->getLogicalId();
-						}
-
-						$status = 1;
+		<!-- <div class="divEquipements"> -->
+		<legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
+		<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
+			<?php
+			foreach ($eqLogics as $eqLogic) {
+				if ($eqLogic->getConfiguration('eq_group') === 'system' || $eqLogic->getConfiguration('eq_group') == null) {
+					if ($eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'VM' || $eqLogic->getConfiguration('type') == 'freeplug') {
+						$template = $eqLogic->getConfiguration('type');
+					} else {
+						$template = $eqLogic->getLogicalId();
+					}
+					if (count($eqLogics) == 0) {
+						echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun équipement détecté. Lancez un \"Scan équipements standards\".}}</div>';
+					} else {
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
 						echo '<img src="plugins/Freebox_OS/core/img/' . $template . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
+						echo '<span class="hidden hiddenAsCard displayTableRight">';
+						if ($eqLogic->getConfiguration('autorefresh', '') != '') {
+							echo '<span class="label label-info">' . $eqLogic->getConfiguration('autorefresh') . '</span>';
+						}
+						echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+						echo '</span>';
 						echo '</div>';
 					}
 				}
-				if ($status == 0) {
-					$divEquipements = false;
-					echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement détecté. Lancez un \"Scan équipements standards\".}}</span></center>";
-				} else {
-					$divEquipements = true;
-				}
-				?>
-			</div>
+			}
+			?>
 		</div>
+		<!-- </div> -->
+
 		<!-- Liste des équipements du plugin "Mes équipements Home - Tiles" -->
-		<div class="divTiles">
-			<legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
-			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
-				<?php
-				$status = 0;
-				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('type') === 'player' || $eqLogic->getConfiguration('type') === 'alarm_control' || $eqLogic->getConfiguration('type') === 'camera' || $eqLogic->getConfiguration('type') === 'light' || $eqLogic->getConfiguration('type') === 'alarm_remote') {
+		<!--<div class="divTiles"> -->
+		<legend class="titleAction"><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
+		<div class=" eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement titleAction">
+			<?php
+			foreach ($eqLogics as $eqLogic) {
+				if ($eqLogic->getConfiguration('eq_group') === 'tiles' || $eqLogic->getConfiguration('eq_group') === 'nodes' || $eqLogic->getConfiguration('eq_group') === 'tiles_SP') {
+					$count_tiles++;
+					if ($eqLogic->getConfiguration('type') === 'alarm_control' || $eqLogic->getConfiguration('type') === 'camera' || $eqLogic->getConfiguration('type') === 'light' || $eqLogic->getConfiguration('type') === 'alarm_remote') {
 						$template = $eqLogic->getConfiguration('type');
 						$icon = $template;
 					} elseif ($eqLogic->getConfiguration('type') == 'alarm_sensor') {
@@ -143,56 +145,52 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							$icon = 'default';
 						}
 					}
-					if ($eqLogic->getConfiguration('eq_group') === 'tiles' || $eqLogic->getConfiguration('eq_group') === 'nodes' || $eqLogic->getConfiguration('eq_group') === 'tiles_SP') {
 
-						$status = 1;
-						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="plugins/Freebox_OS/core/img/' . $icon . '.png"/>';
-						echo '<br>';
-						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
-						echo '</div>';
+					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+					echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+					echo '<img src="plugins/Freebox_OS/core/img/' . $icon . '.png"/>';
+					echo '<br>';
+					echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+					echo '<span class="hidden hiddenAsCard displayTableRight">';
+					if ($eqLogic->getConfiguration('autorefresh', '') != '') {
+						echo '<span class="label label-info">' . $eqLogic->getConfiguration('autorefresh') . '</span>';
 					}
-				}
-				if ($status == 0) {
-					$divTiles = false;
-					echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Home - Tiles détecté. Lancez un \"Scan Tiles\".}}</span></center>";
-				} else {
-					$divTiles = true;
-				}
-				?>
-			</div>
-		</div>
-		<!-- Liste des équipements du plugin "Mes contrôles parentaux" -->
-		<div class="divParental">
-			<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parentaux}}</legend>
-			<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
-				<?php
-				$status = 0;
-				foreach ($eqLogics as $eqLogic) {
-					if ($eqLogic->getConfiguration('eq_group') == 'parental_controls') {
-						$status = 1;
-						$template = $eqLogic->getConfiguration('type');
-						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
-						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
-						echo '<img src="plugins/Freebox_OS/core/img/' . $template . '.png"/>';
-						echo '<br>';
-						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-						echo '<span class="hidden hiddenAsCard displayTableRight">' . $eqLogic->getConfiguration('autorefresh')  .  '</span>';
-						echo '</div>';
-					}
-				}
-				if ($status == 1) {
+					echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+					echo '</span>';
 					echo '</div>';
-					$parental = true;
-				} else {
-					echo "<br/><br/><br/><center><span style='color:#767676;font-size:1em;font-weight: bold;'>{{Aucun équipement Contrôle Parental détecté. Lancez un \"Scan Contrôle parental\".}}</span></center>";
-					$parental = false;
 				}
-				?>
-			</div>
+			}
+			?>
 		</div>
+		<!-- </div> -->
+
+		<!-- Liste des équipements du plugin "Mes contrôles parentaux" -->
+		<!--<div class="divParental"> -->
+		<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parentaux}}</legend>
+		<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
+			<?php
+			foreach ($eqLogics as $eqLogic) {
+				if ($eqLogic->getConfiguration('eq_group') == 'parental_controls') {
+					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
+					echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
+					echo '<img src="plugins/Freebox_OS/core/img/' . $icon . '.png"/>';
+					echo '<br>';
+					echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
+					echo '<span class="hidden hiddenAsCard displayTableRight">';
+					if ($eqLogic->getConfiguration('autorefresh', '') != '') {
+						echo '<span class="label label-info">' . $eqLogic->getConfiguration('autorefresh') . '</span>';
+					}
+					echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+					echo '</span>';
+					echo '</div>';
+				}
+			}
+
+			?>
+		</div>
+		<!--</div> -->
+
+
 	</div> <!-- /.eqLogicThumbnailDisplay -->
 
 	<?php
@@ -216,28 +214,28 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<!-- Onglets -->
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fas fa-arrow-circle-left"></i></a></li>
-			<li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i><span class="hidden-xs"> {{Équipement}}</span></a></li>
-			<li role="presentation"><a href="#commandtab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-list"></i><span class="hidden-xs"> {{Commandes}}</span></a></li>
+			<li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> {{Equipement}}</a></li>
+			<li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fas fa-list-alt"></i> {{Commandes}}</a></li>
 		</ul>
 		<div class="tab-content">
 			<!-- Onglet de configuration de l'équipement -->
 			<div role="tabpanel" class="tab-pane active" id="eqlogictab">
 				<!-- Partie gauche de l'onglet "Equipements" -->
-				<!-- Paramètres généraux de l'équipement -->
+				<!-- Paramètres généraux et spécifiques de l'équipement -->
 				<form class="form-horizontal">
 					<fieldset>
-						<div class="col-lg-7">
-							<legend> {{}}</legend> <!-- Partie générale non affiché <i class="fas fa-wrench"></i> {{Général}}" -->
-							<div class="form-group ">
-								<label class="col-sm-3 control-label">{{Nom de l'équipement}}</label>
-								<div class="col-sm-7">
-									<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display : none;" />
-									<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}" />
+						<div class="col-lg-6">
+							<legend><i class="fas fa-wrench"></i> {{Paramètres généraux}}</legend>
+							<div class="form-group">
+								<label class="col-sm-4 control-label">{{Nom de l'équipement}}</label>
+								<div class="col-sm-6">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="id" style="display:none;">
+									<input type="text" class="eqLogicAttr form-control" data-l1key="name" placeholder="{{Nom de l'équipement}}">
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Objet parent}}</label>
-								<div class="col-sm-7">
+								<label class="col-sm-4 control-label">{{Objet parent}}</label>
+								<div class="col-sm-6">
 									<select id="sel_object" class="eqLogicAttr form-control" data-l1key="object_id">
 										<option value="">{{Aucun}}</option>
 										<?php
@@ -251,34 +249,34 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Catégorie}}</label>
-								<div class="col-sm-9">
+								<label class="col-sm-4 control-label">{{Catégorie}}</label>
+								<div class="col-sm-6">
 									<?php
 									foreach (jeedom::getConfiguration('eqLogic:category') as $key => $value) {
 										echo '<label class="checkbox-inline">';
-										echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" />' . $value['name'];
+										echo '<input type="checkbox" class="eqLogicAttr" data-l1key="category" data-l2key="' . $key . '" >' . $value['name'];
 										echo '</label>';
 									}
 									?>
 								</div>
 							</div>
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Options}}</label>
-								<div class="col-sm-7">
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" title="Activer l'équipement" checked />{{Activer}}</label>
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" title="Rendre l'équipement visible" checked />{{Visible}}</label>
+								<label class="col-sm-4 control-label">{{Options}}</label>
+								<div class="col-sm-6">
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isEnable" checked>{{Activer}}</label>
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" data-l1key="isVisible" checked>{{Visible}}</label>
 								</div>
 							</div>
-							<br>
 
-							<!-- Paramètres spéficique de l'équipement -->
-							<legend><i class="fas fa-cogs"></i> {{Paramètres}}</legend>
-							<!-- Champ de saisie du cron d'auto-actualisation + assistant cron -->
+							<legend><i class="fas fa-cogs"></i> {{Paramètres spécifiques}}</legend>
+
+							<!-- Exemple de champ de saisie du cron d'auto-actualisation avec assistant -->
+							<!-- La fonction cron de la classe du plugin doit contenir le code prévu pour que ce champ soit fonctionnel -->
 							<div class="form-group">
-								<label class="col-sm-3 control-label">{{Auto-actualisation}}
+								<label class="col-sm-4 control-label">{{Auto-actualisation}}
 									<sup><i class="fas fa-question-circle" title="{{Fréquence de rafraîchissement de l'équipement}}"></i></sup>
 								</label>
-								<div class="col-sm-7">
+								<div class="col-sm-6">
 									<div id="CRON_TILES" class="input-group">
 										<input id="CRON_TILES" type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
 										<span class="input-group-btn">
@@ -293,19 +291,20 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 							<div class="form-group IPV">
-								<label class="col-sm-3 control-label">{{Affichage IP sur le widget}}
+								<label class="col-sm-4 control-label">{{Affichage IP sur le widget}}
 									<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
 								</label>
-								<div class="col-sm-7">
+								<div class="col-sm-6">
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l\'IPv4 sur le widget" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l\'IPv6 sur le widget" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
+
 								</div>
 							</div>
 						</div>
 
-						<!-- Partie droite de l'onglet "Equipement" -->
-						<!-- Affiche l'icône du plugin par défaut mais vous pouvez y afficher les informations de votre choix -->
-						<div class="col-lg-5">
+						<!-- Partie droite de l'onglet "Équipement" -->
+						<!-- Affiche un champ de commentaire par défaut mais vous pouvez y mettre ce que vous voulez -->
+						<div class="col-lg-6">
 							<legend><i class="fas fa-info"></i> {{Informations}}</legend>
 							<div class=" form-group">
 								<label class="col-sm-4 control-label"></label>
@@ -340,25 +339,24 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<span class="eqLogicAttr cmdAttr label label-primary" data-l1key="configuration" data-l2key="action"></span>
 								</div>
 							</div>
+						</div>
 					</fieldset>
 				</form>
-				<hr>
-			</div> <!-- /.tabpanel #eqlogictab-->
+			</div><!-- /.tabpanel #eqlogictab-->
 
 			<!-- Onglet des commandes de l'équipement -->
 			<div role="tabpanel" class="tab-pane" id="commandtab">
-				<!-- <a class="btn btn-default btn-sm pull-right cmdAction" data-action="add" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une commande}}</a> -->
-				<br /><br />
+				<!--  <a class="btn btn-default btn-sm pull-right cmdAction" data-action="add" style="margin-top:5px;"><i class="fas fa-plus-circle"></i> {{Ajouter une commande}}</a> -->
+				<br><br>
 				<div class="table-responsive">
 					<table id="table_cmd" class="table table-bordered table-condensed">
 						<thead>
 							<tr>
-								<th>{{Id}}</th>
-								<th>{{Nom}}</th>
+								<th class="hidden-xs" style="min-width:50px;width:70px;">ID</th>
+								<th style="min-width:200px;width:350px;">{{Nom}}</th>
 								<th>{{Type}}</th>
-								<th>{{Options}}</th>
-								<th>{{Paramètres}}</th>
-								<th>{{Action}}</th>
+								<th style="min-width:260px;">{{Options}}</th>
+								<th style="min-width:80px;width:200px;">{{Actions}}</th>
 							</tr>
 						</thead>
 						<tbody>

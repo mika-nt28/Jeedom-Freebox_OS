@@ -189,8 +189,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			?>
 		</div>
 		<!--</div> -->
-
-
 	</div> <!-- /.eqLogicThumbnailDisplay -->
 
 	<?php

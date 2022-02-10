@@ -8,7 +8,7 @@ sendVarToJS('eqType', $plugin->getId());
 $eqLogics = eqLogic::byType($plugin->getId());
 ?>
 <!-- Style pour masquer les équipements -->
-<style type="text/css">
+<!--  <style type="text/css">
 	.freeOSHidenDiv {
 		display: none;
 	}
@@ -20,7 +20,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		background-color: rgba(var(--defaultBkg-color), var(--opacity)) !important;
 		transition: box-shadow 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) 0s;
 	}
-</style>
+</style>-->
 
 <div class="row row-overflow">
 	<!-- Page d'accueil du plugin -->
@@ -81,10 +81,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<!-- Liste des équipements du plugin "Mes équipements" -->
 		<!-- <div class="divEquipements"> -->
 		<legend><i class="fas fa-table"></i> {{Mes Equipements}}</legend>
-		<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
+		<div class="eqLogicThumbnailContainer">
 			<?php
+			$eqLogic_system = 0;
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getConfiguration('eq_group') === 'system' || $eqLogic->getConfiguration('eq_group') == null) {
+					$eqLogic_system = 1;
 					if ($eqLogic->getConfiguration('type') == 'player' || $eqLogic->getConfiguration('type') == 'VM' || $eqLogic->getConfiguration('type') == 'freeplug') {
 						$template = $eqLogic->getConfiguration('type');
 					} else {
@@ -108,18 +110,23 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					}
 				}
 			}
+			if ($eqLogic_system === 0) {
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun équipement Standard trouvé, lancer un "Scan équipements standards"}}</div>';
+			}
 			?>
 		</div>
 		<!-- </div> -->
 
 		<!-- Liste des équipements du plugin "Mes équipements Home - Tiles" -->
 		<!--<div class="divTiles"> -->
-		<legend class="titleAction"><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
-		<div class=" eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement titleAction">
+		<legend><i class="fas fa-home"></i> {{Mes Equipements Home - Tiles}}</legend>
+		<div class=" eqLogicThumbnailContainer">
 			<?php
+			$eqLogic_tiles = 0;
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getConfiguration('eq_group') === 'tiles' || $eqLogic->getConfiguration('eq_group') === 'nodes' || $eqLogic->getConfiguration('eq_group') === 'tiles_SP') {
 					$count_tiles++;
+					$eqLogic_tiles = 1;
 					if ($eqLogic->getConfiguration('type') === 'alarm_control' || $eqLogic->getConfiguration('type') === 'camera' || $eqLogic->getConfiguration('type') === 'light' || $eqLogic->getConfiguration('type') === 'alarm_remote') {
 						$template = $eqLogic->getConfiguration('type');
 						$icon = $template;
@@ -160,6 +167,9 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					echo '</div>';
 				}
 			}
+			if ($eqLogic_tiles === 0) {
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun équipement Home - Tiles trouvé ou Box non compatible, lancer un "Scan Tiles"}}</div>';
+			}
 			?>
 		</div>
 		<!-- </div> -->
@@ -167,10 +177,12 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<!-- Liste des équipements du plugin "Mes contrôles parentaux" -->
 		<!--<div class="divParental"> -->
 		<legend><i class="fas fa-user-shield"></i> {{Mes Contrôles parentaux}}</legend>
-		<div class="eqLogicThumbnailContainer eqLogicThumbnailDisplayEquipement">
+		<div class="eqLogicThumbnailContainer">
 			<?php
+			$eqLogic_parental = 0;
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getConfiguration('eq_group') == 'parental_controls') {
+					$eqLogic_parental = 1;
 					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 					echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
 					echo '<img src="plugins/Freebox_OS/core/img/' . $icon . '.png"/>';
@@ -185,17 +197,13 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					echo '</div>';
 				}
 			}
-
+			if ($eqLogic_parental === 0) {
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun Contrôle parental" trouvé, lancer un "Scan Contrôle parental"}}</div>';
+			}
 			?>
 		</div>
 		<!--</div> -->
 	</div> <!-- /.eqLogicThumbnailDisplay -->
-
-	<?php
-	sendVarToJS('divEquipements', $divEquipements);
-	sendVarToJS('divTiles', $divTiles);
-	sendVarToJS('divParental', $parental);
-	?>
 	<!-- Page de présentation de l'équipement -->
 	<div class="col-xs-12 eqLogic" style="display: none;">
 		<!-- barre de gestion de l'équipement -->

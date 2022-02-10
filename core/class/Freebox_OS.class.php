@@ -140,7 +140,9 @@ class Freebox_OS extends eqLogic
 		//log::remove('Freebox_OS');
 		$deamon_info = self::deamon_info();
 		self::deamon_stop();
-		if ($deamon_info['launchable'] != 'ok') return;
+		if ($deamon_info['launchable'] != 'ok') {
+			throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
+		}
 		if ($deamon_info['state'] == 'ok') return;
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
 		if (!is_object($cron)) {
@@ -183,7 +185,11 @@ class Freebox_OS extends eqLogic
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		}
 		if (is_object($cron)) {
-			$cron->halt();
+			$cron->stop();
+			sleep(1);
+			if ($cron->running()) {
+				$cron->halt();
+			}
 		}
 		cache::delete("actionlist");
 
@@ -194,7 +200,11 @@ class Freebox_OS extends eqLogic
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				}
 				if (is_object($cron)) {
-					$cron->halt();
+					$cron->stop();
+					sleep(1);
+					if ($cron->running()) {
+						$cron->halt();
+					}
 				}
 			}
 		}

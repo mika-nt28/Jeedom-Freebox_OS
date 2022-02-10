@@ -19,10 +19,10 @@ function Freebox_OS_install()
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');
 		$cron->setFunction('FreeboxPUT');
-		$cron->setEnable(1);
 		$cron->setDeamon(1);
-		//$cron->setDeamonSleepTime(1);
+		$cron->setEnable(1);
 		$cron->setSchedule('* * * * *');
+		//$cron->setDeamonSleepTime(1);
 		$cron->setTimeout('1440');
 		$cron->save();
 	}

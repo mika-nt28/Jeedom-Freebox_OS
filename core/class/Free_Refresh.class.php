@@ -763,39 +763,39 @@ class Free_Refresh
             switch ($data['value']) {
                 case 'alarm1_arming':
                     $_Alarm_mode_value = $EqLogic->getConfiguration('ModeAbsent');
-                    $_Alarm_log = ' Mode 1 : Alarme principale (arming)';
+                    $_Alarm_log = 'Mode 1 : Alarme principale (arming)';
                     break;
                 case 'alarm1_armed':
                     $_Alarm_mode_value = $EqLogic->getConfiguration('ModeAbsent');
-                    $_Alarm_log = ' Mode 1 : Alarme principale (armed)';
+                    $_Alarm_log = 'Mode 1 : Alarme principale (armed)';
                     break;
                 case 'alarm2_arming':
                     $_Alarm_mode_value = $EqLogic->getConfiguration('ModeNuit');
-                    $_Alarm_log = ' Mode 2 : Alarme secondaire (arming)';
+                    $_Alarm_log = 'Mode 2 : Alarme secondaire (arming)';
                     break;
                 case 'alarm2_armed':
                     $_Alarm_mode_value = $EqLogic->getConfiguration('ModeNuit');
-                    $_Alarm_log = ' Mode 2 : Alarme secondaire (armed)';
+                    $_Alarm_log = 'Mode 2 : Alarme secondaire (armed)';
                     break;
                 case 'alert':
                     $_Alarm_stat_value = '1';
-                    $_Alarm_log = ' Alarme';
+                    $_Alarm_log = 'Alarme';
                     break;
                 case 'alarm1_alert_timer':
                     $_Alarm_stat_value = '1';
-                    $_Alarm_log = ' Alarme';
+                    $_Alarm_log = 'Alarme principale - timer';
                     break;
                 case 'alarm2_alert_timer':
                     $_Alarm_stat_value = '1';
-                    $_Alarm_log = ' Alarme';
+                    $_Alarm_log = 'Alarme secondaire - timer';
                     break;
                 case 'idle':
                     $_Alarm_enable_value = '0';
-                    $_Alarm_log = ' Alarme désactivée';
+                    $_Alarm_log = 'Alarme désactivée';
                     break;
                 default:
                     $_Alarm_mode_value = null;
-                    $_Alarm_log = ' Aucun Mode';
+                    $_Alarm_log = 'Aucun Mode';
                     break;
             }
             if ($log_result == true) {

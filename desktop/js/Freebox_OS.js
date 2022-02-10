@@ -285,8 +285,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=type2]').on('change', funct
 
 });
 
-
-setupPage();
+//setupPage();
 /*
 * Fonction permettant l'affichage des commandes dans l'équipement
 */
@@ -437,7 +436,7 @@ function setupCron($icon,$icon_type) {
 		}
 	});
 }
-
+/*
 function setupPage() {
 	if (!divEquipements) {
 		$(".eqLogicThumbnailDisplay .divEquipements").addClass('freeOSHidenDiv');
@@ -467,4 +466,4 @@ function setupPage() {
 			}
 		}
 	});
-}
+}*/

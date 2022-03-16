@@ -27,7 +27,24 @@ class Freebox_OS extends eqLogic
 	/*     * ***********************Methode static*************************** */
 	public static function deadCmd()
 	{
-		return array();
+		$return = array();
+		foreach (eqLogic::byType('Freebox_OS') as $Freebox_OS) {
+			foreach ($Freebox_OS->getCmd() as $cmd) {
+				preg_match_all("/#([0-9]*)#/", $cmd->getConfiguration('infoName', ''), $matches);
+				foreach ($matches[1] as $cmd_id) {
+					if (!cmd::byId(str_replace('#', '', $cmd_id))) {
+						$return[] = array('detail' => __('Freebox_OS', __FILE__) . ' ' . $Freebox_OS->getHumanName() . ' ' . __('dans la commande', __FILE__) . ' ' . $cmd->getName(), 'help' => __('Nom Information', __FILE__), 'who' => '#' . $cmd_id . '#');
+					}
+				}
+				preg_match_all("/#([0-9]*)#/", $cmd->getConfiguration('calcul', ''), $matches);
+				foreach ($matches[1] as $cmd_id) {
+					if (!cmd::byId(str_replace('#', '', $cmd_id))) {
+						$return[] = array('detail' => __('Freebox_OS', __FILE__) . ' ' . $Freebox_OS->getHumanName() . ' ' . __('dans la commande', __FILE__) . ' ' . $cmd->getName(), 'help' => __('Calcul', __FILE__), 'who' => '#' . $cmd_id . '#');
+					}
+				}
+			}
+		}
+		return $return;
 	}
 	public static $_widgetPossibility = array('custom' => true);
 	public static function cron()
@@ -140,25 +157,34 @@ class Freebox_OS extends eqLogic
 		//log::remove('Freebox_OS');
 		$deamon_info = self::deamon_info();
 		self::deamon_stop();
-		if ($deamon_info['launchable'] != 'ok') return;
+		if ($deamon_info['launchable'] != 'ok') {
+			throw new Exception(__('Veuillez vérifier la configuration', __FILE__));
+		}
 		if ($deamon_info['state'] == 'ok') return;
 		$cron = cron::byClassAndFunction('Freebox_OS', 'RefreshToken');
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
-		$cron->run();
+		if (is_object($cron)) {
+			$cron->run();
+		}
+
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		}
-		$cron->run();
+		if (is_object($cron)) {
+			$cron->run();
+		}
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
 				$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 				if (!is_object($cron)) {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				}
-				$cron->run();
+				if (is_object($cron)) {
+					$cron->run();
+				}
 			}
 		}
 	}
@@ -168,12 +194,20 @@ class Freebox_OS extends eqLogic
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron RefreshToken introuvable', __FILE__));
 		}
-		$cron->halt();
+		if (is_object($cron)) {
+			$cron->halt();
+		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		}
-		$cron->halt();
+		if (is_object($cron)) {
+			$cron->stop();
+			sleep(1);
+			if ($cron->running()) {
+				$cron->halt();
+			}
+		}
 		cache::delete("actionlist");
 
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
@@ -182,7 +216,13 @@ class Freebox_OS extends eqLogic
 				if (!is_object($cron)) {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				}
-				$cron->halt();
+				if (is_object($cron)) {
+					$cron->stop();
+					sleep(1);
+					if ($cron->running()) {
+						$cron->halt();
+					}
+				}
 			}
 		}
 
@@ -231,12 +271,17 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
 	}
 
+	public static function EqLogic_ID($Name, $_logicalId)
+	{
+		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
+		log::add('Freebox_OS', 'debug', '>> ================ >> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId);
+		return $EqLogic;
+	}
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system')
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', '>> ================ >> Name: ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
+		log::add('Freebox_OS', 'debug', '>> ================ >> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
 		if (!is_object($EqLogic)) {
-
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
 			if ($_Room == null) {
@@ -320,10 +365,9 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatename = false, $name_connectivity_type = null)
 	{
 		log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
-
 		$Command = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Command)) {
 			$VerifName = $Name;
@@ -332,6 +376,14 @@ class Freebox_OS extends eqLogic
 			$Command->setLogicalId($_logicalId);
 			$Command->setEqLogic_id($this->getId());
 			$count = 0;
+			if ($name_connectivity_type != null) {
+				if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
+					$VerifName = $VerifName . ' (' . $name_connectivity_type . ')';
+				}
+				if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
+					$VerifName = $VerifName . ' (' . $name_connectivity_type . ' - ' . $_logicalId . ')';
+				}
+			}
 			while (is_object(cmd::byEqLogicIdCmdName($this->getId(), $VerifName))) {
 				$count++;
 				$VerifName = $Name . '(' . $count . ')';
@@ -441,6 +493,32 @@ class Freebox_OS extends eqLogic
 		}
 		if ($link_logicalId != 'default') {
 			$Command->setConfiguration('logicalId', $link_logicalId);
+		}
+
+		// Mise à jour des noms de la commande pour le metwork
+		if ($updatename != false) {
+			if ($Name != $Command->getName()) {
+				log::add('Freebox_OS', 'debug', '│=======> Non différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Command->getName());
+				$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
+				$Name_wifi = $Name . ' (wifi)';
+				$Name_ethernet = $Name . ' (ethernet)';
+				if ($Name_verif == $Command->getName || $Name_wifi == $Command->getName || $Name_ethernet == $Command->getName) {
+				} else {
+					if ($name_connectivity_type != null) {
+						if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name))) {
+							$Name = $Name_verif;
+						}
+					}
+					if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name_verif))) {
+						$Name_verif = $Name_verif . ' - (' . $_logicalId . ')';
+					}
+					if ($Name_verif != $Command->getName()) {
+						$Command->setName($Name_verif);
+					}
+				}
+			} else {
+				//log::add('Freebox_OS', 'debug', '│ Nom de la commande identique : ' . $Name);
+			}
 		}
 
 		// Forçage pour mettre à jour l'affichage // Option en cas de Update Plugin
@@ -690,16 +768,18 @@ class Freebox_OS extends eqLogic
 			}
 		}
 		foreach ($eqLogics as $eqLogic) {
-			if ($eqLogic->getConfiguration('type') === 'parental') {
+			if ($eqLogic->getConfiguration('type') === 'alarm_control') {
+				$type_eq = 'alarm_control';
+			} else if ($eqLogic->getConfiguration('type') === 'camera') {
+				$type_eq = 'camera';
+			} else if ($eqLogic->getConfiguration('type') === 'freeplug') {
+				$type_eq = 'freeplug';
+			} else if ($eqLogic->getConfiguration('type') === 'parental') {
 				$type_eq = 'parental_controls';
 			} else if ($eqLogic->getConfiguration('type') === 'player') {
 				$type_eq = 'player';
 			} else if ($eqLogic->getConfiguration('type') === 'VM') {
 				$type_eq = 'VM';
-			} else if ($eqLogic->getConfiguration('type') === 'alarm_control') {
-				$type_eq = 'alarm_control';
-			} else if ($eqLogic->getConfiguration('type') === 'camera') {
-				$type_eq = 'camera';
 			} else {
 				$type_eq = $eqLogic->getLogicalId();
 			}

@@ -92,7 +92,7 @@ class Free_CreateTil
                     $cron->setFunction('FreeboxGET');
                     $cron->setEnable(1);
                     $cron->setDeamon(1);
-                    //$cron->setDeamonSleepTime(1);
+                    $cron->setDeamonSleepTime(1);
                     $cron->setSchedule('* * * * *');
                     $cron->setTimeout('1440');
                     $cron->save();
@@ -203,7 +203,10 @@ class Free_CreateTil
         foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {
                 $Label_ETAT =  $Equipement['label'];
-                $homeadapters->AddCommand($Label_ETAT, $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', null, 0, false, false);
+                $order = $Equipement['id'] * 100;
+                $homeadaptersLink = $homeadapters->AddCommand($Label_ETAT, $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', $order, 0, false, false);
+                //$homeadapters->AddCommand('ON ' . $Label_ETAT, 'PB_On' . $Equipement['id'], 'action', 'other', $templatecore_V4 . 'binarySwitch', null, null, 1, $homeadaptersLink, $Equipement['id'], 0, null, 0, 'default', 'default', $order + 1, 0, false, false);
+                //$homeadapters->AddCommand('OFF ' . $Label_ETAT, 'PB_Off' . $Equipement['id'], 'action', 'other', $templatecore_V4 . 'binarySwitch', null, null, 1, $homeadaptersLink, $Equipement['id'], 0, null, 0, 'default', 'default', $order + 2, 0, false, false);
                 if ($Equipement['status'] == 'active') {
                     $homeadapters_value = 1;
                 } else {
@@ -224,6 +227,8 @@ class Free_CreateTil
         $Free_API->universal_get('tiles');
         log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'CAMERA');
         $Free_API->universal_get('universalAPI', null, null, 'camera');
+        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'HOME ADAPTERS');
+        $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         log::add('Freebox_OS', 'debug', '********************  FIN LOG DEBUG : ' . 'TILES / NODES ********************');
         log::add('Freebox_OS', 'debug', '********************');
     }
@@ -308,6 +313,8 @@ class Free_CreateTil
                         'É' => 'E',
                         '\"' => ' ',
                         "\'" => ' ',
+                        "[" => ' ',
+                        "]" => ' ',
                         "'" => ' '
                     );
                     $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);

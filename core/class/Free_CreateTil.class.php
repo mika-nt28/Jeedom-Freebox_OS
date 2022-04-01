@@ -159,18 +159,32 @@ class Free_CreateTil
             $URLrtsp = str_replace($username, "#username#", $URLrtsp);
             $URLrtsp = str_replace($password, "#password#", $URLrtsp);
             $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
+            log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp);
             $EqLogic->save();
         }
         // Changement URL
         $URLrtsp = init('url');
-        //$URLrtsp = str_replace("rtsp", "http", $URLrtsp);
-        //$URLrtsp = str_replace("/stream.m3u8", "/live", $URLrtsp);
         $URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
         $URLrtsp = str_replace($password, "#password#", $URLrtsp);
         $URLrtsp = str_replace($username, "#username#", $URLrtsp);
         $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
-        $EqLogic->setconfiguration("streamRTSP", 1);
-        log::add('Freebox_OS', 'debug', '│ URL du flux : ' . $URLrtsp);
+        $rtsp = 0; // 0 = désactiver - 1 = activer
+        $EqLogic->setconfiguration("streamRTSP", $rtsp);
+        log::add('Freebox_OS', 'debug', '│ Stream du flux RTSP: ' . $rtsp);
+        if ($rtsp == 1) {
+            //log::add('Freebox_OS', 'debug', '│ Test 1 : ' . $URLrtsp);
+            $urlStream = str_replace("stream.m3u8", "snapshot.cgi?size=4&quality=1", $URLrtsp);
+            log::add('Freebox_OS', 'debug', '│ URL du Strean : ' . $urlStream);
+            $EqLogic->setconfiguration('urlStream', $urlStream);
+            $URLrtsp = init('url');
+            $URLrtsp = str_replace("http", "rtsp", $URLrtsp);
+            //log::add('Freebox_OS', 'debug', '│ Test 2 : ' . $URLrtsp);
+            $URLrtsp = str_replace($username . ':' . $password . '@', "", $URLrtsp);
+            $URLrtsp = str_replace($ip, "#ip#", $URLrtsp);
+            $URLrtsp = str_replace("/img/stream.m3u8", "/live", $URLrtsp);
+            $EqLogic->setconfiguration('cameraStreamAccessUrl', $URLrtsp);
+            log::add('Freebox_OS', 'debug', '│ Changement URL du flux en RSTP : ' . $URLrtsp);
+        }
         $EqLogic->save();
         log::add('Freebox_OS', 'debug', '└─────────');
     }

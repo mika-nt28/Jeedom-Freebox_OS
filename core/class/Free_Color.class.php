@@ -41,8 +41,8 @@ class Free_Color
 	public static function HTMLtoXY($_color)
 	{
 
-		$color = str_replace('0x', '', $_color);
-		$color = str_replace('#', '', $_color);
+		$_color = str_replace('0x', '', $_color);
+		$_color = str_replace('#', '', $_color);
 		$red = hexdec(substr($_color, 0, 2));
 		$green = hexdec(substr($_color, 2, 2));
 		$blue = hexdec(substr($_color, 4, 2));

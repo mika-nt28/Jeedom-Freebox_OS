@@ -495,14 +495,18 @@ class Freebox_OS extends eqLogic
 			$Command->setConfiguration('logicalId', $link_logicalId);
 		}
 
-		// Mise à jour des noms de la commande pour le metwork
+		// Mise à jour des noms de la commande pour le Network
 		if ($updatename != false) {
 			if ($Name != $Command->getName()) {
-				log::add('Freebox_OS', 'debug', '│=======> Non différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Command->getName());
-				$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
-				$Name_wifi = $Name . ' (wifi)';
-				$Name_ethernet = $Name . ' (ethernet)';
-				if ($Name_verif == $Command->getName || $Name_wifi == $Command->getName || $Name_ethernet == $Command->getName) {
+				log::add('Freebox_OS', 'debug', '│=======> Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Command->getName());
+				if ($name_connectivity_type != 'Wifi Ethernet ?') {
+					$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
+				} else {
+					$Name_verif = $Name;
+				}
+				$Name_wifi = $Name . ' (Wifi)';
+				$Name_ethernet = $Name . ' (Ethernet)';
+				if ($Name_verif == $Command->getName() || $Name_wifi == $Command->getName() || $Name_ethernet == $Command->getName()) {
 				} else {
 					if ($name_connectivity_type != null) {
 						if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name))) {

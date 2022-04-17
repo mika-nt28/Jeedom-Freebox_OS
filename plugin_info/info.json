@@ -10,8 +10,26 @@
 	"hasOwnDeamon": true,
 	"hasDependency": false,
 	"maxDependancyInstallTime": 0,
-	"language": ["de_DE", "en_US", "es_ES", "fr_FR", "id_ID", "it_IT", "ru_RU", "sp_SP"],
-	"compatibility": ["miniplus", "smart", "rpi", "docker", "diy", "mobile", "v4"],
+	"language": [
+		"de_DE", 
+		"en_US", 
+		"es_ES", 
+		"fr_FR", 
+		"id_ID", 
+		"it_IT", 
+		"ru_RU", 
+		"sp_SP"
+	],
+	"compatibility": [
+		"miniplus",
+		"smart",
+		"rpi",
+		"docker",
+		"diy",
+		"mobile",
+		"v4",
+		"atlas"
+	],
 	"link": {
 		"forum": "https://community.jeedom.com/t/info-plugin-freebox-mise-a-jour-des-composants-de-la-delta-tiles-systeme/30673"
 	},

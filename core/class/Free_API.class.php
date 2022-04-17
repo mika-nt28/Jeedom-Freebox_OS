@@ -287,7 +287,7 @@ class Free_API
         }
     }
 
-    public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true)
+    public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true, $_onlyresult = false)
     {
         $config_log = null;
         $fonction = "GET";
@@ -305,9 +305,9 @@ class Free_API
                 $config = 'api/v8/connection/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
                 break;
-            case 'disk':
-                $config = 'api/v8/storage/disk';
-                break;
+                //case 'disk':
+                //  $config = 'api/v8/storage/disk';
+                // break;
             case 'download':
                 $config = 'api/v8/downloads/' . $update_type;
                 break;
@@ -393,7 +393,7 @@ class Free_API
                 case 'connexion':
                     return $result['result'];
                     break;
-                case 'disk':
+                    //case 'disk':
                 case 'network_ping':
                 case 'network':
                 case 'notification':
@@ -419,8 +419,13 @@ class Free_API
                             log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
                         }
                     }
+
                     if (isset($result['result'])) {
-                        return $result['result'];
+                        if ($_onlyresult == false) {
+                            return $result['result'];
+                        } else {
+                            return $result;
+                        }
                     } else {
                         $result = null;
                         return $result;
@@ -638,7 +643,8 @@ class Free_API
         $listNumber_missed = null;
         $listNumber_accepted = null;
         $listNumber_outgoing = null;
-        $result = $this->fetch('/api/v8/call/log/');
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
         if ($result == 'auth_required') {
             $result = $this->fetch('/api/v8/call/log/');
         }
@@ -657,23 +663,38 @@ class Free_API
 
                     $time = date('H:i', $result['result'][$k]['datetime']);
                     if ($timestampToday <= $jour) {
-                        if ($result['result'][$k]['name'] == $result['result'][$k]['number']) {
-                            $name = "N.C.";
+                        if ($result['result'][$k]['name'] == null) {
+                            $name = $result['result'][$k]['number'];
                         } else {
                             $name = $result['result'][$k]['name'];
                         }
 
                         if ($result['result'][$k]['type'] == 'missed') {
                             $cptAppel_missed++;
-                            $listNumber_missed .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
+                            if ($listNumber_missed == NULL) {
+                                $newligne = null;
+                            } else {
+                                $newligne = '<br>';
+                            }
+                            $listNumber_missed .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                         if ($result['result'][$k]['type'] == 'accepted') {
                             $cptAppel_accepted++;
-                            $listNumber_accepted .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
+                            if ($listNumber_accepted != NULL) {
+                                $newligne = null;
+                            } else {
+                                $newligne = '<br>';
+                            }
+                            $listNumber_accepted .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                         if ($result['result'][$k]['type'] == 'outgoing') {
                             $cptAppel_outgoing++;
-                            $listNumber_outgoing .= '<br>' . $result['result'][$k]['number'] . " : " . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
+                            if ($listNumber_outgoing != NULL) {
+                                $newligne = null;
+                            } else {
+                                $newligne = '<br>';
+                            }
+                            $listNumber_outgoing .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                     }
                 }

@@ -96,10 +96,20 @@ class Freebox_OS extends eqLogic
 							case 'networkwifiguest':
 								if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
 									$_crondailyEq = $eqLogic->getLogicalId();
+									$_Disable = $eqLogic->getConfiguration('DISK_NETWORK');
+									log::add('Freebox_OS', 'debug', '================= ETAT CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . '- Désactiver = ' . $_Disable .  ' ==================');
+									if ($_Disable == 1) {
+										$_crondailyEq  = null;
+									}
 								}
 								break;
 							case 'disk':
 								$_crondailyEq = $eqLogic->getLogicalId();
+								$_Disable = $eqLogic->getConfiguration('DISK_NETWORK');
+								log::add('Freebox_OS', 'debug', '================= ETAT CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . '- Désactiver = ' . $_Disable .  ' ==================');
+								if ($_Disable == 1) {
+									$_crondailyEq  = null;
+								}
 								break;
 							case 'homeadapters':
 								$_crondailyTil = 'homeadapters_SP';

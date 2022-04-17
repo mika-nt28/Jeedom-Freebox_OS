@@ -306,11 +306,19 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</div>
 							</div>
 							<div class="form-group IPV">
-								<label class="col-sm-4 control-label">{{Désactiver la mise à jour des noms}}
+								<label class="col-sm-4 control-label">{{Mise à jour des noms}}
 									<sup><i class="fas fa-question-circle" title="{{Il est déconseillé de désactiver cette commande}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Désactiver la mise à jour des noms" data-l1key="configuration" data-l2key="UpdateName" />{{Désactiver}}</label>
+								</div>
+							</div>
+							<div class="form-group DISK_NETWORK">
+								<label class="col-sm-4 control-label">{{Ajout automatique de nouvelle commande}}
+									<sup><i class="fas fa-question-circle" title="{{Permet de désactiver l'ajout de nouveau disque / Network (CRON JOUR)}}"></i></sup>
+								</label>
+								<div class="col-sm-6">
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Désactiver l'ajout de nouvelle de commande (CRON JOUR)" data-l1key="configuration" data-l2key="DISK_NETWORK" />{{Désactiver}}</label>
 								</div>
 							</div>
 						</div>

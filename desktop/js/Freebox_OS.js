@@ -380,7 +380,7 @@ function addCmdToTable(_cmd) {
 
 }
 function setupCron($icon,$icon_type) {
-	$.ajax({
+	$.ajax({	
 		type: "POST",
 		url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
 		data: {

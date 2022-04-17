@@ -397,14 +397,19 @@ function setupCron($icon,$icon_type) {
 				$icon = $icon_type ;
 			}
 			$('.IPV').hide();
+			$('.DISK_NETWORK').hide();
 			$('#CRON_TILES').show();
 			$('#CRON_TILES_INFO').hide();
 			switch ($icon) {
+				case 'disk':
+					$('.DISK_NETWORK').show();
+					break;
 				case 'network':
 				case 'networkwifiguest':
 					$('#CRON_TILES').show();
 					$('#CRON_TILES_INFO').hide();
 					$('.IPV').show();
+					$('.DISK_NETWORK').show();
 					break;
 				case 'airmedia':
 				case 'connexion':
@@ -412,7 +417,6 @@ function setupCron($icon,$icon_type) {
 				case 'homeadapters':
 				case 'LCD':
 				case 'system':
-				case 'disk':
 				case 'freeplug':
 				case 'phone':
 				case 'wifi':

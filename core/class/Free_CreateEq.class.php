@@ -39,6 +39,7 @@ class Free_CreateEq
                 break;
             case 'disk':
                 Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_disk_RAID($logicalinfo, $templatecore_V4);
                 break;
             case 'LCD':
                 Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4);
@@ -267,22 +268,77 @@ class Free_CreateEq
     private static function createEq_disk_SP($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['diskName']);
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
+            $icontemp = 'fas fa-thermometer-half';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $icontemp = 'fas fa-thermometer-half icon_blue';
+        };
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('disk', null, null, null);
+        ///$result = $Free_API->universal_get('disk', null, null, null);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true);
         if ($result == 'auth_required') {
             $result = $Free_API->universal_get('disk', null, null, null);
         }
         $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
         if ($result != false) {
             foreach ($result['result'] as $disks) {
+                if ($disks['temp'] != 0) {
+                    log::add('Freebox_OS', 'debug', '──────────> Disque [' . $disks['serial'] . '] - ' . $disks['id'] . ' - Température : ' . $disks['temp'] . '°C');
+                    $disk->AddCommand('Disque [' . $disks['serial'] . '] Temperature', $disks['id'] . '_temp', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $icontemp, 0, '0', '100', null, 0, false, true, null, null);
+                }
+                if ($disks['serial'] != null) {
+                    log::add('Freebox_OS', 'debug', '──────────> Disque [' . $disks['serial'] . '] ');
+                    $disk->AddCommand('Disque [' . $disks['serial'] . '] Tourne', $disks['id'] . '_spinning', 'info', 'binary', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, null, '0', false, false, 'never', null, null, null);
+                }
                 foreach ($disks['partitions'] as $partition) {
-                    log::add('Freebox_OS', 'debug', '│──────────> Disque [' . $disks['type'] . '] - ' . $disks['id'] . ' - Partitions : ' . $partition['label'] . ' -  id ' . $partition['id']);
+                    log::add('Freebox_OS', 'debug', '│──────────> ID :' . $partition['id'] . ' : Disque [' . $disks['type'] . '] - ' . $disks['id'] . ' - Partitions : ' . $partition['label']);
                     $disk->AddCommand($partition['label'] . ' - ' . $disks['type'] . ' - ' . $partition['fstype'], $partition['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true, '#value#*100', 2);
                 }
             }
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
+    private static function createEq_disk_RAID($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique RAID : ' . $logicalinfo['diskName']);
+        if (version_compare(jeedom::version(), "4", "<")) {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
+            $icontemp = 'fas fa-thermometer-half';
+        } else {
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $icontemp = 'fas fa-thermometer-half icon_blue';
+        };
+        $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
+        if ($Type_box == 'OK') {
+            $Free_API = new Free_API();
+            $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
+            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid');
+
+            if ($result != false) {
+                $order_i = 0;
+                foreach ($result as $raid) {
+                    log::add('Freebox_OS', 'debug', '│──────────> RAID : ' . $raid['name']);
+                    $order_i--;
+                    $disk->AddCommand('Raid ' . $raid['name'] . ' state', $raid['id'] . '_state', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
+                    $order_i--;
+                    $disk->AddCommand('Raid ' . $raid['name'] . ' sync_action', $raid['id'] . '_sync_action', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
+                    $order_i--;
+                    if (isset($raid['members'])) {
+                        foreach ($raid['members'] as $members_raid) {
+                            //log::add('Freebox_OS', 'debug', '│──────────> Membre RAID : ' . $raid['name'] . ' - Disque : ' . $members_raid['disk']['serial']);
+                            //$disk->AddCommand('Température Disque ' . $members_raid['disk']['serial'], $members_raid['id'] . '_temp', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $icontemp, 0, '0', '100', $order_i, 0, false, true, null, null);
+                            //$order_i--;
+                            //$disk->AddCommand('Etat Disque ' . $members_raid['disk']['serial'], $members_raid['id'] . '_role', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
+                        }
+                    }
+                }
+            }
+        }
+        log::add('Freebox_OS', 'debug', '└─────────');
+    }
+
 
     private static function createEq_download($logicalinfo, $templatecore_V4)
     {

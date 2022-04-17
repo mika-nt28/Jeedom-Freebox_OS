@@ -654,6 +654,12 @@ class Free_CreateEq
         $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
 
         if (isset($result['result'])) {
+            if ($network->getConfiguration('UpdateName') == 1) {
+                $updatename_disable = 1;
+            } else {
+                $updatename_disable = 0;
+            }
+            log::add('Freebox_OS', 'debug', '│──────────> Désactiver la mise à jour des noms : ' . $updatename_disable);
             foreach ($result['result'] as $Equipement) {
                 if ($Equipement['primary_name'] != '') {
                     $replace_device_type = array(
@@ -670,12 +676,15 @@ class Free_CreateEq
                     );
                     $Equipement['primary_name'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['primary_name']);
 
+                    if ($updatename_disable == 0) {
+                        $updatename = true; // mise à jour automatique des noms des commandes
+                    } else {
+                        $updatename = false; // mise à jour automatique des noms des commandes
+                    }
                     if (isset($Equipement['access_point'])) {
-                        $updatename = true;
                         $name_connectivity_type = $Equipement['access_point']['connectivity_type'];
                     } else {
-                        $updatename = false;
-                        $name_connectivity_type = 'wifi ethernet ?';
+                        $name_connectivity_type = 'Wifi Ethernet ?';
                     }
                     $Command = $network->AddCommand($Equipement['primary_name'], $Equipement['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true, null, null, null, null, null, null, null, null, null, null, null, $updatename, $name_connectivity_type);
                     $Command->setConfiguration('host_type', $Equipement['host_type']);

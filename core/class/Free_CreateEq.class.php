@@ -325,8 +325,12 @@ class Free_CreateEq
                     $order_i--;
                     $disk->AddCommand('Raid ' . $raid['name'] . ' sync_action', $raid['id'] . '_sync_action', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
                     $order_i--;
+                    $disk->AddCommand('Raid ' . $raid['name'] . ' degraded', $raid['id'] . '_degraded', 'info', 'binary', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
+                    $order_i--;
                     if (isset($raid['members'])) {
                         foreach ($raid['members'] as $members_raid) {
+                            //$disk->AddCommand('Raid ' . $raid['name'] . ' role', $raid['id'] . '_role', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
+                            //$order_i--;
                             //log::add('Freebox_OS', 'debug', '│──────────> Membre RAID : ' . $raid['name'] . ' - Disque : ' . $members_raid['disk']['serial']);
                             //$disk->AddCommand('Température Disque ' . $members_raid['disk']['serial'], $members_raid['id'] . '_temp', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $icontemp, 0, '0', '100', $order_i, 0, false, true, null, null);
                             //$order_i--;

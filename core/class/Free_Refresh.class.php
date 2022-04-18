@@ -335,6 +335,14 @@ class Free_Refresh
                                 log::add('Freebox_OS', 'debug', '>─────────  Raid_' . $raid['id'] . '_sync_action : ' . $raid['sync_action']);
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['sync_action']);
                                 break;
+                            case $raid['id'] . '_role':
+                                log::add('Freebox_OS', 'debug', '>─────────  Raid_' . $raid['id'] . '_role : ' . $raid['role']);
+                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['role']);
+                                break;
+                            case $raid['id'] . '_degraded':
+                                log::add('Freebox_OS', 'debug', '>─────────  Raid_' . $raid['id'] . '_degraded : ' . $raid['degraded']);
+                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['degraded']);
+                                break;
                         }
                     }
                 }

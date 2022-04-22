@@ -128,66 +128,11 @@ class Freebox_OS extends eqLogic
 				}
 				$_crondailyEq = null;
 				$_crondailyTil = null;
-			} else {
-				log::add('Freebox_OS', 'debug', '================= CRON ACTUALISATION AJOUT NOUVELLE COMMANDE NON CONFIGURE pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
 			}
 		} catch (Exception $exc) {
 			log::add('Freebox_OS', 'error', __('Erreur Cron Actualisation Ajout nouvelle commande ', __FILE__) . $eqLogic->getHumanName());
 		}
 	}
-	/*public static function cronDaily()
-	{
-		$eqLogics = eqLogic::byType('Freebox_OS');
-		$deamon_info = self::deamon_info();
-		$_crondailyEq = null;
-		$_crondailyTil = null;
-		foreach ($eqLogics as $eqLogic) {
-			try {
-				if ($deamon_info['state'] == 'ok') {
-					if ($eqLogic->getIsEnable()) {
-						switch ($eqLogic->getLogicalId()) {
-							case 'network':
-							case 'networkwifiguest':
-								if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
-									$_crondailyEq = $eqLogic->getLogicalId();
-									$_Disable = $eqLogic->getConfiguration('DISK_NETWORK');
-									log::add('Freebox_OS', 'debug', '================= ETAT CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . '- Désactiver = ' . $_Disable .  ' ==================');
-									if ($_Disable == 1) {
-										$_crondailyEq  = null;
-									}
-								}
-								break;
-							case 'disk':
-								$_crondailyEq = $eqLogic->getLogicalId();
-								$_Disable = $eqLogic->getConfiguration('DISK_NETWORK');
-								log::add('Freebox_OS', 'debug', '================= ETAT CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . '- Désactiver = ' . $_Disable .  ' ==================');
-								if ($_Disable == 1) {
-									$_crondailyEq  = null;
-								}
-								break;
-							case 'homeadapters':
-								$_crondailyTil = 'homeadapters_SP';
-								break;
-						}
-						if ($_crondailyEq != null or $_crondailyTil != null) {
-							log::add('Freebox_OS', 'debug', '================= CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
-							if ($_crondailyEq != null) {
-								Free_CreateEq::createEq($_crondailyEq, false);
-							}
-							if ($_crondailyTil != null) {
-								Free_CreateTil::createTil($_crondailyTil, false);
-							}
-							log::add('Freebox_OS', 'debug', '================= FIN CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
-						}
-						$_crondailyEq = null;
-						$_crondailyTil = null;
-					}
-				}
-			} catch (Exception $exc) {
-				log::add('Freebox_OS', 'error', __('Erreur Cron Jour ', __FILE__) . $eqLogic->getHumanName());
-			}
-		}
-	}*/
 
 	public static function deamon_info()
 	{

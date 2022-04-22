@@ -345,6 +345,18 @@ class Free_Refresh
                                 break;
                         }
                     }
+                    if (isset($raid['members'])) {
+                        foreach ($raid['members'] as $members_raid) {
+                            foreach ($EqLogics->getCmd('info') as $Command) {
+                                switch ($Command->getLogicalId()) {
+                                    case $members_raid['id'] . '_role':
+                                        log::add('Freebox_OS', 'debug', '>─────────  Etat Role Disque ' . $members_raid['disk']['serial'] . '_role: ' . $members_raid['role']);
+                                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $members_raid['role']);
+                                        break;
+                                }
+                            }
+                        }
+                    }
                 }
             }
         }

@@ -313,12 +313,19 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Désactiver la mise à jour des noms" data-l1key="configuration" data-l2key="UpdateName" />{{Désactiver}}</label>
 								</div>
 							</div>
-							<div class="form-group DISK_NETWORK">
-								<label class="col-sm-4 control-label">{{Ajout automatique de nouvelle commande}}
-									<sup><i class="fas fa-question-circle" title="{{Permet de désactiver l'ajout de nouveau disque / Network (CRON JOUR)}}"></i></sup>
+							<div class="form-group ADD_EQLOGIC">
+								<label class="col-sm-4 control-label">{{Ajout des nouvelles commandes}}
+									<sup><i class="fas fa-question-circle" title="{{Permet d'ajouter les nouvelles commandes, champs vide = pas d'actualisation}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Désactiver l'ajout de nouvelle de commande (CRON JOUR)" data-l1key="configuration" data-l2key="DISK_NETWORK" />{{Désactiver}}</label>
+									<div class="input-group">
+										<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh_eqLogic" placeholder="{{Cliquer sur ? pour afficher l'assistant cron, Vide pas d'ajout}}" />
+										<span class="input-group-btn">
+											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="Assistant cron">
+												<i class="fas fa-question-circle"></i>
+											</a>
+										</span>
+									</div>
 								</div>
 							</div>
 						</div>

@@ -276,20 +276,19 @@ class Free_CreateEq
             $icontemp = 'fas fa-thermometer-half icon_blue';
         };
         $Free_API = new Free_API();
-        ///$result = $Free_API->universal_get('disk', null, null, null);
-        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         if ($result == 'auth_required') {
-            $result = $Free_API->universal_get('disk', null, null, null);
+            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         }
         $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
         if ($result != false) {
             foreach ($result['result'] as $disks) {
                 if ($disks['temp'] != 0) {
-                    log::add('Freebox_OS', 'debug', '──────────> Disque [' . $disks['serial'] . '] - ' . $disks['id'] . ' - Température : ' . $disks['temp'] . '°C');
+                    log::add('Freebox_OS', 'debug', '──────────> Température : ' . $disks['temp'] . '°C' . '- Disque [' . $disks['serial'] . '] - ' . $disks['id']);
                     $disk->AddCommand('Disque [' . $disks['serial'] . '] Temperature', $disks['id'] . '_temp', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $icontemp, 0, '0', '100', null, 0, false, true, null, null);
                 }
                 if ($disks['serial'] != null) {
-                    log::add('Freebox_OS', 'debug', '──────────> Disque [' . $disks['serial'] . '] ');
+                    log::add('Freebox_OS', 'debug', '──────────> Tourne : ' . $disks['spinning'] . '- Disque [' . $disks['serial'] . '] - ' . $disks['id']);
                     $disk->AddCommand('Disque [' . $disks['serial'] . '] Tourne', $disks['id'] . '_spinning', 'info', 'binary', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, null, '0', false, false, 'never', null, null, null);
                 }
                 foreach ($disks['partitions'] as $partition) {

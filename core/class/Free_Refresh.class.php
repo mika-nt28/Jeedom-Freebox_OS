@@ -350,7 +350,7 @@ class Free_Refresh
                             foreach ($EqLogics->getCmd('info') as $Command) {
                                 switch ($Command->getLogicalId()) {
                                     case $members_raid['id'] . '_role':
-                                        log::add('Freebox_OS', 'debug', '>─────────  Etat Role Disque ' . $members_raid['disk']['serial'] . '_role: ' . $members_raid['role']);
+                                        log::add('Freebox_OS', 'debug', '>─────────  Role pour le disque ' . $members_raid['disk']['serial'] . ' : ' . $members_raid['role']);
                                         $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $members_raid['role']);
                                         break;
                                 }

@@ -276,14 +276,14 @@ class Free_CreateEq
             $icontemp = 'fas fa-thermometer-half icon_blue';
         };
         $Free_API = new Free_API();
-        ///$result = $Free_API->universal_get('disk', null, null, null);
-        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         if ($result == 'auth_required') {
-            $result = $Free_API->universal_get('disk', null, null, null);
+            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         }
         $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
         if ($result != false) {
             foreach ($result['result'] as $disks) {
+                log::add('Freebox_OS', 'debug', '──────────> Disque [' . $disks['serial'] . '] - ' . $disks['id'] . ' - Température : ' . $disks['temp'] . '°C');
                 if ($disks['temp'] != 0) {
                     log::add('Freebox_OS', 'debug', '──────────> Disque [' . $disks['serial'] . '] - ' . $disks['id'] . ' - Température : ' . $disks['temp'] . '°C');
                     $disk->AddCommand('Disque [' . $disks['serial'] . '] Temperature', $disks['id'] . '_temp', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $icontemp, 0, '0', '100', null, 0, false, true, null, null);

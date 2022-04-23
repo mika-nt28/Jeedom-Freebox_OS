@@ -307,7 +307,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							</div>
 							<div class="form-group IPV">
 								<label class="col-sm-4 control-label">{{Mise à jour des noms}}
-									<sup><i class="fas fa-question-circle" title="{{Il est déconseillé de désactiver cette commande}}"></i></sup>
+									<sup><i class="fas fa-question-circle" title="{{Il est déconseillé de le faire, cela peut poser des problèmes en cas de commande en double)}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Désactiver la mise à jour des noms" data-l1key="configuration" data-l2key="UpdateName" />{{Désactiver}}</label>

@@ -182,6 +182,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			$eqLogic_parental = 0;
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getConfiguration('eq_group') == 'parental_controls') {
+					$icon = 'parental';
 					$eqLogic_parental = 1;
 					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 					echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';

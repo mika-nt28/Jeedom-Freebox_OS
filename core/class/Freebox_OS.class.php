@@ -79,49 +79,58 @@ class Freebox_OS extends eqLogic
 			} catch (Exception $exc) {
 				//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
 			}
+			if ($eqLogic->getLogicalId() == 'network' || $eqLogic->getLogicalId() == 'networkwifiguest' || $eqLogic->getLogicalId() == 'disk' || $eqLogic->getLogicalId() == 'homeadapters') {
+				if ($eqLogic->getIsEnable()) {
+					if ($deamon_info['state'] == 'ok') {
+						Freebox_OS::cron_autorefresh_eqLogic($eqLogic, $deamon_info);
+					}
+				}
+			}
 		}
 	}
-	public static function cronDaily()
+	public static function cron_autorefresh_eqLogic($eqLogic, $deamon_info)
 	{
-		$eqLogics = eqLogic::byType('Freebox_OS');
-		$deamon_info = self::deamon_info();
 		$_crondailyEq = null;
 		$_crondailyTil = null;
-		foreach ($eqLogics as $eqLogic) {
-			try {
-				if ($deamon_info['state'] == 'ok') {
-					if ($eqLogic->getIsEnable()) {
-						switch ($eqLogic->getLogicalId()) {
-							case 'network':
-							case 'networkwifiguest':
-								if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
-									$_crondailyEq = $eqLogic->getLogicalId();
-								}
-								break;
-							case 'disk':
-								$_crondailyEq = $eqLogic->getLogicalId();
-								break;
-							case 'homeadapters':
-								$_crondailyTil = 'homeadapters_SP';
-								break;
+		$autorefresh_eqLogic = $eqLogic->getConfiguration('autorefresh_eqLogic');
+		try {
+			if ($autorefresh_eqLogic != null) {
+				switch ($eqLogic->getLogicalId()) {
+					case 'network':
+					case 'networkwifiguest':
+						if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
+							$_crondailyEq = $eqLogic->getLogicalId();
 						}
-						if ($_crondailyEq != null or $_crondailyTil != null) {
-							log::add('Freebox_OS', 'debug', '================= CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
+						break;
+					case 'disk':
+						$_crondailyEq = $eqLogic->getLogicalId();
+						break;
+					case 'homeadapters':
+						$_crondailyTil = 'homeadapters_SP';
+						break;
+				}
+				if ($_crondailyEq != null or $_crondailyTil != null) {
+					try {
+						$cron = new Cron\CronExpression($autorefresh_eqLogic, new Cron\FieldFactory);
+						if ($cron->isDue()) {
+							log::add('Freebox_OS', 'debug', '================= CRON ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
 							if ($_crondailyEq != null) {
 								Free_CreateEq::createEq($_crondailyEq, false);
 							}
 							if ($_crondailyTil != null) {
 								Free_CreateTil::createTil($_crondailyTil, false);
 							}
-							log::add('Freebox_OS', 'debug', '================= FIN CRON JOUR pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
+							log::add('Freebox_OS', 'debug', '================= FIN CRON ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
 						}
-						$_crondailyEq = null;
-						$_crondailyTil = null;
+					} catch (Exception $e) {
+						log::add('Freebox_OS', 'error', __('Expression Cron Actualisation Ajout nouvelle commande  non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh_eqLogic);
 					}
 				}
-			} catch (Exception $exc) {
-				log::add('Freebox_OS', 'error', __('Erreur Cron Jour ', __FILE__) . $eqLogic->getHumanName());
+				$_crondailyEq = null;
+				$_crondailyTil = null;
 			}
+		} catch (Exception $exc) {
+			log::add('Freebox_OS', 'error', __('Erreur Cron Actualisation Ajout nouvelle commande ', __FILE__) . $eqLogic->getHumanName());
 		}
 	}
 
@@ -320,6 +329,10 @@ class Freebox_OS extends eqLogic
 			if ($eq_group != null) {
 				$EqLogic->setConfiguration('eq_group', $eq_group);
 			}
+
+			if ($_logicalId == 'network' || $_logicalId == 'networkwifiguest' || $_logicalId == 'disk' || $_logicalId == 'homeadapters') {
+				$EqLogic->setConfiguration('autorefresh_eqLogic', '2 1 * * *');
+			}
 			try {
 				$EqLogic->save();
 			} catch (Exception $e) {
@@ -495,14 +508,18 @@ class Freebox_OS extends eqLogic
 			$Command->setConfiguration('logicalId', $link_logicalId);
 		}
 
-		// Mise à jour des noms de la commande pour le metwork
+		// Mise à jour des noms de la commande pour le Network
 		if ($updatename != false) {
 			if ($Name != $Command->getName()) {
-				log::add('Freebox_OS', 'debug', '│=======> Non différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Command->getName());
-				$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
-				$Name_wifi = $Name . ' (wifi)';
-				$Name_ethernet = $Name . ' (ethernet)';
-				if ($Name_verif == $Command->getName || $Name_wifi == $Command->getName || $Name_ethernet == $Command->getName) {
+				log::add('Freebox_OS', 'debug', '│=======> Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Command->getName());
+				if ($name_connectivity_type != 'Wifi Ethernet ?') {
+					$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
+				} else {
+					$Name_verif = $Name;
+				}
+				$Name_wifi = $Name . ' (Wifi)';
+				$Name_ethernet = $Name . ' (Ethernet)';
+				if ($Name_verif == $Command->getName() || $Name_wifi == $Command->getName() || $Name_ethernet == $Command->getName()) {
 				} else {
 					if ($name_connectivity_type != null) {
 						if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name))) {

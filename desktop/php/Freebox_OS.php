@@ -74,7 +74,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<div class="input-group" style="margin-bottom:5px;">
 			<input class="form-control roundedLeft" placeholder="{{Rechercher}}" id="in_searchEqlogic" />
 			<div class="input-group-btn">
-				<a id="bt_resetObjectSearch" class="btn" style="width:30px"><i class="fas fa-times"></i>
+				<a id="bt_resetSearch" class="btn" style="width:30px"><i class="fas fa-times"></i>
 				</a><a class="btn roundedRight hidden" id="bt_pluginDisplayAsTable" data-coreSupport="1" data-state="0"><i class="fas fa-grip-lines"></i></a>
 			</div>
 		</div>
@@ -182,6 +182,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			$eqLogic_parental = 0;
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getConfiguration('eq_group') == 'parental_controls') {
+					$icon = 'parental';
 					$eqLogic_parental = 1;
 					$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 					echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
@@ -303,7 +304,29 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								<div class="col-sm-6">
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l\'IPv4 sur le widget" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l\'IPv6 sur le widget" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
-
+								</div>
+							</div>
+							<div class="form-group IPV">
+								<label class="col-sm-4 control-label">{{Mise à jour des noms}}
+									<sup><i class="fas fa-question-circle" title="{{Il est déconseillé de le faire, cela peut poser des problèmes en cas de commande en double)}}"></i></sup>
+								</label>
+								<div class="col-sm-6">
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Désactiver la mise à jour des noms" data-l1key="configuration" data-l2key="UpdateName" />{{Désactiver}}</label>
+								</div>
+							</div>
+							<div class="form-group ADD_EQLOGIC">
+								<label class="col-sm-4 control-label">{{Ajout des nouvelles commandes}}
+									<sup><i class="fas fa-question-circle" title="{{Permet d'ajouter les nouvelles commandes, champs vide = pas d'actualisation}}"></i></sup>
+								</label>
+								<div class="col-sm-6">
+									<div class="input-group">
+										<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh_eqLogic" placeholder="{{Cliquer sur ? pour afficher l'assistant cron, Vide pas d'ajout}}" />
+										<span class="input-group-btn">
+											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="Assistant cron">
+												<i class="fas fa-question-circle"></i>
+											</a>
+										</span>
+									</div>
 								</div>
 							</div>
 						</div>

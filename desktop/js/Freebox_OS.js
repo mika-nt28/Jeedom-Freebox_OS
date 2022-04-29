@@ -380,7 +380,7 @@ function addCmdToTable(_cmd) {
 
 }
 function setupCron($icon,$icon_type) {
-	$.ajax({
+	$.ajax({	
 		type: "POST",
 		url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
 		data: {
@@ -397,22 +397,31 @@ function setupCron($icon,$icon_type) {
 				$icon = $icon_type ;
 			}
 			$('.IPV').hide();
+			$('.ADD_EQLOGIC').hide();
 			$('#CRON_TILES').show();
 			$('#CRON_TILES_INFO').hide();
 			switch ($icon) {
+				case 'disk':
+					$('.ADD_EQLOGIC').show();
+					break;
 				case 'network':
 				case 'networkwifiguest':
 					$('#CRON_TILES').show();
 					$('#CRON_TILES_INFO').hide();
 					$('.IPV').show();
+					$('.ADD_EQLOGIC').show();
+					break;
+				case 'homeadapters':
+					$('.IPV').hide();
+					$('#CRON_TILES').show();
+					$('#CRON_TILES_INFO').hide();
+					$('.ADD_EQLOGIC').show();
 					break;
 				case 'airmedia':
 				case 'connexion':
 				case 'downloads':
-				case 'homeadapters':
 				case 'LCD':
 				case 'system':
-				case 'disk':
 				case 'freeplug':
 				case 'phone':
 				case 'wifi':

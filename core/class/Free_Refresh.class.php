@@ -288,14 +288,23 @@ class Free_Refresh
 
     private static function refresh_disk($EqLogics, $Free_API)
     {
-        $result = $Free_API->universal_get('disk', null, null, null);
-
+        //$result = $Free_API->universal_get('disk', null, null, null);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk');
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
-                    foreach ($result['result'] as $disks) {
+                    foreach ($result as $disks) {
+                        switch ($Command->getLogicalId()) {
+                            case $disks['id'] . '_temp':
+                                log::add('Freebox_OS', 'debug', '>───────── Disque [' . $disks['serial'] . ' - ' . $disks['id'] . '] '  . 'Température :' . $disks['temp'] . '°C');
+                                $EqLogics->checkAndUpdateCmd($disks['id'] . '_temp', $disks['temp']);
+                                break;
+                            case $disks['id'] . '_spinning':
+                                log::add('Freebox_OS', 'debug', '>───────── Disque [' . $disks['serial'] . ' - ' . $disks['id'] . '] '  . 'Tourne :' . $disks['spinning']);
+                                $EqLogics->checkAndUpdateCmd($disks['id'] . '_spinning', $disks['spinning']);
+                                break;
+                        }
                         foreach ($disks['partitions'] as $partition) {
-
                             if ($Command->getLogicalId() != $partition['id']) continue;
 
                             if ($partition['total_bytes'] != null) {
@@ -304,7 +313,48 @@ class Free_Refresh
                                 $value = 0;
                             }
                             log::add('Freebox_OS', 'debug', '>───────── Occupation de la partition ' . $partition['label'] . ' : ' . $value . ' - Pour le disque  [' . $disks['type'] . '] - ' . $disks['id']);
+
                             $EqLogics->checkAndUpdateCmd($partition['id'], $value);
+                        }
+                    }
+                }
+            }
+        }
+        $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
+        if ($Type_box == 'OK') {
+            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid');
+            if (is_object($Command)) {
+                foreach ($result as $raid) {
+                    foreach ($EqLogics->getCmd('info') as $Command) {
+                        switch ($Command->getLogicalId()) {
+                            case $raid['id'] . '_state':
+                                log::add('Freebox_OS', 'debug', '>─────────  Raid_' . $raid['id'] . '_state : ' . $raid['state']);
+                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['state']);
+                                break;
+                            case $raid['id'] . '_sync_action':
+                                log::add('Freebox_OS', 'debug', '>─────────  Raid_' . $raid['id'] . '_sync_action : ' . $raid['sync_action']);
+                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['sync_action']);
+                                break;
+                            case $raid['id'] . '_role':
+                                log::add('Freebox_OS', 'debug', '>─────────  Raid_' . $raid['id'] . '_role : ' . $raid['role']);
+                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['role']);
+                                break;
+                            case $raid['id'] . '_degraded':
+                                log::add('Freebox_OS', 'debug', '>─────────  Raid_' . $raid['id'] . '_degraded : ' . $raid['degraded']);
+                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['degraded']);
+                                break;
+                        }
+                    }
+                    if (isset($raid['members'])) {
+                        foreach ($raid['members'] as $members_raid) {
+                            foreach ($EqLogics->getCmd('info') as $Command) {
+                                switch ($Command->getLogicalId()) {
+                                    case $members_raid['id'] . '_role':
+                                        log::add('Freebox_OS', 'debug', '>─────────  Role pour le disque ' . $members_raid['disk']['serial'] . ' : ' . $members_raid['role']);
+                                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $members_raid['role']);
+                                        break;
+                                }
+                            }
                         }
                     }
                 }
@@ -424,10 +474,22 @@ class Free_Refresh
     private static function refresh_phone($EqLogics, $Free_API)
     {
         $result = $Free_API->nb_appel_absence();
+        $list_missed = null;
+        $list_accepted = null;
+        $list_outgoing = null;
         if ($result != false) {
-            log::add('Freebox_OS', 'debug', '>───────── Nb Appels manqués : ' . $result['missed'] . ' -- Liste des appels manqués : ' . $result['list_missed']);
-            log::add('Freebox_OS', 'debug', '>───────── Nb Appels reçus : ' . $result['accepted'] . ' -- Liste des appels reçus : ' . $result['list_accepted']);
-            log::add('Freebox_OS', 'debug', '>───────── Nb Appels passés : ' . $result['outgoing'] . ' -- Liste des appels passés : ' . $result['list_outgoing']);
+            if ($result['list_missed'] != null) {
+                $list_missed = ' -- Liste des appels manqués : ' . $result['list_missed'];
+            }
+            if ($result['list_accepted'] != null) {
+                $list_accepted = ' -- Liste des appels reçus : ' . $result['list_accepted'];
+            }
+            if ($result['list_outgoing'] != null) {
+                $list_outgoing = ' -- Liste des appels passés : ' . $result['list_outgoing'];
+            }
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels manqués : ' . $result['missed'] . $list_missed);
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels reçus : ' . $result['accepted'] . $list_accepted);
+            log::add('Freebox_OS', 'debug', '>───────── Nb Appels passés : ' . $result['outgoing'] . $list_outgoing);
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {

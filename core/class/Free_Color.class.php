@@ -38,14 +38,14 @@ class Free_Color
 	 *
 	 * @return array x, y, bri key/value
 	 */
-	public static function HTMLtoXY($color)
+	public static function HTMLtoXY($_color)
 	{
 
-		$color = str_replace('0x', '', $color);
-		$color = str_replace('#', '', $color);
-		$red = hexdec(substr($color, 0, 2));
-		$green = hexdec(substr($color, 2, 2));
-		$blue = hexdec(substr($color, 4, 2));
+		$_color = str_replace('0x', '', $_color);
+		$_color = str_replace('#', '', $_color);
+		$red = hexdec(substr($_color, 0, 2));
+		$green = hexdec(substr($_color, 2, 2));
+		$blue = hexdec(substr($_color, 4, 2));
 
 		// Normalize the values to 1
 		$normalizedToOne['red'] = $red / 255;

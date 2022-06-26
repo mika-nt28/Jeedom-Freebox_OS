@@ -77,6 +77,7 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '================= ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS  ==================');
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl');
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['freeplugName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['diskName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['phoneName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['LCDName']);
@@ -337,7 +338,6 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-
 
     private static function createEq_download($logicalinfo, $templatecore_V4)
     {
@@ -607,7 +607,8 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Recherche des Interfaces réseaux : ' . $logicalinfo['networkName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('network', null, null, 'browser/interfaces');
+        //$Free_API->universal_get('network', null, null, 'browser/interfaces');
+        $Free_API->universal_get('universalAPI', null, null, 'lan/browser/interfaces', true, true, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -650,7 +651,8 @@ class Free_CreateEq
         $network->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -31, '0', $updateWidget, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#&type=#type#');
         $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, true, 'default', 'default', 0, $icon_search, true, 'default', 'default',  -30, '0', $updateWidget, false, null, true, null, null, null, null, null, null, null, true);
         $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -32, '0', $updateWidget, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
-        $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
+        //$result = $Free_API->universal_get('network', null, null, 'lan/browser/' . $_networkinterface);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true);
 
         if (isset($result['result'])) {
             if ($network->getConfiguration('UpdateName') == 1) {
@@ -887,7 +889,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['VMName']);
         $updateicon = true;
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('universalAPI', null, null, 'vm');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'vm', false, false);
         if ($result != null) {
             $VMmemory = 'fas fa-memory';
             $VMCPU = 'fas fa-microchip';
@@ -991,7 +993,8 @@ class Free_CreateEq
         };
         $order = 50;
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('wifi', null, null, 'ap');
+        //$result = $Free_API->universal_get('wifi', null, null, 'ap');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
 
         $nb_card = count($result['result']);
         if ($result != false) {
@@ -1022,7 +1025,8 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
         $order++;
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('wifi', null, null, 'bss');
+        //$result = $Free_API->universal_get('wifi', null, null, 'bss');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/bss', true, true, true);
         if ($result != false) {
             foreach ($result['result'] as $wifibss) {
                 if ($wifibss['config']['wps_enabled'] != true) continue;

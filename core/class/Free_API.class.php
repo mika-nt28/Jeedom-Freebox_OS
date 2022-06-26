@@ -305,9 +305,6 @@ class Free_API
                 $config = 'api/v8/connection/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
                 break;
-                //case 'disk':
-                //  $config = 'api/v8/storage/disk';
-                // break;
             case 'download':
                 $config = 'api/v8/downloads/' . $update_type;
                 break;
@@ -338,7 +335,8 @@ class Free_API
                 $config = 'api/v8/lan/' . $update_type;
                 break;
             case 'universalAPI':
-                $config = 'api/v8/' . $update_type . $id;
+                //case 'wifi':
+                $config = 'api/v9/' . $update_type . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network_ID':
@@ -364,10 +362,10 @@ class Free_API
                     "event" => 'VmStateChange',
                 );
                 break;
-            case 'wifi':
-                $config = 'api/v8/wifi/' . $update_type;
-                $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';
-                break;
+                //case 'wifi':
+                //  $config = 'api/' . $update_type;
+                // $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';
+                //break;
             case 'PortForwarding':
                 $config = '/api/v8/fw/redir/';
                 $config_log = 'Redirection de port';
@@ -398,7 +396,7 @@ class Free_API
                 case 'network':
                 case 'notification':
                 case 'freeplug':
-                case 'wifi':
+                    //case 'wifi':
                     return $result;
                     break;
                 case 'system':
@@ -549,7 +547,7 @@ class Free_API
                 $fonction = "POST";
                 break;
             case 'wifi':
-                $config = 'api/v8/wifi/' . $_options;
+                $config = 'api/v9/wifi/' . $_options;
                 if ($_options == 'planning') {
                     $config_commande = 'use_planning';
                 } else if ($_options == 'wps/start') {
@@ -724,9 +722,9 @@ class Free_API
     {
         $listmac_whitelist = null;
         $listmac_blacklist = null;
-        $result = $this->fetch('/api/v8/wifi/mac_filter/');
+        $result = $this->fetch('/api/v9/wifi/mac_filter/', null, null, true, true);
         if ($result == 'auth_required') {
-            $result = $this->fetch('/api/v8/wifi/mac_filter/');
+            $result = $this->fetch('/api/v9/wifi/mac_filter/', null, null, true, true);
         }
         if ($result === false)
             return false;

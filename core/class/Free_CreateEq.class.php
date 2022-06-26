@@ -77,6 +77,7 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '================= ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS  ==================');
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl');
+                log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['freeplugName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['diskName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['phoneName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['LCDName']);
@@ -887,7 +888,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['VMName']);
         $updateicon = true;
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('universalAPI', null, null, 'vm');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'vm', false, false);
         if ($result != null) {
             $VMmemory = 'fas fa-memory';
             $VMCPU = 'fas fa-microchip';
@@ -991,7 +992,8 @@ class Free_CreateEq
         };
         $order = 50;
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('wifi', null, null, 'ap');
+        //$result = $Free_API->universal_get('wifi', null, null, 'ap');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
 
         $nb_card = count($result['result']);
         if ($result != false) {
@@ -1022,7 +1024,8 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
         $order++;
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('wifi', null, null, 'bss');
+        //$result = $Free_API->universal_get('wifi', null, null, 'bss');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/bss', true, true, true);
         if ($result != false) {
             foreach ($result['result'] as $wifibss) {
                 if ($wifibss['config']['wps_enabled'] != true) continue;

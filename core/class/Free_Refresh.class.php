@@ -1294,12 +1294,17 @@ class Free_Refresh
     }
     private static function refresh_wifi($EqLogics, $Free_API)
     {
+        log::add('Freebox_OS', 'debug', '>───────── Wifi : Update Liste Noire/Blanche');
         $listmac = $Free_API->mac_filter_list();
         if ($listmac != false) {
-            log::add('Freebox_OS', 'debug', '>───────── Liste Noire : ' . $listmac['listmac_blacklist']);
-            log::add('Freebox_OS', 'debug', '>───────── Liste Blanche : ' . $listmac['listmac_whitelist']);
+            if ($listmac['listmac_blacklist'] != null && $listmac['listmac_whitelist'] != null) {
+                log::add('Freebox_OS', 'debug', '>───────── Liste Noire : ' . $listmac['listmac_blacklist']);
+                log::add('Freebox_OS', 'debug', '>───────── Liste Blanche : ' . $listmac['listmac_whitelist']);
+            } else {
+                log::add('Freebox_OS', 'debug', '>───────── Liste Noire/Blanche : Vide');
+            }
         }
-        $result_config = $Free_API->universal_get('wifi', null, null, 'config');
+        $result_config = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
         $value = false;
         foreach ($EqLogics->getCmd('info') as $Command) {
             if (is_object($Command)) {
@@ -1319,7 +1324,7 @@ class Free_Refresh
                         break;
                     case "wifiPlanning":
                         $value = false;
-                        $result = $Free_API->universal_get('wifi', null, null, 'planning');
+                        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/planning', true, true, true);
                         if ($result['result']['use_planning']) {
                             $value = true;
                         }
@@ -1327,7 +1332,7 @@ class Free_Refresh
                         break;
                     case "wifiWPS":
                         $value = false;
-                        $result = $Free_API->universal_get('wifi', null, null, 'wps/config');
+                        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/wps/config', true, true, true);
                         if ($result['result']['enabled']) {
                             $value = true;
                         }
@@ -1337,7 +1342,7 @@ class Free_Refresh
                         $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result_config['result']['mac_filter_state']);
                         break;
                     default:
-                        $result_ap = $Free_API->universal_get('wifi', null, null, 'ap/' . $Command->getLogicalId());
+                        $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap/' . $Command->getLogicalId(), true, true, true);
                         log::add('Freebox_OS', 'debug', '>───────── Status Carte ' . $result_ap['result']['name'] . ' / ' . $Command->getLogicalId() . ' : ' . $result_ap['result']['status']['state']);
                         $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result_ap['result']['status']['state']);
                         break;

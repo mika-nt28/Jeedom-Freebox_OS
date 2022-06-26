@@ -330,10 +330,10 @@ class Free_API
                 $config = 'api/v8/player' . $id . '/api/v6/status';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
-            case 'network':
-            case 'network_ping':
-                $config = 'api/v8/lan/' . $update_type;
-                break;
+                //case 'network':
+                //case 'network_ping':
+                //  $config = 'api/v9/' . $update_type;
+                //break;
             case 'universalAPI':
                 //case 'wifi':
                 $config = 'api/v9/' . $update_type . $id;
@@ -383,6 +383,7 @@ class Free_API
             return false;
         }
         if ($result['success']) {
+            //log::add('Freebox_OS', 'debug', '>───────── TEST A SUPPRIMER APRES' . $config_log . ' : ' . $id);
             $value = 0;
             if ($update_type == 'freeplug') {
                 $update = 'freeplug';
@@ -392,8 +393,8 @@ class Free_API
                     return $result['result'];
                     break;
                     //case 'disk':
-                case 'network_ping':
-                case 'network':
+                    //case 'network_ping':
+                    //case 'network':
                 case 'notification':
                 case 'freeplug':
                     //case 'wifi':

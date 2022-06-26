@@ -524,7 +524,8 @@ class Free_Refresh
         } else if ($_network == 'WIFIGUEST') {
             $_networkinterface = 'wifiguest';
         }
-        $result_network_ping = $Free_API->universal_get('network_ping', null, null, 'browser/' . $_networkinterface);
+        //$result_network_ping = $Free_API->universal_get('network_ping', null, null, 'lan/browser/' . $_networkinterface);
+        $result_network_ping = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true);
         $order_count_active = 100;
         $order_count_noactive = 400;
         if (!$result_network_ping['success']) {

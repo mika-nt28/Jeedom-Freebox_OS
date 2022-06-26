@@ -339,7 +339,6 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-
     private static function createEq_download($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['downloadsName']);
@@ -608,7 +607,8 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Recherche des Interfaces réseaux : ' . $logicalinfo['networkName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('network', null, null, 'browser/interfaces');
+        //$Free_API->universal_get('network', null, null, 'browser/interfaces');
+        $Free_API->universal_get('universalAPI', null, null, 'lan/browser/interfaces', true, true, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
@@ -651,7 +651,8 @@ class Free_CreateEq
         $network->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -31, '0', $updateWidget, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#&type=#type#');
         $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, true, 'default', 'default', 0, $icon_search, true, 'default', 'default',  -30, '0', $updateWidget, false, null, true, null, null, null, null, null, null, null, true);
         $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -32, '0', $updateWidget, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
-        $result = $Free_API->universal_get('network', null, null, 'browser/' . $_networkinterface);
+        //$result = $Free_API->universal_get('network', null, null, 'lan/browser/' . $_networkinterface);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true);
 
         if (isset($result['result'])) {
             if ($network->getConfiguration('UpdateName') == 1) {

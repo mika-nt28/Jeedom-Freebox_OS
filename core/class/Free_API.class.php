@@ -248,29 +248,34 @@ class Free_API
         }
     }
 
-    public function PortForwarding($id, $fonction = "get", $active = null)
+    public function PortForwarding($id, $fonction = "GET", $active = null, $Mac = null)
     {
-        $PortForwarding = $this->fetch('/api/v8/fw/redir/');
-        if ($PortForwarding === false)
+        $PortForwarding = $this->fetch('/api/v8/fw/redir/', null, $fonction, true, true);
+        $id = str_replace("ether-", "", $id);
+        $id = strtoupper($id);
+        log::add('Freebox_OS', 'debug', '│──────────> Lecture des Ports l\'adresse Mac : '  . $Mac . ' - FONCTION ' . $fonction);
+        if ($PortForwarding === false) {
+            log::add('Freebox_OS', 'debug', '│──────────> Aucune donnée');
             return false;
-
-        if ($fonction == "get") {
+        }
+        if ($fonction == "GET") {
             $result = array();
             foreach ($PortForwarding['result'] as $value) {
-                if ($value['host']['id'] != $id) continue;
-                $enabled = "0";
-                if ($value['enabled'] == true) $enabled = "1";
-                array_push($result, array(
-                    'id' => $value['id'],
-                    'enabled' => $enabled,
-                    'src_ip' => $value['src_ip'],
-                    'wan_port_start' => $value['wan_port_start'],
-                    'wan_port_end' => $value['wan_port_end'],
-                    'ip_proto' => $value['ip_proto'],
-                    'lan_ip' => $value['lan_ip'],
-                    'lan_port' => $value['lan_port'],
-                    'comment' => $value['comment']
-                ));
+                if ($value['host']['l2ident']['id'] == $Mac) {
+                    $enabled = "0";
+                    if ($value['enabled'] == true) $enabled = "1";
+                    array_push($result, array(
+                        'id' => $value['id'],
+                        'enabled' => $enabled,
+                        'src_ip' => $value['src_ip'],
+                        'wan_port_start' => $value['wan_port_start'],
+                        'wan_port_end' => $value['wan_port_end'],
+                        'ip_proto' => $value['ip_proto'],
+                        'lan_ip' => $value['lan_ip'],
+                        'lan_port' => $value['lan_port'],
+                        'comment' => $value['comment']
+                    ));
+                };
             }
             return $result;
         } elseif ($fonction == "PUT") {
@@ -558,17 +563,20 @@ class Free_API
                     $fonction = "POST";
                     $config_commande = 'session_id';
                 } else if ($_options == 'mac_filter') {
-                    $fonction = $id['function'];
+                    log::add('Freebox_OS', 'debug', '>───────── TEST');
+                    log::add('Freebox_OS', 'debug', '>───────── Fonction : ' . $_options_2['function']);
+                    $fonction = $_options_2['function'];
                     if ($fonction != 'POST') {
-                        $id = $id['mac_address'] . '-' . $id['filter'];
+                        $id = $_options_2['mac_address'] . '-' . $_options_2['filter'];
                         $parametre = null;
                     } else {
-                        $_filter = $id['filter'];
-                        $mac_adress = $id['mac_address'];
-                        $comment = $id['comment'];
+                        $_filter = $_options_2['filter'];
+                        $mac_adress = $_options_2['mac_address'];
+                        $comment = $_options_2['comment'];
                         $id = null;
                         $parametre = array("mac" => $mac_adress, "type" => $_filter, "comment" => $comment);
                     }
+                    log::add('Freebox_OS', 'debug', '>───────── Fonction 2 : ' . $fonction);
                 } else if ($_options == 'config' && $_options_2 == 'mac_filter_state') {
                     $config_commande = 'mac_filter_state';
                 } else {
@@ -747,8 +755,9 @@ class Free_API
                 $return = array('listmac_blacklist' => '', 'listmac_whitelist' => "");
             }
             return $return;
-        } else
+        } else {
             return false;
+        }
     }
 
     public function airmedia($update = 'config', $parametre, $receiver)

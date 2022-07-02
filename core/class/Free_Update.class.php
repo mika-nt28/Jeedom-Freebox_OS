@@ -377,7 +377,7 @@ class Free_Update
                         log::add('Freebox_OS', 'error', 'Méthode Filtrage  ou type de Filtrage incorrect ');
                         break;
                     }
-                    $Free_API->universal_put(null, 'wifi', $_options, null, 'mac_filter');
+                    $Free_API->universal_put(null, 'wifi', $_options['mac_address'], null, 'mac_filter', null, $_options);
                 case 'wifiOn':
                     $Free_API->universal_put(1, 'wifi', null, null, 'config');
                     break;

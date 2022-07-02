@@ -529,7 +529,7 @@ class Free_Refresh
         $order_count_active = 100;
         $order_count_noactive = 400;
         if (!$result_network_ping['success']) {
-            log::add('Freebox_OS', 'debug', '│===========> RESULTAT  Requête pas correct : ' . $result_network_ping['success']);
+            log::add('Freebox_OS', 'debug', '│===========> RESULTAT  Requête pas correct ou Pas d\'appareil trouvé' . $result_network_ping['success']);
         } else {
             foreach ($EqLogics->getCmd('info') as $Command) {
 
@@ -1298,7 +1298,7 @@ class Free_Refresh
         log::add('Freebox_OS', 'debug', '>───────── Wifi : Update Liste Noire/Blanche');
         $listmac = $Free_API->mac_filter_list();
         if ($listmac != false) {
-            if ($listmac['listmac_blacklist'] != null && $listmac['listmac_whitelist'] != null) {
+            if ($listmac['listmac_blacklist'] != null || $listmac['listmac_whitelist'] != null) {
                 log::add('Freebox_OS', 'debug', '>───────── Liste Noire : ' . $listmac['listmac_blacklist']);
                 log::add('Freebox_OS', 'debug', '>───────── Liste Blanche : ' . $listmac['listmac_whitelist']);
             } else {

@@ -23,7 +23,8 @@ try {
 			break;
 		case 'PortForwarding':
 			$id_logical = cmd::byId(init('id'))->getLogicalId();
-			ajax::success($Free_API->PortForwarding($id_logical, "get"));
+			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
+			ajax::success($Free_API->PortForwarding($id_logical, "GET", null, $Mac));
 			break;
 		case 'WakeOnLAN':
 			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');

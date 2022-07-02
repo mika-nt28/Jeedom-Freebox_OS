@@ -1298,7 +1298,7 @@ class Free_Refresh
         log::add('Freebox_OS', 'debug', '>───────── Wifi : Update Liste Noire/Blanche');
         $listmac = $Free_API->mac_filter_list();
         if ($listmac != false) {
-            if ($listmac['listmac_blacklist'] != null && $listmac['listmac_whitelist'] != null) {
+            if ($listmac['listmac_blacklist'] != null || $listmac['listmac_whitelist'] != null) {
                 log::add('Freebox_OS', 'debug', '>───────── Liste Noire : ' . $listmac['listmac_blacklist']);
                 log::add('Freebox_OS', 'debug', '>───────── Liste Blanche : ' . $listmac['listmac_whitelist']);
             } else {

@@ -27,6 +27,14 @@ class Free_Update
             //log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
         $Free_API = new Free_API();
+        $Api_version = config::byKey('API_FREEBOX', 'Freebox_OS');
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $Api_version);
+        if ($Api_version === '') {
+            $result = Free_Refresh::Test_API(null, $Free_API);
+            log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
+            $Api_version = $result;
+        }
+
         if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player'  || $logicalId_eq->getConfiguration('type') == 'freeplug' || $logicalId_eq->getConfiguration('type') == 'VM') {
             $update = $logicalId_eq->getconfiguration('type');
         } else {
@@ -35,7 +43,7 @@ class Free_Update
         switch ($update) {
             case 'airmedia':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
+                    Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $Api_version);
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 } else {
                     log::add('Freebox_OS', 'debug', '│ Pas de fonction rafraichir pour cet équipement');
@@ -49,88 +57,89 @@ class Free_Update
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'downloads':
-                Free_Update::update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                Free_Update::update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'freeplug':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_freeplug($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                    Free_Update::update_freeplug($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update, $Api_version);
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'LCD':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                    Free_Update::update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version);
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'homeadapters':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_homeadapters($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                    Free_Update::update_homeadapters($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update, $Api_version);
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'player':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                    Free_Update::update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update, $Api_version);
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'parental':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                    Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update, $Api_version);
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'phone':
-                Free_Update::update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                Free_Update::update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'player':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
+                    Free_Update::update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update, $Api_version);
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'netshare':
-                Free_Update::update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                Free_Update::update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             case 'network':
             case 'networkwifiguest':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
+                    Free_Update::update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update, $Api_version);
                 }
                 if ($logicalId != 'WakeonLAN') {
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 }
                 break;
             case 'system':
-                Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                Free_Update::update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version);
                 if ($logicalId != 'reboot') {
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 }
                 break;
             case 'VM':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
+                    Free_Update::update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update, $Api_version);
                 }
                 break;
             case 'wifi':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                    Free_Update::update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version);
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
             default:
-                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf);
+                Free_Update::update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf, $Api_version);
                 //if ($logicalId == 'refresh' || config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 0) {
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 //}
                 break;
         }
     }
-    private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
+
+    private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $Api_version)
     {
         $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");
         log::add('Freebox_OS', 'debug', '│ Media type : ' . $_options['titre'] . ' -- Media : ' . $_options['message'] . ' -- Action : ' . $logicalId);
@@ -154,7 +163,7 @@ class Free_Update
         }
     }
 
-    private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_download($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_option, $Api_versions)
     {
         $result = $Free_API->universal_get('download', null, null, 'stats/');
         if ($result != false) {
@@ -184,7 +193,7 @@ class Free_Update
             }
         }
     }
-    private static function update_homeadapters($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_homeadapters($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version)
     {
         if (stripos($logicalId, 'PB_On')  !== false) {
             $parametre = 'active';
@@ -199,11 +208,11 @@ class Free_Update
         log::add('Freebox_OS', 'debug', '│ Récupération ID : ' . $ID_logicalID);
         $Free_API->universal_put('default', 'universal_put', $ID_logicalID, null, 'home/adapters/', 'PUT', $option);
     }
-    private static function update_freeplug($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_freeplug($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version)
     {
         $Free_API->universal_put(null, 'universal_put', null, null, 'freeplug/' . $logicalId_eq->getLogicalId() . '/' . $logicalId, 'POST', null);
     }
-    private static function update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version)
     {
         switch ($logicalId) {
             case 'brightness':
@@ -225,7 +234,7 @@ class Free_Update
                 break;
         }
     }
-    private static function update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version)
     {
         switch ($logicalId) {
             case "FTP_enabledOn":
@@ -260,7 +269,7 @@ class Free_Update
                 break;
         }
     }
-    private static function update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $network)
+    private static function update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $network, $Api_version)
     {
         switch ($logicalId) {
             case "search":
@@ -276,7 +285,7 @@ class Free_Update
                     "mac" => $_options['mac_address'],
                     "password" => $_options['password']
                 );
-                $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'lan/wol/pub/', null, $option);
+                $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'lan/wol/pub/', null, $option, $Api_version);
                 break;
             case "add_del_mac":
                 if ($_options['ip'] == null || $_options['mac_address'] == null) {
@@ -290,14 +299,14 @@ class Free_Update
                     "comment" => $_options['comment'],
                 );
                 if ($_options['function'] != 'device') {
-                    $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'dhcp/static_lease/', $_options['function'], $option);
+                    $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'dhcp/static_lease/', $_options['function'], $option, $Api_version);
                 }
                 $option = array(
                     "id" => 'ether-' . $_options['mac_address'],
                     "primary_name" => $_options['name'],
                     'host_type'  => $_options['type']
                 );
-                $Free_API->universal_put(null, 'universal_put', 'ether-' . $_options['mac_address'], null, 'lan/browser/pub', 'PUT', $option);
+                $Free_API->universal_put(null, 'universal_put', 'ether-' . $_options['mac_address'], null, 'lan/browser/pub', 'PUT', $option, $Api_version);
                 break;
             case "redir":
                 if ($_options['lan_ip'] == null) {
@@ -315,11 +324,11 @@ class Free_Update
                     'ip_proto' => $_options['ip_proto'],
                     'src_ip' =>  $_options['src_ip']
                 );
-                $Free_API->universal_put(null, 'universal_put', null, null, 'fw/redir', 'POST', $option);
+                $Free_API->universal_put(null, 'universal_put', null, null, 'fw/redir', 'POST', $option, $Api_version);
                 break;
         }
     }
-    private static function update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
+    private static function update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update, $Api_version)
     {
         $cmd = cmd::byid($_cmd->getvalue());
 
@@ -329,11 +338,11 @@ class Free_Update
         $Free_API->universal_put($logicalId, $update, $logicalId_eq->getConfiguration('action'), null, $_options, $_status);
         Free_Refresh::RefreshInformation($logicalId_eq->getId());
     }
-    private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
+    private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update, $Api_version)
     {
         $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
     }
-    private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version)
     {
         $result = $Free_API->nb_appel_absence();
         if ($result != false) {
@@ -347,7 +356,7 @@ class Free_Update
             }
         }
     }
-    private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version)
     {
         switch ($logicalId) {
             case "reboot":
@@ -361,48 +370,48 @@ class Free_Update
                 break;
         }
     }
-    private static function update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update)
+    private static function update_VM($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update, $Api_version)
     {
         $Free_API->universal_put(null, $logicalId_eq->getconfiguration('type'), $logicalId_eq->getConfiguration('action'), null, null, null, $logicalId);
     }
-    private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $Api_version)
     {
         if ($logicalId != 'refresh') {
             switch ($logicalId) {
                 case 'mac_filter_state':
-                    $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state');
+                    $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state', $Api_version);
                     break;
                 case 'add_del_mac';
                     if ($_options['function'] == null || $_options['filter'] == null || $_options['mac_address'] == null) {
                         log::add('Freebox_OS', 'error', 'Méthode Filtrage  ou type de Filtrage incorrect ');
                         break;
                     }
-                    $Free_API->universal_put(null, 'wifi', $_options['mac_address'], null, 'mac_filter', null, $_options);
+                    $Free_API->universal_put(null, 'wifi', $_options['mac_address'], null, 'mac_filter', null, $_options, $Api_version);
                 case 'wifiOn':
-                    $Free_API->universal_put(1, 'wifi', null, null, 'config');
+                    $Free_API->universal_put(1, 'wifi', null, null, 'config', null, null, $Api_version);
                     break;
                 case 'wifiOff':
-                    $Free_API->universal_put(0, 'wifi', null, null, 'config');
+                    $Free_API->universal_put(0, 'wifi', null, null, 'config', null, null, $Api_version);
                     break;
                 case 'wifiPlanningOn':
-                    $Free_API->universal_put(1, 'wifi', null, null, 'planning');
+                    $Free_API->universal_put(1, 'wifi', null, null, 'planning', null, null, $Api_version);
                     break;
                 case 'wifiPlanningOff':
-                    $Free_API->universal_put(0, 'wifi', null, null, 'planning');
+                    $Free_API->universal_put(0, 'wifi', null, null, 'planning', null, null, $Api_version);
                     break;
                 case 'wifiSessionWPSOff':
                 case 'wifiWPSOff':
                     $parametre = 1;
-                    $Free_API->universal_put($parametre, 'wifi', null, null, 'wps/stop');
+                    $Free_API->universal_put($parametre, 'wifi', null, null, 'wps/stop', null, null, $Api_version);
                     break;
                 default:
-                    $Free_API->universal_put($logicalId, 'wifi', null, null, 'wps/start');
+                    $Free_API->universal_put($logicalId, 'wifi', null, null, 'wps/start', null, null, $Api_version);
                     break;
             }
         }
     }
 
-    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf)
+    private static function update_default($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_conf, $Api_version)
     {
         //$_execute = 1;
         switch ($logicalId_type) {

@@ -202,6 +202,9 @@ class Free_API
                     } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
                         log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
                         return false;
+                    } else if ($result['error_code'] == 'invalid_api_version') {
+                        log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg']);
+                        return false;
                     } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                         log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
                         return false;

@@ -35,6 +35,6 @@
 	},
 	"documentation": "http://mika-nt28.github.io/Documentations/Freebox_OS/#language#/",
 	"changelog": "https://mika-nt28.github.io/Documentations/Freebox_OS/#language#/changelog",
-	"changelog_beta" : "http://mika-nt28.github.io/Documentations/Freebox_OS/#language#/",
- 	"documentation_beta" : "https://mika-nt28.github.io/Documentations/Freebox_OS/#language#/changelog"
+	"changelog_beta" : "https://mika-nt28.github.io/Documentations/Freebox_OS/#language#/changelog_beta",
+ 	"documentation_beta" :  "http://mika-nt28.github.io/Documentations/Freebox_OS/#language#/"
 }

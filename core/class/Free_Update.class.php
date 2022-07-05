@@ -30,7 +30,7 @@ class Free_Update
         $Api_version = config::byKey('API_FREEBOX', 'Freebox_OS');
         //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $Api_version);
         if ($Api_version === '') {
-            $result = Free_Refresh::Test_API(null, $Free_API);
+            $result = Free_Refresh::refresh_API($Free_API);
             log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
             $Api_version = $result;
         }

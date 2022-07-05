@@ -339,10 +339,10 @@ class Free_API
                 $config = 'api/' . $api_version . '/player' . $id . '/api/v6/status';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
-                //case 'network':
+            case 'network':
                 //case 'network_ping':
-                //  $config = 'api/' . $api_version . '/' . $update_type;
-                //break;
+                $config = 'api/' . $api_version . '/' . $update_type;
+                break;
             case 'universalAPI':
                 //case 'wifi':
                 $config = 'api/' . $api_version . '/' . $update_type . $id;

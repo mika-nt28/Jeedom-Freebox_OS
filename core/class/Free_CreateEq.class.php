@@ -28,50 +28,57 @@ class Free_CreateEq
         } else {
             $templatecore_V4  = 'core::';
         };
+        $Api_version = config::byKey('API_FREEBOX', 'Freebox_OS');
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $Api_version);
+        if ($Api_version === '') {
+            $result = Free_Refresh::refresh_API($Api_version);
+            log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
+            $Api_version = $result;
+        }
         switch ($create) {
             case 'airmedia':
-                Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'connexion':
-                Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'disk':
-                Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_disk_RAID($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_disk_RAID($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'LCD':
-                Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'downloads':
-                Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'parental':
-                Free_CreateEq::createEq_parental($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_parental($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'network':
-                Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'LAN', $IsVisible);
+                Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'LAN', $IsVisible, $Api_version);
                 break;
             case 'netshare':
-                Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'networkwifiguest':
-                Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'WIFIGUEST', $IsVisible);
+                Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_network_SP($logicalinfo, $templatecore_V4, 'WIFIGUEST', $IsVisible, $Api_version);
                 break;
             case 'phone':
-                Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'system':
-                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP_lang($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_system_SP_lang($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             case 'wifi':
-                Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4, $Api_version);
                 break;
             default:
                 log::add('Freebox_OS', 'debug', '================= ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS  ==================');
@@ -90,29 +97,29 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES VM');
                 log::add('Freebox_OS', 'debug', '====================================================================================');
-                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP_lang($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_FreePlug($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_system_SP_lang($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_FreePlug($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4, $Api_version);
+                Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4, $Api_version);
                 $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
                 if ($Type_box == 'fbxgw1r' || $Type_box == 'fbxgw2r') {
-                    Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4);
+                    Free_CreateEq::createEq_LCD($logicalinfo, $templatecore_V4, $Api_version);
                 } else {
                     log::add('Freebox_OS', 'debug', '>───────── Type de box compatible pour modifier les réglages de l\'afficheur : ' . $Type_box);
                 }
                 if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
-                    Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);
-                    Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4);
-                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
-                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
-                    Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
+                    Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4, $Api_version);
+                    Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4, $Api_version);
+                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN', $Api_version);
+                    Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST', $Api_version);
+                    Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4, $Api_version);
                 } else {
                     log::add('Freebox_OS', 'debug', '================= BOX EN MODE BRIDGE : LES ÉQUIPEMENTS SUIVANTS NE SONT PAS CRÉER  ==================');
                     log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['airmediaName']);
@@ -120,11 +127,16 @@ class Free_CreateEq
                     log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
                     log::add('Freebox_OS', 'debug', '====================================================================================');
                 }
-                Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4);
+                if ($Type_box != 'fbxgw1r' && $Type_box != 'fbxgw2r') {
+                    log::add('Freebox_OS', 'debug', '================= BOX COMPATIBLE AVEC LES VM  ==================');
+                    Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4, $Api_version);
+                } else {
+                    log::add('Freebox_OS', 'debug', '================= BOX NON COMPATIBLE AVEC LES VM  ==================');
+                }
                 break;
         }
     }
-    private static function createEq_airmedia($logicalinfo, $templatecore_V4)
+    private static function createEq_airmedia($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['airmediaName']);
         $updateicon = false;
@@ -143,15 +155,15 @@ class Free_CreateEq
         $Airmedia->AddCommand('Stop', 'airmediastop', 'action', 'message', 'Freebox_OS::AirMedia_Stop', null, null, 1, 'default', 'default', 0, $iconAirPlayOff, 0, 'default', 'default', 3, '0', $updateicon, false, null, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_airmedia_sp($logicalinfo, $templatecore_V4)
+    private static function createEq_airmedia_sp($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['airmediaName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('airmedia', null, null, null);
+        $Free_API->universal_get('airmedia', null, null, null, true, true, false, $Api_version);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_connexion($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['connexionName']);
         $updateicon = false;
@@ -163,7 +175,7 @@ class Free_CreateEq
             $iconspeed = 'fas fa-tachometer-alt icon_blue';
         };
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('connexion', null, null, 'ftth');
+        $result = $Free_API->universal_get('connexion', null, null, 'ftth', true, true, false, $Api_version);
         if ($result['sfp_present'] == null) {
             $_modul = 'Module Fibre : Non Présent';
             $_bandwidth_value_down = '#value# / 1000000';
@@ -190,11 +202,11 @@ class Free_CreateEq
         $Connexion->AddCommand('Proxy Wake on Lan', 'wol', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  10, '0', $updateicon, true);
         log::add('Freebox_OS', 'debug', '└─────────');
         if ($result['sfp_present'] != null) {
-            Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result);
+            Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result, $Api_version);
         }
         log::add('Freebox_OS', 'debug', '│──────────> ' . $_modul);
     }
-    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result)
+    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
 
@@ -218,11 +230,11 @@ class Free_CreateEq
 
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_connexion_4G($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion_4G($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique 4G : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
+        $result = $Free_API->universal_get('connexion', null, null, 'lte/config', true, true, false, $Api_version);
         if ($result != false && $result != 'Aucun module 4G détecté') {
             $_modul = 'Module 4G : Présent';
             log::add('Freebox_OS', 'debug', '│──────────>' . $_modul);
@@ -239,11 +251,11 @@ class Free_CreateEq
 
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_connexion_xdsl($logicalinfo, $templatecore_V4)
+    private static function createEq_connexion_xdsl($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique xdsl : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('connexion', null, null, 'xdsl');
+        $result = $Free_API->universal_get('connexion', null, null, 'xdsl', true, true, false, $Api_version);
         if ($result != false && $result != 'Aucun module 4G détecté') {
             if ($result['status']['status'] != 'down') {
                 $_modul = 'Module xdsl : Présent';
@@ -259,14 +271,14 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '│──────────> ' . $_modul);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_disk($logicalinfo, $templatecore_V4)
+    private static function createEq_disk($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['diskName']);
         Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_disk_SP($logicalinfo, $templatecore_V4)
+    private static function createEq_disk_SP($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['diskName']);
         if (version_compare(jeedom::version(), "4", "<")) {
@@ -277,9 +289,9 @@ class Free_CreateEq
             $icontemp = 'fas fa-thermometer-half icon_blue';
         };
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true, $Api_version);
         if ($result == 'auth_required') {
-            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
+            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true, $Api_version);
         }
         $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
         if ($result != false) {
@@ -300,7 +312,7 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_disk_RAID($logicalinfo, $templatecore_V4)
+    private static function createEq_disk_RAID($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique RAID : ' . $logicalinfo['diskName']);
         if (version_compare(jeedom::version(), "4", "<")) {
@@ -314,7 +326,7 @@ class Free_CreateEq
         if ($Type_box == 'OK') {
             $Free_API = new Free_API();
             $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
-            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid');
+            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid', true, true, false, $Api_version);
 
             if ($result != false) {
                 $order_i = 0;
@@ -339,7 +351,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_download($logicalinfo, $templatecore_V4)
+    private static function createEq_download($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['downloadsName']);
         $updateicon = true;
@@ -399,7 +411,7 @@ class Free_CreateEq
 
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_FreePlug($logicalinfo, $templatecore_V4)
+    private static function createEq_FreePlug($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['freeplugName']);
         $updateicon = false;
@@ -411,7 +423,7 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
             $iconReboot = 'fas fa-sync icon_red';
         };
-        $result = $Free_API->universal_get('universalAPI', null, null, 'freeplug', true, true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'freeplug', true, true, false, $Api_version);
         foreach ($result['result'] as $freeplugs) {
             foreach ($freeplugs['members'] as $freeplug) {
                 log::add('Freebox_OS', 'debug', '│──────────>  Création Freeplug : ' . $freeplug['id']);
@@ -424,7 +436,7 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_LCD($logicalinfo, $templatecore_V4)
+    private static function createEq_LCD($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['LCDName']);
         $LCD = Freebox_OS::AddEqLogic($logicalinfo['LCDName'], $logicalinfo['LCDID'], 'default', false, null, null, null, '5 */12 * * *');
@@ -447,10 +459,10 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_parental($logicalinfo, $templatecore_V4)
+    private static function createEq_parental($logicalinfo, $templatecore_V4, $Api_version)
     {
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('parentalprofile');
+        $result = $Free_API->universal_get('parentalprofile', null, null, null, true, true, false, $Api_version);
         foreach ($result  as $Equipement) {
             log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
             if (version_compare(jeedom::version(), "4", "<")) {
@@ -479,7 +491,7 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '└─────────');
         }
     }
-    private static function createEq_phone($logicalinfo, $templatecore_V4)
+    private static function createEq_phone($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['phoneName']);
         $updateicon = false;
@@ -511,7 +523,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_network($logicalinfo, $templatecore_V4, $_network = 'LAN')
+    private static function createEq_network($logicalinfo, $templatecore_V4, $_network = 'LAN', $Api_version)
     {
         if ($_network == 'LAN') {
             $_networkname = $logicalinfo['networkName'];
@@ -546,7 +558,7 @@ class Free_CreateEq
         $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -32, '0', $updateWidget, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_netshare($logicalinfo, $templatecore_V4)
+    private static function createEq_netshare($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['netshareName']);
         $updateicon = false;
@@ -603,16 +615,16 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_network_interface($logicalinfo, $templatecore_V4)
+    private static function createEq_network_interface($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Recherche des Interfaces réseaux : ' . $logicalinfo['networkName']);
         $Free_API = new Free_API();
         //$Free_API->universal_get('network', null, null, 'browser/interfaces');
-        $Free_API->universal_get('universalAPI', null, null, 'lan/browser/interfaces', true, true, true);
+        $Free_API->universal_get('universalAPI', null, null, 'lan/browser/interfaces', true, true, true, $Api_version);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_network_SP($logicalinfo, $templatecore_V4, $_network = 'LAN', $IsVisible = true)
+    private static function createEq_network_SP($logicalinfo, $templatecore_V4, $_network = 'LAN', $IsVisible = true, $Api_version)
     {
         if ($_network == 'LAN') {
             $_networkname = $logicalinfo['networkName'];
@@ -652,7 +664,7 @@ class Free_CreateEq
         $network->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, true, 'default', 'default', 0, $icon_search, true, 'default', 'default',  -30, '0', $updateWidget, false, null, true, null, null, null, null, null, null, null, true);
         $network->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -32, '0', $updateWidget, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         //$result = $Free_API->universal_get('network', null, null, 'lan/browser/' . $_networkinterface);
-        $result = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true, $Api_version);
 
         if (isset($result['result'])) {
             if ($network->getConfiguration('UpdateName') == 1) {
@@ -720,14 +732,14 @@ class Free_CreateEq
         }
     }
 
-    private static function createEq_notification($logicalinfo, $templatecore_V4)
+    private static function createEq_notification($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['notificationName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('notification', null, null);
+        $Free_API->universal_get('notification', null, null, null, true, null, $Api_version);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_system($logicalinfo, $templatecore_V4)
+    private static function createEq_system($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['systemName']);
         $updateicon = false;
@@ -751,7 +763,7 @@ class Free_CreateEq
         //$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateicon);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_system_lan($logicalinfo, $templatecore_V4)
+    private static function createEq_system_lan($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifique Type de Freebox : ' . $logicalinfo['systemName']);
         $updateicon = false;
@@ -769,7 +781,7 @@ class Free_CreateEq
         Free_Refresh::RefreshInformation($logicalinfo['systemID']);
     }
 
-    private static function createEq_system_SP($logicalinfo, $templatecore_V4)
+    private static function createEq_system_SP($logicalinfo, $templatecore_V4, $Api_version)
     {
         $Free_API = new Free_API();
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques Capteurs : ' . $logicalinfo['systemName']);
@@ -802,7 +814,7 @@ class Free_CreateEq
             } else if ($boucle_num == 3) {
                 $boucle_update = 'expansions';
             }
-            $result_SP = $Free_API->universal_get('system', null, $boucle_update);
+            $result_SP = $Free_API->universal_get('system', null, $boucle_update, null, true, true, false, $Api_version);
             if ($result_SP != false) {
                 log::add('Freebox_OS', 'debug', '│──────────> Boucle pour Update : ' . $boucle_update);
 
@@ -868,7 +880,7 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_system_SP_lang($logicalinfo, $templatecore_V4)
+    private static function createEq_system_SP_lang($logicalinfo, $templatecore_V4, $Api_version)
     {
         $updateicon = false;
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
@@ -884,12 +896,12 @@ class Free_CreateEq
         $system->AddCommand('langue Box', 'lang', 'info', 'string', 'default', null, 'default', 1, 'default', '4GStatut', 0, $iconLang, 1, 'default', 'default', 50, '0', false, false, null, true);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_VM($logicalinfo, $templatecore_V4)
+    private static function createEq_VM($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['VMName']);
         $updateicon = true;
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('universalAPI', null, null, 'vm', false, false);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'vm', false, false, false, $Api_version);
         if ($result != null) {
             $VMmemory = 'fas fa-memory';
             $VMCPU = 'fas fa-microchip';
@@ -915,7 +927,14 @@ class Free_CreateEq
             };
 
             foreach ($result as $Equipement) {
-                $_VM = Freebox_OS::AddEqLogic($Equipement['name'], 'VM_' . $Equipement['id'], 'multimedia', true, 'VM', null, $Equipement['id'], '*/5 * * * *', null, null);
+                if ($Equipement['name'] == null && $Equipement['cloudinit_hostname'] != null) {
+                    $VM_name = $Equipement['cloudinit_hostname'];
+                } else if ($Equipement['name'] != null) {
+                    $VM_name = $Equipement['name'];
+                } else {
+                    $VM_name = 'VM_' . $Equipement['id'];
+                }
+                $_VM = Freebox_OS::AddEqLogic($VM_name, 'VM_' . $Equipement['id'], 'multimedia', true, 'VM', null, $Equipement['id'], '*/5 * * * *', null, null);
                 $_VM->AddCommand('CPU(s)', 'vcpus', 'info', 'numeric',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, $VMCPU, 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
                 $_VM->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 11, '0', $updateicon, false, false, true);
                 $_VM->AddCommand('Mémoire', 'memory', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mo', 'default', 0, 'default', 'default', 0, $VMmemory, 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
@@ -934,7 +953,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_wifi($logicalinfo, $templatecore_V4)
+    private static function createEq_wifi($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['wifiName']);
         $updateicon = false;
@@ -972,12 +991,12 @@ class Free_CreateEq
         //$Wifi->AddCommand('Wifi WPS On', 'wifiWPSOn', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOn, 0, 'default', 'default', 14, '0', $updateicon, false);
         //$Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
         log::add('Freebox_OS', 'debug', '└─────────');
-        Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi);
-        Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi);
-        Free_CreateEq::createEq_wifi_ap($logicalinfo, $templatecore_V4, $Wifi);
+        Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi, $Api_version);
+        Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi, $Api_version);
+        Free_CreateEq::createEq_wifi_ap($logicalinfo, $templatecore_V4, $Wifi, $Api_version);
     }
 
-    private static function createEq_wifi_ap($logicalinfo, $templatecore_V4, $Wifi)
+    private static function createEq_wifi_ap($logicalinfo, $templatecore_V4, $Wifi, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiAPName']);
 
@@ -994,7 +1013,7 @@ class Free_CreateEq
         $order = 50;
         $Free_API = new Free_API();
         //$result = $Free_API->universal_get('wifi', null, null, 'ap');
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true, $Api_version);
 
         $nb_card = count($result['result']);
         if ($result != false) {
@@ -1007,7 +1026,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi)
+    private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $Wifi, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiWPSName']);
 
@@ -1026,7 +1045,7 @@ class Free_CreateEq
         $order++;
         $Free_API = new Free_API();
         //$result = $Free_API->universal_get('wifi', null, null, 'bss');
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/bss', true, true, true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/bss', true, true, true, $Api_version);
         if ($result != false) {
             foreach ($result['result'] as $wifibss) {
                 if ($wifibss['config']['wps_enabled'] != true) continue;
@@ -1047,7 +1066,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 
-    private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi)
+    private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $Wifi, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['wifimmac_filter']);
         if (version_compare(jeedom::version(), "4", "<")) {
@@ -1078,11 +1097,11 @@ class Free_CreateEq
         $Wifi->AddCommand('Liste MAC Noire', 'listblack', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_black, 0, 'default', 'default',  $order, '0', null, true, false, true, null, null, null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_upload($logicalinfo, $templatecore_V4)
+    private static function createEq_upload($logicalinfo, $templatecore_V4, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['notificationName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('upload', null, null);
+        $Free_API->universal_get('upload', null, null, null, null, null, $Api_version);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 }

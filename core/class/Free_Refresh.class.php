@@ -27,7 +27,7 @@ class Free_Refresh
         $Api_version = config::byKey('API_FREEBOX', 'Freebox_OS');
         //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $Api_version);
         if ($Api_version === '') {
-            $result = Free_Refresh::Test_API($EqLogics, $Free_API);
+            $result = Free_Refresh::refresh_API($Free_API);
             log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
             $Api_version = $result;
         }
@@ -46,6 +46,9 @@ class Free_Refresh
                 $refresh = $EqLogics->getLogicalId();
             }
             switch ($refresh) {
+                case 'API':
+                    Free_Refresh::refresh_API($Api_version);
+                    break;
                 case 'airmedia':
                     break;
                 case 'connexion':
@@ -122,7 +125,7 @@ class Free_Refresh
         }
     }
 
-    private static function Test_API($EqLogics, $Free_API)
+    private static function refresh_API($Free_API)
     {
         $result = null;
         $api_version = 'v10';
@@ -197,7 +200,7 @@ class Free_Refresh
 
     private static function refresh_connexion_4G($EqLogics, $Free_API, $Api_version)
     {
-        $result = $Free_API->universal_get('connexion', null, 1, 'lte/config');
+        $result = $Free_API->universal_get('connexion', null, 1, 'lte/config', true, true, null, $Api_version);
         if ($result != false && $result != 'Aucun module 4G détecté') {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -236,7 +239,7 @@ class Free_Refresh
     }
     private static function refresh_connexion_Config($EqLogics, $Free_API, $Api_version)
     {
-        $result =  $Free_API->universal_get('connexion', null, null, 'config');
+        $result =  $Free_API->universal_get('connexion', null, null, 'config', true, true, null, $Api_version);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -255,7 +258,7 @@ class Free_Refresh
 
     private static function refresh_connexion_FTTH($EqLogics, $Free_API, $Api_version)
     {
-        $result = $Free_API->universal_get('connexion', null, null, 'ftth');
+        $result = $Free_API->universal_get('connexion', null, null, 'ftth', true, true, null, $Api_version);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -302,7 +305,7 @@ class Free_Refresh
 
     private static function refresh_connexion_xdsl($EqLogics, $Free_API, $Api_version)
     {
-        $result =  $Free_API->universal_get('connexion', null, null, 'xdsl');
+        $result =  $Free_API->universal_get('connexion', null, null, 'xdsl', true, true, null, $Api_version);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -322,7 +325,7 @@ class Free_Refresh
     private static function refresh_disk($EqLogics, $Free_API, $Api_version)
     {
         //$result = $Free_API->universal_get('disk', null, null, null);
-        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, null, $Api_version);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -355,7 +358,7 @@ class Free_Refresh
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         if ($Type_box == 'OK') {
-            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid');
+            $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid', true, true, null, $Api_version);
             if (is_object($Command)) {
                 foreach ($result as $raid) {
                     foreach ($EqLogics->getCmd('info') as $Command) {
@@ -397,7 +400,7 @@ class Free_Refresh
 
     private static function refresh_download($EqLogics, $Free_API, $Api_version)
     {
-        $result = $Free_API->universal_get('download', null, null, 'stats/');
+        $result = $Free_API->universal_get('download', null, null, 'stats/', true, true, null, $Api_version);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -466,7 +469,7 @@ class Free_Refresh
     }
     private static function refresh_download_config($EqLogics, $Free_API, $Api_version)
     {
-        $result = $Free_API->universal_get('download', null, null, 'config/');
+        $result = $Free_API->universal_get('download', null, null, 'config/', true, true, null, $Api_version);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -481,7 +484,7 @@ class Free_Refresh
     }
     private static function refresh_LCD($EqLogics, $Free_API, $Api_version)
     {
-        $result = $Free_API->universal_get('universalAPI', null, null, 'lcd/config/');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'lcd/config/', true, true, null, $Api_version);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -558,7 +561,7 @@ class Free_Refresh
             $_networkinterface = 'wifiguest';
         }
         //$result_network_ping = $Free_API->universal_get('network_ping', null, null, 'lan/browser/' . $_networkinterface);
-        $result_network_ping = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true);
+        $result_network_ping = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true, $Api_version);
         $order_count_active = 100;
         $order_count_noactive = 400;
         if (!$result_network_ping['success']) {
@@ -678,7 +681,7 @@ class Free_Refresh
     private static function refresh_system($EqLogics, $Free_API, $Api_version)
     {
         log::add('Freebox_OS', 'debug', '│──────────> Récupération des valeurs du Système');
-        $result = $Free_API->universal_get('system', null, null, null);
+        $result = $Free_API->universal_get('system', null, null, null, true, true, null, $Api_version);
         foreach ($EqLogics->getCmd('info') as $Command) {
             $logicalId = $Command->getConfiguration('logicalId');
 
@@ -772,13 +775,13 @@ class Free_Refresh
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
                                 break;
                             case "4GStatut": // toute la partie 4G
-                                Free_Refresh::refresh_system_4G($EqLogics, $Free_API);
+                                Free_Refresh::refresh_system_4G($EqLogics, $Free_API, $Api_version);
                                 break;
                             case "mode": // toute la partie Info de la Freebox
-                                Free_Refresh::refresh_system_lan($EqLogics, $Free_API);
+                                Free_Refresh::refresh_system_lan($EqLogics, $Free_API, $Api_version);
                                 break;
                             case "lang": // toute la partie Info de la Freebox
-                                Free_Refresh::refresh_system_lang($EqLogics, $Free_API);
+                                Free_Refresh::refresh_system_lang($EqLogics, $Free_API, $Api_version);
                                 break;
                         }
                     }
@@ -788,7 +791,7 @@ class Free_Refresh
     }
     private static function refresh_system_4G($EqLogics, $Free_API, $Api_version)
     {
-        $result = $Free_API->universal_get('connexion', null, null, 'lte/config');
+        $result = $Free_API->universal_get('connexion', null, null, 'lte/config', true, true, null, $Api_version);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -804,7 +807,7 @@ class Free_Refresh
     }
     private static function refresh_system_lan($EqLogics, $Free_API, $Api_version)
     {
-        $result =  $Free_API->universal_get('network', null, null, 'config/');
+        $result =  $Free_API->universal_get('network', null, null, 'lan/config/', true, true, true, $Api_version);
 
         if ($result != false || isset($result['result']) != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
@@ -830,8 +833,8 @@ class Free_Refresh
     }
     private static function refresh_system_lang($EqLogics, $Free_API, $Api_version)
     {
-        $result = $Free_API->universal_get('universalAPI', null, null, 'lang');
-        $result_config2 = $Free_API->universal_get('universalAPI', null, null, 'notif/targets');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'lang', true, true, null, $Api_version);
+        $result_config2 = $Free_API->universal_get('universalAPI', null, null, 'notif/targets', true, true, null, $Api_version);
         if ($result != false || isset($result['result']) != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
@@ -1079,15 +1082,15 @@ class Free_Refresh
             }
         }
     }
-    private static function refresh_titles_global($EqLogics, $Free_API)
+    private static function refresh_titles_global($EqLogics, $Free_API, $Api_version)
     {
 
         $boucle_num = 1; // 1 = Tiles - 2 = Node 
         while ($boucle_num <= 2) {
             if ($boucle_num == 2) {
-                $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes', false, false);
+                $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes', false, false, null, $Api_version);
             } else if ($boucle_num == 1) {
-                $result = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/all', false, false);
+                $result = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/all', false, false, null, $Api_version);
             }
 
             foreach ($result as $node) {
@@ -1177,7 +1180,7 @@ class Free_Refresh
     }
     private static function refresh_titles($EqLogics, $Free_API, $Api_version)
     {
-        $results = $Free_API->universal_get('tiles', $EqLogics->getLogicalId(), null, null, null, true, true, $Api_version);
+        $results = $Free_API->universal_get('tiles', $EqLogics->getLogicalId(), null, null, true, true, true, $Api_version);
 
         if ($results != false) {
             foreach ($results as $result) {
@@ -1189,12 +1192,12 @@ class Free_Refresh
             }
         }
         if ($EqLogics->getConfiguration('type2') == 'pir' || $EqLogics->getConfiguration('type2') == 'alarm' || $EqLogics->getConfiguration('type2') == 'dws' || $EqLogics->getConfiguration('type') == 'camera' || $EqLogics->getConfiguration('type2') == 'alarm' || $EqLogics->getConfiguration('type2') == 'kfb' || $EqLogics->getConfiguration('type2') == 'shutter' || $EqLogics->getConfiguration('type2') == 'basic_shutter') {
-            Free_Refresh::refresh_titles_nodes($EqLogics, $Free_API, $data['ep_id']);
+            Free_Refresh::refresh_titles_nodes($EqLogics, $Free_API, $data['ep_id'], $Api_version);
         }
     }
-    private static function refresh_titles_nodes($EqLogics, $Free_API, $Api_version)
+    private static function refresh_titles_nodes($EqLogics, $Free_API, $ep_id, $Api_version)
     {
-        $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $EqLogics->getLogicalId(), true, true, $Api_version);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $EqLogics->getLogicalId(), true, true, true, $Api_version);
         $_eq_data = $result['show_endpoints'];
         foreach ($_eq_data as $Cmd) {
             foreach ($EqLogics->getCmd('info') as $Command) {
@@ -1219,11 +1222,11 @@ class Free_Refresh
     private static function refresh_player($EqLogics, $Free_API, $Api_version)
     {
         if ($EqLogics->getConfiguration('player') == 'OK') {
-            $results_playerID = $Free_API->universal_get('player_ID', $EqLogics->getConfiguration('action'));
+            $results_playerID = $Free_API->universal_get('player_ID', $EqLogics->getConfiguration('action'), null, null, true, true, null, $Api_version);
         }
 
-        log::add('Freebox_OS', 'debug', '│──────────> Player OK ? : ' . $EqLogics->getConfiguration('player'));
-        $results_players = $Free_API->universal_get('player', $EqLogics->getConfiguration('action'));
+        log::add('Freebox_OS', 'debug', '│──────────> Player OK ? : ' . $EqLogics->getConfiguration('player'), null, null, true, true, null, $Api_version);
+        $results_players = $Free_API->universal_get('player', $EqLogics->getConfiguration('action'), null, null, true, true, null, $Api_version);
 
         $cmd_mac = $EqLogics->getCmd('info', 'mac');
         $cmd_stb_type = $EqLogics->getCmd('info', 'stb_type');
@@ -1376,7 +1379,7 @@ class Free_Refresh
                         $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result_config['result']['mac_filter_state']);
                         break;
                     default:
-                        $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap/' . $Command->getLogicalId(), true, true, true, $Api_version);
+                        $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap/' . $Command->getLogicalId(), true, true, $Api_version);
                         log::add('Freebox_OS', 'debug', '>───────── Status Carte ' . $result_ap['result']['name'] . ' / ' . $Command->getLogicalId() . ' : ' . $result_ap['result']['status']['state']);
                         $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result_ap['result']['status']['state']);
                         break;

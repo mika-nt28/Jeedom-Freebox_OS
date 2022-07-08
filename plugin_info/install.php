@@ -98,7 +98,7 @@ function Freebox_OS_update()
 		}
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Mise à jour Version API freebox'
 		if (!is_object(config::byKey('API_FREEBOX', 'Freebox_OS'))) {
-			config::save('FREEBOX_TILES_CRON', 'v8', 'Freebox_OS');
+			config::save('API_FREEBOX', 'v8', 'Freebox_OS');
 
 		}
 

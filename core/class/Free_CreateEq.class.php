@@ -28,7 +28,7 @@ class Free_CreateEq
         } else {
             $templatecore_V4  = 'core::';
         };
-        /* $API_version = config::byKey('API_FREEBOX', 'Freebox_OS');
+        /* $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $API_version);
         if ($API_version === '') {
             //$result = Free_CreateEq::createEq_API($API_version);
@@ -136,31 +136,7 @@ class Free_CreateEq
                 break;
         }
     }
-    /* private static function createEq_API($Free_API)
-    {
-        $result = null;
-        $Free_API = new Free_API();
-        $api_version = 'v10';
-        log::add('Freebox_OS', 'debug', '│──────────> TEST 1 Version API Compatible avec la Freebox : ' . $api_version);
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $api_version);
-        log::add('Freebox_OS', 'debug', '│──────────> TEST 2 Version API Compatible avec la Freebox : ' . $api_version);
-        if ($result == 'invalid_api_version') {
-            $api_version = 'v9';
-            log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $api_version);
-            $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $api_version);
-            if ($result == 'invalid_api_version') {
-                $api_version = 'v8';
-                log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $api_version);
-                $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $api_version);
-                config::save('API_FREEBOX', 'Freebox_OS');
-            } else {
-                config::save('API_FREEBOX', 'Freebox_OS');
-            }
-        } else {
-            config::save('API_FREEBOX', 'Freebox_OS');
-        }
-        return $api_version;
-    }*/
+
     private static function createEq_airmedia($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['airmediaName']);

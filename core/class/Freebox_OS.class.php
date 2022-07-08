@@ -772,6 +772,30 @@ class Freebox_OS extends eqLogic
 			'wifiAPName' => 'Wifi Access Points'
 		);
 	}
+	public static function Create_API()
+	{
+		$Free_API = new Free_API();
+		$result = null;
+		$API_version = 'v10';
+		log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $API_version);
+		$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
+		if ($result == 'invalid_api_version') {
+			$API_version = 'v9';
+			log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $API_version);
+			$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
+			if ($result == 'invalid_api_version') {
+				$API_version = 'v8';
+				log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $API_version);
+				$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
+				config::save('FREEBOX_API', 'Freebox_OS');
+			} else {
+				config::save('FREEBOX_API', 'Freebox_OS');
+			}
+		} else {
+			config::save('FREEBOX_API', 'Freebox_OS');
+		}
+		return $API_version;
+	}
 	public static function updateLogicalID($eq_version, $_update = false)
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');

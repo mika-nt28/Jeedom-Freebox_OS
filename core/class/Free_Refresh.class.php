@@ -24,12 +24,13 @@ class Free_Refresh
     {
         $Free_API = new Free_API();
         $EqLogics = eqlogic::byId($_freeboxID);
-        $API_version = config::byKey('API_FREEBOX', 'Freebox_OS');
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $API_version);
-        if ($API_version === '') {
-            $result = Free_Refresh::refresh_API($Free_API);
-            log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
-            $API_version = $result;
+        $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        //$TEST = Freebox_OS::Create_API();
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $TEST);
+        if ($API_version == '') {
+            //$result = Free_Refresh::refresh_API($Free_API);
+            //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
+            // $API_version = $result;
         }
         if ($_freeboxID == 'Tiles_global') {
             Free_Refresh::refresh_titles_global($EqLogics, $Free_API);
@@ -46,9 +47,6 @@ class Free_Refresh
                 $refresh = $EqLogics->getLogicalId();
             }
             switch ($refresh) {
-                case 'API':
-                    Free_Refresh::refresh_API($API_version);
-                    break;
                 case 'airmedia':
                     break;
                 case 'connexion':
@@ -123,30 +121,6 @@ class Free_Refresh
                     break;
             }
         }
-    }
-
-    private static function refresh_API($Free_API)
-    {
-        $result = null;
-        $api_version = 'v10';
-        log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $api_version);
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $api_version);
-        if ($result == 'invalid_api_version') {
-            $api_version = 'v9';
-            log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $api_version);
-            $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $api_version);
-            if ($result == 'invalid_api_version') {
-                $api_version = 'v8';
-                log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $api_version);
-                $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $api_version);
-                config::save('API_FREEBOX', 'Freebox_OS');
-            } else {
-                config::save('API_FREEBOX', 'Freebox_OS');
-            }
-        } else {
-            config::save('API_FREEBOX', 'Freebox_OS');
-        }
-        return $api_version;
     }
 
     private static function refresh_connexion($EqLogics, $Free_API)

@@ -21,8 +21,9 @@ class Free_API
         $this->device_name = trim(config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'));
         $this->track_id = config::byKey('FREEBOX_SERVER_TRACK_ID', 'Freebox_OS');
         $this->app_token = config::byKey('FREEBOX_SERVER_APP_TOKEN', 'Freebox_OS');
+        $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         // Gestion API
-        if (!is_object($this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS'))) {
+        if (is_object($this->API_version)) {
             log::add('Freebox_OS', 'debug', '│──────────> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
             $this->API_version = 'v8';
         } else {
@@ -308,22 +309,11 @@ class Free_API
 
     public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true, $_onlyresult = false, $API_TEST = null)
     {
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
-        // if (!is_object($API_version = $this->API_version) {
-        //   if ($API_version == null) {
-        //      log::add('Freebox_OS', 'debug', '│──────────> TEST 1 Version API Compatible avec la Freebox :' . $API_TEST);
-        //    if ($API_TEST == null) {
-        //      $API_version = 'v8';
-        //    log::add('Freebox_OS', 'debug', '│──────────> TEST 2 Version API Compatible avec la Freebox :' . $API_version);
-        //} else {
-        //  $API_version = $API_TEST;
-        // log::add('Freebox_OS', 'debug', '│──────────> TEST 3 Version API Compatible avec la Freebox :' . $API_version);
-        //}
-        //}
-
-        //} else {
-        //  $API_version = $this->API_version; 
-        //}
+        if ($API_TEST != null) {
+            $API_version = $API_TEST;
+        } else {
+            $API_version = $this->API_version;
+        }
 
         $config_log = null;
         $fonction = "GET";

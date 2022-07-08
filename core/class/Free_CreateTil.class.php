@@ -28,13 +28,6 @@ class Free_CreateTil
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         log::add('Freebox_OS', 'debug', '>───────── Type de box compatible Tiles ? : ' . $Type_box);
-        // $API_version = config::byKey('API_FREEBOX', 'Freebox_OS');
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $API_version);
-        //if ($API_version === '') {
-        // $result = Free_Refresh::refresh_API($API_version);
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
-        //$API_version = $result;
-        //}
 
         $Free_API = new Free_API();
         if ($Type_box == 'OK' || $create == "box") {

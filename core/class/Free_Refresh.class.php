@@ -25,12 +25,9 @@ class Free_Refresh
         $Free_API = new Free_API();
         $EqLogics = eqlogic::byId($_freeboxID);
         $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
-        //$TEST = Freebox_OS::Create_API();
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $TEST);
-        if ($API_version == '') {
-            //$result = Free_Refresh::refresh_API($Free_API);
-            //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
-            // $API_version = $result;
+        if ($API_version == '' || $API_version == 'TEST_V8') {
+            $result_API = Freebox_OS::Create_API();
+            log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result_API);
         }
         if ($_freeboxID == 'Tiles_global') {
             Free_Refresh::refresh_titles_global($EqLogics, $Free_API);

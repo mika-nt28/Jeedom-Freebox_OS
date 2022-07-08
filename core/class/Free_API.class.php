@@ -26,6 +26,9 @@ class Free_API
         if (is_object($this->API_version)) {
             log::add('Freebox_OS', 'debug', '│──────────> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
             $this->API_version = 'v8';
+        } elseif ($this->API_version === 'TEST_V8') {
+            $this->API_version = 'v8';
+            log::add('Freebox_OS', 'debug', '│──────────> Test Version API Non faite avec la Freebox : ' . $this->API_version);
         } else {
             $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         }
@@ -406,7 +409,7 @@ class Free_API
             $result = $this->fetch('/' . $config, $Parameter, $fonction);
         }
         if ($result === 'invalid_api_version') {
-            log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE de la Version : ' . $API_version);
+            log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante : ' . $API_version);
             return $result;
         }
         if ($result === false) {

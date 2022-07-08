@@ -774,26 +774,29 @@ class Freebox_OS extends eqLogic
 	}
 	public static function Create_API()
 	{
+		log::add('Freebox_OS', 'debug', '================= DEBUT TEST VERSION API DE LA FREEBOX ==================');
+		log::add('Freebox_OS', 'debug', '================= IL est possible d\'avoir le message suivant dans les messages : Freebox_OS API NON COMPATIBLE : Version d\'API inconnue ==================');
 		$Free_API = new Free_API();
 		$result = null;
 		$API_version = 'v10';
-		log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $API_version);
+		log::add('Freebox_OS', 'debug', '│──────────> Vérification si cette version API Compatible est avec la Freebox : ' . $API_version);
 		$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
 		if ($result == 'invalid_api_version') {
 			$API_version = 'v9';
-			log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $API_version);
+			log::add('Freebox_OS', 'debug', '│──────────> Vérification si cette version API Compatible est avec la Freebox : ' . $API_version);
+			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', $API_version), 'Freebox_OS');
 			$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
 			if ($result == 'invalid_api_version') {
 				$API_version = 'v8';
-				log::add('Freebox_OS', 'debug', '│──────────> TEST Version API Compatible avec la Freebox : ' . $API_version);
+				log::add('Freebox_OS', 'debug', '│──────────> Vérification si cette version API Compatible est avec la Freebox : ' . $API_version);
 				$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
-				config::save('FREEBOX_API', 'Freebox_OS');
 			} else {
-				config::save('FREEBOX_API', 'Freebox_OS');
+				config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', $API_version), 'Freebox_OS');
 			}
 		} else {
-			config::save('FREEBOX_API', 'Freebox_OS');
+			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', $API_version), 'Freebox_OS');
 		}
+		log::add('Freebox_OS', 'debug', '================= FIN TEST VERSION API DE LA FREEBOX ==================');
 		return $API_version;
 	}
 	public static function updateLogicalID($eq_version, $_update = false)

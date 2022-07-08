@@ -28,13 +28,11 @@ class Free_CreateEq
         } else {
             $templatecore_V4  = 'core::';
         };
-        /* $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $API_version);
-        if ($API_version === '') {
-            //$result = Free_CreateEq::createEq_API($API_version);
-            log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
-            $API_version = $result;
-        }*/
+        $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        if ($API_version == '' || $API_version == 'TEST_V8') {
+            $result_API = Freebox_OS::Create_API();
+            log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result_API);
+        }
         switch ($create) {
             case 'airmedia':
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4);

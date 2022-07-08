@@ -27,6 +27,7 @@ function Freebox_OS_install()
 		$cron->save();
 	}
 	updateConfig();
+	config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v8'), 'Freebox_OS');
 }
 function Freebox_OS_update()
 {
@@ -54,6 +55,7 @@ function Freebox_OS_update()
 		$cron->save();
 	}
 	updateConfig();
+
 
 	try {
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
@@ -99,6 +101,8 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Mise à jour Version API freebox');
 		if (!is_object(config::byKey('FREEBOX_API', 'Freebox_OS'))) {
 			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v8'), 'Freebox_OS');
+			Freebox_OS::Create_API();
+		} elseif (config::byKey('FREEBOX_API', 'Freebox_OS') == 'v8') {
 			Freebox_OS::Create_API();
 		}
 

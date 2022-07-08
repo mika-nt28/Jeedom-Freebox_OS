@@ -96,11 +96,11 @@ function Freebox_OS_update()
 				config::save('FREEBOX_TILES_CmdbyCmd', '1', 'Freebox_OS');
 			}*/
 		}
-		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Mise à jour Version API freebox'
+		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Mise à jour Version API freebox');
 		//if (!is_object(config::byKey('API_FREEBOX', 'Freebox_OS'))) {
 
-			//config::save('API_FREEBOX', config::byKey('API_FREEBOX', 'Freebox_OS', 'v8'), 'Freebox_OS');
-	
+		//config::save('API_FREEBOX', config::byKey('API_FREEBOX', 'Freebox_OS', 'v8'), 'Freebox_OS');
+
 
 		//}
 

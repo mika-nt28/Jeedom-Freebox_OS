@@ -97,12 +97,9 @@ function Freebox_OS_update()
 			}*/
 		}
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Mise à jour Version API freebox');
-		//if (!is_object(config::byKey('API_FREEBOX', 'Freebox_OS'))) {
-
-		//config::save('API_FREEBOX', config::byKey('API_FREEBOX', 'Freebox_OS', 'v8'), 'Freebox_OS');
-
-
-		//}
+		if (!is_object(config::byKey('API_FREEBOX', 'Freebox_OS'))) {
+			config::save('API_FREEBOX', config::byKey('API_FREEBOX', 'Freebox_OS', 'v8'), 'Freebox_OS');
+		}
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {
@@ -163,7 +160,7 @@ function updateConfig()
 	config::save('FREEBOX_SERVER_APP_NAME', config::byKey('FREEBOX_SERVER_APP_NAME', 'Freebox_OS', "Plugin Freebox OS"), 'Freebox_OS');
 	config::save('FREEBOX_SERVER_APP_ID', config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS', "plugin.freebox.jeedom"), 'Freebox_OS');
 	config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS', config::byKey("name")), 'Freebox_OS');
-	config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v8'), 'Freebox_OS');
+	//config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v8'), 'Freebox_OS');
 	$version = 1;
 	if (config::byKey('FREEBOX_CONFIG_V', 'Freebox_OS', 0) != $version) {
 		Freebox_OS::resetConfig();

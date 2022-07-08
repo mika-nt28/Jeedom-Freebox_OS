@@ -22,12 +22,12 @@ class Free_CreateTV
 {
     public static function createTV($create = 'default')
     {
-        $Api_version = config::byKey('API_FREEBOX', 'Freebox_OS');
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $Api_version);
-        if ($Api_version === '') {
-            $result = Free_Refresh::refresh_API($Api_version);
+        $API_version = config::byKey('API_FREEBOX', 'Freebox_OS');
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $API_version);
+        if ($API_version === '') {
+            $result = Free_Refresh::refresh_API($API_version);
             log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
-            $Api_version = $result;
+            $API_version = $result;
         }
 
         $logicalinfo = Freebox_OS::getlogicalinfo();

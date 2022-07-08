@@ -21,12 +21,13 @@ class Free_API
         $this->device_name = trim(config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'));
         $this->track_id = config::byKey('FREEBOX_SERVER_TRACK_ID', 'Freebox_OS');
         $this->app_token = config::byKey('FREEBOX_SERVER_APP_TOKEN', 'Freebox_OS');
-        /* if (!is_object($this->API_version = config::byKey('API_FREEBOX', 'Freebox_OS'))) {
+        // Gestion API
+        if (!is_object($this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS'))) {
             log::add('Freebox_OS', 'debug', '│──────────> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
             $this->API_version = 'v8';
         } else {
-            $this->API_version = config::byKey('API_FREEBOX', 'Freebox_OS');
-        }*/
+            $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        }
     }
 
     public function track_id() //Doit correspondre a la donction "auth" de freboxsession.js homebridge freebox

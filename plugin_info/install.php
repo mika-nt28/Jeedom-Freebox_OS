@@ -100,7 +100,7 @@ function Freebox_OS_update()
 		}
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Mise à jour Version API freebox');
 		if (!is_object(config::byKey('FREEBOX_API', 'Freebox_OS'))) {
-			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v8'), 'Freebox_OS');
+			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', ''), 'Freebox_OS');
 			Freebox_OS::Create_API();
 		} elseif (config::byKey('FREEBOX_API', 'Freebox_OS') == 'v8') {
 			Freebox_OS::Create_API();

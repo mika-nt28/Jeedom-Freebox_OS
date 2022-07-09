@@ -216,7 +216,8 @@ class Free_API
                         return false;
                     } else if ($result['error_code'] == 'invalid_api_version') {
                         log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg']);
-                        $result = 'invalid_api_version';
+                        $result = $result['error_code'];
+                        //Freebox_OS::Create_API();
                         return $result;
                     } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                         log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
@@ -312,12 +313,14 @@ class Free_API
 
     public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true, $_onlyresult = false, $API_TEST = null)
     {
+        //log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante 1a : ' . $API_TEST);
         if ($API_TEST != null) {
             $API_version = $API_TEST;
         } else {
             $API_version = $this->API_version;
         }
 
+        //log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante 1b : ' . $API_version);
         $config_log = null;
         $fonction = "GET";
         $Parameter = null;
@@ -408,8 +411,10 @@ class Free_API
         if ($result == 'auth_required') {
             $result = $this->fetch('/' . $config, $Parameter, $fonction);
         }
+        //log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante 2a : ' . $API_version);
         if ($result === 'invalid_api_version') {
-            log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante : ' . $API_version);
+            //log::add('Freebox_OS', 'info', '>─────────── API NON COMPATIBLE avec la version suivante : ' . $API_version . ' -- ' . $result);
+            $result = 'invalid_api_version';
             return $result;
         }
         if ($result === false) {
@@ -463,6 +468,7 @@ class Free_API
                     }
                     break;
             }
+
 
             return $value;
         } else {

@@ -25,7 +25,7 @@ class Free_Refresh
         $Free_API = new Free_API();
         $EqLogics = eqlogic::byId($_freeboxID);
         $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
-        if ($API_version == '' || $API_version == 'TEST_V8') {
+        if ($API_version == null || $API_version === 'TEST_V8') {
             $result_API = Freebox_OS::Create_API();
             log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result_API);
         }

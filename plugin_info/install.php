@@ -27,6 +27,7 @@ function Freebox_OS_install()
 		$cron->save();
 	}
 	updateConfig();
+	config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v8'), 'Freebox_OS');
 }
 function Freebox_OS_update()
 {
@@ -55,6 +56,7 @@ function Freebox_OS_update()
 	}
 	updateConfig();
 
+
 	try {
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
@@ -69,7 +71,7 @@ function Freebox_OS_update()
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Création Equipement WIFI -- ID N° : ' . $link_IA);
 		}*/
 
-		log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Update(s) nouveautée(s) + correction(s) commande(s)');
+		log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
@@ -81,10 +83,10 @@ function Freebox_OS_update()
 
 		}
 
-		log::add('Freebox_OS', 'debug', '│ Etape 2/3 : Changement de nom de certains équipements');
+		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Changement de nom de certains équipements');
 		$eq_version = '2.1';
 		Freebox_OS::updateLogicalID($eq_version, true);
-		log::add('Freebox_OS', 'debug', '│ Etape 3/3 : Update paramétrage Plugin tiles');
+		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Update paramétrage Plugin tiles');
 		if ($eq_version === '2') {
 			/*if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
@@ -96,6 +98,11 @@ function Freebox_OS_update()
 				config::save('FREEBOX_TILES_CmdbyCmd', '1', 'Freebox_OS');
 			}*/
 		}
+		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Création API');
+		if (!is_object(config::byKey('FREEBOX_API', 'Freebox_OS'))) {
+			config::save('FREEBOX_API', 'v8', 'Freebox_OS');
+		}
+
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {
@@ -156,7 +163,7 @@ function updateConfig()
 	config::save('FREEBOX_SERVER_APP_NAME', config::byKey('FREEBOX_SERVER_APP_NAME', 'Freebox_OS', "Plugin Freebox OS"), 'Freebox_OS');
 	config::save('FREEBOX_SERVER_APP_ID', config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS', "plugin.freebox.jeedom"), 'Freebox_OS');
 	config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS', config::byKey("name")), 'Freebox_OS');
-
+	//config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v8'), 'Freebox_OS');
 	$version = 1;
 	if (config::byKey('FREEBOX_CONFIG_V', 'Freebox_OS', 0) != $version) {
 		Freebox_OS::resetConfig();

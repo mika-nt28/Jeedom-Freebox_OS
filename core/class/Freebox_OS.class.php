@@ -789,7 +789,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'info', '│──────────> API version : ' . $result['api_version']);
 		$API_version = 'v'  . $result['api_version'];
 		$API_version = strstr($API_version, '.', true);
-		log::add('Freebox_OS', 'info', '│──────────> API version Enregistrer : ' . $API_version);
+		//log::add('Freebox_OS', 'info', '│──────────> API version Enregistrer : ' . $API_version);
 		log::add('Freebox_OS', 'info', '│──────────> Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
 		log::add('Freebox_OS', 'info', '│──────────> Nouvelle Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));

@@ -28,6 +28,7 @@ class Free_CreateEq
         } else {
             $templatecore_V4  = 'core::';
         };
+        Freebox_OS::Create_API();
         $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         if ($API_version == null || $API_version === 'TEST_V8') {
             $result_API = Freebox_OS::Create_API();
@@ -79,6 +80,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
                 break;
             default:
+                Freebox_OS::Create_API();
                 log::add('Freebox_OS', 'debug', '================= ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS  ==================');
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['systemName']);
                 log::add('Freebox_OS', 'debug', '================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl');

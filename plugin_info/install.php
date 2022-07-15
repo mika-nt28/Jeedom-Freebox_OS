@@ -98,13 +98,7 @@ function Freebox_OS_update()
 				config::save('FREEBOX_TILES_CmdbyCmd', '1', 'Freebox_OS');
 			}*/
 		}
-		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Mise à jour Version API freebox');
-		Freebox_OS::Create_API();
-		//if (!is_object(config::byKey('FREEBOX_API', 'Freebox_OS'))) {
-		//Freebox_OS::Create_API();
-		//} elseif (config::byKey('FREEBOX_API', 'Freebox_OS') == 'v8') {
-		//	Freebox_OS::Create_API();
-		//}
+
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {

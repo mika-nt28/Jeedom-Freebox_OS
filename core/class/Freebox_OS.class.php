@@ -775,32 +775,24 @@ class Freebox_OS extends eqLogic
 	public static function Create_API()
 	{
 		log::add('Freebox_OS', 'info', '================= DEBUT TEST VERSION API DE LA FREEBOX ==================');
-		log::add('Freebox_OS', 'info', '================= IL est possible d\'avoir le message suivant dans les messages : Freebox_OS API NON COMPATIBLE : Version d\'API inconnue ==================');
+		log::add('Freebox_OS', 'info', '================= Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue ==================');
 		$Free_API = new Free_API();
-		//$result = null;
-		$API_version = 'v10';
-		log::add('Freebox_OS', 'info', '│──────────> Vérification si la version ' . $API_version . ' est compatible avec la Freebox');
-		$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
-		if ($result == null) {
-			log::add('Freebox_OS', 'info', '│──────────> Vérification si cette version API Compatible est avec la Freebox : ');
-		}
-		if ($result === 'invalid_api_version') {
-			log::add('Freebox_OS', 'info', '│──────────> la version ' . $API_version . ' est non compatible avec la freebox');
-			$API_version = 'v9';
-			log::add('Freebox_OS', 'info', '│──────────> Vérification si la version ' . $API_version . ' est compatible avec la Freebox');
-			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', $API_version), 'Freebox_OS');
-			$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
-			if ($result === 'invalid_api_version') {
-				log::add('Freebox_OS', 'info', '│──────────> la version ' . $API_version . ' est non compatible avec la freebox');
-				$API_version = 'v8';
-				log::add('Freebox_OS', 'info', '│──────────> Vérification si la version ' . $API_version . ' est compatible avec la Freebox');
-				$result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true, $API_version);
-			}
-			log::add('Freebox_OS', 'info', '│──────────> la version ' . $API_version . ' est compatible avec la freebox');
-			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', $API_version), 'Freebox_OS');
-		} else {
-			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', $API_version), 'Freebox_OS');
-		}
+		$result = $Free_API->universal_get('api_version', null, null, null, true, true, true);
+		log::add('Freebox_OS', 'info', '│──────────> Type Box : ' . $result['box_model_name']);
+		log::add('Freebox_OS', 'info', '│──────────> API URL : ' . $result['api_base_url']);
+		log::add('Freebox_OS', 'info', '│──────────> Port https : ' . $result['https_port']);
+		log::add('Freebox_OS', 'info', '│──────────> Nom Box : ' . $result['device_name']);
+		log::add('Freebox_OS', 'info', '│──────────> Https disponible : ' . $result['https_available']);
+		log::add('Freebox_OS', 'info', '│──────────> Modele de box : ' . $result['box_model']);
+		log::add('Freebox_OS', 'info', '│──────────> Type de box : ' . $result['device_type']);
+		log::add('Freebox_OS', 'info', '│──────────> API domaine : ' . $result['api_domain']);
+		log::add('Freebox_OS', 'info', '│──────────> API version : ' . $result['api_version']);
+		$API_version = 'v'  . $result['api_version'];
+		$API_version = strstr($API_version, '.', true);
+		log::add('Freebox_OS', 'info', '│──────────> API version Enregistrer : ' . $API_version);
+		log::add('Freebox_OS', 'info', '│──────────> Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
+		log::add('Freebox_OS', 'info', '│──────────> Nouvelle Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		log::add('Freebox_OS', 'info', '================= FIN TEST VERSION API DE LA FREEBOX ==================');
 		return $API_version;
 	}

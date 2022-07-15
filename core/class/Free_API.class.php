@@ -311,16 +311,11 @@ class Free_API
         }
     }
 
-    public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true, $_onlyresult = false, $API_TEST = null)
+    public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true, $_onlyresult = false)
     {
-        //log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante 1a : ' . $API_TEST);
-        if ($API_TEST != null) {
-            $API_version = $API_TEST;
-        } else {
-            $API_version = $this->API_version;
-        }
+        $API_version = $this->API_version;
 
-        //log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante 1b : ' . $API_version);
+        //log::add('Freebox_OS', 'debug', '>───────── API la version suivante 1b : ' . $API_version);
         $config_log = null;
         $fonction = "GET";
         $Parameter = null;
@@ -332,6 +327,9 @@ class Free_API
         switch ($update) {
             case 'airmedia':
                 $config = 'api/' . $API_version . '/airmedia/receivers/';
+                break;
+            case 'api_version':
+                $config = 'api_version';
                 break;
             case 'connexion':
                 $config = 'api/' . $API_version . '/connection/' . $update_type;
@@ -472,7 +470,7 @@ class Free_API
 
             return $value;
         } else {
-            if ($update == "network_ping" || $update == "network_ID") {
+            if ($update == "network_ping" || $update == "network_ID" || $update == "api_version") {
                 return $result;
             } else if ($update_type == 'lte/config') {
                 return $result['msg'];

@@ -28,7 +28,6 @@ class Free_CreateTil
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         log::add('Freebox_OS', 'debug', '>───────── Type de box compatible Tiles ? : ' . $Type_box);
-        Freebox_OS::Create_API();
         $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         $Free_API = new Free_API();
         if ($Type_box == 'OK' || $create == "box") {
@@ -61,6 +60,7 @@ class Free_CreateTil
                     $result = Free_CreateTil::createTil_Group();
                     break;
                 default:
+                    Freebox_OS::Create_API();
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
                     break;
             }

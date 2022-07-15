@@ -39,6 +39,10 @@ $('.bt_Freebox_Autorisation').on('click', function () {
     logs('info', "================= Lancement autorisation Freebox");
     autorisationFreebox();
 });
+$('.bt_Freebox_resetAPI').on('click', function () {
+    logs('info', "================= Lancement Reset de la version API");
+    ResetAPI();
+});
 
 $('.bt_Freebox_droitVerif').on('click', function () {
     logs('info', "================= Lancement vérification des droits");
@@ -368,10 +372,13 @@ function GetSetting() {
             logs('info', "Nom Jeedom : " + data.result.DeviceName);
             $('#sel_object_default').val(data.result.Categorie);
             logs('info', "Objet par défaut : " + data.result.Categorie);
+            logs('info', "Version API Freebox : " + data.result.API);
+            $('#input_API').val(data.result.API);
 
             console.log('IP : ' + data.result.ip)
             console.log('Nom API : ' + data.result.DeviceName)
             console.log('Objet par défaut : ' + data.result.Categorie)
+            console.log('Version API : ' + data.result.API)
             if (data.result.DeviceName == null || data.result.DeviceName == "") {
                 $('.bt_Freebox_OS_Next').hide();
                 $('.textFreebox').text('Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage');
@@ -430,6 +437,23 @@ function GetSettingTiles() {
                 console.log('Actualisation par commande - TRUE - : ' + data.result.CmdbyCmd);
                 $('.checkbox_freeboxCmdbyCmd').prop('checked',true);
             };*/
+        }
+    });
+}
+
+function ResetAPI() {
+    $.ajax({
+        type: "POST",
+        url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+        data: {
+            action: "ResetAPI",
+        },
+        dataType: 'json',
+        error: function (request, status, error) {
+            handleAjaxError(request, status, error);
+        },
+        success: function (data) {
+            //GetSetting();
         }
     });
 }

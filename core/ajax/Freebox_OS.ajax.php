@@ -109,7 +109,8 @@ try {
 				"IdApp" => config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS'),
 				"DeviceName" => config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'),
 				"Categorie" => config::byKey('defaultParentObject', 'Freebox_OS'),
-				"LogLevel" => log::getLogLevel('Freebox_OS')
+				"LogLevel" => log::getLogLevel('Freebox_OS'),
+				"API" => config::byKey('FREEBOX_API', 'Freebox_OS'),
 			);
 			ajax::success($result);
 			break;
@@ -119,6 +120,10 @@ try {
 				//"CmdbyCmd" => config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS')
 			);
 			ajax::success($result);
+			break;
+		case 'ResetAPI':
+			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', ''), 'Freebox_OS');
+			Freebox_OS::Create_API();
 			break;
 		case 'SetSettingTiles':
 			config::save('FREEBOX_TILES_CRON', init('cron_tiles'), 'Freebox_OS');

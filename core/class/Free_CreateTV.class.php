@@ -22,12 +22,8 @@ class Free_CreateTV
 {
     public static function createTV($create = 'default')
     {
-        //Freebox_OS::Create_API();
+
         $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
-        if ($API_version == null || $API_version === 'TEST_V8') {
-            $result_API = Freebox_OS::Create_API();
-            log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result_API);
-        }
 
         $logicalinfo = Freebox_OS::getlogicalinfo();
         if (version_compare(jeedom::version(), "4", "<")) {

@@ -88,6 +88,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
+
 	public static function cron_autorefresh_eqLogic($eqLogic, $deamon_info)
 	{
 		$_crondailyEq = null;
@@ -772,7 +773,7 @@ class Freebox_OS extends eqLogic
 			'wifiAPName' => 'Wifi Access Points'
 		);
 	}
-	public static function Create_API()
+	public static function FreeboxAPI()
 	{
 		log::add('Freebox_OS', 'info', '================= DEBUT TEST VERSION API DE LA FREEBOX ==================');
 		log::add('Freebox_OS', 'info', '================= Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue ==================');

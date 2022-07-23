@@ -60,7 +60,7 @@ class Free_CreateTil
                     $result = Free_CreateTil::createTil_Group();
                     break;
                 default:
-                    Freebox_OS::Create_API();
+                    Freebox_OS::FreeboxAPI();
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
                     break;
             }

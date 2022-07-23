@@ -123,7 +123,7 @@ try {
 			break;
 		case 'ResetAPI':
 			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', ''), 'Freebox_OS');
-			Freebox_OS::Create_API();
+			Freebox_OS::FreeboxAPI();
 			break;
 		case 'SetSettingTiles':
 			config::save('FREEBOX_TILES_CRON', init('cron_tiles'), 'Freebox_OS');

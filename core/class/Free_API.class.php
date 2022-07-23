@@ -217,7 +217,6 @@ class Free_API
                     } else if ($result['error_code'] == 'invalid_api_version') {
                         log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg']);
                         $result = $result['error_code'];
-                        //Freebox_OS::Create_API();
                         return $result;
                     } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                         log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);

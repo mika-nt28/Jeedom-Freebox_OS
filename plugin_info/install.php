@@ -31,11 +31,11 @@ function Freebox_OS_install()
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');
 		$cron->setFunction('FreeboxAPI');
-		$cron->setDeamon(1);
+		//$cron->setDeamon(1);
 		$cron->setEnable(1);
 		$cron->setSchedule('0 0 * * 1');
 		//$cron->setDeamonSleepTime(1);
-		$cron->setTimeout('1440');
+		$cron->setTimeout('15');
 		$cron->save();
 	}
 	updateConfig();
@@ -71,11 +71,11 @@ function Freebox_OS_update()
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');
 		$cron->setFunction('FreeboxAPI');
-		$cron->setDeamon(1);
+		//$cron->setDeamon(1);
 		$cron->setEnable(1);
 		$cron->setSchedule('0 0 * * 1');
 		//$cron->setDeamonSleepTime(1);
-		$cron->setTimeout('1440');
+		$cron->setTimeout('15');
 		$cron->save();
 	}
 	updateConfig();

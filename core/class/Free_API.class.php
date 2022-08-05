@@ -796,34 +796,4 @@ class Free_API
             return false;
         }
     }
-
-    public function airmedia($update = 'config', $parametre, $receiver)
-    {
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
-        $API_version = $this->API_version;
-        switch ($update) {
-            case 'config':
-                $config = 'config/';
-                $fonction = "PUT";
-                break;
-            case 'receivers':
-                $config = 'receivers/';
-                $fonction = null;
-                break;
-            case 'action':
-                $config = 'receivers/' . $receiver . '/';
-                $fonction = "POST";
-                break;
-        }
-        $result = $this->fetch('/api/' . $API_version . '/airmedia/' . $config, $parametre, $fonction);
-        if ($result == 'auth_required') {
-            $result = $this->fetch('/api/' . $API_version . '/airmedia/' . $config, $parametre, $fonction);
-        }
-        if (!isset($result) || $result === false)
-            return false;
-        if (isset($result['result']) && $result['success'])
-            return $result['result'];
-        else
-            return false;
-    }
 }

@@ -34,18 +34,6 @@ try {
 			);
 			ajax::success($Free_API->universal_put(null, 'universal_put', $Mac, null, 'lan/wol/pub/', null, $option));
 			break;
-		case 'get_airmediareceivers':
-			ajax::success($Free_API->airmedia('receivers', null, null));
-			break;
-		case 'set_airmediareceivers':
-			$cmd = cmd::byId(init('id'));
-			if (is_object($cmd)) {
-				$cmd->setCollectDate('');
-				$cmd->event(init('value'));
-				ajax::success(true);
-			}
-			ajax::success(false);
-			break;
 		case 'SearchTile':
 			Free_CreateTil::createTil('homeadapters');
 			$result = Free_CreateTil::createTil();

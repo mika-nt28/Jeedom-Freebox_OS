@@ -45,6 +45,7 @@ class Free_Refresh
             }
             switch ($refresh) {
                 case 'airmedia':
+                    Free_Refresh::refresh_airmedia($EqLogics, $Free_API);
                     break;
                 case 'connexion':
                     Free_Refresh::refresh_connexion($EqLogics, $Free_API);
@@ -119,7 +120,80 @@ class Free_Refresh
             }
         }
     }
+    private static function refresh_airmedia($EqLogics, $Free_API)
+    {
+        $logicalinfo = Freebox_OS::getlogicalinfo();
+        foreach ($EqLogics->getCmd('info') as $Command) {
+            if (is_object($Command)) {
+                switch ($Command->getLogicalId()) {
+                    case "receivers_info":
+                        $receivers_Value = $Command->execCmd();
+                        $result = $Free_API->universal_get('universalAPI', null, null, 'airmedia/receivers', true, true, null);
 
+                        // Gestion Liste déroulante Airmedia
+                        $receivers_list = null;
+                        if ($result != false) {
+                            foreach ($result as $airmedia) {
+                                if ($receivers_list == null) {
+                                    $receivers_list = $airmedia['name'] . '|' . $airmedia['name'];
+                                } else {
+                                    $receivers_list .= ';' . $airmedia['name'] . '|' . $airmedia['name'];
+                                }
+                            }
+                            log::add('Freebox_OS', 'debug', '│ Liste des Airmedia : ' . $receivers_list);
+                            $EqLogics->AddCommand('Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, 'default', 'default', null, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null, true);
+                        }
+                        // Gestion Liste déroulante Type de média
+                        if ($receivers_Value != null) {
+                            log::add('Freebox_OS', 'debug', '│ Choix Player AirMedia : ' . $receivers_Value);
+                            $media_type_list = null;
+                            if ($result != false) {
+                                foreach ($result as $airmedia) {
+                                    if ($airmedia['name'] == $receivers_Value) {
+                                        if ($airmedia['capabilities']['photo'] == true) {
+                                            // log::add('Freebox_OS', 'debug', '│ Photo : ' . $airmedia['capabilities']['photo']);
+                                            if ($media_type_list == null) {
+                                                $media_type_list = 'photo' . '|' . 'Photo';
+                                            }
+                                        }
+                                        if ($airmedia['capabilities']['screen'] == true) {
+                                            //log::add('Freebox_OS', 'debug', '│ Screen : ' . $airmedia['capabilities']['screen']);
+                                            if ($media_type_list == null) {
+                                                $media_type_list = 'screen' . '|' . 'Screen';
+                                            } else {
+                                                $media_type_list .= ';' . 'screen' . '|' . 'Screen';
+                                            }
+                                        }
+                                        if ($airmedia['capabilities']['audio'] == true) {
+                                            //log::add('Freebox_OS', 'debug', '│ Audio : ' . $airmedia['capabilities']['audio']);
+                                            if ($media_type_list == null) {
+                                                $media_type_list = 'audio' . '|' . 'Audio';
+                                            } else {
+                                                $media_type_list .= ';' . 'audio' . '|' . 'Audio';
+                                            }
+                                        }
+                                        if ($airmedia['capabilities']['video'] == true) {
+                                            //log::add('Freebox_OS', 'debug', '│ Vidéo : ' . $airmedia['capabilities']['video']);
+                                            if ($media_type_list == null) {
+                                                $media_type_list = 'video' . '|' . 'video';
+                                            } else {
+                                                $media_type_list .= ';' . 'video' . '|' . 'Vidéo';
+                                            }
+                                        }
+                                        $EqLogics->AddCommand('Choix media', 'media_type', 'action', 'select', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null, true);
+                                        $EqLogics->refreshWidget();
+                                    }
+                                }
+                            }
+                        } else {
+                            $EqLogics->refreshWidget();
+                        }
+
+                        break;
+                }
+            }
+        }
+    }
     private static function refresh_connexion($EqLogics, $Free_API)
     {
         $result = $Free_API->universal_get('connexion', null, null, null);

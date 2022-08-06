@@ -158,15 +158,17 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $receivers_list = null;
         $result = $Free_API->universal_get('universalAPI', null, null, 'airmedia/receivers', true, true, null);
-        if ($result != false) {
-            foreach ($result as $airmedia) {
-                if ($receivers_list == null) {
-                    $receivers_list = $airmedia['name'] . '|' . $airmedia['name'];
-                } else {
-                    $receivers_list .= ';' . $airmedia['name'] . '|' . $airmedia['name'];
+        if (isset($result)) {
+            if ($result != false) {
+                foreach ($result as $airmedia) {
+                    if ($receivers_list == null) {
+                        $receivers_list = $airmedia['name'] . '|' . $airmedia['name'];
+                    } else {
+                        $receivers_list .= ';' . $airmedia['name'] . '|' . $airmedia['name'];
+                    }
                 }
+                log::add('Freebox_OS', 'debug', '│ Equipements détectées : ' . $receivers_list);
             }
-            log::add('Freebox_OS', 'debug', '│ Equipements détectées : ' . $receivers_list);
         }
 
         $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['airmediaName'], $logicalinfo['airmediaID'], 'multimedia', false, null, null, null, '*/5 * * * *');
@@ -195,13 +197,6 @@ class Free_CreateEq
 
         $EqLogic->AddCommand('Start', 'start', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $start_icon, 0, 'default', 'default', 8, '0', $updateicon, false, null, true);
         $EqLogic->AddCommand('Stop', 'stop', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $stop_icon, 0, 'default', 'default', 9, '0', $updateicon, false, null, true);
-        log::add('Freebox_OS', 'debug', '└─────────');
-    }
-    private static function createEq_airmedia_sp($logicalinfo, $templatecore_V4)
-    {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['airmediaName']);
-        $Free_API = new Free_API();
-        $Free_API->universal_get('airmedia', null, null, null, true, true, false);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

@@ -109,13 +109,7 @@ class Free_Refresh
                     Free_Refresh::refresh_wifi($EqLogics, $Free_API);
                     break;
                 default:
-                    //if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
-                    //  Free_Refresh::refresh_titles_CmdbyCmd($EqLogics, $Free_API, true);
-                    //} else {
                     Free_Refresh::refresh_titles($EqLogics, $Free_API);
-                    //}
-
-
                     break;
             }
         }
@@ -145,7 +139,6 @@ class Free_Refresh
                         }
                         // Gestion Liste déroulante Type de média
                         if ($receivers_Value != null) {
-                            log::add('Freebox_OS', 'debug', '│ Choix Player AirMedia : ' . $receivers_Value);
                             $media_type_list = null;
                             if ($result != false) {
                                 foreach ($result as $airmedia) {
@@ -180,6 +173,7 @@ class Free_Refresh
                                                 $media_type_list .= ';' . 'video' . '|' . 'Vidéo';
                                             }
                                         }
+                                        log::add('Freebox_OS', 'debug', '│ Liste des médias compatible pour : ' . $receivers_Value . ' avec les valeurs : ' . $media_type_list);
                                         $EqLogics->AddCommand('Choix media', 'media_type', 'action', 'select', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null, true);
                                         $EqLogics->refreshWidget();
                                     }
@@ -1129,7 +1123,6 @@ class Free_Refresh
     }
     private static function refresh_titles_global($EqLogics, $Free_API)
     {
-
         $boucle_num = 1; // 1 = Tiles - 2 = Node 
         while ($boucle_num <= 2) {
             if ($boucle_num == 2) {
@@ -1225,8 +1218,7 @@ class Free_Refresh
     }
     private static function refresh_titles($EqLogics, $Free_API)
     {
-        $results = $Free_API->universal_get('tiles', $EqLogics->getLogicalId(), null, null, true, true, true);
-
+        $results = $Free_API->universal_get('tiles', $EqLogics->getLogicalId(), null, null, true, true, FALSE);
         if ($results != false) {
             foreach ($results as $result) {
                 foreach ($result['data'] as $data) {
@@ -1242,9 +1234,8 @@ class Free_Refresh
     }
     private static function refresh_titles_nodes($EqLogics, $Free_API, $ep_id)
     {
-        $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $EqLogics->getLogicalId(), true, true, true);
-        $_eq_data = $result['show_endpoints'];
-        foreach ($_eq_data as $Cmd) {
+        $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $EqLogics->getLogicalId(), true, true, FALSE);
+        foreach ($result['show_endpoints'] as $Cmd) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if ($Command->getLogicalId() == $Cmd['id'] && $Command->getConfiguration('TypeNode') == 'nodes') {
                     if ($Command->getConfiguration('info') == 'mouv_sensor') {

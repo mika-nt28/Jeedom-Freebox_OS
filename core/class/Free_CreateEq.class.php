@@ -158,24 +158,26 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $receivers_list = null;
         $result = $Free_API->universal_get('universalAPI', null, null, 'airmedia/receivers', true, true, null);
-        if ($result != false) {
-            foreach ($result as $airmedia) {
-                if ($receivers_list == null) {
-                    $receivers_list = $airmedia['name'] . '|' . $airmedia['name'];
-                } else {
-                    $receivers_list .= ';' . $airmedia['name'] . '|' . $airmedia['name'];
+        if (isset($result)) {
+            if ($result != false) {
+                foreach ($result as $airmedia) {
+                    if ($receivers_list == null) {
+                        $receivers_list = $airmedia['name'] . '|' . $airmedia['name'];
+                    } else {
+                        $receivers_list .= ';' . $airmedia['name'] . '|' . $airmedia['name'];
+                    }
                 }
+                log::add('Freebox_OS', 'debug', '│ Equipements détectées : ' . $receivers_list);
             }
-            log::add('Freebox_OS', 'debug', '│ Equipements détectées : ' . $receivers_list);
         }
 
         $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['airmediaName'], $logicalinfo['airmediaID'], 'multimedia', false, null, null, null, '*/5 * * * *');
-        $receivers = $EqLogic->AddCommand('Choix Player AirMedia', 'receivers_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
-        $EqLogic->AddCommand('Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, $receivers, 'default', $receivers_icon, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null);
+        $receivers = $EqLogic->AddCommand('Player AirMedia choisi', 'receivers_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
+        $EqLogic->AddCommand('Choix du Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, $receivers, 'default', $receivers_icon, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null);
 
-        $media_type = $EqLogic->AddCommand('Media', 'media_type_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, true);
+        $media_type = $EqLogic->AddCommand('Media choisi', 'media_type_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, true);
         $media_type_list = null;
-        $EqLogic->AddCommand('Choix media', 'media_type', 'action', 'select', null, null, null, 1, $media_type, 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null);
+        $EqLogic->AddCommand('Choix du Media', 'media_type', 'action', 'select', null, null, null, 1, $media_type, 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null);
 
         $config_message = array(
             'title_disable' => 1,
@@ -183,7 +185,7 @@ class Free_CreateEq
 
         );
         $media = $EqLogic->AddCommand('URL choisi', 'media_info', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, $media_icon, 0, 'default', 'default', 5, '0', false, false, null, true, null, null, null, null);
-        $EqLogic->AddCommand('URL', 'media', 'action', 'message', 'default', null, null, 1, $media, 'default', 0, $media_icon, 0, 'default', 'default', 6, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
+        $EqLogic->AddCommand('Envoyer URL', 'media', 'action', 'message', 'default', null, null, 1, $media, 'default', 0, $media_icon, 0, 'default', 'default', 6, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
 
         $config_message = array(
             'title_disable' => 1,
@@ -191,18 +193,10 @@ class Free_CreateEq
 
         );
         $password = $EqLogic->AddCommand('Mot de Passe actuel', 'password_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, $password_icon, 0, 'default', 'default', 7, '0', false, false, null, true, null, null, null, null);
-        $EqLogic->AddCommand('Mot de passe', 'password', 'action', 'message', 'default', null, null, 1, $password, 'default', 0, $password_icon, 0, 'default', 'default', 8, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
-
+        $EqLogic->AddCommand('Envoyer Mot de passe', 'password', 'action', 'message', 'default', null, null, 1, $password, 'default', 0, $password_icon, 0, 'default', 'default', 8, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
 
         $EqLogic->AddCommand('Start', 'start', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $start_icon, 0, 'default', 'default', 8, '0', $updateicon, false, null, true);
         $EqLogic->AddCommand('Stop', 'stop', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $stop_icon, 0, 'default', 'default', 9, '0', $updateicon, false, null, true);
-        log::add('Freebox_OS', 'debug', '└─────────');
-    }
-    private static function createEq_airmedia_sp($logicalinfo, $templatecore_V4)
-    {
-        log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['airmediaName']);
-        $Free_API = new Free_API();
-        $Free_API->universal_get('airmedia', null, null, null, true, true, false);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
 

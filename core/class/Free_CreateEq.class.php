@@ -183,7 +183,7 @@ class Free_CreateEq
 
         );
         $media = $EqLogic->AddCommand('URL choisi', 'media_info', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, $media_icon, 0, 'default', 'default', 5, '0', false, false, null, true, null, null, null, null);
-        $EqLogic->AddCommand('URL', 'media', 'action', 'message', 'default', null, null, 1, $media, 'default', 0, $media_icon, 0, 'default', 'default', 6, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
+        $EqLogic->AddCommand('Envoyer URL', 'media', 'action', 'message', 'default', null, null, 1, $media, 'default', 0, $media_icon, 0, 'default', 'default', 6, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
 
         $config_message = array(
             'title_disable' => 1,
@@ -191,8 +191,7 @@ class Free_CreateEq
 
         );
         $password = $EqLogic->AddCommand('Mot de Passe actuel', 'password_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, $password_icon, 0, 'default', 'default', 7, '0', false, false, null, true, null, null, null, null);
-        $EqLogic->AddCommand('Mot de passe', 'password', 'action', 'message', 'default', null, null, 1, $password, 'default', 0, $password_icon, 0, 'default', 'default', 8, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
-
+        $EqLogic->AddCommand('Envoyer Mot de passe', 'password', 'action', 'message', 'default', null, null, 1, $password, 'default', 0, $password_icon, 0, 'default', 'default', 8, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
 
         $EqLogic->AddCommand('Start', 'start', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $start_icon, 0, 'default', 'default', 8, '0', $updateicon, false, null, true);
         $EqLogic->AddCommand('Stop', 'stop', 'action', 'other', null, null, null, 1, 'default', 'default', 0, $stop_icon, 0, 'default', 'default', 9, '0', $updateicon, false, null, true);

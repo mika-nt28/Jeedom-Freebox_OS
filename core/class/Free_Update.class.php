@@ -179,11 +179,14 @@ class Free_Update
             $Parameter["password"] = $password_value;
             $Parameter["action"] = $logicalId;
             log::add('Freebox_OS', 'debug', '│ Player : ' . $receivers_value . ' -- Media type : ' . $media_type_value . ' -- Media : ' . $media_value . ' -- Mot de Passe : ' . $password_value . ' -- Action : ' . $logicalId);
-            if ($media_type_value == NULL || $media_value == NULL || $receivers_value == NULL) {
+            if ($media_type_value == NULL || $receivers_value == NULL) {
                 log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, les paramètres sont incomplets Player : ' . $receivers_value . '-- Media type : ' . $media_type_value . ' -- Media : ' . $media_value);
                 return;
             }
-            $Parameter["action"] = $logicalId;
+            if ($media_value == NULL && $logicalId == 'start') {
+                log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, Pas de média : '  . $media_value);
+                return;
+            }
             $Free_API->universal_put($Parameter, 'universal_put', null, null, 'airmedia//receivers/' . $receivers_value  . '/', 'POST', $Parameter);
         }
     }

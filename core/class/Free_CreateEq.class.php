@@ -172,12 +172,12 @@ class Free_CreateEq
         }
 
         $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['airmediaName'], $logicalinfo['airmediaID'], 'multimedia', false, null, null, null, '*/5 * * * *');
-        $receivers = $EqLogic->AddCommand('Choix Player AirMedia', 'receivers_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
-        $EqLogic->AddCommand('Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, $receivers, 'default', $receivers_icon, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null);
+        $receivers = $EqLogic->AddCommand('Player AirMedia choisi', 'receivers_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, true);
+        $EqLogic->AddCommand('Choix du Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, $receivers, 'default', $receivers_icon, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null);
 
-        $media_type = $EqLogic->AddCommand('Media', 'media_type_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, true);
+        $media_type = $EqLogic->AddCommand('Media choisi', 'media_type_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, true);
         $media_type_list = null;
-        $EqLogic->AddCommand('Choix media', 'media_type', 'action', 'select', null, null, null, 1, $media_type, 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null);
+        $EqLogic->AddCommand('Choix du Media', 'media_type', 'action', 'select', null, null, null, 1, $media_type, 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null);
 
         $config_message = array(
             'title_disable' => 1,

@@ -135,7 +135,7 @@ class Free_Refresh
                                 }
                             }
                             log::add('Freebox_OS', 'debug', '│ Liste des Airmedia : ' . $receivers_list);
-                            $EqLogics->AddCommand('Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, 'default', 'default', null, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null, true);
+                            $EqLogics->AddCommand('Choix du Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, 'default', 'default', null, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null, true);
                         }
                         // Gestion Liste déroulante Type de média
                         if ($receivers_Value != null) {
@@ -174,7 +174,7 @@ class Free_Refresh
                                             }
                                         }
                                         log::add('Freebox_OS', 'debug', '│ Liste des médias compatible pour : ' . $receivers_Value . ' avec les valeurs : ' . $media_type_list);
-                                        $EqLogics->AddCommand('Choix media', 'media_type', 'action', 'select', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null, true);
+                                        $EqLogics->AddCommand('Choix du Media', 'media_type', 'action', 'select', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null, true);
                                         $EqLogics->refreshWidget();
                                     }
                                 }

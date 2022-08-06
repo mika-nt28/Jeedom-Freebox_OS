@@ -99,11 +99,13 @@ function Freebox_OS_update()
 
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
-			removeLogicId($eqLogic, 'slow'); // Amélioration 20210627
-			removeLogicId($eqLogic, 'normal'); // Amélioration 20210627
-			removeLogicId($eqLogic, 'hibernate'); // Amélioration 20210627
-			removeLogicId($eqLogic, 'schedule'); // Amélioration 20210627
-			removeLogicId($eqLogic, ' schedule'); // Amélioration 20210627
+			//=> Suppression des anciennes commandes Airmedia
+			removeLogicId($eqLogic, 'ActualAirmedia'); // Amélioration 20220806
+			removeLogicId($eqLogic, 'airmediastart'); // Amélioration 20220806
+			removeLogicId($eqLogic, 'airmediastop'); // Amélioration 20220806
+			//=> Libre
+			//removeLogicId($eqLogic, 'schedule'); // Amélioration 20210627
+			//removeLogicId($eqLogic, ' schedule'); // Amélioration 20210627
 
 		}
 

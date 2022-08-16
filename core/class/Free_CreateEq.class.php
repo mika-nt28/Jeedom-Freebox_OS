@@ -500,6 +500,7 @@ class Free_CreateEq
     {
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('parentalprofile', null, null, true, true, true, false);
+        $result =  $result['result'];
         foreach ($result  as $Equipement) {
             log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
             if (version_compare(jeedom::version(), "4", "<")) {

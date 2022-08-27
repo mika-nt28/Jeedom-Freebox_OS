@@ -258,6 +258,7 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 		case 'wifi':
 		case 'player':
 		case 'network':
+		case 'management':
 		case 'netshare':
 		case 'networkwifiguest':
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/img/' + $icon + '.png');
@@ -309,6 +310,7 @@ function addCmdToTable(_cmd) {
 		case 'LCD':
 		case 'network':
 		case 'netshare':
+		case 'management':
 		case 'networkwifiguest':
 		case 'system':
 		case 'wifi':
@@ -428,6 +430,7 @@ function setupCron($icon,$icon_type) {
 				case 'parental':
 				case 'player':
 				case 'netshare':
+				case 'management':
 				case 'VM':
 					$('.IPV').hide();
 					$('#CRON_TILES').show();

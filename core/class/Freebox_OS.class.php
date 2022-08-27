@@ -776,6 +776,8 @@ class Freebox_OS extends eqLogic
 			'homeadaptersName' => 'Home Adapters',
 			'LCDID' => 'LCD',
 			'LCDName' => 'Afficheur LCD',
+			'managementID' => 'management',
+			'managementName' => 'Gestion réseau',
 			'networkID' => 'network',
 			'networkName' => 'Appareils connectés',
 			'netshareID' => 'netshare',
@@ -917,6 +919,12 @@ class Freebox_OS extends eqLogic
 					break;
 				case 'player':
 					//Pour les players
+					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
+					$eqLogic->setConfiguration('eq_group', 'system');
+					break;
+				case 'management':
+					$eqLogic->setLogicalId($logicalinfo['management']);
+					//$eqLogic->setName($logicalinfo['networkName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
 					$eqLogic->setConfiguration('eq_group', 'system');
 					break;

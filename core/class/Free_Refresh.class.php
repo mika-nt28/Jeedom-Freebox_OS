@@ -44,6 +44,10 @@ class Free_Refresh
                 $refresh = $EqLogics->getLogicalId();
             }
             switch ($refresh) {
+                case 'management':
+                    log::add('Freebox_OS', 'debug', '│ Pas de fonction rafraichir pour cet équipement');
+                    log::add('Freebox_OS', 'debug', '└─────────');
+                    break;
                 case 'airmedia':
                     Free_Refresh::refresh_airmedia($EqLogics, $Free_API);
                     break;
@@ -618,8 +622,11 @@ class Free_Refresh
                 $_control_id = array_search($Command->getLogicalId(), array_column($result_network, 'id'), true);
 
                 if ($_control_id  === false) {
-                    log::add('Freebox_OS', 'debug', '│===========> APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
-                    $Command->remove();
+                    if ($Command->getLogicalId() == 'host_info' || $Command->getLogicalId() == 'host_type_info' || $Command->getLogicalId() == 'method_info' || $Command->getLogicalId() == 'add_del_ip_info' || $Command->getLogicalId() == 'primary_name_info' || $Command->getLogicalId() == 'comment_info') {
+                    } else {
+                        log::add('Freebox_OS', 'debug', '│===========> APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
+                        $Command->remove();
+                    }
                 }
                 if (is_object($Command)) {
                     foreach ($result_network as $result) {
@@ -686,8 +693,6 @@ class Free_Refresh
                         );
                         $EqLogics->AddCommand($result['primary_name'], $result['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true, null, null, null, null, null, null, null, null, null, null, null, $Parameter, $name_connectivity_type);
                         $EqLogics->checkAndUpdateCmd($cmd, $value);
-                        //$cmd->save();
-                        //log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $result['id'] . ' -- Nom : ' . $result['primary_name'] . ' -- Etat : ' . $value . ' -- Type : ' . $result['host_type']);
                         break;
                     }
                 }
@@ -1405,7 +1410,7 @@ class Free_Refresh
     private static function refresh_wifi($EqLogics, $Free_API)
     {
         log::add('Freebox_OS', 'debug', '>───────── Wifi : Update Liste Noire/Blanche');
-        $listmac = $Free_API->mac_filter_list($Api_version);
+        $listmac = $listmac = $Free_API->mac_filter_list();
         if ($listmac != false) {
             if ($listmac['listmac_blacklist'] != null || $listmac['listmac_whitelist'] != null) {
                 log::add('Freebox_OS', 'debug', '>───────── Liste Noire : ' . $listmac['listmac_blacklist']);

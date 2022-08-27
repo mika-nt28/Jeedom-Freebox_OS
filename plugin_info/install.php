@@ -103,6 +103,11 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'ActualAirmedia'); // Amélioration 20220806
 			removeLogicId($eqLogic, 'airmediastart'); // Amélioration 20220806
 			removeLogicId($eqLogic, 'airmediastop'); // Amélioration 20220806
+
+			// a faire plus tard
+			//removeLogicId($eqLogic, 'add_del_mac'); // Amélioration 20220827
+			//removeLogicId($eqLogic, 'WakeonLAN'); // Amélioration 20220827
+			//removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
 			//=> Libre
 			//removeLogicId($eqLogic, 'schedule'); // Amélioration 20210627
 			//removeLogicId($eqLogic, ' schedule'); // Amélioration 20210627

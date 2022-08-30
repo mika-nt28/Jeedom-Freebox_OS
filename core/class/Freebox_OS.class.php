@@ -923,7 +923,7 @@ class Freebox_OS extends eqLogic
 					$eqLogic->setConfiguration('eq_group', 'system');
 					break;
 				case 'management':
-					$eqLogic->setLogicalId($logicalinfo['management']);
+					$eqLogic->setLogicalId($logicalinfo['managementID']);
 					//$eqLogic->setName($logicalinfo['networkName']);
 					$eqLogic->setConfiguration('VersionLogicalID', $eq_version);
 					$eqLogic->setConfiguration('eq_group', 'system');

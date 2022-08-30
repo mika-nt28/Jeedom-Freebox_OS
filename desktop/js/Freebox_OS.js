@@ -257,8 +257,8 @@ $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').on('change', f
 		case 'phone':
 		case 'wifi':
 		case 'player':
-		case 'network':
 		case 'management':
+		case 'network':
 		case 'netshare':
 		case 'networkwifiguest':
 			$('#img_device').attr("src", 'plugins/Freebox_OS/core/img/' + $icon + '.png');
@@ -352,7 +352,10 @@ function addCmdToTable(_cmd) {
   	tr += '<input class="tooltips cmdAttr form-control input-sm" data-l1key="unite" placeholder="Unité" title="{{Unité}}" style="width:30%;max-width:80px;display:inline-block;margin-right:2px;">'
   	tr += '</div>'
   	tr += '</td>'
-  	tr += '<td>'
+	tr += '<td>';
+    tr += '<span class="cmdAttr" data-l1key="htmlstate"></span>'; 
+	tr += '</td>';
+	tr += '<td>'
 	if (is_numeric(_cmd.id)) {
 		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> '
 		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> Tester</a>'

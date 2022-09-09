@@ -1300,12 +1300,11 @@ class Free_Refresh
     private static function refresh_player($EqLogics, $Free_API)
     {
         if ($EqLogics->getConfiguration('player') == 'OK') {
-            $results_playerID = $Free_API->universal_get('player_ID', $EqLogics->getConfiguration('action'), null, null, true, true, null);
+            $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $EqLogics->getConfiguration('action') . '/api/v6/status', false, false, false);
         }
 
         log::add('Freebox_OS', 'debug', '│──────────> Player OK ? : ' . $EqLogics->getConfiguration('player'), null, null, true, true, null);
-        $results_players = $Free_API->universal_get('player', $EqLogics->getConfiguration('action'), null, null, true, true, null);
-
+        $results_players = $Free_API->universal_get('universalAPI', null, null, 'player/', true, true, true);
         $cmd_mac = $EqLogics->getCmd('info', 'mac');
         $cmd_stb_type = $EqLogics->getCmd('info', 'stb_type');
         $cmd_device_model = $EqLogics->getCmd('info', 'device_model');
@@ -1314,7 +1313,7 @@ class Free_Refresh
         $cmd_reachable = $EqLogics->getCmd('info', 'reachable');
         $cmd_powerState = $EqLogics->getCmd('info', 'power_state');
 
-
+        $results_players = $results_players['result'];
         foreach ($results_players as $results_player) {
             if ($results_player['id'] != $EqLogics->getConfiguration('action')) continue;
 

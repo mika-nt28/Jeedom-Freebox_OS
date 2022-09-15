@@ -188,6 +188,7 @@ if (!isConnect('admin')) {
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a id="bt_Freebox_droitVerif_pass" class="btn btn-sm btn-warning bt_Freebox_droitVerif_pass" title="{{Ignorer la vérification des droits}}"><i class="fas fa-balance-scale"></i><span class="hidden-xs"> {{Ignorer Vérification des droits}}</span>
                     </a><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif" title="{{Lancer la vérification des droits}}"><i class="fas fa-balance-scale"></i><span class="hidden-xs"> {{Vérification des droits}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>

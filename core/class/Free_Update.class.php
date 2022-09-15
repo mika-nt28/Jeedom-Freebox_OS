@@ -382,6 +382,7 @@ class Free_Update
                     $update_TYPE = null;
                     $update_IP = NULL;
                     $update_WIFI = null;
+                    $update_WOL = null;
 
                     switch ($method_value) {
                         case 'DEVICE':
@@ -528,10 +529,10 @@ class Free_Update
                     }
                     if ($update_WOL == 'POST_WOL') {
                         $option = array(
-                            "mac"  => $add_del_ip_value,
+                            "mac"  => $host_value_mac_ID,
                             "password" => $comment_value
                         );
-                        $Free_API->universal_put(null, 'universal_put', $add_del_ip_value, null, 'lan/wol/pub/', null, $option);
+                        $Free_API->universal_put(null, 'universal_put', null, null, 'lan/wol/pub/', null, $option);
                     }
                 }
         }

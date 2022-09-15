@@ -48,6 +48,10 @@ $('.bt_Freebox_droitVerif').on('click', function () {
     logs('info', "================= Lancement vérification des droits");
     GetSessionData();
 });
+$('.bt_Freebox_droitVerif_pass').on('click', function () {
+    logs('info', "================= Ignorer vérification des droits");
+    funNext();
+});
 
 $('.bt_Freebox_OS_ResetConfig').on('click', function () {
     logs('info', "================= Reset de la configuration");
@@ -522,6 +526,7 @@ function GetSessionData() {
     $('.Freebox_OK').hide();
     $('.Freebox_OK_NEXT').hide();
     $('.bt_Freebox_droitVerif').show();
+    $('.bt_Freebox_droitVerif_pass').hide();
     $('.bt_Freebox_OS').show();
 
     $.ajax({
@@ -568,9 +573,12 @@ function GetSessionData() {
                     $('.Freebox_OK').show();
                     $('.Freebox_OK_NEXT').show();
                     $('.bt_Freebox_droitVerif').hide();
+                    $('.bt_Freebox_droitVerif_pass').hide();
                     $('.bt_Freebox_OS').hide();
 
                     progress(65);
+                } else {
+                    $('.bt_Freebox_droitVerif_pass').show();
                 }
             }
         }

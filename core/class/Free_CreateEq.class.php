@@ -889,13 +889,6 @@ class Free_CreateEq
             $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *');
             $host_type = $EqLogic->AddCommand('Appareil connecté choisi', 'host_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_network, 0, 'default', 'default', 14, '0', false, true, null, true);
             $EqLogic->AddCommand('Sélection appareil connecté', 'host', 'action', 'select', null, null, null, $_IsVisible, $host_type, 'default', 0, $icon_network, 0, 'default', 'default', 15, '0', false, true, null, true, null, null, null, null, null, null, null, null, $network_list, null, null);
-            $config_message = array(
-                'title_disable' => 1,
-                'message_placeholder' => 'Adresse Mac',
-                'message' => '00:00:00:00:00:00',
-
-            );
-            $EqLogic->AddCommand('Saisie Adresse mac', 'host_mac', 'action', 'message', 'default', null, null, $_IsVisible, $host_type, 'default', 0,  $icon_network, 0, 'default', 'default', 32, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
             $EqLogic->refreshWidget();
 
             // Ajout des commandes dans WIFI
@@ -1259,11 +1252,11 @@ class Free_CreateEq
         $_IsVisible = 0;
 
         $order = 40;
-        $Statutmac = $EqLogic->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order, 1, false, true, null, true);
-        $order++;
-        $listValue = 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche';
-        $EqLogic->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order, '0', false, false, null, true, null, null, null, null, null, null, null, null, $listValue);
-        $order++;
+        //$Statutmac = $EqLogic->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order, 1, false, true, null, true);
+        //$order++;
+        //$listValue = 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche';
+        //$EqLogic->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order, '0', false, false, null, true, null, null, null, null, null, null, null, null, $listValue);
+        //$order++;
         $order++;
         $EqLogic->AddCommand('Liste Mac Blanche', 'listwhite', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_white, 0, 'default', 'default',  $order, '0', null, true, false, true, null, null, null, null);
         $order++;

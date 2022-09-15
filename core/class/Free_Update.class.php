@@ -44,8 +44,8 @@ class Free_Update
             case 'airmedia':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_value);
-                    Free_Refresh::RefreshInformation($logicalId_eq->getId());
-                } else {
+                }
+                if ($logicalId != 'media' && $logicalId != 'password') {
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
                     log::add('Freebox_OS', 'debug', '└─────────');
                 }

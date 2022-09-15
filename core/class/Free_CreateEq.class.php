@@ -602,7 +602,7 @@ class Free_CreateEq
 
         $config_message = array(
             'title_disable' => 1,
-            'message_placeholder' => 'xxx.xxx.xxx.xxx',
+            'message_placeholder' => 'Adresse IP',
 
         );
 
@@ -623,8 +623,7 @@ class Free_CreateEq
         //Commentaires
         $config_message = array(
             'title_disable' => 1,
-            'message_placeholder' => 'Commentaire ou Mot de Passe',
-            'message' => 'Commentaire ou Mot de Passe (pour la fonction Wake on Lan)',
+            'message_placeholder' => 'Commentaire ou Mot de Passe (pour la fonction Wake on Lan)',
 
         );
         $primary_name = $EqLogic->AddCommand('Commentaire choisi', 'comment_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_comment, 0, 'default', 'default', $order, '0', false, false, null, true, null, null, null, null);
@@ -769,9 +768,9 @@ class Free_CreateEq
         $Free_API = new Free_API();
         $EqLogic = Freebox_OS::EqLogic_ID($_networkname, $_networkID);
         // ---> $network->AddCommand('Redirections des ports', 'redir', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_redir, 0, 'default', 'default',  -33, '0', true, false, null, true, null, null, null, null, null, 'redir?lan_ip=#lan_ip#&enable_lan=#enable_lan#&src_ip=#src_ip#&ip_proto=#ip_proto#&wan_port_start=#wan_port_start#&wan_port_end=#wan_port_end#&lan_port=#lan_port#&comment=#comment#');
-        $EqLogic->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -31, '0', $updateWidget, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#&type=#type#');
+        //$EqLogic->AddCommand('Ajouter supprimer IP Fixe', 'add_del_mac', 'action', 'message',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  -31, '0', $updateWidget, false, null, true, null, null, null, null, null, 'add_del_dhcp?mac_address=#mac#&ip=#ip#&comment=#comment#&name=#name#&function=#function#&type=#type#');
         $EqLogic->AddCommand('Rechercher les nouveaux appareils', 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, true, 'default', 'default', 0, $icon_search, true, 'default', 'default',  -30, '0', $updateWidget, false, null, true, null, null, null, null, null, null, null, true);
-        $EqLogic->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -32, '0', $updateWidget, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
+        //$EqLogic->AddCommand('Wake on LAN', 'WakeonLAN', 'action', 'message',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, $icon_wol, 0, 'default', 'default',  -32, '0', $updateWidget, false, null, true, null, null, null, null, null, 'wol?mac_address=#mac#&password=#password#');
         //$result = $Free_API->universal_get('network', null, null, 'lan/browser/' . $_networkinterface);
         $result = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true);
         $order_count_active = 100;
@@ -841,15 +840,15 @@ class Free_CreateEq
                             $order = $order_count_active++;
                             // Liste des actifs
                             if ($active_list == null) {
-                                $active_list = $mac_address . '|' . $result['primary_name'];
+                                $active_list = $mac_address . '|' . $result['primary_name'] . ' ( ' . $mac_address . ')';
                             } else {
-                                $active_list .= ';' . $mac_address . '|' . $result['primary_name'];
+                                $active_list .= ';' . $mac_address . '|' . $result['primary_name'] . ' ( ' . $mac_address . ')';
                             }
                             // Liste des équipements 
                             if ($network_list == null) {
-                                $network_list = $result['id'] . '|' . $result['primary_name'];
+                                $network_list = $result['id'] . '|' . $result['primary_name'] . ' ( ' . $mac_address . ')';
                             } else {
-                                $network_list .= ';' . $result['id'] . '|' . $result['primary_name'];
+                                $network_list .= ';' . $result['id'] . '|' . $result['primary_name'] . ' ( ' . $mac_address . ')';
                             }
                             $value = true;
                         } else {
@@ -857,15 +856,15 @@ class Free_CreateEq
                             $value = 0;
                             // Liste des non actifs
                             if ($noactive_list == null) {
-                                $noactive_list = $mac_address . '|' . $result['primary_name'];
+                                $noactive_list = $mac_address . '|' . $result['primary_name'] . ' ( ' . $mac_address . ')';
                             } else {
-                                $noactive_list .= ';' . $mac_address . '|' . $result['primary_name'];
+                                $noactive_list .= ';' . $mac_address . '|' . $result['primary_name'] . ' ( ' . $mac_address . ')';
                             }
                             // Liste des équipements 
                             if ($network_list == null) {
-                                $network_list = $result['id'] . '|' . $result['primary_name'];
+                                $network_list = $result['id'] . '|' . $result['primary_name'] . ' ( ' . $mac_address . ')';
                             } else {
-                                $network_list .= ';' . $result['id'] . '|' . $result['primary_name'];
+                                $network_list .= ';' . $result['id'] . '|' . $result['primary_name'] . ' ( ' . $mac_address . ')';
                             }
                         }
 

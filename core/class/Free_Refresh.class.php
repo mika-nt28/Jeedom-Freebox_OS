@@ -1045,6 +1045,8 @@ class Free_Refresh
     }
     private static function refresh_titles_int($EqLogic, $data, $log_result, $Cmd)
     {
+        $logicalId_name = $Cmd->getName();
+        $_cmd_id = $Cmd->getId();
         if ($Cmd->getDisplay('invertBinary') == 1) {
             if ($data['value'] === $Cmd->getConfiguration('maxValue')) {
                 $_value = $Cmd->getConfiguration('minValue');
@@ -1069,9 +1071,9 @@ class Free_Refresh
                 }
             }
         }
-        if ($log_result == true) {
-            //log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
-        }
+        //if ($log_result == true) {
+        Log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
+        //}
         return $_value;
     }
     private static function refresh_titles_CmdbyCmd($EqLogic, $Free_API, $log_result = false)
@@ -1222,10 +1224,6 @@ class Free_Refresh
     }
     private static function refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, $log_result)
     {
-        $_Alarm_mode_value = null;
-        $_Alarm_stat_value = null;
-        $logicalId_name = $cmd->getName();
-
         if ($data['name'] == 'pushed') {
             $nb_pushed = count($data['history']);
             $nb_pushed_k = $nb_pushed - 1;
@@ -1242,7 +1240,6 @@ class Free_Refresh
         switch ($cmd->getSubType()) {
             case 'numeric':
                 $_value = Free_Refresh::refresh_titles_int($EqLogic, $data, $log_result, $cmd);
-
                 break;
             case 'string':
                 $_value = Free_Refresh::refresh_titles_string($EqLogic, $data, $log_result, $cmd);

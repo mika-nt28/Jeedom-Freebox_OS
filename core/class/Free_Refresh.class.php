@@ -1046,7 +1046,7 @@ class Free_Refresh
     private static function refresh_titles_int($EqLogic, $data, $log_result, $Cmd)
     {
         $logicalId_name = $Cmd->getName();
-        $_cmd_id = $Cmd->getId();
+        $_cmd_id = $Cmd->getLogicalId();
         if ($Cmd->getDisplay('invertBinary') == 1) {
             if ($data['value'] === $Cmd->getConfiguration('maxValue')) {
                 $_value = $Cmd->getConfiguration('minValue');

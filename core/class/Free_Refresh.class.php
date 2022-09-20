@@ -1072,7 +1072,7 @@ class Free_Refresh
             }
         }
         //if ($log_result == true) {
-        Log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
+        Log::add('Freebox_OS', 'debug', '│──────────> ' . $EqLogic->getName() . ' => ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
         //}
         return $_value;
     }

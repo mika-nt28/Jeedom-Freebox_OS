@@ -526,7 +526,6 @@ function GetSessionData() {
     $('.Freebox_OK').hide();
     $('.Freebox_OK_NEXT').hide();
     $('.bt_Freebox_droitVerif').show();
-    $('.bt_Freebox_droitVerif_pass').hide();
     $('.bt_Freebox_OS').show();
 
     $.ajax({
@@ -573,12 +572,9 @@ function GetSessionData() {
                     $('.Freebox_OK').show();
                     $('.Freebox_OK_NEXT').show();
                     $('.bt_Freebox_droitVerif').hide();
-                    $('.bt_Freebox_droitVerif_pass').hide();
                     $('.bt_Freebox_OS').hide();
 
                     progress(65);
-                } else {
-                    $('.bt_Freebox_droitVerif_pass').show();
                 }
             }
         }

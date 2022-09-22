@@ -1072,9 +1072,9 @@ class Free_Refresh
             }
         }
         // Activation log provisoire pour test
-        //if ($log_result == true) {
-        Log::add('Freebox_OS', 'debug', '│──────────> ' . $EqLogic->getName() . ' => ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
-        //}
+        if ($log_result == true) {
+            Log::add('Freebox_OS', 'debug', '│──────────> ' . $EqLogic->getName() . ' => ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
+        }
         return $_value;
     }
     private static function refresh_titles_CmdbyCmd($EqLogic, $Free_API, $log_result = false)

@@ -48,7 +48,7 @@ class Free_CreateTV
         $iconePlayPrevious = 'fas fa-angle-double-left';
         $iconePlayNext = 'fas fa-angle-double-right';
 
-        $result = $Free_API->universal_get('universalAPI', null, null, 'player', false, false, true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'player', false, true, true);
         if (isset($result['result'])) {
             $result = $result['result'];
             if ($result != null) {

@@ -733,6 +733,7 @@ class Free_Update
                     log::add('Freebox_OS', 'debug', '>──────────> RGB EN HEX : ' . $replace['#color#']);
                     $parametre['value'] = $replace['#color#'];
                     $parametre['value_type'] = 'int';
+                    
                     $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
                     if ($cmd !== false) {
                         if ($cmd->execCmd() == 0) {

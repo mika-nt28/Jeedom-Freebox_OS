@@ -551,44 +551,37 @@ class Freebox_OS extends eqLogic
 					}
 				}
 			}
+			$Cmd->setConfiguration('host_type', $updatenetwork['host_type']);
 			if ($repeatevent == $updatenetwork['repeatevent'] && $Type == 'info') {
 				$Cmd->setConfiguration('repeatEventManagement', 'never');
 				//log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
 			}
-			$Cmd->setConfiguration('host_type', $updatenetwork['host_type']);
 			$Cmd->setConfiguration('IPV4', $updatenetwork['IPV4']);
 			$Cmd->setConfiguration('IPV6', $updatenetwork['IPV6']);
 			$Cmd->setConfiguration('mac_address', $updatenetwork['mac_address']);
 			if ($updatenetwork['order'] != null) {
 				$Cmd->setOrder($updatenetwork['order']);
 			}
-			if ($repeatevent == true && $Type == 'info') {
-				$Cmd->setConfiguration('repeatEventManagement', 'never');
-				//log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
-			}
 		}
-		if ($listValue_Update != true) {
-			// Forçage pour mettre à jour l'affichage // Option en cas de Update Plugin
-			if ($forceIcone_widget == true) {
-				if ($icon != null) {
-					$Cmd->setdisplay('icon', '<i class="' . $icon . '"></i>');
-				}
-				if ($Template != null) {
-					$Cmd->setTemplate('dashboard', $Template);
-					$Cmd->setTemplate('mobile', $Template);
-				}
-				$Cmd->setIsVisible($IsVisible);
+		if ($forceIcone_widget == true) {
+			if ($icon != null) {
+				$Cmd->setdisplay('icon', '<i class="' . $icon . '"></i>');
+			}
+			if ($Template != null) {
+				$Cmd->setTemplate('dashboard', $Template);
+				$Cmd->setTemplate('mobile', $Template);
+			}
+			$Cmd->setIsVisible($IsVisible);
 
-				if ($forceLineB != null) {
-					$Cmd->setdisplay('forceReturnLineBefore', 1);
-				}
-				if ($forceLineA != null) {
-					$Cmd->setdisplay('forceReturnLineAfter', 1);
-				}
+			if ($forceLineB != null) {
+				$Cmd->setdisplay('forceReturnLineBefore', 1);
+			}
+			if ($forceLineA != null) {
+				$Cmd->setdisplay('forceReturnLineAfter', 1);
+			}
 
-				if ($_iconname != null) {
-					$Cmd->setdisplay('showIconAndNamedashboard', 1);
-				}
+			if ($_iconname != null) {
+				$Cmd->setdisplay('showIconAndNamedashboard', 1);
 			}
 		}
 		if ($listValue != null) {

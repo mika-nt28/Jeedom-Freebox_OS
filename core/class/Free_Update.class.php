@@ -366,23 +366,18 @@ class Free_Update
                     }
                 }
                 if ($logicalId == 'start') {
-                    log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Type : ' . $host_type_value . ' -- Action à faire : ' . $method_value . ' -- IP : ' . $add_del_ip_value .  ' -- Commentaire : ' . $comment_value . ' -- Action : ' . $logicalId);
-                    if ($host_value == null || $add_del_ip_value == null) {
-                        log::add('Freebox_OS', 'error', 'IP  ou adresse mac vide');
-                        break;
-                    }
+                    $_networkinterface = 'pub';
+                    $update_TYPE = null;
+                    $update_IP = NULL;
+                    $update_WIFI = null;
+                    $update_WOL = null;
+
                     //Option par défaut
                     $option = array(
                         "mac" => $host_value_mac_ID,
                         "ip" => $add_del_ip_value,
                         "comment" => $comment_value,
                     );
-
-                    $_networkinterface = 'pub';
-                    $update_TYPE = null;
-                    $update_IP = NULL;
-                    $update_WIFI = null;
-                    $update_WOL = null;
 
                     switch ($method_value) {
                         case 'DEVICE':
@@ -489,7 +484,31 @@ class Free_Update
                         default;
                             break;
                     }
-
+                    if ($update_WIFI == 'WIFI') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($host_value == null || $add_del_ip_value == null || $mac_filter_value == null) {
+                            log::add('Freebox_OS', 'error', 'Gestion réseau : IP  ou adresse mac vide');
+                            break;
+                        }
+                    } else if ($update_TYPE == 'DEVICE') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Type : ' . $host_type_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($primary_name_value == null || $host_value == null || $host_type_value == null) {
+                            log::add('Freebox_OS', 'error', 'Gestion réseau : Les données sont incomplètes => Impossible de continuer');
+                            break;
+                        }
+                    } else if ($update_IP == 'IP') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- IP : ' . $add_del_ip_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($host_value == '0' || $host_value == null || $add_del_ip_value == null) {
+                            log::add('Freebox_OS', 'error', 'Gestion réseau : IP  ou adresse mac vide => Impossible de continuer');
+                            break;
+                        }
+                    } else if ($update_WOL == 'POST_WOL') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($host_value == '0' || $host_value == null) {
+                            log::add('Freebox_OS', 'error', 'Gestion réseau : Adresse mac vide => Impossible de continuer');
+                            break;
+                        }
+                    }
 
                     // Action IP
                     if ($update_IP == 'IP') {
@@ -506,10 +525,6 @@ class Free_Update
 
                     // Action Type de périphérique
                     if ($update_TYPE == 'DEVICE') {
-                        if ($primary_name_value == null) {
-                            log::add('Freebox_OS', 'error', 'Nom de l\'appareil vide => Impossible de continuer');
-                            break;
-                        }
                         $option = array(
                             "id" => $host_value,
                             "primary_name" => $primary_name_value,
@@ -520,13 +535,13 @@ class Free_Update
                         }
                         $Free_API->universal_put(null, 'universal_put', $host_value, null, 'lan/browser/pub/', 'PUT', $option);
                     }
+
+                    // Action Filtrage WIFI
                     if ($update_WIFI == 'WIFI') {
-                        if ($host_value == null || $add_del_ip_value == null || $mac_filter_value == null) {
-                            log::add('Freebox_OS', 'error', 'IP  ou adresse mac vide');
-                            break;
-                        }
                         $Free_API->universal_put(null, 'universal_put', null, null, 'wifi/mac_filter/' . $host_value_mac_ID, $method_value, $option);
                     }
+
+                    // Action Wake on LAN
                     if ($update_WOL == 'POST_WOL') {
                         $option = array(
                             "mac"  => $host_value_mac_ID,

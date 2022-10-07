@@ -140,6 +140,7 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Création API');
 		if (!is_object(config::byKey('FREEBOX_API', 'Freebox_OS'))) {
 			config::save('FREEBOX_API', 'v8', 'Freebox_OS');
+			log::add('Freebox_OS', 'debug', '│ Update API fait');
 		}
 
 

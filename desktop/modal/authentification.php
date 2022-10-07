@@ -318,6 +318,8 @@ if (!isConnect('admin')) {
                         <br>
                         <i>{{Uniquement sur la Freebox Delta}}</i>
                     </div>
+                    <div class="alert alert-danger">{{Il est conseillé de désactiver l'option "Actualisation Globale des Tiles", si vous avez des volets SOMFY}}
+                    </div>
                     <br>
                     <form class="form-horizontal">
                         <fieldset>

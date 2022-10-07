@@ -127,19 +127,23 @@ function Freebox_OS_update()
 		Freebox_OS::updateLogicalID($eq_version, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Update paramétrage Plugin tiles');
 		if ($eq_version === '2') {
-			/*if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
-				if (!is_object(config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'))) {
+			/* CRON GLOBAL TITLES
+			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
+				$Config_KEY = config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS');
+				if (empty($Config_KEY)) {
 					config::save('FREEBOX_TILES_CRON', '1', 'Freebox_OS');
 					Free_CreateTil::createTil('SetSettingTiles');
 				}
 			}*/
-			/*if (!is_object(config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS'))) {
+			/* UPDATE CMD BY CMD
+			$Config_KEY = config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS');
+			if (empty($Config_KEY)) {
 				config::save('FREEBOX_TILES_CmdbyCmd', '1', 'Freebox_OS');
 			}*/
 		}
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Création API');
-		$Config_API = config::byKey('FREEBOX_API', 'Freebox_OS');
-		if (empty($Config_API)) {
+		$Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
+		if (empty($Config_KEY)) {
 			config::save('FREEBOX_API', 'v8', 'Freebox_OS');
 			log::add('Freebox_OS', 'debug', '│ Update Version API en V8');
 		}

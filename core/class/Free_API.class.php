@@ -23,7 +23,8 @@ class Free_API
         $this->app_token = config::byKey('FREEBOX_SERVER_APP_TOKEN', 'Freebox_OS');
         $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         // Gestion API
-        if (is_object($this->API_version)) {
+        $Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
+        if (empty($Config_KEY)) {
             log::add('Freebox_OS', 'debug', '│──────────> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
             $this->API_version = 'v8';
         } elseif ($this->API_version === 'TEST_V8') {

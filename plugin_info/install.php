@@ -141,7 +141,7 @@ function Freebox_OS_update()
 		$Config_API = config::byKey('FREEBOX_API', 'Freebox_OS');
 		if (empty($Config_API)) {
 			config::save('FREEBOX_API', 'v8', 'Freebox_OS');
-			log::add('Freebox_OS', 'debug', '│ Update Version API');
+			log::add('Freebox_OS', 'debug', '│ Update Version API en V8');
 		}
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');

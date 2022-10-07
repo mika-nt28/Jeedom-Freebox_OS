@@ -139,11 +139,10 @@ function Freebox_OS_update()
 		}
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Création API');
 		$Config_API = config::byKey('FREEBOX_API', 'Freebox_OS');
-		if (!is_object($Config_API)) {
+		if (empty($Config_API)) {
 			config::save('FREEBOX_API', 'v8', 'Freebox_OS');
-			log::add('Freebox_OS', 'debug', '│ Update API fait');
+			log::add('Freebox_OS', 'debug', '│ Update Version API');
 		}
-
 
 		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
 	} catch (Exception $e) {

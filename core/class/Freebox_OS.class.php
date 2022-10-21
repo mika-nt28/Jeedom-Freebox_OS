@@ -726,16 +726,34 @@ class Freebox_OS extends eqLogic
 	public static function RefreshToken()
 	{
 		log::add('Freebox_OS', 'debug', '=================   REFRESH TOKEN    ==================');
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
+		if (is_object($cron)) {
+			log::add('Freebox_OS', 'debug', '>───────── ARRET CRON FreeboxPUT');
+			$cron->stop();
+		}
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+		if (is_object($cron)) {
+			log::add('Freebox_OS', 'debug', '>───────── ARRET CRON FreeboxGET');
+			$cron->stop();
+		}
+		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxAPI');
+		if (is_object($cron)) {
+			log::add('Freebox_OS', 'debug', '>───────── ARRET CRON FreeboxAPI');
+			$cron->stop();
+		}
+		sleep(1);
 		$Free_API = new Free_API();
 		$Free_API->close_session();
 		if ($Free_API->getFreeboxOpenSession() === false) {
 			self::deamon_stop();
 			log::add('Freebox_OS', 'debug', '[REFRESH TOKEN] : FALSE / ' . $Free_API->getFreeboxOpenSession());
 		}
+		sleep(1);
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		} else {
+			log::add('Freebox_OS', 'debug', '>───────── REDEMARRAGE CRON FreeboxPUT');
 			$cron->run();
 		}
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
@@ -744,6 +762,7 @@ class Freebox_OS extends eqLogic
 				if (!is_object($cron)) {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				} else {
+					log::add('Freebox_OS', 'debug', '>───────── REDEMARRAGE CRON FreeboxGET');
 					$cron->run();
 				}
 			}

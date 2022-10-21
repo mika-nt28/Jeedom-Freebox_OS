@@ -114,6 +114,7 @@ class Free_Refresh
                     break;
                 default:
                     Free_Refresh::refresh_titles($EqLogics, $Free_API);
+                    // Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, true);
                     break;
             }
         }
@@ -1162,7 +1163,14 @@ class Free_Refresh
                 if ($log_result == true) {
                     log::add('Freebox_OS', 'debug', '=========================> ───────── UPDATE EQUIPEMENT : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
                 }
-                Free_Refresh::refresh_titles_CmdbyCmd($EqLogic, $Free_API, false);
+                foreach ($EqLogic->getCmd('info') as $Cmd) {
+                    if (is_object($Cmd)) {
+                        log::add('Freebox_OS', 'debug', '=========================> ───────── TEST UPDATE COMMANDE : ' . $Cmd->getLogicalId() . ' - '  . $Cmd->getName());
+                        $result_config2 = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/25' . ' / ' . $Cmd->getLogicalId(), true, true, null);
+                        //$result_config2 = $Free_API->universal_get('universalAPI', null, null, 'home/enpoints/25/3' . $EqLogic->getLogicalId() . '/' . $Cmd->getLogicalId(), true, true, null);
+                    }
+                }
+                //Free_Refresh::refresh_titles_CmdbyCmd($EqLogic, $Free_API, false);
             }
         }
     }

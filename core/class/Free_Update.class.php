@@ -78,12 +78,6 @@ class Free_Update
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
-            case 'player':
-                if ($logicalId != 'refresh') {
-                    Free_Update::update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
-                }
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
-                break;
             case 'parental':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
@@ -625,7 +619,31 @@ class Free_Update
     }
     private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
-        $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
+        if ($logicalId != 'channel') {
+            $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
+        } else {
+            $ID_Player = $logicalId_eq->getlogicalId();
+            $ID_Player = str_replace('player_', '', $ID_Player);
+            log::add('Freebox_OS', 'debug', '│ Player ' . $logicalId_eq->getlogicalId() . ' -  avec ID : ' . $ID_Player);
+
+
+            if ($logicalId == 'channel') {
+                foreach ($logicalId_eq->getCmd('info') as $Cmd) {
+                    if (is_object($Cmd)) {
+                        if ($logicalId == 'channel') {
+                            $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
+                            $channel_value = $Cmd->execCmd();
+                            $channel_value = 'tv:?channel=' . $channel_value;
+                            //Option par défaut
+                            $option = array(
+                                "url" =>  $channel_value,
+                            );
+                            $Free_API->universal_put(null, 'universal_put', null, null, 'player/' . $ID_Player . '/api/v6/control/open', null, $option);
+                        }
+                    }
+                }
+            }
+        }
     }
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {

@@ -9,7 +9,7 @@
 	},
 	"licence": "AGPL",
 	"author": "mika-nt28 | JAG",
-	"require": "3.3",
+	"require": "4.0",
 	"category": "monitoring",
 	"hasOwnDeamon": true,
 	"hasDependency": false,

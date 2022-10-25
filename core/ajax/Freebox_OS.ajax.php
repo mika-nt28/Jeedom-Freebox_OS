@@ -23,7 +23,8 @@ try {
 			break;
 		case 'PortForwarding':
 			$id_logical = cmd::byId(init('id'))->getLogicalId();
-			ajax::success($Free_API->PortForwarding($id_logical, "get"));
+			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
+			ajax::success($Free_API->PortForwarding($id_logical, "GET", null, $Mac));
 			break;
 		case 'WakeOnLAN':
 			$Mac = cmd::byId(init('id'))->getConfiguration('mac_address', '00:00:00:00:00:00');
@@ -32,18 +33,6 @@ try {
 				"password" => init('password')
 			);
 			ajax::success($Free_API->universal_put(null, 'universal_put', $Mac, null, 'lan/wol/pub/', null, $option));
-			break;
-		case 'get_airmediareceivers':
-			ajax::success($Free_API->airmedia('receivers', null, null));
-			break;
-		case 'set_airmediareceivers':
-			$cmd = cmd::byId(init('id'));
-			if (is_object($cmd)) {
-				$cmd->setCollectDate('');
-				$cmd->event(init('value'));
-				ajax::success(true);
-			}
-			ajax::success(false);
 			break;
 		case 'SearchTile':
 			Free_CreateTil::createTil('homeadapters');
@@ -108,7 +97,8 @@ try {
 				"IdApp" => config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS'),
 				"DeviceName" => config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'),
 				"Categorie" => config::byKey('defaultParentObject', 'Freebox_OS'),
-				"LogLevel" => log::getLogLevel('Freebox_OS')
+				"LogLevel" => log::getLogLevel('Freebox_OS'),
+				"API" => config::byKey('FREEBOX_API', 'Freebox_OS'),
 			);
 			ajax::success($result);
 			break;
@@ -118,6 +108,10 @@ try {
 				//"CmdbyCmd" => config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS')
 			);
 			ajax::success($result);
+			break;
+		case 'ResetAPI':
+			config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', ''), 'Freebox_OS');
+			Freebox_OS::FreeboxAPI();
 			break;
 		case 'SetSettingTiles':
 			config::save('FREEBOX_TILES_CRON', init('cron_tiles'), 'Freebox_OS');

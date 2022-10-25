@@ -73,7 +73,8 @@ if (!isConnect('admin')) {
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
-                    </a><a class="btn btn-sm btn-danger bt_Freebox_OS_ResetConfig" title="{{Reset de la configuration}}"><i class="fas fa-trash"></i><span class="hidden-xs"> Reset</span>
+                    </a><a class="btn btn-sm btn-danger bt_Freebox_OS_ResetConfig" title="{{Reset de la configuration}}"><i class="fas fa-trash"></i><span class="hidden-xs"> Reset de la configuration</span>
+                    </a><a class="btn btn-sm btn-warning bt_Freebox_resetAPI" title="{{Reset de la version API }}"><i class="fas fa-exclamation-circle"></i><span class="hidden-xs"> {{Reset API Freebox}}</span>
                     </a><a class="btn btn-sm btn-success bt_Freebox_OS_Save"><i class="fas fa-save"></i><span class="hidden-xs"> {{Sauvegarder}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
@@ -119,6 +120,12 @@ if (!isConnect('admin')) {
                             <label class="col-md-5 control-label">{{Nom de l'équipement connecté :}}</label>
                             <div class="col-md-4">
                                 <input id="input_DeviceName" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_DEVICE_NAME" disabled />
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-md-5 control-label">{{Version API de la Freebox :}}</label>
+                            <div class="col-md-4">
+                                <input id="input_API" type="text" class="configKey form-control" data-l1key="FREEBOX_API" disabled />
                             </div>
                         </div>
                         <div class="form-group">
@@ -182,7 +189,9 @@ if (!isConnect('admin')) {
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a class="btn btn-sm btn-danger bt_Freebox_droitVerif_pass" title="{{Ignorer la vérification des droits}}"><i class="fas fa-balance-scale"></i><span class="hidden-xs"> {{Ignorer Vérification des droits}}</span>
                     </a><a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif" title="{{Lancer la vérification des droits}}"><i class="fas fa-balance-scale"></i><span class="hidden-xs"> {{Vérification des droits}}</span>
+                    </a><a id="bt_Freebox_OS" class="btn btn-sm btn-default bt_Freebox_OS" target='_blank' href='http://mafreebox.freebox.fr'><i class="far fa-hand-point-right"></i> <span class="hidden-xs">{{Ouvrir Interface Freebox}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
                     </a>
@@ -212,11 +221,6 @@ if (!isConnect('admin')) {
                     </div>
                 </center>
                 <br />
-                <center>
-                    <a id="bt_Freebox_droitVerif" class="btn btn-sm btn-warning bt_Freebox_droitVerif" title="{{Lancer la vérification des droits}}">{{Vérification des droits}} <i class="fas fa-balance-scale"></i>
-                    </a><a id="bt_Freebox_OS" class="btn btn-sm btn-default bt_Freebox_OS" target='_blank' href='http://mafreebox.freebox.fr'><i class="far fa-hand-point-right"></i> {{Ouvrir Interface Freebox}}
-                    </a>
-                </center>
                 <br />
                 <table id="table_packages" class="table table-condensed">
                     <thead>
@@ -314,6 +318,8 @@ if (!isConnect('admin')) {
                         <br>
                         <i>{{Uniquement sur la Freebox Delta}}</i>
                     </div>
+                    <div class="alert alert-danger">{{Il est conseillé de désactiver l'option "Actualisation Globale des Tiles", si vous avez des volets sous protocole IO}}
+                    </div>
                     <br>
                     <form class="form-horizontal">
                         <fieldset>
@@ -358,6 +364,7 @@ if (!isConnect('admin')) {
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
+                    </a><a class="btn btn-sm btn-warning bt_Freebox_resetAPI" title="{{Reset de la version API }}"><i class="fas fa-exclamation-circle"></i><span class="hidden-xs"> {{Reset API Freebox}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
                     </a>

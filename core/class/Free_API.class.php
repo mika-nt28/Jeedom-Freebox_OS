@@ -10,6 +10,7 @@ class Free_API
     private $device_name;
     private $track_id;
     private $app_token;
+    private $API_version;
 
     public function __construct()
     {
@@ -20,6 +21,18 @@ class Free_API
         $this->device_name = trim(config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'));
         $this->track_id = config::byKey('FREEBOX_SERVER_TRACK_ID', 'Freebox_OS');
         $this->app_token = config::byKey('FREEBOX_SERVER_APP_TOKEN', 'Freebox_OS');
+        $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        // Gestion API
+        $Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
+        if (empty($Config_KEY)) {
+            log::add('Freebox_OS', 'debug', '│──────────> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
+            $this->API_version = 'v8';
+        } elseif ($this->API_version === 'TEST_V8') {
+            $this->API_version = 'v8';
+            log::add('Freebox_OS', 'debug', '│──────────> Test Version API Non faite avec la Freebox : ' . $this->API_version);
+        } else {
+            $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        }
     }
 
     public function track_id() //Doit correspondre a la donction "auth" de freboxsession.js homebridge freebox
@@ -202,6 +215,10 @@ class Free_API
                     } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
                         log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
                         return false;
+                    } else if ($result['error_code'] == 'invalid_api_version') {
+                        log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg']);
+                        $result = $result['error_code'];
+                        return $result;
                     } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                         log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
                         return false;
@@ -248,40 +265,47 @@ class Free_API
         }
     }
 
-    public function PortForwarding($id, $fonction = "get", $active = null)
+    public function PortForwarding($id, $fonction = "GET", $active = null, $Mac = null)
     {
-        $PortForwarding = $this->fetch('/api/v8/fw/redir/');
-        if ($PortForwarding === false)
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
+        $API_version = $this->API_version;
+        $PortForwarding = $this->fetch('/api/' . $API_version . '/fw/redir/', null, $fonction, true, true);
+        $id = str_replace("ether-", "", $id);
+        $id = strtoupper($id);
+        log::add('Freebox_OS', 'debug', '│──────────> Lecture des Ports l\'adresse Mac : '  . $Mac . ' - FONCTION ' . $fonction);
+        if ($PortForwarding === false) {
+            log::add('Freebox_OS', 'debug', '│──────────> Aucune donnée');
             return false;
-
-        if ($fonction == "get") {
+        }
+        if ($fonction == "GET") {
             $result = array();
             foreach ($PortForwarding['result'] as $value) {
-                if ($value['host']['id'] != $id) continue;
-                $enabled = "0";
-                if ($value['enabled'] == true) $enabled = "1";
-                array_push($result, array(
-                    'id' => $value['id'],
-                    'enabled' => $enabled,
-                    'src_ip' => $value['src_ip'],
-                    'wan_port_start' => $value['wan_port_start'],
-                    'wan_port_end' => $value['wan_port_end'],
-                    'ip_proto' => $value['ip_proto'],
-                    'lan_ip' => $value['lan_ip'],
-                    'lan_port' => $value['lan_port'],
-                    'comment' => $value['comment']
-                ));
+                if ($value['host']['l2ident']['id'] == $Mac) {
+                    $enabled = "0";
+                    if ($value['enabled'] == true) $enabled = "1";
+                    array_push($result, array(
+                        'id' => $value['id'],
+                        'enabled' => $enabled,
+                        'src_ip' => $value['src_ip'],
+                        'wan_port_start' => $value['wan_port_start'],
+                        'wan_port_end' => $value['wan_port_end'],
+                        'ip_proto' => $value['ip_proto'],
+                        'lan_ip' => $value['lan_ip'],
+                        'lan_port' => $value['lan_port'],
+                        'comment' => $value['comment']
+                    ));
+                };
             }
             return $result;
         } elseif ($fonction == "PUT") {
             if ($active == 1) {
-                $this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => true), $fonction);
+                $this->fetch('/api/' . $API_version . '/fw/redir/' . $id, array("enabled" => true), $fonction);
                 return true;
             } elseif ($active == 0) {
-                $this->fetch('/api/v8/fw/redir/' . $id, array("enabled" => false), $fonction);
+                $this->fetch('/api/' . $API_version . '/fw/redir/' . $id, array("enabled" => false), $fonction);
                 return true;
             } elseif ($active == 3) {
-                $this->fetch('/api/v8/fw/redir/' . $id, null, "DELETE");
+                $this->fetch('/api/' . $API_version . '/fw/redir/' . $id, null, "DELETE");
                 return true;
             }
         }
@@ -289,6 +313,9 @@ class Free_API
 
     public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true, $_onlyresult = false)
     {
+        $API_version = $this->API_version;
+
+        //log::add('Freebox_OS', 'debug', '>───────── API la version suivante 1b : ' . $API_version);
         $config_log = null;
         $fonction = "GET";
         $Parameter = null;
@@ -299,63 +326,64 @@ class Free_API
         }
         switch ($update) {
             case 'airmedia':
-                $config = 'api/v8/airmedia/receivers/';
+                $config = 'api/' . $API_version . '/airmedia/receivers/';
+                break;
+            case 'api_version':
+                $config = 'api_version';
                 break;
             case 'connexion':
-                $config = 'api/v8/connection/' . $update_type;
+                $config = 'api/' . $API_version . '/connection/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
                 break;
-                //case 'disk':
-                //  $config = 'api/v8/storage/disk';
-                // break;
             case 'download':
-                $config = 'api/v8/downloads/' . $update_type;
+                $config = 'api/' . $API_version . '/downloads/' . $update_type;
                 break;
             case 'notification':
-                $config = 'api/v8/notif/targets';
+                $config = 'api/' . $API_version . '/notif/targets';
                 $config_log = 'Liste des notifications';
                 break;
             case 'notification_ID':
-                $config = 'api/v8/notif/targets' . $id;
+                $config = 'api/' . $API_version . '/notif/targets' . $id;
                 $config_log = 'Etat des notifications';
                 break;
             case 'parental':
-                $config = 'api/v8/network_control' . $id;
+                $config = 'api/' . $API_version . '/network_control' . $id;
                 $config_log = 'Etat Contrôle Parental';
                 break;
             case 'parentalprofile':
-                $config = 'api/v8/profile';
+                $config = 'api/' . $API_version . '/profile';
                 break;
             case 'player':
-                $config = 'api/v8/player';
+                $config = 'api/' . $API_version . '/player';
                 break;
             case 'player_ID':
-                $config = 'api/v8/player' . $id . '/api/v6/status';
+                $config = 'api/' . $API_version . '/player' . $id . '/api/v6/status';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network':
-            case 'network_ping':
-                $config = 'api/v8/lan/' . $update_type;
+                //case 'network_ping':
+                $config = 'api/' . $API_version . '/' . $update_type;
                 break;
             case 'universalAPI':
-                $config = 'api/v8/' . $update_type . $id;
+                //case 'wifi':
+                $config = 'api/' . $API_version . '/' . $update_type . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network_ID':
-                $config = 'api/v8/lan/browser/' . $update_type  . $id;
+                $config = 'api/' . $API_version . '/lan/browser/' . $update_type  . $id;
                 break;
             case 'system':
-                $config = 'api/v8/system';
+                $config = 'api/' . $API_version . '/system';
                 break;
             case 'switch':
-                $config = 'api/v8/switch/status';
+                $config = 'api/' . $API_version . '/switch/status';
                 break;
             case 'tiles':
-                $config = 'api/v8/home/tileset' . $id;
+                $config = 'api/' . $API_version . '/home/tileset' . $id;
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'WebSocket':
-                $config = 'api/v8/ws/event';
+                $config = 'api/' . $API_version . '/ws/event';
                 $config_log = 'Traitement de la Mise à jour de WebSocket';
                 $Parameter = array(
                     "action" => 'notification',
@@ -364,22 +392,28 @@ class Free_API
                     "event" => 'VmStateChange',
                 );
                 break;
-            case 'wifi':
-                $config = 'api/v8/wifi/' . $update_type;
-                $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';
-                break;
+                //case 'wifi':
+                //  $config = 'api/' . $update_type;
+                // $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';
+                //break;
             case 'PortForwarding':
-                $config = '/api/v8/fw/redir/';
+                $config = '/api/' . $API_version . '/fw/redir/';
                 $config_log = 'Redirection de port';
                 break;
             case 'upload':
-                $config = 'api/v8/ws/';
+                $config = 'api/' . $API_version . '/ws/';
                 $config_log = 'Upload Progress tracking API';
                 break;
         }
         $result = $this->fetch('/' . $config, $Parameter, $fonction, $log_request, $log_result);
         if ($result == 'auth_required') {
             $result = $this->fetch('/' . $config, $Parameter, $fonction);
+        }
+        //log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante 2a : ' . $API_version);
+        if ($result === 'invalid_api_version') {
+            //log::add('Freebox_OS', 'info', '>─────────── API NON COMPATIBLE avec la version suivante : ' . $API_version . ' -- ' . $result);
+            $result = 'invalid_api_version';
+            return $result;
         }
         if ($result === false) {
             return false;
@@ -394,11 +428,11 @@ class Free_API
                     return $result['result'];
                     break;
                     //case 'disk':
-                case 'network_ping':
-                case 'network':
+                    //case 'network_ping':
+                    //case 'network':
                 case 'notification':
                 case 'freeplug':
-                case 'wifi':
+                    //case 'wifi':
                     return $result;
                     break;
                 case 'system':
@@ -433,9 +467,10 @@ class Free_API
                     break;
             }
 
+
             return $value;
         } else {
-            if ($update == "network_ping" || $update == "network_ID") {
+            if ($update == "network_ping" || $update == "network_ID" || $update == "api_version") {
                 return $result;
             } else if ($update_type == 'lte/config') {
                 return $result['msg'];
@@ -446,7 +481,9 @@ class Free_API
     }
     public function downloads_put($Etat)
     {
-        $result = $this->fetch('/api/v8/downloads/');
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
+        $API_version = $this->API_version;
+        $result = $this->fetch('/api/' . $API_version . '/downloads/');
         if ($result == 'auth_required') {
             $result = $this->fetch('/api/v8/downloads/');
         }
@@ -468,6 +505,8 @@ class Free_API
     }
     public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null, $_options_2 = null)
     {
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
+        $API_version = $this->API_version;
         $fonction = "PUT";
         $config_log = null;
         if ($id != null) {
@@ -475,12 +514,12 @@ class Free_API
         }
         switch ($update) {
             case '4G':
-                $config = 'api/v8/connection/lte/config';
+                $config = 'api/' . $API_version . '/connection/lte/config';
                 $config_log = 'Mise à jour de : Activation 4G';
                 $config_commande = 'enabled';
                 break;
             case 'notification_ID':
-                $config = 'api/v8/notif/targets/' . $id;
+                $config = 'api/' . $API_version . '/notif/targets/' . $id;
                 if ($_options == 'DELETE') {
                     $fonction = $_options;
                 }
@@ -489,7 +528,7 @@ class Free_API
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
 
-                $jsontestprofile = $this->fetch("/api/v8/network_control/" . $id);
+                $jsontestprofile = $this->fetch("/api/' . $API_version . '/network_control/" . $id);
                 $jsontestprofile = $jsontestprofile['result'];
                 if ($parametre == "denied") {
                     $jsontestprofile['override_until'] = 0;
@@ -509,47 +548,47 @@ class Free_API
                     $jsontestprofile['override'] = false;
                 }
                 $parametre = $jsontestprofile;
-                $config = "api/v8/network_control/" . $id;
+                $config = "api/' . $API_version . '/network_control/" . $id;
                 break;
             case 'player_ID_ctrl':
-                $config = 'api/v8/player' . $id . '/api/v6/control/mediactrl';
+                $config = 'api/' . $API_version . '/player' . $id . '/api/v6/control/mediactrl';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 $config_commande = 'name';
                 $fonction = "POST";
                 break;
             case 'player_ID_open':
-                $config = 'api/v8/player' . $id . '/api/v6/control/open';
+                $config = 'api/' . $API_version . '/player' . $id . '/api/v6/control/open';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 $config_commande = 'url';
                 $fonction = "POST";
                 break;
             case 'phone':
-                $config = 'api/v8/call/log/' . $_options;
+                $config = 'api/' . $API_version . '/call/log/' . $_options;
                 $fonction = "POST";
                 break;
             case 'reboot':
-                $config = 'api/v8/system/reboot';
+                $config = 'api/' . $API_version . '/system/reboot';
                 $fonction = "POST";
                 break;
             case 'universalAPI':
-                $config = 'api/v8/' . $_options_2;
+                $config = 'api/' . $API_version . '/' . $_options_2;
                 $config_commande = $_options;
                 break;
             case 'universal_put':
                 if ($_status_cmd == "DELETE" || $_status_cmd == "PUT" || $_status_cmd == "device") {
-                    $config = 'api/v8/' . $_options  . $id;
+                    $config = 'api/' . $API_version . '/' . $_options  . $id;
                     $fonction = $_status_cmd;
                 } else {
-                    $config = 'api/v8/' . $_options;
+                    $config = 'api/' . $API_version . '/' . $_options;
                     $fonction = "POST";
                 }
                 break;
             case 'VM':
-                $config = 'api/v8/vm/' . $id  . '/' . $_options_2;
+                $config = 'api/' . $API_version . '/vm/' . $id  . '/' . $_options_2;
                 $fonction = "POST";
                 break;
             case 'wifi':
-                $config = 'api/v8/wifi/' . $_options;
+                $config = 'api/' . $API_version . '/wifi/' . $_options;
                 if ($_options == 'planning') {
                     $config_commande = 'use_planning';
                 } else if ($_options == 'wps/start') {
@@ -559,17 +598,19 @@ class Free_API
                     $fonction = "POST";
                     $config_commande = 'session_id';
                 } else if ($_options == 'mac_filter') {
-                    $fonction = $id['function'];
+                    log::add('Freebox_OS', 'debug', '>───────── Fonction : ' . $_options_2['function']);
+                    $fonction = $_options_2['function'];
                     if ($fonction != 'POST') {
-                        $id = $id['mac_address'] . '-' . $id['filter'];
+                        $id = $_options_2['mac_address'] . '-' . $_options_2['filter'];
                         $parametre = null;
                     } else {
-                        $_filter = $id['filter'];
-                        $mac_adress = $id['mac_address'];
-                        $comment = $id['comment'];
+                        $_filter = $_options_2['filter'];
+                        $mac_adress = $_options_2['mac_address'];
+                        $comment = $_options_2['comment'];
                         $id = null;
                         $parametre = array("mac" => $mac_adress, "type" => $_filter, "comment" => $comment);
                     }
+                    log::add('Freebox_OS', 'debug', '>───────── Fonction 2 : ' . $fonction);
                 } else if ($_options == 'config' && $_options_2 == 'mac_filter_state') {
                     $config_commande = 'mac_filter_state';
                 } else {
@@ -583,7 +624,7 @@ class Free_API
                 break;
             case 'set_tiles':
                 //log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
-                $config = 'api/v8/home/endpoints/';
+                $config = 'api/' . $API_version . '/home/endpoints/';
                 $config_commande = 'enabled';
                 $config_log = 'Mise à jour de : ';
                 break;
@@ -640,13 +681,15 @@ class Free_API
 
     public function nb_appel_absence()
     {
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
+        $API_version = $this->API_version;
         $listNumber_missed = null;
         $listNumber_accepted = null;
         $listNumber_outgoing = null;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
         if ($result == 'auth_required') {
-            $result = $this->fetch('/api/v8/call/log/');
+            $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
         }
         if ($result === false)
             return false;
@@ -722,11 +765,13 @@ class Free_API
 
     public function mac_filter_list()
     {
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
+        $API_version = $this->API_version;
         $listmac_whitelist = null;
         $listmac_blacklist = null;
-        $result = $this->fetch('/api/v8/wifi/mac_filter/');
+        $result = $this->fetch('/api/' . $API_version . '/wifi/mac_filter/', null, null, true, true);
         if ($result == 'auth_required') {
-            $result = $this->fetch('/api/v8/wifi/mac_filter/');
+            $result = $this->fetch('/api/' . $API_version . '/wifi/mac_filter/', null, null, true, true);
         }
         if ($result === false)
             return false;
@@ -748,35 +793,8 @@ class Free_API
                 $return = array('listmac_blacklist' => '', 'listmac_whitelist' => "");
             }
             return $return;
-        } else
+        } else {
             return false;
-    }
-
-    public function airmedia($update = 'config', $parametre, $receiver)
-    {
-        switch ($update) {
-            case 'config':
-                $config = 'config/';
-                $fonction = "PUT";
-                break;
-            case 'receivers':
-                $config = 'receivers/';
-                $fonction = null;
-                break;
-            case 'action':
-                $config = 'receivers/' . $receiver . '/';
-                $fonction = "POST";
-                break;
         }
-        $result = $this->fetch('/api/v8/airmedia/' . $config, $parametre, $fonction);
-        if ($result == 'auth_required') {
-            $result = $this->fetch('/api/v8/airmedia/' . $config, $parametre, $fonction);
-        }
-        if (!isset($result) || $result === false)
-            return false;
-        if (isset($result['result']) && $result['success'])
-            return $result['result'];
-        else
-            return false;
     }
 }

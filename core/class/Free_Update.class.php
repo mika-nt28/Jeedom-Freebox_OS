@@ -27,6 +27,14 @@ class Free_Update
             //log::add('Freebox_OS', 'debug', '│ Connexion sur la freebox pour mise à jour de : ' . $logicalId_name);
         }
         $Free_API = new Free_API();
+        $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $API_version);
+        //if ($API_version === '') {
+        //$result = Free_Refresh::refresh_API($Free_API);
+        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
+        //$API_version = $result;
+        //}
+
         if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player'  || $logicalId_eq->getConfiguration('type') == 'freeplug' || $logicalId_eq->getConfiguration('type') == 'VM') {
             $update = $logicalId_eq->getconfiguration('type');
         } else {
@@ -35,10 +43,10 @@ class Free_Update
         switch ($update) {
             case 'airmedia':
                 if ($logicalId != 'refresh') {
-                    Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd);
+                    Free_Update::update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_value);
+                }
+                if ($logicalId != 'media' && $logicalId != 'password') {
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
-                } else {
-                    log::add('Freebox_OS', 'debug', '│ Pas de fonction rafraichir pour cet équipement');
                     log::add('Freebox_OS', 'debug', '└─────────');
                 }
                 break;
@@ -70,12 +78,6 @@ class Free_Update
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
-            case 'player':
-                if ($logicalId != 'refresh') {
-                    Free_Update::update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
-                }
-                Free_Refresh::RefreshInformation($logicalId_eq->getId());
-                break;
             case 'parental':
                 if ($logicalId != 'refresh') {
                     Free_Update::update_parental($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update);
@@ -92,6 +94,9 @@ class Free_Update
                 }
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 break;
+            case 'management':
+                Free_Update::update_management($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
+                break;
             case 'netshare':
                 Free_Update::update_netshare($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options);
                 Free_Refresh::RefreshInformation($logicalId_eq->getId());
@@ -101,6 +106,7 @@ class Free_Update
                 if ($logicalId != 'refresh') {
                     Free_Update::update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $update);
                 }
+                // A supprimer lors de la prochaine mise a jour
                 if ($logicalId != 'WakeonLAN') {
                     Free_Refresh::RefreshInformation($logicalId_eq->getId());
                 }
@@ -130,27 +136,56 @@ class Free_Update
                 break;
         }
     }
-    private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd)
-    {
-        $receivers = $logicalId_eq->getCmd(null, "ActualAirmedia");
-        log::add('Freebox_OS', 'debug', '│ Media type : ' . $_options['titre'] . ' -- Media : ' . $_options['message'] . ' -- Action : ' . $logicalId);
 
-        if (!is_object($receivers) || $receivers->execCmd() == "" || $_options['titre'] == null) {
-            log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, les paramètres sont incomplets' . $receivers->execCmd() . ' type :' . $_options['titre']);
-            return;
+    private static function update_airmedia($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $logicalId_value)
+    {
+        $logicalinfo = Freebox_OS::getlogicalinfo();
+        //$result = $Free_API->universal_get('universalAPI', null, null, 'airmedia/receivers', true, true, null);
+
+        foreach ($logicalId_eq->getCmd('info') as $Cmd) {
+            if (is_object($Cmd)) {
+                if ($Cmd->getLogicalId() == 'receivers_info') {
+                    if ($logicalId == 'receivers') {
+                        $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['select']);
+                        //log::add('Freebox_OS', 'debug', '│ Airmedia Player choisi : ' . $_options['select']);
+                    }
+                    $receivers_value = $Cmd->execCmd();
+                } else if ($Cmd->getLogicalId() == "media_type_info") {
+                    if ($logicalId == 'media_type') {
+                        $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['select']);
+                        //log::add('Freebox_OS', 'debug', '│ Type de média choisi : ' . $_options['select']);
+                    }
+                    $media_type_value = $Cmd->execCmd();
+                } else if ($Cmd->getLogicalId() == "media_info") {
+                    if ($logicalId == 'media') {
+                        $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
+                        //log::add('Freebox_OS', 'debug', '│ URL choisi : ' . $_options['message']);
+                    }
+                    $media_value = $Cmd->execCmd();
+                } else if ($Cmd->getLogicalId() == "password_info") {
+                    if ($logicalId == 'password') {
+                        $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
+                        //log::add('Freebox_OS', 'debug', '│ Mot de passe choisi : ' . $_options['message']);
+                    }
+                    $password_value = $Cmd->execCmd();
+                }
+            }
         }
-        $Parameter["media_type"] = $_options['titre'];
-        $Parameter["media"] = $_options['message'];
-        $Parameter["password"] = $_cmd->getConfiguration('password');
-        switch ($logicalId) {
-            case "airmediastart":
-                $Parameter["action"] = "start";
-                $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
-                break;
-            case "airmediastop":
-                $Parameter["action"] = "stop";
-                $Free_API->airmedia('action', $Parameter, $receivers->execCmd());
-                break;
+        if ($logicalId == 'start' || $logicalId == 'stop') {
+            $Parameter["media_type"] =  $media_type_value;
+            $Parameter["media"] = $media_value;
+            $Parameter["password"] = $password_value;
+            $Parameter["action"] = $logicalId;
+            log::add('Freebox_OS', 'debug', '│ Player : ' . $receivers_value . ' -- Media type : ' . $media_type_value . ' -- Media : ' . $media_value . ' -- Mot de Passe : ' . $password_value . ' -- Action : ' . $logicalId);
+            if ($media_type_value == NULL || $receivers_value == NULL) {
+                log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, les paramètres sont incomplets Player : ' . $receivers_value . '-- Media type : ' . $media_type_value . ' -- Media : ' . $media_value);
+                return;
+            }
+            if ($media_value == NULL && $logicalId == 'start') {
+                log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, Pas de média : '  . $media_value);
+                return;
+            }
+            $Free_API->universal_put($Parameter, 'universal_put', null, null, 'airmedia//receivers/' . $receivers_value  . '/', 'POST', $Parameter);
         }
     }
 
@@ -260,18 +295,271 @@ class Free_Update
                 break;
         }
     }
+    private static function update_management($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
+    {
+        $option = null;
+        switch ($logicalId) {
+            case "host":
+            case "host_mac":
+            case "host_type":
+            case "method":
+            case "add_del_ip":
+            case "primary_name":
+            case "comment":
+            case "mac_filter":
+            case "start":
+                foreach ($logicalId_eq->getCmd('info') as $Cmd) {
+                    if (is_object($Cmd)) {
+                        if ($Cmd->getLogicalId() == 'host_info') {
+                            if ($logicalId == 'host' || $logicalId == 'host_mac') {
+                                $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['select']);
+                            }
+                            $host_value = $Cmd->execCmd();
+                            // Juste Adresse Mac sans ID
+                            $host_value_mac = strlen($host_value);
+                            if ($host_value_mac > 17) {
+                                $host_value_mac_start = $host_value_mac - 17;
+                                $host_value_mac_ID = substr($host_value, $host_value_mac_start, 17);
+                                $host_value_mac_ID = strtoupper($host_value_mac_ID);
+                            } else {
+                                $host_value_mac_ID =  $host_value_mac;
+                                $host_value_mac_ID = strtoupper($host_value_mac);
+                            }
+                            //log::add('Freebox_OS', 'debug', '│ Adresse MAC uniquement : ' . $host_value_mac_ID);
+                        } else if ($Cmd->getLogicalId() == 'host_type_info') {
+                            if ($logicalId == 'host_type') {
+                                $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['select']);
+                            }
+                            $host_type_value = $Cmd->execCmd();
+                        } else if ($Cmd->getLogicalId() == 'method_info') {
+                            if ($logicalId == 'method') {
+                                $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['select']);
+                            }
+                            $method_value = $Cmd->execCmd();
+                        } else if ($Cmd->getLogicalId() == 'add_del_ip_info') {
+                            if ($logicalId == 'add_del_ip') {
+                                $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
+                            }
+                            $add_del_ip_value = $Cmd->execCmd();
+                        } else if ($Cmd->getLogicalId() == 'mac_filter_info') {
+                            if ($logicalId == 'mac_filter') {
+                                $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['select']);
+                            }
+                            $mac_filter_value = $Cmd->execCmd();
+                        } else if ($Cmd->getLogicalId() == 'primary_name_info') {
+                            if ($logicalId == 'primary_name') {
+                                $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
+                            }
+                            $primary_name_value = $Cmd->execCmd();
+                        } else if ($Cmd->getLogicalId() == 'comment_info') {
+                            if ($logicalId == 'comment') {
+                                $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
+                            }
+                            $comment_value = $Cmd->execCmd();
+                        }
+                    }
+                }
+                if ($logicalId == 'start') {
+                    $_networkinterface = 'pub';
+                    $update_TYPE = null;
+                    $update_IP = NULL;
+                    $update_WIFI = null;
+                    $update_WOL = null;
+
+                    //Option par défaut
+                    $option = array(
+                        "mac" => $host_value_mac_ID,
+                        "ip" => $add_del_ip_value,
+                        "comment" => $comment_value,
+                    );
+
+                    switch ($method_value) {
+                        case 'DEVICE':
+                            $update_TYPE = 'DEVICE';
+                            //$update_IP = 'IP';
+                            break;
+                        case 'NO_DHCP':
+                            break;
+                        case 'POST':
+                            //Ajout IP
+                            $update_IP = 'IP';
+                            $update_TYPE = 'DEVICE';
+                            // Contrôle Equipement
+                            $result = $Free_API->universal_get('universalAPI', null, null, 'dhcp/static_lease/', true, true, true);
+                            if (isset($result['result'])) {
+                                $result_network = $result['result'];
+                                foreach ($result_network as $result) {
+                                    if ($result['id'] == $host_value_mac_ID) {
+                                        log::add('Freebox_OS', 'debug', '│ Equipement avec déjà un paramètrage IP : ' . $result['mac']);
+                                        if ($method_value == 'POST' && $method_value != 'DELETE') {
+                                            $method_value = 'PUT';
+                                        }
+                                        break;
+                                    }
+                                }
+                            }
+                            break;
+                        case 'DELETE':
+                            $update_IP = 'IP';
+                            break;
+                        case 'PUT':
+                            $update_TYPE = 'DEVICE';
+                            $update_IP = 'IP';
+                            break;
+                        case 'ADD_blacklist':
+                            $update_WIFI = 'WIFI';
+                            $mac_filter_value = 'blacklist';
+                            $option = array(
+                                "mac" => $host_value_mac_ID,
+                                "type" => $mac_filter_value,
+                                "comment" => $comment_value,
+                            );
+                            $host_value_mac_ID = null;
+                            $method_value = 'POST';
+                            break;
+                        case 'ADD_whitelist':
+                            $update_WIFI = 'WIFI';
+                            $mac_filter_value = 'whitelist';
+                            $option = array(
+                                "mac" => $host_value_mac_ID,
+                                "type" => 'whitelist',
+                                "comment" => $comment_value,
+                            );
+                            $host_value_mac_ID = null;
+                            $method_value = 'POST';
+                            break;
+                        case 'DEL_blacklist':
+                            $update_WIFI = 'WIFI';
+                            $method_value = 'DELETE';
+                            $mac_filter_value = 'blacklist';
+                            $option = array(
+                                "mac" => $host_value_mac_ID,
+                                "type" => $mac_filter_value,
+                                "comment" => $comment_value,
+                            );
+                            $host_value_mac_ID = $host_value_mac_ID . '-' . $mac_filter_value;
+                            break;
+                        case 'DEL_whitelist':
+                            $update_WIFI = 'WIFI';
+                            $mac_filter_value = 'whitelist';
+                            $method_value = 'DELETE';
+                            $option = array(
+                                "mac" => $host_value_mac_ID,
+                                "type" => $mac_filter_value,
+                                "comment" => $comment_value,
+                            );
+                            $host_value_mac_ID = $host_value_mac_ID . '-' . $mac_filter_value;
+                            break;
+                        case 'PUT_blacklist':
+                            $update_WIFI = 'WIFI';
+                            $mac_filter_value = 'blacklist';
+                            $method_value = 'PUT';
+                            $option = array(
+                                "mac" => $host_value_mac_ID,
+                                "type" => $mac_filter_value,
+                                "comment" => $comment_value,
+                            );
+                            $host_value_mac_ID = $host_value_mac_ID . '-' . $mac_filter_value;
+                            break;
+                        case 'PUT_whitelist':
+                            $update_WIFI = 'WIFI';
+                            $mac_filter_value = 'whitelist';
+                            $method_value = 'PUT';
+                            $option = array(
+                                "mac" => $host_value_mac_ID,
+                                "type" => $mac_filter_value,
+                                "comment" => $comment_value,
+                            );
+                            $host_value_mac_ID = $host_value_mac_ID . '-' . $mac_filter_value;
+                            break;
+                        case 'POST_WOL':
+                            $update_WOL = 'POST_WOL';
+                            $method_value = 'POST';
+                        default;
+                            break;
+                    }
+                    if ($update_WIFI == 'WIFI') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($host_value == null || $add_del_ip_value == null || $mac_filter_value == null) {
+                            log::add('Freebox_OS', 'error', 'Gestion réseau : IP  ou adresse mac vide');
+                            break;
+                        }
+                    } else if ($update_TYPE == 'DEVICE') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Type : ' . $host_type_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($primary_name_value == null || $host_value == null || $host_type_value == null) {
+                            log::add('Freebox_OS', 'error', 'Gestion réseau : Les données sont incomplètes => Impossible de continuer');
+                            break;
+                        }
+                    } else if ($update_IP == 'IP') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- IP : ' . $add_del_ip_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($host_value == '0' || $host_value == null || $add_del_ip_value == null) {
+                            log::add('Freebox_OS', 'error', 'Gestion réseau : IP  ou adresse mac vide => Impossible de continuer');
+                            break;
+                        }
+                    } else if ($update_WOL == 'POST_WOL') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($host_value == '0' || $host_value == null) {
+                            log::add('Freebox_OS', 'error', 'Gestion réseau : Adresse mac vide => Impossible de continuer');
+                            break;
+                        }
+                    }
+
+                    // Action IP
+                    if ($update_IP == 'IP') {
+                        $option = array(
+                            "mac" => $host_value_mac_ID,
+                            "ip" => $add_del_ip_value,
+                            "comment" => $comment_value,
+                        );
+                        if ($method_value == 'POST') {
+                            $host_value_mac_ID = null;
+                        }
+                        $Free_API->universal_put(null, 'universal_put', null, null, 'dhcp/static_lease/' . $host_value_mac_ID, $method_value, $option);
+                    }
+
+                    // Action Type de périphérique
+                    if ($update_TYPE == 'DEVICE') {
+                        $option = array(
+                            "id" => $host_value,
+                            "primary_name" => $primary_name_value,
+                            'host_type'  => $host_type_value
+                        );
+                        if ($method_value == 'DEVICE') {
+                            $host_value_mac_ID = null;
+                        }
+                        $Free_API->universal_put(null, 'universal_put', $host_value, null, 'lan/browser/pub/', 'PUT', $option);
+                    }
+
+                    // Action Filtrage WIFI
+                    if ($update_WIFI == 'WIFI') {
+                        $Free_API->universal_put(null, 'universal_put', null, null, 'wifi/mac_filter/' . $host_value_mac_ID, $method_value, $option);
+                    }
+
+                    // Action Wake on LAN
+                    if ($update_WOL == 'POST_WOL') {
+                        $option = array(
+                            "mac"  => $host_value_mac_ID,
+                            "password" => $comment_value
+                        );
+                        $Free_API->universal_put(null, 'universal_put', null, null, 'lan/wol/pub/', null, $option);
+                    }
+                }
+        }
+    }
     private static function update_network($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $network)
     {
+        $option = null;
         switch ($logicalId) {
             case "search":
                 Free_CreateEq::createEq($network, true);
                 break;
             case "WakeonLAN":
+                // Commande a supprimer
+                log::add('Freebox_OS', 'ERROR', '│ METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION');
                 if ($_options['mac_address'] == null) {
                     log::add('Freebox_OS', 'error', 'Adresse mac vide');
                     break;
                 }
-                $option = null;
                 $option = array(
                     "mac" => $_options['mac_address'],
                     "password" => $_options['password']
@@ -279,11 +567,12 @@ class Free_Update
                 $Free_API->universal_put(null, 'universal_put', $_options['mac_address'], null, 'lan/wol/pub/', null, $option);
                 break;
             case "add_del_mac":
+                // Commande a supprimer
+                log::add('Freebox_OS', 'ERROR', '│ METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION');
                 if ($_options['ip'] == null || $_options['mac_address'] == null) {
                     log::add('Freebox_OS', 'error', 'IP  ou adresse mac vide');
                     break;
                 }
-                $option = null;
                 $option = array(
                     "mac" => $_options['mac_address'],
                     "ip" => $_options['ip'],
@@ -297,14 +586,13 @@ class Free_Update
                     "primary_name" => $_options['name'],
                     'host_type'  => $_options['type']
                 );
-                $Free_API->universal_put(null, 'universal_put', 'ether-' . $_options['mac_address'], null, 'lan/browser/pub', 'PUT', $option);
+                $Free_API->universal_put(null, 'universal_put', 'ether-' . $_options['mac_address'], null, 'lan/browser/pub/', 'PUT', $option);
                 break;
             case "redir":
                 if ($_options['lan_ip'] == null) {
                     log::add('Freebox_OS', 'error', 'Adresse IP vide');
                     break;
                 }
-                $option = null;
                 $option = array(
                     'enabled' =>  $_options['enable_lan'],
                     'comment' =>  $_options['comment'],
@@ -331,7 +619,31 @@ class Free_Update
     }
     private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
-        $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
+        if ($logicalId != 'channel') {
+            $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
+        } else {
+            $ID_Player = $logicalId_eq->getlogicalId();
+            $ID_Player = str_replace('player_', '', $ID_Player);
+            log::add('Freebox_OS', 'debug', '│ Player ' . $logicalId_eq->getlogicalId() . ' -  avec ID : ' . $ID_Player);
+
+
+            if ($logicalId == 'channel') {
+                foreach ($logicalId_eq->getCmd('info') as $Cmd) {
+                    if (is_object($Cmd)) {
+                        if ($logicalId == 'channel') {
+                            $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
+                            $channel_value = $Cmd->execCmd();
+                            $channel_value = 'tv:?channel=' . $channel_value;
+                            //Option par défaut
+                            $option = array(
+                                "url" =>  $channel_value,
+                            );
+                            $Free_API->universal_put(null, 'universal_put', null, null, 'player/' . $ID_Player . '/api/v6/control/open', null, $option);
+                        }
+                    }
+                }
+            }
+        }
     }
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
@@ -373,30 +685,32 @@ class Free_Update
                     $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state');
                     break;
                 case 'add_del_mac';
+                    // Commande a supprimer
+                    log::add('Freebox_OS', 'ERROR', '│ METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION');
                     if ($_options['function'] == null || $_options['filter'] == null || $_options['mac_address'] == null) {
                         log::add('Freebox_OS', 'error', 'Méthode Filtrage  ou type de Filtrage incorrect ');
                         break;
                     }
-                    $Free_API->universal_put(null, 'wifi', $_options, null, 'mac_filter');
+                    $Free_API->universal_put(null, 'wifi', $_options['mac_address'], null, 'mac_filter', null, $_options);
                 case 'wifiOn':
-                    $Free_API->universal_put(1, 'wifi', null, null, 'config');
+                    $Free_API->universal_put(1, 'wifi', null, null, 'config', null, null);
                     break;
                 case 'wifiOff':
-                    $Free_API->universal_put(0, 'wifi', null, null, 'config');
+                    $Free_API->universal_put(0, 'wifi', null, null, 'config', null, null);
                     break;
                 case 'wifiPlanningOn':
-                    $Free_API->universal_put(1, 'wifi', null, null, 'planning');
+                    $Free_API->universal_put(1, 'wifi', null, null, 'planning', null, null);
                     break;
                 case 'wifiPlanningOff':
-                    $Free_API->universal_put(0, 'wifi', null, null, 'planning');
+                    $Free_API->universal_put(0, 'wifi', null, null, 'planning', null, null);
                     break;
                 case 'wifiSessionWPSOff':
                 case 'wifiWPSOff':
                     $parametre = 1;
-                    $Free_API->universal_put($parametre, 'wifi', null, null, 'wps/stop');
+                    $Free_API->universal_put($parametre, 'wifi', null, null, 'wps/stop', null, null);
                     break;
                 default:
-                    $Free_API->universal_put($logicalId, 'wifi', null, null, 'wps/start');
+                    $Free_API->universal_put($logicalId, 'wifi', null, null, 'wps/start', null, null);
                     break;
             }
         }
@@ -452,6 +766,7 @@ class Free_Update
                     log::add('Freebox_OS', 'debug', '>──────────> RGB EN HEX : ' . $replace['#color#']);
                     $parametre['value'] = $replace['#color#'];
                     $parametre['value_type'] = 'int';
+                    
                     $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
                     if ($cmd !== false) {
                         if ($cmd->execCmd() == 0) {

@@ -1463,8 +1463,8 @@ class Free_Refresh
                         break;
                     default:
                         $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap/' . $Command->getLogicalId(), true, true);
-                        log::add('Freebox_OS', 'debug', '>───────── Status Carte ' . $result_ap['result']['name'] . ' / ' . $Command->getLogicalId() . ' : ' . $result_ap['result']['status']['state']);
-                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result_ap['result']['status']['state']);
+                        log::add('Freebox_OS', 'debug', '>───────── Status Carte ' . $result_ap['name'] . ' / ' . $Command->getLogicalId() . ' : ' . $result_ap['status']['state']);
+                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result_ap['status']['state']);
                         break;
                 }
             }

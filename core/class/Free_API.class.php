@@ -527,8 +527,8 @@ class Free_API
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
                 $config_commande = 'parental';
-
-                $jsontestprofile = $this->fetch("/api/' . $API_version . '/network_control/" . $id);
+                $config = "/api/" . $API_version . "/network_control/" . $id;
+                $jsontestprofile = $this->fetch($config);
                 $jsontestprofile = $jsontestprofile['result'];
                 if ($parametre == "denied") {
                     $jsontestprofile['override_until'] = 0;
@@ -548,7 +548,7 @@ class Free_API
                     $jsontestprofile['override'] = false;
                 }
                 $parametre = $jsontestprofile;
-                $config = "api/' . $API_version . '/network_control/" . $id;
+                $config = "api/" . $API_version . "/network_control/" . $id;
                 break;
             case 'player_ID_ctrl':
                 $config = 'api/' . $API_version . '/player' . $id . '/api/v6/control/mediactrl';

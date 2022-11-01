@@ -269,10 +269,11 @@ class Free_API
     {
         //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
         $API_version = $this->API_version;
-        $PortForwarding = $this->fetch('/api/' . $API_version . '/fw/redir/', null, $fonction, true, true);
+        $PortForwardingUrl = '/' . 'api/' . $API_version . '/fw/redir/';
+        $PortForwarding = $this->fetch($PortForwardingUrl, null, "GET", true, true);
         $id = str_replace("ether-", "", $id);
         $id = strtoupper($id);
-        log::add('Freebox_OS', 'debug', '│──────────> Lecture des Ports l\'adresse Mac : '  . $Mac . ' - FONCTION ' . $fonction);
+        log::add('Freebox_OS', 'debug', '│──────────> Lecture des Ports l\'adresse Mac : '  . $Mac . ' - FONCTION ' . $fonction . ' - action ' . $active);
         if ($PortForwarding === false) {
             log::add('Freebox_OS', 'debug', '│──────────> Aucune donnée');
             return false;
@@ -299,13 +300,13 @@ class Free_API
             return $result;
         } elseif ($fonction == "PUT") {
             if ($active == 1) {
-                $this->fetch('/api/' . $API_version . '/fw/redir/' . $id, array("enabled" => true), $fonction);
+                $this->fetch($PortForwardingUrl . $id, array("enabled" => true), $fonction, true, true);
                 return true;
             } elseif ($active == 0) {
-                $this->fetch('/api/' . $API_version . '/fw/redir/' . $id, array("enabled" => false), $fonction);
+                $this->fetch($PortForwardingUrl . $id, array("enabled" => false), $fonction, true, true);
                 return true;
             } elseif ($active == 3) {
-                $this->fetch('/api/' . $API_version . '/fw/redir/' . $id, null, "DELETE");
+                $this->fetch($PortForwardingUrl . $id, null, "DELETE", true, true);
                 return true;
             }
         }

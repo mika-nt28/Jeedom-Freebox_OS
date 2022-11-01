@@ -19,7 +19,8 @@ try {
 			ajax::success($Free_API->ask_track_authorization());
 			break;
 		case 'UpdatePortForwarding':
-			ajax::success($Free_API->PortForwarding(init('id'), "PUT", init('enabled')));
+			$Mac = cmd::byId(init('id2'))->getConfiguration('mac_address', '00:00:00:00:00:00');
+			ajax::success($Free_API->PortForwarding(init('id'), "PUT", init('enabled'), $Mac));
 			break;
 		case 'PortForwarding':
 			$id_logical = cmd::byId(init('id'))->getLogicalId();

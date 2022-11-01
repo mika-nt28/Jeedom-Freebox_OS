@@ -154,7 +154,7 @@ if (!isConnect('admin')) {
             .append($('<input class="redirPort" data-l1key="comment" disabled/>')));
         tr.append($('<td style="width:250px;">')
             .append($('<a class="btn btn-sm btn-success redirPort fas fa-check-circle" data-action="UpdatePortForwarding">')
-                .text('{{ Mise à jour}}')));
+                .text('{{Mise à jour}}')));
         $('#table_cmd tbody').append(tr);
         $('#table_cmd tbody tr:last').setValues(_cmd, '.redirPort');
     }
@@ -203,6 +203,7 @@ if (!isConnect('admin')) {
                 action: 'UpdatePortForwarding',
                 id: $(this).closest('.redir').find('.redirPort[data-l1key=id]').val(),
                 enabled: $(this).closest('.redir').find('.redirPort[data-l1key=enabled]').val(),
+                id2: SelectEquipement,
             },
             dataType: 'json',
             global: false,

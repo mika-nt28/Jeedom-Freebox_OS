@@ -1306,6 +1306,7 @@ class Free_Refresh
     private static function refresh_player($EqLogics, $Free_API)
     {
         if ($EqLogics->getConfiguration('player') == 'OK') {
+            $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
             $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $EqLogics->getConfiguration('action') . '/api/v6/status', false, false, false);
         }
 

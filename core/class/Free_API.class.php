@@ -26,9 +26,9 @@ class Free_API
         $Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
         if (empty($Config_KEY)) {
             log::add('Freebox_OS', 'debug', '│──────────> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
-            $this->API_version = 'v8';
+            $this->API_version = 'v9';
         } elseif ($this->API_version === 'TEST_V8') {
-            $this->API_version = 'v8';
+            $this->API_version = 'v9';
             log::add('Freebox_OS', 'debug', '│──────────> Test Version API Non faite avec la Freebox : ' . $this->API_version);
         } else {
             $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
@@ -38,7 +38,7 @@ class Free_API
     public function track_id() //Doit correspondre a la donction "auth" de freboxsession.js homebridge freebox
     {
         try {
-            $http = new com_http($this->serveur . '/api/v8/login/authorize/');
+            $http = new com_http($this->serveur . '/api/v9/login/authorize/');
             $http->setPost(
                 json_encode(
                     array(
@@ -62,7 +62,7 @@ class Free_API
     public function ask_track_authorization()
     {
         try {
-            $http = new com_http($this->serveur . '/api/v8/login/authorize/' . $this->track_id);
+            $http = new com_http($this->serveur . '/api/v9/login/authorize/' . $this->track_id);
             $result = $http->exec(30, 2);
             if (is_json($result)) {
                 return json_decode($result, true);
@@ -76,7 +76,7 @@ class Free_API
     public function getFreeboxPassword()
     {
         try {
-            $http = new com_http($this->serveur . '/api/v8/login/');
+            $http = new com_http($this->serveur . '/api/v9/login/');
             $json = $http->exec(30, 2);
             log::add('Freebox_OS', 'debug', '[Freebox Password] : ' . $json);
             $json_connect = json_decode($json, true);
@@ -100,7 +100,7 @@ class Free_API
                 $challenge = cache::byKey('Freebox_OS::Challenge');
             }
 
-            $http = new com_http($this->serveur . '/api/v8/login/session/');
+            $http = new com_http($this->serveur . '/api/v9/login/session/');
             $http->setPost(json_encode(array(
                 'app_id' => $this->app_id,
                 'app_version' => $this->app_version, // Ajout suivant fonction session Free homebridge
@@ -139,7 +139,7 @@ class Free_API
                 $challenge = cache::byKey('Freebox_OS::Challenge');
             }
 
-            $http = new com_http($this->serveur . '/api/v8/login/session/');
+            $http = new com_http($this->serveur . '/api/v9/login/session/');
             $http->setPost(json_encode(array(
                 'app_id' => $this->app_id,
                 'password' => hash_hmac('sha1', $challenge->getValue(''), $this->app_token)
@@ -160,9 +160,9 @@ class Free_API
             while ($session_token->getValue('') == '') {
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
-
+            $requetURL = '[Freebox Request Connexion] : ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')';
             if ($log_request  != false) {
-                log::add('Freebox_OS', 'debug', '│ [Freebox Request Connexion] : ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')');
+                log::add('Freebox_OS', 'debug', '│ ' . $requetURL);
             };
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $this->serveur . $api_url);
@@ -187,8 +187,10 @@ class Free_API
                 $errorno = curl_errno($ch);
             }
             curl_close($ch);
+
             if ($log_result  != false) {
-                log::add('Freebox_OS', 'debug', '│ [Freebox Request Result] : ' . $content);
+
+                log::add('Freebox_OS', 'debug', '│ ' . '[Freebox Request Result] : ' . $content);
             }
             if ($errorno !== 0) {
                 return '│ Erreur de connexion cURL vers ' . $this->serveur . $api_url . ': ' . $error;
@@ -216,7 +218,7 @@ class Free_API
                         log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
                         return false;
                     } else if ($result['error_code'] == 'invalid_api_version') {
-                        log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg']);
+                        log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg'] . ' - ' . $requetURL);
                         $result = $result['error_code'];
                         return $result;
                     } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
@@ -248,7 +250,7 @@ class Free_API
                 return;
             }
 
-            $http = new com_http($this->serveur . '/api/v8/login/logout/');
+            $http = new com_http($this->serveur . '/api/v9/login/logout/');
             $http->setPost(array());
             $json = $http->exec(2, 2);
             log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $json);
@@ -410,7 +412,6 @@ class Free_API
         if ($result == 'auth_required') {
             $result = $this->fetch('/' . $config, $Parameter, $fonction);
         }
-        //log::add('Freebox_OS', 'debug', '>───────── API NON COMPATIBLE avec la version suivante 2a : ' . $API_version);
         if ($result === 'invalid_api_version') {
             //log::add('Freebox_OS', 'info', '>─────────── API NON COMPATIBLE avec la version suivante : ' . $API_version . ' -- ' . $result);
             $result = 'invalid_api_version';
@@ -484,18 +485,20 @@ class Free_API
     {
         //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
         $API_version = $this->API_version;
-        $result = $this->fetch('/api/' . $API_version . '/downloads/');
+        $DownloadUrl = '/api/' . $API_version . '/downloads/';
+        $result = $this->fetch($DownloadUrl);
+
         if ($result == 'auth_required') {
-            $result = $this->fetch('/api/v8/downloads/');
+            $result = $this->fetch($DownloadUrl);
         }
         if ($result === false)
             return false;
         $nbDL = count($result['result']);
         for ($i = 0; $i < $nbDL; ++$i) {
             if ($Etat == 0)
-                $downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "stopped"), "PUT");
+                $downloads = $this->fetch($DownloadUrl  . $result['result'][$i]['id'], array("status" => "stopped"), "PUT");
             if ($Etat == 1)
-                $downloads = $this->fetch('/api/v8/downloads/' . $result['result'][$i]['id'], array("status" => "downloading"), "PUT");
+                $downloads = $this->fetch($DownloadUrl . $result['result'][$i]['id'], array("status" => "downloading"), "PUT");
         }
         if ($downloads === false)
             return false;

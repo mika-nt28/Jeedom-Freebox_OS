@@ -5,14 +5,14 @@
 
 # Jeedom - Plugin Freebox OS
 
-Ce Plugin permet de récupérer les informations disponibles sur les box Freebox Révolution/Delta/Pop.
-Pour les Freebox Delta, il permet aussi de récupèrer les équipements connectés (Domotique)
+Ce plugin permet de récupérer les informations disponibles sur les box Freebox Révolution/Delta/Pop.
+Pour les Freebox Delta, il permet aussi de récupérer les équipements connectés (Domotique).
 
 ## Utilisation :
 
-Il est possible de commander le wifi, le planning du wifi, le contrôle parental.
+Il est possible de commander le Wi-Fi, le planning du Wi-Fi et le contrôle parental.
 
-Pour la freebox delta plusieurs possibilités sont disponible, Il est entre autre possible de commander le pack sécurité ainsi que les différents équipements compatibles avec celle-ci.
+Pour la Freebox Delta plusieurs possibilités sont disponibles. Il est entre autre possible de commander le pack sécurité ainsi que les différents équipements compatibles avec celui-ci.
 
 ## Documentations :
 
@@ -24,4 +24,4 @@ _[Fil d'actualité du Plugin](https://community.jeedom.com/t/info-plugin-freebox
 
 ## Demande d'améliorations ou d'aide:
 
-Toute demande d'amélioration doit passer par le site _[Communauty](https://community.jeedom.com/)_
+Toute demande d'amélioration doit passer par le site _[Community](https://community.jeedom.com/)_

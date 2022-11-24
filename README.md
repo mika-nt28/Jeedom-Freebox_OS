@@ -12,7 +12,6 @@ Pour les Freebox Delta, il permet aussi de récupérer les équipements connect�
 
 Il est possible de commander le Wi-Fi, le planning du Wi-Fi et le contrôle parental.
 
-
 Pour la Freebox Delta plusieurs possibilités sont disponibles. Il est entre autre possible de commander le pack sécurité ainsi que les différents équipements compatibles avec celui-ci.
 
 ## Documentations :

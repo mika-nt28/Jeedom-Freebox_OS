@@ -619,6 +619,7 @@ class Free_Update
     }
     private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
+        $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         if ($logicalId != 'channel') {
             $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
         } else {
@@ -638,7 +639,8 @@ class Free_Update
                             $option = array(
                                 "url" =>  $channel_value,
                             );
-                            $Free_API->universal_put(null, 'universal_put', null, null, 'player/' . $ID_Player . '/api/v6/control/open', null, $option);
+                            $playerURL = '/api/' . $API_version . '/control/open';
+                            $Free_API->universal_put(null, 'universal_put', null, null, 'player/' . $ID_Player .  $playerURL, null, $option);
                         }
                     }
                 }

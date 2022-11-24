@@ -10,7 +10,8 @@ Pour les Freebox Delta, il permet aussi de récupérer les équipements connect�
 
 ## Utilisation :
 
-Il est possible de commander le Wi-Fi, le planning du Wi-Fi, le contrôle parental.
+Il est possible de commander le Wi-Fi, le planning du Wi-Fi et le contrôle parental.
+
 
 Pour la Freebox Delta plusieurs possibilités sont disponibles. Il est entre autre possible de commander le pack sécurité ainsi que les différents équipements compatibles avec celui-ci.
 
@@ -24,4 +25,4 @@ _[Fil d'actualité du Plugin](https://community.jeedom.com/t/info-plugin-freebox
 
 ## Demande d'améliorations ou d'aide:
 
-Toute demande d'amélioration doit passer par le site _[Communauty](https://community.jeedom.com/)_
+Toute demande d'amélioration doit passer par le site _[Community](https://community.jeedom.com/)_

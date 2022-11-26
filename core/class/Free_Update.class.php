@@ -28,12 +28,6 @@ class Free_Update
         }
         $Free_API = new Free_API();
         $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $API_version);
-        //if ($API_version === '') {
-        //$result = Free_Refresh::refresh_API($Free_API);
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result);
-        //$API_version = $result;
-        //}
 
         if ($logicalId_eq->getconfiguration('type') == 'parental' || $logicalId_eq->getConfiguration('type') == 'player'  || $logicalId_eq->getConfiguration('type') == 'freeplug' || $logicalId_eq->getConfiguration('type') == 'VM') {
             $update = $logicalId_eq->getconfiguration('type');

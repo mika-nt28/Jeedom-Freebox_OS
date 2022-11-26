@@ -98,12 +98,12 @@ if (!isConnect('admin')) {
                                 <input id="input_freeboxIP" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_IP" />
                             </div>
                         </div>
-                        <div class="form-group debugFreeOS debugHide">
+                        <!--<div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Version de l'application Freebox serveur :}}</label>
                             <div class="col-md-4">
                                 <input id="input_freeAppVersion" type="text" class="configKey form-control" data-l1key="FREEBOX_SERVER_APP_VERSION" />
                             </div>
-                        </div>
+                        </div>-->
                         <div class="form-group debugFreeOS debugHide">
                             <label class="col-md-5 control-label">{{Nom de l'application Freebox serveur :}}</label>
                             <div class="col-md-4">

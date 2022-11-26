@@ -27,9 +27,6 @@ class Free_API
         if (empty($Config_KEY)) {
             log::add('Freebox_OS', 'debug', '│──────────> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
             $this->API_version = 'v9';
-        } elseif ($this->API_version === 'TEST_V8') {
-            $this->API_version = 'v9';
-            log::add('Freebox_OS', 'debug', '│──────────> Test Version API Non faite avec la Freebox : ' . $this->API_version);
         } else {
             $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         }

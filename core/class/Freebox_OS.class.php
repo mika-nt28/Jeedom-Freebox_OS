@@ -279,6 +279,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_SERVER_APP_NAME', "Plugin Freebox OS", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_ID', "plugin.freebox.jeedom", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
+		config::save('FREEBOX_API', "v9", 'Freebox_OS');
 	}
 
 	public static function EqLogic_ID($Name, $_logicalId)

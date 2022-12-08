@@ -224,7 +224,7 @@ class Free_Refresh
                         case "state":
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
                             break;
-                        case "rx_max_rate_lte": // toute la partie 4G
+                        case "rx_max_rate_xdsl": // toute la partie 4G
                             Free_Refresh::refresh_connexion_4G($EqLogics, $Free_API);
                             break;
                         case "ping": // toute la partie CONFIG
@@ -232,9 +232,6 @@ class Free_Refresh
                             break;
                         case "sfp_present": // toute la partie Fibre
                             Free_Refresh::refresh_connexion_FTTH($EqLogics, $Free_API);
-                            break;
-                        case "modulation": // toute la partie XDSL
-                            Free_Refresh::refresh_connexion_xdsl($EqLogics, $Free_API);
                             break;
                     }
                 }
@@ -244,37 +241,37 @@ class Free_Refresh
 
     private static function refresh_connexion_4G($EqLogics, $Free_API)
     {
-        $result = $Free_API->universal_get('connexion', null, 1, 'lte/config', true, true, null);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'connection/aggregation', true, true, true);
         if ($result != false && $result != 'Aucun module 4G détecté') {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "rx_max_rate_lte":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_max_rate']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tunnel']['lte']['rx_max_rate']);
                             break;
                         case "rx_used_rate_lte":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['rx_used_rate']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tunnel']['lte']['rx_used_rate']);
                             break;
                         case "rx_max_rate_xdsl":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_max_rate']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tunnel']['xdsl']['rx_max_rate']);
                             break;
                         case "rx_used_rate_xdsl":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['rx_used_rate']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tunnel']['xdsl']['rx_used_rate']);
                             break;
                         case "state":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['state']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['enabled']);
                             break;
                         case "tx_max_rate_lte":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_max_rate']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tunnel']['lte']['tx_max_rate']);
                             break;
                         case "tx_used_rate_lte":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['lte']['tx_used_rate']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tunnel']['lte']['tx_used_rate']);
                             break;
                         case "tx_max_rate_xdsl":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_max_rate']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tunnel']['xdsl']['tx_max_rate']);
                             break;
                         case "tx_used_rate_xdsl":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['tunnel']['xdsl']['tx_used_rate']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['tunnel']['xdsl']['tx_used_rate']);
                             break;
                     }
                 }
@@ -340,25 +337,6 @@ class Free_Refresh
                             } else {
                                 Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
                             }
-                            break;
-                    }
-                }
-            }
-        }
-    }
-
-    private static function refresh_connexion_xdsl($EqLogics, $Free_API)
-    {
-        $result =  $Free_API->universal_get('connexion', null, null, 'xdsl', true, true, null);
-        if ($result != false) {
-            foreach ($EqLogics->getCmd('info') as $Command) {
-                if (is_object($Command)) {
-                    switch ($Command->getLogicalId()) {
-                        case "modulation":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['status']['modulation']);
-                            break;
-                        case "protocol":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['status']['protocol']);
                             break;
                     }
                 }
@@ -873,14 +851,22 @@ class Free_Refresh
     }
     private static function refresh_system_4G($EqLogics, $Free_API)
     {
-        $result = $Free_API->universal_get('connexion', null, null, 'lte/config', true, true, null);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'connection/lte/aggregation', true, true, true);
         if ($result != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "4GStatut":
-                            log::add('Freebox_OS', 'debug', '│──────────> Etat 4G : ' . $result['enabled']);
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['enabled']);
+                            log::add('Freebox_OS', 'debug', '│──────────> Etat de la carte 4G : ' . $result['result']['enabled']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['enabled']);
+                            break;
+                        case "associated_lte":
+                            log::add('Freebox_OS', 'debug', '│──────────> Etat Radio 4G : ' . $result['result']['radio']['associated']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['radio']['associated']);
+                            break;
+                        case "state_lte":
+                            log::add('Freebox_OS', 'debug', '│──────────> Etat du réseau 4G : ' . $result['result']['state']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['state']);
                             break;
                     }
                 }

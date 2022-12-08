@@ -325,9 +325,6 @@ class Free_API
             $id = '/all';
         }
         switch ($update) {
-            case 'airmedia':
-                $config = 'api/' . $API_version . '/airmedia/receivers/';
-                break;
             case 'api_version':
                 $config = 'api_version';
                 break;
@@ -337,10 +334,6 @@ class Free_API
                 break;
             case 'download':
                 $config = 'api/' . $API_version . '/downloads/' . $update_type;
-                break;
-            case 'notification':
-                $config = 'api/' . $API_version . '/notif/targets';
-                $config_log = 'Liste des notifications';
                 break;
             case 'notification_ID':
                 $config = 'api/' . $API_version . '/notif/targets' . $id;

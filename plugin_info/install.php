@@ -104,6 +104,10 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'airmediastart'); // Amélioration 20220806
 			removeLogicId($eqLogic, 'airmediastop'); // Amélioration 20220806
 
+			// 4G => Nouvelle API
+			removeLogicId($eqLogic, 'protocol'); // Amélioration 20221208
+			removeLogicId($eqLogic, 'modulation'); // Amélioration 20221208
+
 			// a faire plus tard
 			//removeLogicId($eqLogic, 'add_del_mac'); // Amélioration 20220827
 			//removeLogicId($eqLogic, 'WakeonLAN'); // Amélioration 20220827

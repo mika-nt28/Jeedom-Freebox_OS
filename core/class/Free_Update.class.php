@@ -643,16 +643,14 @@ class Free_Update
     }
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
-        $result = $Free_API->nb_appel_absence();
-        if ($result != false) {
-            switch ($logicalId) {
-                case "phone_dell_call":
-                    $Free_API->universal_put(null, 'phone', null, null, 'delete_all');
-                    break;
-                case "phone_read_call":
-                    $Free_API->universal_put(null, 'phone', null, null, 'mark_all_as_read');
-                    break;
-            }
+
+        switch ($logicalId) {
+            case "phone_dell_call":
+                $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/delete_all', 'POST', null);
+                break;
+            case "phone_read_call":
+                $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/mark_all_as_read', 'POST', null);
+                break;
         }
     }
     private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
@@ -662,10 +660,10 @@ class Free_Update
                 $Free_API->universal_put(null, 'reboot', null, null, null);
                 break;
             case '4GOn':
-                $Free_API->universal_put(1, '4G', null, null, null);
+                $Free_API->universal_put(1, 'universalAPI', null, null, 'enabled', null, 'connection/aggregation');
                 break;
             case '4GOff':
-                $Free_API->universal_put(0, '4G', null, null, null);
+                $Free_API->universal_put(0, 'universalAPI', null, null, 'enabled', null, 'connection/aggregation');
                 break;
         }
     }

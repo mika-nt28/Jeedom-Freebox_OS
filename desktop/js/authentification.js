@@ -30,7 +30,8 @@ $('.bt_eqlogic_control_parental').on('click', function () {
 $('.bt_Freebox_OS_Save').on('click', function () {
     logs('info', "================= Sauvegarde des Paramètres");
     ip = $('#input_freeboxIP').val();
-    VersionAPP = $('#input_freeAppVersion').val();
+    //VersionAPP = $('#input_freeAppVersion').val();
+    VersionAPP = null;
     Categorie = $('#sel_object_default').val();
     SetSetting(ip, VersionAPP, Categorie);
 });
@@ -366,8 +367,8 @@ function GetSetting() {
         success: function (data) {
             $('#input_freeboxIP').val(data.result.ip);
             logs('info', "IP : " + data.result.ip);
-            $('#input_freeAppVersion').val(data.result.VersionAPP);
-            logs('info', "Version API : " + data.result.VersionAPP);
+            //$('#input_freeAppVersion').val(data.result.VersionAPP);
+            //logs('info', "Version API : " + data.result.VersionAPP);
             $('#input_freeNameAPP').val(data.result.NameAPP);
             logs('info', "Nom API : " + data.result.NameAPP);
             $('#input_IdApp').val(data.result.IdApp);
@@ -469,7 +470,7 @@ function SetSetting(ip, VersionAPP, Categorie) {
         data: {
             action: "SetSetting",
             ip: ip,
-            VersionAPP: VersionAPP,
+            //VersionAPP: VersionAPP,
             Categorie: Categorie,
         },
         dataType: 'json',

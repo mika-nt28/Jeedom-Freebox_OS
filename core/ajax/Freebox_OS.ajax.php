@@ -93,7 +93,7 @@ try {
 		case 'GetSetting':
 			$result = array(
 				"ip" => config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'),
-				"VersionAPP" => config::byKey('FREEBOX_SERVER_APP_VERSION', 'Freebox_OS'),
+				//"VersionAPP" => config::byKey('FREEBOX_SERVER_APP_VERSION', 'Freebox_OS'),
 				"NameAPP" => config::byKey('FREEBOX_SERVER_APP_NAME', 'Freebox_OS'),
 				"IdApp" => config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS'),
 				"DeviceName" => config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'),
@@ -122,7 +122,7 @@ try {
 			break;
 		case 'SetSetting':
 			config::save('FREEBOX_SERVER_IP', init('ip'), 'Freebox_OS');
-			config::save('FREEBOX_SERVER_APP_VERSION', init('VersionAPP'), 'Freebox_OS');
+			//config::save('FREEBOX_SERVER_APP_VERSION', init('VersionAPP'), 'Freebox_OS');
 			config::save('defaultParentObject', init('Categorie'), 'Freebox_OS');
 			ajax::success(true);
 			break;

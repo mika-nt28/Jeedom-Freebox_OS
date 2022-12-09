@@ -422,64 +422,64 @@ class Free_Refresh
 
     private static function refresh_download($EqLogics, $Free_API)
     {
-        $result = $Free_API->universal_get('download', null, null, 'stats/', true, true, null);
-        if ($result != false) {
+        $result = $Free_API->universal_get('universalAPI', null, null, 'downloads/stats', true, true, true);
+        if ($result['result'] != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "conn_ready":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['conn_ready']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['conn_ready']);
                             break;
                         case "throttling_is_scheduled":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['throttling_is_scheduled']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['throttling_is_scheduled']);
                             break;
                         case "nb_tasks":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks']);
                             break;
                         case "nb_tasks_downloading":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_downloading']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_downloading']);
                             break;
                         case "nb_tasks_done":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_done']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_done']);
                             break;
                         case "nb_rss":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_rss']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_rss']);
                             break;
                         case "nb_rss_items_unread":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_rss_items_unread']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_rss_items_unread']);
                             break;
                         case "rx_rate":
-                            $rx_rate = $result['rx_rate'];
+                            $rx_rate = $result['result']['rx_rate'];
                             if (function_exists('bcdiv'))
                                 $rx_rate = bcdiv($result, 1048576, 2);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $rx_rate);
                             break;
                         case "tx_rate":
-                            $tx_rate = $result['tx_rate'];
+                            $tx_rate = $result['result']['tx_rate'];
                             if (function_exists('bcdiv'))
                                 $tx_rate = bcdiv($tx_rate, 1048576, 2);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $tx_rate);
                             break;
                         case "nb_tasks_active":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_active']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_active']);
                             break;
                         case "nb_tasks_stopped":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_stopped']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_stopped']);
                             break;
                         case "nb_tasks_queued":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_queued']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_queued']);
                             break;
                         case "nb_tasks_repairing":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_repairing']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_repairing']);
                             break;
                         case "nb_tasks_extracting":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_extracting']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_extracting']);
                             break;
                         case "nb_tasks_error":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_error']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_error']);
                             break;
                         case "nb_tasks_checking":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['nb_tasks_checking']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['nb_tasks_checking']);
                             break;
                         case "mode":
                             Free_Refresh::refresh_download_config($EqLogics, $Free_API);
@@ -491,13 +491,14 @@ class Free_Refresh
     }
     private static function refresh_download_config($EqLogics, $Free_API)
     {
-        $result = $Free_API->universal_get('download', null, null, 'config/', true, true, null);
-        if ($result != false) {
+        $result = $Free_API->universal_get('universalAPI', null, null, 'downloads/config', true, true, true);
+
+        if ($result['result'] != false) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "mode":
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['throttling']['mode']);
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['throttling']['mode']);
                             break;
                     }
                 }

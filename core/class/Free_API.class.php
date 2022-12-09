@@ -35,7 +35,9 @@ class Free_API
     public function track_id() //Doit correspondre a la donction "auth" de freboxsession.js homebridge freebox
     {
         try {
-            $http = new com_http($this->serveur . '/api/v9/login/authorize/');
+            $API_version = $this->API_version;
+            $_URL = '/api/' . $API_version . 'login/authorize/';
+            $http = new com_http($this->serveur . $_URL);
             $http->setPost(
                 json_encode(
                     array(
@@ -59,7 +61,9 @@ class Free_API
     public function ask_track_authorization()
     {
         try {
-            $http = new com_http($this->serveur . '/api/v9/login/authorize/' . $this->track_id);
+            $API_version = $this->API_version;
+            $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
+            $http = new com_http($_URL . $this->track_id);
             $result = $http->exec(30, 2);
             if (is_json($result)) {
                 return json_decode($result, true);
@@ -73,7 +77,9 @@ class Free_API
     public function getFreeboxPassword()
     {
         try {
-            $http = new com_http($this->serveur . '/api/v9/login/');
+            $API_version = $this->API_version;
+            $_URL = $this->serveur . '/api/' . $API_version . '/login/';
+            $http = new com_http($_URL);
             $json = $http->exec(30, 2);
             log::add('Freebox_OS', 'debug', '[Freebox Password] : ' . $json);
             $json_connect = json_decode($json, true);
@@ -96,8 +102,9 @@ class Free_API
                     return false;
                 $challenge = cache::byKey('Freebox_OS::Challenge');
             }
-
-            $http = new com_http($this->serveur . '/api/v9/login/session/');
+            $API_version = $this->API_version;
+            $_URL = $this->serveur . '/api/' . $API_version . '/login/session/';
+            $http = new com_http($_URL);
             $http->setPost(json_encode(array(
                 'app_id' => $this->app_id,
                 'app_version' => $this->app_version, // Ajout suivant fonction session Free homebridge
@@ -135,8 +142,9 @@ class Free_API
                     return false;
                 $challenge = cache::byKey('Freebox_OS::Challenge');
             }
-
-            $http = new com_http($this->serveur . '/api/v9/login/session/');
+            $API_version = $this->API_version;
+            $_URL = $this->serveur . '/api/' . $API_version . '/login/session';
+            $http = new com_http($_URL);
             $http->setPost(json_encode(array(
                 'app_id' => $this->app_id,
                 'password' => hash_hmac('sha1', $challenge->getValue(''), $this->app_token)
@@ -239,15 +247,14 @@ class Free_API
             $Challenge = cache::byKey('Freebox_OS::Challenge');
             if (is_object($Challenge)) {
                 $Challenge->remove();
-                //log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Challenge');
             }
             $session_token = cache::byKey('Freebox_OS::SessionToken');
             if (!is_object($session_token) || $session_token->getValue('') == '') {
-                //log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Token Vide');
                 return;
             }
-
-            $http = new com_http($this->serveur . '/api/v9/login/logout/');
+            $API_version = $this->API_version;
+            $_URL = $this->serveur . '/api/' . $API_version . '/login/logout/';
+            $http = new com_http($_URL);
             $http->setPost(array());
             $json = $http->exec(2, 2);
             log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $json);
@@ -255,9 +262,7 @@ class Free_API
 
             if (is_object($SessionToken)) {
                 $SessionToken->remove();
-                //log::add('Freebox_OS', 'debug', '[Freebox Close Session] : Remove Token');
             }
-            //log::add('Freebox_OS', 'debug', '│──────────> Fin Close Session  ');
             return $json;
         } catch (Exception $e) {
             log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $e->getCode() . ' ou session déjà fermée');
@@ -325,16 +330,17 @@ class Free_API
             $id = '/all';
         }
         switch ($update) {
-            case 'api_version':
-                $config = 'api_version';
-                break;
+                //case 'api_version':
+                //  $config = 'api_version';
+                // break;
             case 'connexion':
                 $config = 'api/' . $API_version . '/connection/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
                 break;
-            case 'download':
-                $config = 'api/' . $API_version . '/downloads/' . $update_type;
-                break;
+                // Fonction download intégré dans universalAPI => 20221209
+                //case 'download':
+                //$config = 'api/' . $API_version . '/downloads/' . $update_type;
+                //break;
             case 'notification_ID':
                 $config = 'api/' . $API_version . '/notif/targets' . $id;
                 $config_log = 'Etat des notifications';
@@ -507,11 +513,18 @@ class Free_API
             $id = $id . '/';
         }
         switch ($update) {
-            case '4G':
-                $config = 'api/' . $API_version . '/connection/lte/config';
-                $config_log = 'Mise à jour de : Activation 4G';
-                $config_commande = 'enabled';
-                break;
+                // Fonction 4G intégré dans universalAPI => 20221209
+                //case '4G':
+                //  $config = 'api/' . $API_version . '/connection/lte/config';
+                //$config_log = 'Mise à jour de : Activation 4G';
+                //$cmd_config = 'enabled';
+                //break;
+
+                // Fonction phone intégré dans universalAPI => 20221209
+                //case 'phone':
+                //  $config = 'api/' . $API_version . '/call/log/' . $_options;
+                //$fonction = "POST";
+                //break;
             case 'notification_ID':
                 $config = 'api/' . $API_version . '/notif/targets/' . $id;
                 if ($_options == 'DELETE') {
@@ -520,7 +533,7 @@ class Free_API
                 break;
             case 'parental':
                 $config_log = 'Mise à jour du : Contrôle Parental';
-                $config_commande = 'parental';
+                $cmd_config = 'parental';
                 $config = "/api/" . $API_version . "/network_control/" . $id;
                 $jsontestprofile = $this->fetch($config);
                 $jsontestprofile = $jsontestprofile['result'];
@@ -547,17 +560,13 @@ class Free_API
             case 'player_ID_ctrl':
                 $config = 'api/' . $API_version . '/player' . $id . '/api/v6/control/mediactrl';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
-                $config_commande = 'name';
+                $cmd_config = 'name';
                 $fonction = "POST";
                 break;
             case 'player_ID_open':
                 $config = 'api/' . $API_version . '/player' . $id . '/api/v6/control/open';
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
-                $config_commande = 'url';
-                $fonction = "POST";
-                break;
-            case 'phone':
-                $config = 'api/' . $API_version . '/call/log/' . $_options;
+                $cmd_config = 'url';
                 $fonction = "POST";
                 break;
             case 'reboot':
@@ -566,9 +575,10 @@ class Free_API
                 break;
             case 'universalAPI':
                 $config = 'api/' . $API_version . '/' . $_options_2;
-                $config_commande = $_options;
+                $cmd_config = $_options;
                 break;
             case 'universal_put':
+                log::add('Freebox_OS', 'debug', '│──────────> Type : ' . $_status_cmd);
                 if ($_status_cmd == "DELETE" || $_status_cmd == "PUT" || $_status_cmd == "device") {
                     $config = 'api/' . $API_version . '/' . $_options  . $id;
                     $fonction = $_status_cmd;
@@ -584,13 +594,13 @@ class Free_API
             case 'wifi':
                 $config = 'api/' . $API_version . '/wifi/' . $_options;
                 if ($_options == 'planning') {
-                    $config_commande = 'use_planning';
+                    $cmd_config = 'use_planning';
                 } else if ($_options == 'wps/start') {
                     $fonction = "POST";
-                    $config_commande = 'bssid';
+                    $cmd_config = 'bssid';
                 } else if ($_options == 'wps/stop') {
                     $fonction = "POST";
-                    $config_commande = 'session_id';
+                    $cmd_config = 'session_id';
                 } else if ($_options == 'mac_filter') {
                     log::add('Freebox_OS', 'debug', '>───────── Fonction : ' . $_options_2['function']);
                     $fonction = $_options_2['function'];
@@ -606,9 +616,9 @@ class Free_API
                     }
                     log::add('Freebox_OS', 'debug', '>───────── Fonction 2 : ' . $fonction);
                 } else if ($_options == 'config' && $_options_2 == 'mac_filter_state') {
-                    $config_commande = 'mac_filter_state';
+                    $cmd_config = 'mac_filter_state';
                 } else {
-                    $config_commande = 'enabled';
+                    $cmd_config = 'enabled';
                 }
                 if ($_options == 'planning' || $_options == 'wifi') {
                     $config_log = 'Mise à jour de : Etat du Wifi ' . $_options;
@@ -619,7 +629,7 @@ class Free_API
             case 'set_tiles':
                 //log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
                 $config = 'api/' . $API_version . '/home/endpoints/';
-                $config_commande = 'enabled';
+                $cmd_config = 'enabled';
                 $config_log = 'Mise à jour de : ';
                 break;
         }
@@ -649,7 +659,12 @@ class Free_API
             if ($config_log != null) {
                 log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
             }
-            $return = $this->fetch('/' . $config . '/', array($config_commande => $parametre), $fonction, true, true);
+            if ($cmd_config != null) {
+                $requet = array($cmd_config => $parametre);
+            } else {
+                $requet = null;
+            }
+            $return = $this->fetch('/' . $config . '/', $requet, $fonction, true, true);
 
             if ($return === false) {
                 return false;

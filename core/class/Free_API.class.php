@@ -107,7 +107,7 @@ class Free_API
             $http = new com_http($_URL);
             $http->setPost(json_encode(array(
                 'app_id' => $this->app_id,
-                'app_version' => $this->app_version, // Ajout suivant fonction session Free homebridge
+                'app_version' =>  $API_version, // Ajout suivant fonction session Free homebridge
                 'password' => hash_hmac('sha1', $challenge->getValue(''), $this->app_token)
             )));
             $json = $http->exec(30, 2);

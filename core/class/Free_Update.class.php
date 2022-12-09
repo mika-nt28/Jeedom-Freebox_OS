@@ -660,10 +660,10 @@ class Free_Update
                 $Free_API->universal_put(null, 'reboot', null, null, null);
                 break;
             case '4GOn':
-                $Free_API->universal_put(1, 'universalAPI', null, null, 'enabled', null, '/connection/lte/config');
+                $Free_API->universal_put(1, 'universalAPI', null, null, 'enabled', null, 'connection/aggregation');
                 break;
             case '4GOff':
-                $Free_API->universal_put(0, 'universalAPI', null, null, 'enabled', null, '/connection/lte/config');
+                $Free_API->universal_put(0, 'universalAPI', null, null, 'enabled', null, 'connection/aggregation');
                 break;
         }
     }

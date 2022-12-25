@@ -411,7 +411,7 @@ class Free_CreateEq
         foreach ($result['result'] as $freeplugs) {
             foreach ($freeplugs['members'] as $freeplug) {
                 log::add('Freebox_OS', 'debug', '│──────────>  Création Freeplug : ' . $freeplug['id']);
-                $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugName'], null, null, '*/5 * * * *', null, null, null, 'system');
+                $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugID'], null, null, '*/5 * * * *', null, null, null, 'system');
                 $FreePlug->AddCommand('Rôle', 'net_role', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
                 $FreePlug->AddCommand('Redémarrer', 'reset', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  1, '0', true, false, null, true);
                 //$FreePlug->AddCommand('Débit TX', 'tx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mb/s', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);

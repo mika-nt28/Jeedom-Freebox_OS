@@ -36,6 +36,10 @@ class Free_API
     {
         try {
             $API_version = $this->API_version;
+            if ($API_version == null) {
+                $API_version = 'v9';
+                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+            };
             $_URL = '/api/' . $API_version . 'login/authorize/';
             $http = new com_http($this->serveur . $_URL);
             $http->setPost(
@@ -62,6 +66,10 @@ class Free_API
     {
         try {
             $API_version = $this->API_version;
+            if ($API_version == null) {
+                $API_version = 'v9';
+                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+            };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
             $http = new com_http($_URL . $this->track_id);
             $result = $http->exec(30, 2);
@@ -78,6 +86,10 @@ class Free_API
     {
         try {
             $API_version = $this->API_version;
+            if ($API_version == null) {
+                $API_version = 'v9';
+                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+            };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/';
             $http = new com_http($_URL);
             $json = $http->exec(30, 2);
@@ -103,6 +115,10 @@ class Free_API
                 $challenge = cache::byKey('Freebox_OS::Challenge');
             }
             $API_version = $this->API_version;
+            if ($API_version == null) {
+                $API_version = 'v9';
+                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+            };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/session/';
             $http = new com_http($_URL);
             $http->setPost(json_encode(array(
@@ -143,6 +159,10 @@ class Free_API
                 $challenge = cache::byKey('Freebox_OS::Challenge');
             }
             $API_version = $this->API_version;
+            if ($API_version == null) {
+                $API_version = 'v9';
+                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+            };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/session';
             $http = new com_http($_URL);
             $http->setPost(json_encode(array(
@@ -253,6 +273,10 @@ class Free_API
                 return;
             }
             $API_version = $this->API_version;
+            if ($API_version == null) {
+                $API_version = 'v9';
+                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+            };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/logout/';
             $http = new com_http($_URL);
             $http->setPost(array());
@@ -319,8 +343,11 @@ class Free_API
     public function universal_get($update = 'wifi', $id = null, $boucle = 4, $update_type = 'config', $log_request = true, $log_result = true, $_onlyresult = false)
     {
         $API_version = $this->API_version;
+        if ($API_version == null) {
+            $API_version = 'v9';
+            log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+        };
 
-        //log::add('Freebox_OS', 'debug', '>───────── API la version suivante 1b : ' . $API_version);
         $config_log = null;
         $fonction = "GET";
         $Parameter = null;
@@ -330,9 +357,6 @@ class Free_API
             $id = '/all';
         }
         switch ($update) {
-                //case 'api_version':
-                //  $config = 'api_version';
-                // break;
             case 'connexion':
                 $config = 'api/' . $API_version . '/connection/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
@@ -364,8 +388,13 @@ class Free_API
                 $config = 'api/' . $API_version . '/' . $update_type;
                 break;
             case 'universalAPI':
+                if ($update_type == 'api_version') {
+                    $config =   $update_type;
+                } else {
+                    $config = 'api/' . $API_version . '/' . $update_type . $id;
+                }
                 //case 'wifi':
-                $config = 'api/' . $API_version . '/' . $update_type . $id;
+
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network_ID':
@@ -468,7 +497,7 @@ class Free_API
 
             return $value;
         } else {
-            if ($update == "network_ping" || $update == "network_ID" || $update == "api_version") {
+            if ($update == "network_ping" || $update == "network_ID" || $update_type == "api_version") {
                 return $result;
             } else if ($update_type == 'lte/config') {
                 return $result['msg'];

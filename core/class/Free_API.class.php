@@ -40,8 +40,8 @@ class Free_API
                 $API_version = 'v9';
                 log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
             };
-            $_URL = '/api/' . $API_version . 'login/authorize/';
-            $http = new com_http($this->serveur . $_URL);
+            $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
+            $http = new com_http($_URL);
             $http->setPost(
                 json_encode(
                     array(
@@ -607,7 +607,6 @@ class Free_API
                 $cmd_config = $_options;
                 break;
             case 'universal_put':
-                log::add('Freebox_OS', 'debug', '│──────────> Type : ' . $_status_cmd);
                 if ($_status_cmd == "DELETE" || $_status_cmd == "PUT" || $_status_cmd == "device") {
                     $config = 'api/' . $API_version . '/' . $_options  . $id;
                     $fonction = $_status_cmd;
@@ -615,6 +614,7 @@ class Free_API
                     $config = 'api/' . $API_version . '/' . $_options;
                     $fonction = "POST";
                 }
+                log::add('Freebox_OS', 'debug', '│──────────> Type de requête : ' . $fonction);
                 break;
             case 'VM':
                 $config = 'api/' . $API_version . '/vm/' . $id  . '/' . $_options_2;

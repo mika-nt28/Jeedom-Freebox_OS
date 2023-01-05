@@ -554,9 +554,11 @@ class Freebox_OS extends eqLogic
 				}
 			}
 			$Cmd->setConfiguration('host_type', $updatenetwork['host_type']);
-			if ($repeatevent == $updatenetwork['repeatevent'] && $Type == 'info') {
-				$Cmd->setConfiguration('repeatEventManagement', 'never');
-				//log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
+			if (isset($updatenetwork['repeatevent'])){
+				if ($repeatevent == $updatenetwork['repeatevent'] && $Type == 'info') {
+					$Cmd->setConfiguration('repeatEventManagement', 'never');
+					//log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
+				}
 			}
 			$Cmd->setConfiguration('IPV4', $updatenetwork['IPV4']);
 			$Cmd->setConfiguration('IPV6', $updatenetwork['IPV6']);

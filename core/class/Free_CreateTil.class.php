@@ -193,7 +193,7 @@ class Free_CreateTil
     public static function createTil_Group()
     {
         $Free_API = new Free_API();
-        $tiles  = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/all');
+        $tiles  = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/all', false, false);
         $result_GP = [];
         foreach ($tiles as $tile) {
             $group = $tile['group']['label'];

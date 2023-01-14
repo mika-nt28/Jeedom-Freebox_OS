@@ -218,7 +218,7 @@ class Freebox_OS extends eqLogic
 				$cron->halt();
 			}
 		}
-		cache::delete("actionlist");
+		cache::delete("Freebox_OS::actionlist");
 
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == '1') {
@@ -241,7 +241,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function FreeboxPUT()
 	{
-		$action = cache::byKey("actionlist")->getValue();
+		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		if (!is_array($action)) {
 			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
 			return;
@@ -254,9 +254,9 @@ class Freebox_OS extends eqLogic
 		}
 		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $action[0]['Name'] . '(' . $action[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
 		Free_Update::UpdateAction($action[0]['LogicalId'], $action[0]['SubType'], $action[0]['Name'], $action[0]['Value'], $action[0]['Config'], $action[0]['EqLogic'], $action[0]['Options'], $action[0]['This']);
-		$action = cache::byKey("actionlist")->getValue();
+		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		array_shift($action);
-		cache::set("actionlist", $action);
+		cache::set("Freebox_OS::actionlist", $action);
 	}
 	public static function FreeboxGET()
 	{
@@ -1009,7 +1009,7 @@ class Freebox_OSCmd extends cmd
 	public function execute($_options = array())
 	{
 		//log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $this->getName());
-		$array = cache::byKey("actionlist")->getValue();
+		$array = cache::byKey("Freebox_OS::actionlist")->getValue();
 		if (!is_array($array)) {
 			$array = [];
 		}
@@ -1026,7 +1026,7 @@ class Freebox_OSCmd extends cmd
 		);
 
 		array_push($array, $update);
-		cache::set("actionlist", $array);
+		cache::set("Freebox_OS::actionlist", $array);
 		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 

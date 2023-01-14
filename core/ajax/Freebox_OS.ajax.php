@@ -50,9 +50,9 @@ try {
 			Free_CreateTil::createTil('Tiles_group');
 			$objects = "";
 			$objects = $objects . '<option value="">Default</option>';
-			//foreach ((jeeObject::buildTree(null, false)) as $object) {
+			/*foreach ((jeeObject::buildTree(null, false)) as $object) {
 				$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration("parentNumber")) . $object->getName() . '</option>';
-			}
+			}*/
 			/*foreach (jeeObject::all() as $object) {
 				$objects = $objects . '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
 			}*/

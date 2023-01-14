@@ -182,7 +182,7 @@ function SearchTile_room() { // Ligne 148
             object = data.result.objects;
             $("#table_room tr").remove();
             $('#table_room thead').append("<tr><th style=\"width: 320px\">{{Pièces Freebox}}</th><th>{{Objects Jeedom}}</th></tr>");
-            for (var i = 0; i < pieces.length; i++) { // Ligne 164
+            for (var i = 0; i < pieces; i++) { // Ligne 164
                 var piece = pieces[i];
                 var tr = '<tr class="piece">';
                 tr += '<td>';

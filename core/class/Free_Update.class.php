@@ -613,46 +613,53 @@ class Free_Update
     }
     private static function update_player($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options, $_cmd, $update)
     {
-        $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
-        if ($logicalId != 'channel') {
-            $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
-        } else {
-            $ID_Player = $logicalId_eq->getlogicalId();
-            $ID_Player = str_replace('player_', '', $ID_Player);
-            log::add('Freebox_OS', 'debug', '│ Player ' . $logicalId_eq->getlogicalId() . ' -  avec ID : ' . $ID_Player);
 
-
-            if ($logicalId == 'channel') {
+        switch ($logicalId) {
+            case "channel":
+                log::add('Freebox_OS', 'debug', '│ Chaine : '  . $_options['message']);
                 foreach ($logicalId_eq->getCmd('info') as $Cmd) {
-                    if (is_object($Cmd)) {
+                    //if (is_object($Cmd)) {
+                    if ($Cmd->getLogicalId() === 'channel_info') {
+                        log::add('Freebox_OS', 'debug', '│ Choix Chaine : '  . $_options['message']);
                         if ($logicalId == 'channel') {
                             $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
-                            $channel_value = $Cmd->execCmd();
-                            $channel_value = 'tv:?channel=' . $channel_value;
-                            //Option par défaut
-                            $option = array(
-                                "url" =>  $channel_value,
-                            );
-                            $playerURL = '/api/' . $API_version . '/control/open';
-                            $Free_API->universal_put(null, 'universal_put', null, null, 'player/' . $ID_Player .  $playerURL, null, $option);
                         }
+                        $ID_Player = $logicalId_eq->getlogicalId();
+                        $ID_Player = str_replace('player_', '', $ID_Player);
+                        log::add('Freebox_OS', 'debug', '│ Player ' . $logicalId_eq->getlogicalId() . ' -  avec ID : ' . $ID_Player);
+                        $channel_value = $_cmd->execCmd();
+                        $channel_value = 'tv:?channel=' . $channel_value;
+                        log::add('Freebox_OS', 'debug', '│ Chaine : ' . $channel_value . ' / ' . $_options['message']);
+                        //Option par défaut
+                        $option = array(
+                            "url" =>  $channel_value,
+                        );
+                        $playerURL = '/api/v6/control/open';
+                        log::add('Freebox_OS', 'debug', '│ =================> REQUETE');
+                        $Free_API->universal_put(null, 'universal_put', null, null, 'player/' . $ID_Player .  $playerURL, null, $option);
+                        log::add('Freebox_OS', 'debug', '│ =================> FIN REQUETE');
+                        break;
                     }
+                    //}
                 }
-            }
+                log::add('Freebox_OS', 'debug', '│ =================> FIN REQUETE 3');
+                break;
+            default:
+                log::add('Freebox_OS', 'debug', '│ test : ');
+                $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
+                break;
         }
     }
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
-        $result = $Free_API->nb_appel_absence();
-        if ($result != false) {
-            switch ($logicalId) {
-                case "phone_dell_call":
-                    $Free_API->universal_put(null, 'phone', null, null, 'delete_all');
-                    break;
-                case "phone_read_call":
-                    $Free_API->universal_put(null, 'phone', null, null, 'mark_all_as_read');
-                    break;
-            }
+
+        switch ($logicalId) {
+            case "phone_dell_call":
+                $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/delete_all', 'POST', null);
+                break;
+            case "phone_read_call":
+                $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/mark_all_as_read', 'POST', null);
+                break;
         }
     }
     private static function update_system($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
@@ -662,10 +669,10 @@ class Free_Update
                 $Free_API->universal_put(null, 'reboot', null, null, null);
                 break;
             case '4GOn':
-                $Free_API->universal_put(1, '4G', null, null, null);
+                $Free_API->universal_put(1, 'universalAPI', null, null, 'enabled', null, 'connection/aggregation');
                 break;
             case '4GOff':
-                $Free_API->universal_put(0, '4G', null, null, null);
+                $Free_API->universal_put(0, 'universalAPI', null, null, 'enabled', null, 'connection/aggregation');
                 break;
         }
     }

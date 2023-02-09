@@ -51,10 +51,12 @@ class Free_CreateTV
         $icon_channel = "icon kiko-television icon_green";
 
         $result = $Free_API->universal_get('universalAPI', null, null, 'player', false, true, true);
+        $nb_player = 1;
         if (isset($result['result'])) {
             $result = $result['result'];
             if ($result != null) {
                 foreach ($result as $Equipement) {
+                    log::add('Freebox_OS', 'debug', '│===========> CONFIGURATION PLAYER : ' . $nb_player);
                     if ($Equipement['device_name'] == null) {
                         $_devicename = 'Player - ' . $Equipement['id'] . ' - ' . $Equipement['mac'];
                     } else {
@@ -62,8 +64,8 @@ class Free_CreateTV
                     }
 
                     if ($Equipement['id'] != null) {
-                        log::add('Freebox_OS', 'debug', '│===========>  Test de récupération du statut pour le player aved l\' ' . $_devicename);
-                        $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $Equipement['id'] . '/api/v6/status', true, true, true);
+                        log::add('Freebox_OS', 'debug', '│===========>  Test de récupération du statut pour le player avec le nom : ' . $_devicename);
+                        $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $Equipement['id'] . '/api/v6/status', true, true, false);
                         log::add('Freebox_OS', 'debug', '│===========> ETAT PLAYER : ' . $results_playerID['power_state']);
                         if ($results_playerID['power_state'] == 'running' || $results_playerID['power_state'] == 'standby') {
                             $player_STATE = 'OK';
@@ -85,18 +87,22 @@ class Free_CreateTV
                         if ($player_STATE == 'OK') {
                             $EqLogic->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
                         }
+                        // Channel
+                        /*
                         $config_message = array(
                             'title_disable' => 1,
                             'message_placeholder' => 'Chaine',
 
                         );
-                        //$add_channel = $EqLogic->AddCommand('Chaine choisi', 'channel_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_channel, 0, 'default', 'default', 8, '0', false, false, null, true, null, null, null, null);
-                        //$EqLogic->AddCommand('Choix Chaine', 'channel', 'action', 'message', 'default', null, null, $_IsVisible, $add_channel, 'default', 0, $icon_channel, 0, 'default', 'default', 9, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
-
-                        Free_Refresh::RefreshInformation($EqLogic->getId());
+                        $add_channel = $EqLogic->AddCommand('Chaine choisi', 'channel_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_channel, 0, 'default', 'default', 8, '0', false, false, null, true, null, null, null, null);
+                        $EqLogic->AddCommand('Choix Chaine', 'channel', 'action', 'message', 'default', null, null, $_IsVisible, $add_channel, 'default', 0, $icon_channel, 0, 'default', 'default', 9, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
+                        */
+                        //Free_Refresh::RefreshInformation($EqLogic->getId());
                     } else {
                         log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- L\'Id est vide donc pas de création de l\'équipement (mettre sous tension le player pour résoudre ce problème)');
                     }
+                    log::add('Freebox_OS', 'debug', '│===========> FIN CONFIGURATION PLAYER : ' . $nb_player . ' / ' . $_devicename);
+                    $nb_player++;
                 }
             } else {
                 log::add('Freebox_OS', 'debug', '│ PAS DE ' . $logicalinfo['playerName'] . ' SUR VOTRE BOX ');

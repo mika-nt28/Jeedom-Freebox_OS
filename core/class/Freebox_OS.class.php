@@ -218,7 +218,7 @@ class Freebox_OS extends eqLogic
 				$cron->halt();
 			}
 		}
-		cache::delete("actionlist");
+		cache::delete("Freebox_OS::actionlist");
 
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == '1') {
@@ -241,7 +241,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function FreeboxPUT()
 	{
-		$action = cache::byKey("actionlist")->getValue();
+		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		if (!is_array($action)) {
 			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
 			return;
@@ -254,9 +254,9 @@ class Freebox_OS extends eqLogic
 		}
 		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $action[0]['Name'] . '(' . $action[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
 		Free_Update::UpdateAction($action[0]['LogicalId'], $action[0]['SubType'], $action[0]['Name'], $action[0]['Value'], $action[0]['Config'], $action[0]['EqLogic'], $action[0]['Options'], $action[0]['This']);
-		$action = cache::byKey("actionlist")->getValue();
+		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		array_shift($action);
-		cache::set("actionlist", $action);
+		cache::set("Freebox_OS::actionlist", $action);
 	}
 	public static function FreeboxGET()
 	{
@@ -275,11 +275,12 @@ class Freebox_OS extends eqLogic
 	public static function resetConfig()
 	{
 		config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
-		config::save('FREEBOX_SERVER_APP_VERSION', "v5.0.0", 'Freebox_OS');
+		//config::save('FREEBOX_SERVER_APP_VERSION', "v5.0.0", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_NAME', "Plugin Freebox OS", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_ID', "plugin.freebox.jeedom", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
 		config::save('FREEBOX_API', "v9", 'Freebox_OS');
+		config::save('FREEBOX_REBOOT_DEAMON', FALSE, 'Freebox_OS');
 	}
 
 	public static function EqLogic_ID($Name, $_logicalId)
@@ -703,10 +704,13 @@ class Freebox_OS extends eqLogic
 	public function preUpdate()
 	{
 		if (!$this->getIsEnable()) return;
-
-		if ($this->getConfiguration('autorefresh') == '') {
-			log::add('Freebox_OS', 'error', '================= CRON : Temps de rafraichissement est vide pour l\'équipement : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
-			throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide : ' . $this->getName(), __FILE__));
+		if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1 && $this->getConfiguration('eq_group') == 'tiles') {
+			log::add('Freebox_OS', 'debug', '================= CRON : Pas de vérification car Cron global titles actif');
+		} else {
+			if ($this->getConfiguration('autorefresh') == '') {
+				log::add('Freebox_OS', 'error', '================= CRON : Temps de rafraichissement est vide pour l\'équipement : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
+				throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide : ' . $this->getName(), __FILE__));
+			}
 		}
 	}
 
@@ -784,7 +788,7 @@ class Freebox_OS extends eqLogic
 			'downloadsID' => 'downloads',
 			'downloadsName' => 'Téléchargements',
 			'freeplugID' => 'freeplug',
-			'freeplugName' => 'freeplug',
+			'freeplugName' => 'Freeplug',
 			'homeadaptersID' => 'homeadapters',
 			'homeadaptersName' => 'Home Adapters',
 			'LCDID' => 'LCD',
@@ -798,7 +802,7 @@ class Freebox_OS extends eqLogic
 			'networkwifiguestID' => 'networkwifiguest',
 			'networkwifiguestName' => 'Appareils connectés Wifi Invité',
 			'notificationID' => 'notification',
-			'notificationName' => 'notification',
+			'notificationName' => 'Notification',
 			'phoneID' => 'phone',
 			'phoneName' => 'Téléphone',
 			'playerID' => 'player',
@@ -823,7 +827,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'info', '================= DEBUT TEST VERSION API DE LA FREEBOX ==================');
 		log::add('Freebox_OS', 'info', '================= Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue ==================');
 		$Free_API = new Free_API();
-		$result = $Free_API->universal_get('api_version', null, null, null, true, true, true);
+		$result = $Free_API->universal_get('universalAPI', null, null, 'api_version', true, true, true);
 		log::add('Freebox_OS', 'info', '│──────────> Type Box : ' . $result['box_model_name']);
 		log::add('Freebox_OS', 'info', '│──────────> API URL : ' . $result['api_base_url']);
 		log::add('Freebox_OS', 'info', '│──────────> Port https : ' . $result['https_port']);
@@ -835,7 +839,6 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'info', '│──────────> API version : ' . $result['api_version']);
 		$API_version = 'v'  . $result['api_version'];
 		$API_version = strstr($API_version, '.', true);
-		//log::add('Freebox_OS', 'info', '│──────────> API version Enregistrer : ' . $API_version);
 		log::add('Freebox_OS', 'info', '│──────────> Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
 		log::add('Freebox_OS', 'info', '│──────────> Nouvelle Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
@@ -1006,7 +1009,7 @@ class Freebox_OSCmd extends cmd
 	public function execute($_options = array())
 	{
 		//log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $this->getName());
-		$array = cache::byKey("actionlist")->getValue();
+		$array = cache::byKey("Freebox_OS::actionlist")->getValue();
 		if (!is_array($array)) {
 			$array = [];
 		}
@@ -1023,7 +1026,7 @@ class Freebox_OSCmd extends cmd
 		);
 
 		array_push($array, $update);
-		cache::set("actionlist", $array);
+		cache::set("Freebox_OS::actionlist", $array);
 		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 

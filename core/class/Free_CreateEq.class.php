@@ -40,7 +40,6 @@ class Free_CreateEq
             case 'connexion':
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
                 break;
             case 'disk':
                 Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4);
@@ -103,8 +102,11 @@ class Free_CreateEq
                 Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_system_SP_lang($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
+                log::add('Freebox_OS', 'debug', '====================================================================================');
+                log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion_xdsl($logicalinfo, $templatecore_V4);
+                log::add('Freebox_OS', 'debug', '====================================================================================');
+                log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_FreePlug($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4);
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
@@ -122,6 +124,7 @@ class Free_CreateEq
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'LAN');
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, 'WIFIGUEST');
                     Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
+                    //Free_CreateEq::createEq_notification($logicalinfo, $templatecore_V4);
                 } else {
                     log::add('Freebox_OS', 'debug', '================= BOX EN MODE BRIDGE : LES ÉQUIPEMENTS SUIVANTS NE SONT PAS CRÉER  ==================');
                     log::add('Freebox_OS', 'debug', '>───────── ' . $logicalinfo['airmediaName']);
@@ -142,22 +145,14 @@ class Free_CreateEq
     private static function createEq_airmedia($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['airmediaName']);
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes');
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $start_icon = 'fas fa-play';
-            $stop_icon = 'fas fa-stop';
-            $receivers_icon = 'fas fa-play-circle';
-            $media_icon = 'fas fa-file-export';
-            $password_icon = 'fas fa-barcode';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $start_icon = 'fas fa-play icon_green';
-            $stop_icon = 'fas fa-stop icon_red';
-            $receivers_icon = 'fas fa-play-circle icon_blue';
-            $media_icon = 'fas fa-file-export icon_blue';
-            $password_icon = 'fas fa-barcode icon_orange';
-        };
+        $start_icon = 'fas fa-play icon_green';
+        $stop_icon = 'fas fa-stop icon_red';
+        $receivers_icon = 'fas fa-play-circle icon_blue';
+        $media_icon = 'fas fa-file-export icon_blue';
+        $password_icon = 'fas fa-barcode icon_orange';
+
         $Free_API = new Free_API();
         $receivers_list = null;
         $result = $Free_API->universal_get('universalAPI', null, null, 'airmedia/receivers', true, true, null);
@@ -206,14 +201,10 @@ class Free_CreateEq
     private static function createEq_connexion($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['connexionName']);
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $iconspeed = 'fas fa-tachometer-alt';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconspeed = 'fas fa-tachometer-alt icon_blue';
-        };
+        $iconspeed = 'fas fa-tachometer-alt icon_blue';
+
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('connexion', null, null, 'ftth', true, true, false);
         if ($result['sfp_present'] == null) {
@@ -249,13 +240,9 @@ class Free_CreateEq
     private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique Fibre : ' . $logicalinfo['connexionName']);
-
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-        };
+
         $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
         if (isset($result['link_type'])) {
             $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  20, '0', $updateicon, true);
@@ -274,7 +261,8 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique 4G : ' . $logicalinfo['connexionName']);
         $Free_API = new Free_API();
-        $result = $Free_API->universal_get('connexion', null, null, 'lte/config', true, true, false);
+        $result = $Free_API->universal_get('universalAPI', null, null, '/connection/aggregation', true, true, false);
+
         if ($result != false && $result != 'Aucun module 4G détecté') {
             $_modul = 'Module 4G : Présent';
             log::add('Freebox_OS', 'debug', '│──────────>' . $_modul);
@@ -291,26 +279,7 @@ class Free_CreateEq
 
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_connexion_xdsl($logicalinfo, $templatecore_V4)
-    {
-        log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes Spécifique xdsl : ' . $logicalinfo['connexionName']);
-        $Free_API = new Free_API();
-        $result = $Free_API->universal_get('connexion', null, null, 'xdsl', true, true, false);
-        if ($result != false && $result != 'Aucun module 4G détecté') {
-            if ($result['status']['status'] != 'down') {
-                $_modul = 'Module xdsl : Présent';
-                $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *');
-                $Connexion->AddCommand('Type de modulation', 'modulation', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  40, '0', null, true);
-                $Connexion->AddCommand('Protocole', 'protocol', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  41, '0', null, true);
-            } else {
-                $_modul = 'Module xdsl : Présent mais désactivé - Aucune création des équipements';
-            }
-        } else {
-            $_modul = 'Module xdsl : Non Présent';
-        }
-        log::add('Freebox_OS', 'debug', '│──────────> ' . $_modul);
-        log::add('Freebox_OS', 'debug', '└─────────');
-    }
+
     private static function createEq_disk($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['diskName']);
@@ -321,13 +290,10 @@ class Free_CreateEq
     private static function createEq_disk_SP($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['diskName']);
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
-            $icontemp = 'fas fa-thermometer-half';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $icontemp = 'fas fa-thermometer-half icon_blue';
-        };
+
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $icontemp = 'fas fa-thermometer-half icon_blue';
+
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         if ($result == 'auth_required') {
@@ -355,13 +321,7 @@ class Free_CreateEq
     private static function createEq_disk_RAID($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique RAID : ' . $logicalinfo['diskName']);
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
-            $icontemp = 'fas fa-thermometer-half';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $icontemp = 'fas fa-thermometer-half icon_blue';
-        };
+
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         if ($Type_box == 'OK') {
             $Free_API = new Free_API();
@@ -394,38 +354,22 @@ class Free_CreateEq
     private static function createEq_download($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['downloadsName']);
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $iconDownloadsOn = 'fas fa-play icon_green';
+        $iconDownloadsOff = 'fas fa-stop icon_red';
+        $iconRSSnb = 'fas fa-rss icon_green';
+        $iconRSSread = 'fas fa-rss-square icon_orange';
+        $iconconn_ready = 'fas fa-ethernet icon_green';
+        $icontask = 'fas fa-tasks icon_green';
+        $icontask_queued = 'fas fa-tasks icon_orange';
+        $icontask_error = 'fas fa-tasks icon_red';
+        $icondownload = 'fas fa-file-download icon_blue';
+        $iconspeed = 'fas fa-tachometer-alt icon_blue';
+        $iconcalendar = 'far fa-calendar-alt icon_green';
+        $Templatemode = 'Freebox_OS::Mode Téléchargement';
+        $iconDownloadsnormal = 'fas fa-rocket icon_green';
         $updateicon = true;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $iconDownloadsOn = 'fas fa-play';
-            $iconDownloadsOff = 'fas fa-stop';
-            $iconRSSnb = 'fas fa-rss';
-            $iconRSSread = 'fas fa-rss-square';
-            $iconconn_ready = 'fas fa-ethernet';
-            $icontask = 'fas fa-tasks';
-            $icontask_queued = 'fas fa-tasks';
-            $icontask_error = 'fas fa-tasks';
-            $icondownload = 'fas fa-file-download';
-            $iconspeed = 'fas fa-tachometer-alt';
-            $iconcalendar = 'far fa-calendar-alt icon_green';
-            $Templatemode = 'default';
-            $iconDownloadsnormal = 'fas fa-rocket';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconDownloadsOn = 'fas fa-play icon_green';
-            $iconDownloadsOff = 'fas fa-stop icon_red';
-            $iconRSSnb = 'fas fa-rss icon_green';
-            $iconRSSread = 'fas fa-rss-square icon_orange';
-            $iconconn_ready = 'fas fa-ethernet icon_green';
-            $icontask = 'fas fa-tasks icon_green';
-            $icontask_queued = 'fas fa-tasks icon_orange';
-            $icontask_error = 'fas fa-tasks icon_red';
-            $icondownload = 'fas fa-file-download icon_blue';
-            $iconspeed = 'fas fa-tachometer-alt icon_blue';
-            $iconcalendar = 'far fa-calendar-alt icon_green';
-            $Templatemode = 'Freebox_OS::Mode Téléchargement';
-            $iconDownloadsnormal = 'fas fa-rocket icon_green';
-        };
+
         $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask, 0, 'default', 'default',  1, '0', $updateicon, true, null, true);
         $downloads->AddCommand('Nb de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask,  0, 'default', 'default',  2, '0', $updateicon, true, null, true);
@@ -467,7 +411,7 @@ class Free_CreateEq
         foreach ($result['result'] as $freeplugs) {
             foreach ($freeplugs['members'] as $freeplug) {
                 log::add('Freebox_OS', 'debug', '│──────────>  Création Freeplug : ' . $freeplug['id']);
-                $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugName'], null, null, '*/5 * * * *', null, null, null, 'system');
+                $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugID'], null, null, '*/5 * * * *', null, null, null, 'system');
                 $FreePlug->AddCommand('Rôle', 'net_role', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
                 $FreePlug->AddCommand('Redémarrer', 'reset', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  1, '0', true, false, null, true);
                 //$FreePlug->AddCommand('Débit TX', 'tx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mb/s', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
@@ -480,16 +424,11 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['LCDName']);
         $LCD = Freebox_OS::AddEqLogic($logicalinfo['LCDName'], $logicalinfo['LCDID'], 'default', false, null, null, null, '5 */12 * * *');
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $iconbrightness = 'fas fa-adjust icon_green';
+        $iconorientation = 'fas fa-map-signs icon_green';
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $iconbrightness = 'fas fa-adjust';
-            $iconorientation = 'fas fa-map-signs';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconbrightness = 'fas fa-adjust icon_green';
-            $iconorientation = 'fas fa-map-signs icon_green';
-        };
+
         $StatusLCD = $LCD->AddCommand('Etat Lumininosité écran LCD', 'brightness', "info", 'numeric', null, '%', null, 0, '', '', '', $iconbrightness, 0, '0', 100, 20, 2, $updateicon, true, false, true);
         $LCD->AddCommand('Lumininosité écran LCD', 'brightness', 'action', 'slider', null, '%', null, 1, $StatusLCD, 'default', 0, $iconbrightness, 0, '0', 100, 21, '0', $updateicon, false, null, true, null, 'floor(#value#)');
         // Affichage Orientation
@@ -506,19 +445,11 @@ class Free_CreateEq
         $result =  $result['result'];
         foreach ($result  as $Equipement) {
             log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : Contrôle parental');
-            if (version_compare(jeedom::version(), "4", "<")) {
-                log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-                $Templateparent = null;
-                $iconparent_allowed = 'fas fa-user-check';
-                $iconparent_denied = 'fas fa-user-lock';
-                $iconparent_temp = 'fas fa-user-clock';
-            } else {
-                log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-                $Templateparent = 'Freebox_OS::Parental';
-                $iconparent_allowed = 'fas fa-user-check icon_green';
-                $iconparent_denied = 'fas fa-user-lock icon_red';
-                $iconparent_temp = 'fas fa-user-clock icon_blue';
-            };
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $Templateparent = 'Freebox_OS::Parental';
+            $iconparent_allowed = 'fas fa-user-check icon_green';
+            $iconparent_denied = 'fas fa-user-lock icon_red';
+            $iconparent_temp = 'fas fa-user-clock icon_blue';
 
             $category = 'default';
             $Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
@@ -535,22 +466,14 @@ class Free_CreateEq
     private static function createEq_phone($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['phoneName']);
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $iconmissed = 'icon techno-phone1 icon_red';
+        $iconaccepted = 'icon techno-phone3 icon_blue';
+        $iconoutgoing = 'icon techno-phone2 icon_green';
+        $iconDell_call = 'fas fa-magic icon_red';
+        $iconRead_call = 'fab fa-readme icon_blue';
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $iconmissed = 'icon techno-phone1';
-            $iconaccepted = 'icon techno-phone3';
-            $iconoutgoing = 'ficon techno-phone2';
-            $iconDell_call = 'fas fa-magic';
-            $iconRead_call = 'fab fa-readme';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconmissed = 'icon techno-phone1 icon_red';
-            $iconaccepted = 'icon techno-phone3 icon_blue';
-            $iconoutgoing = 'icon techno-phone2 icon_green';
-            $iconDell_call = 'fas fa-magic icon_red';
-            $iconRead_call = 'fab fa-readme icon_blue';
-        };
+
         $phone = Freebox_OS::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null, null, '*/30 * * * *');
         $phone->AddCommand('Nb Manqués', 'nbmissed', 'info', 'numeric', $templatecore_V4 . 'badge', null, null, 1, 'default', 'default', 0, $iconmissed, 1, 'default', 'default',  1, '0', $updateicon, true, false, true, null, null, null, null);
         $phone->AddCommand('Liste Manqués', 'listmissed', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmissed, 1, 'default', 'default',  2, '0', $updateicon, true, false, null, null, null, null, 'NONAME');
@@ -567,20 +490,14 @@ class Free_CreateEq
     private static function createEq_management($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['managementName']);
-        $LCD = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '5 */12 * * *');
-        $updateicon = false;
-        $icon_search = 'fas fa-search-plus icon_green';
-        $icon_wol = 'fas fa-broadcast-tower icon_orange';
         $icon_dhcp = 'fas fa-network-wired icon_blue';
-        //$icon_redir = 'fas fa-project-diagram icon_blue';
         $icon_host_type = 'fas fa-laptop icon_green';
         $icon_method = 'fas fa-list icon_orange';
         $icon_add_del_ip = 'fas fa-network-wired icon_blue';
         $icon_primary_name = 'fas fa-book icon_blue';
         $icon_comment = 'far fa-comment icon_orange';
-        $iconmac_mac_filter = 'far fa-list-alt icon_orange';
-
         $updateWidget = false;
+
         // Pour test Visibilité
         $_IsVisible = 0;
         $order = 1;
@@ -666,17 +583,11 @@ class Free_CreateEq
     private static function createEq_netshare($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['netshareName']);
-        $updateicon = false;
         $_order = 1;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $color_on = null;
-            $color_off = null;
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $color_on = ' icon_green';
-            $color_off = ' icon_red';
-        };
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $color_on = ' icon_green';
+        $color_off = ' icon_red';
+        $updateicon = false;
 
         $netshare = Freebox_OS::AddEqLogic($logicalinfo['netshareName'], $logicalinfo['netshareID'], 'multimedia', false, null, null, null, '5 */12 * * *');
         $boucle_num = 1; // 1 = Partage Imprimante - 2 = Partage de fichiers Windows - 3 = Partage Fichier Mac - 4 = Partage Fichier FTP
@@ -730,7 +641,6 @@ class Free_CreateEq
 
     private static function createEq_network_SP($logicalinfo, $templatecore_V4, $_network = 'LAN', $IsVisible = true)
     {
-
         log::add('Freebox_OS', 'debug', '┌───────── Type de recherche : ' . $_network);
         if ($_network == 'LAN') {
             $_networkname = $logicalinfo['networkName'];
@@ -743,22 +653,10 @@ class Free_CreateEq
             $icon_search = 'fas fa-broadcast-tower icon_green';
         }
 
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $icon_search = 'fas fa-search-plus';
-            $icon_wol = 'fas fa-broadcast-tower';
-            $icon_dhcp = 'fas fa-network-wired';
-            $icon_redir = 'fas fa-project-diagram';
-            $icon_network = 'fas fa-network-wired';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $icon_search = 'fas fa-search-plus icon_green';
-            $icon_wol = 'fas fa-broadcast-tower icon_orange';
-            $icon_dhcp = 'fas fa-network-wired icon_blue';
-            $icon_redir = 'fas fa-project-diagram icon_blue';
-            $icon_network = 'fas fa-network-wired icon_green';
-        };
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $icon_network = 'fas fa-network-wired icon_green';
         $updateWidget = false;
+
         if ($IsVisible == true) {
             $_IsVisible = 1;
         } else {
@@ -890,14 +788,6 @@ class Free_CreateEq
             $host_type = $EqLogic->AddCommand('Appareil connecté choisi', 'host_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_network, 0, 'default', 'default', 14, '0', false, true, null, true);
             $EqLogic->AddCommand('Sélection appareil connecté', 'host', 'action', 'select', null, null, null, $_IsVisible, $host_type, 'default', 0, $icon_network, 0, 'default', 'default', 15, '0', false, true, null, true, null, null, null, null, null, null, null, null, $network_list, null, null);
             $EqLogic->refreshWidget();
-
-            // Ajout des commandes dans WIFI
-            // $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null, null, '*/5 * * * *');
-            // if ($_network == 'LAN') {
-            //  $host_type = $EqLogic->AddCommand('Appareil connecté choisi', 'host_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_network, 0, 'default', 'default', 30, '0', false, true, null, true);
-            // $EqLogic->AddCommand('Sélection appareil connecté', 'host', 'action', 'select', null, null, null, $_IsVisible, $host_type, 'default', 0, $icon_network, 0, 'default', 'default', 31, '0', false, true, null, true, null, null, null, null, null, null, null, null, $network_list, null, null);
-            // $EqLogic->AddCommand('Saisie Adresse mac', 'host_mac', 'action', 'message', 'default', null, null, $_IsVisible, $host_type, 'default', 0,  $icon_network, 0, 'default', 'default', 32, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
-            // }
             log::add('Freebox_OS', 'debug', '└─────────');
         } else {
             log::add('Freebox_OS', 'debug', '│===========> PAS D\'APPAREIL TROUVE');
@@ -908,20 +798,16 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement : ' . $logicalinfo['notificationName']);
         $Free_API = new Free_API();
-        $Free_API->universal_get('notification', null, null, null, true, null);
+        $Free_API->universal_get('universalAPI', null, null, '/notif/targets', true, true, false);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_system($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['systemName']);
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $iconReboot = 'fas fa-sync icon_red';
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $iconReboot = 'fas fa-sync';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconReboot = 'fas fa-sync icon_red';
-        };
+
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
         $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  31, '0', true, false, null, true);
         $system->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateicon, true);
@@ -938,12 +824,9 @@ class Free_CreateEq
     private static function createEq_system_lan($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifique Type de Freebox : ' . $logicalinfo['systemName']);
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-        };
+
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
         $system->AddCommand('Nom Freebox', 'name', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 60, '0', $updateicon, true);
         $system->AddCommand('Mode Freebox', 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  61, '0', $updateicon, true);
@@ -958,23 +841,14 @@ class Free_CreateEq
         $Free_API = new Free_API();
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques Capteurs : ' . $logicalinfo['systemName']);
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
-            $Template4G = null;
-            $templatecore_V4 = null;
-            $icontemp = 'fas fa-thermometer-half';
-            $iconfan = 'fas fa-fan';
-            $icon4Gon = 'fas fa-broadcast-tower';
-            $icon4Goff = 'fas fa-broadcast-tower';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $Template4G = 'Freebox_OS::4G';
-            $templatecore_V4  = 'core::';
-            $icontemp = 'fas fa-thermometer-half icon_blue';
-            $iconfan = 'fas fa-fan icon_blue';
-            $icon4Gon = 'fas fa-broadcast-tower icon_green';
-            $icon4Goff = 'fas fa-broadcast-tower icon_red';
-        };
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $Template4G = 'Freebox_OS::4G';
+        $templatecore_V4  = 'core::';
+        $icontemp = 'fas fa-thermometer-half icon_blue';
+        $iconfan = 'fas fa-fan icon_blue';
+        $icon4Gon = 'fas fa-broadcast-tower icon_green';
+        $icon4Goff = 'fas fa-broadcast-tower icon_red';
+
         $boucle_num = 1; // 1 = sensors - 2 = fans - 3 = extension
         $_order = 6;
         while ($boucle_num <= 3) {
@@ -1038,6 +912,8 @@ class Free_CreateEq
                                     $_4G = $system->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 32, '0', false, 'never', null, true);
                                     $system->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icon4Gon, 1, 'default', 'default', 33, '0', false, false, null, true);
                                     $system->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icon4Goff, 0, 'default', 'default', 34, '0', false, false, null, true);
+                                    $system->AddCommand('Etat du réseau 4G', 'state_lte', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', 35, '0', false, false, null, true);
+                                    $system->AddCommand('Etat de la radio 4G', 'associated_lte', 'info', 'binary', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', 36, '0', false, false, null, true);
                                 }
                             }
                             $_order++;
@@ -1054,16 +930,12 @@ class Free_CreateEq
     }
     private static function createEq_system_SP_lang($logicalinfo, $templatecore_V4)
     {
-        $updateicon = false;
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
         $Free_API = new Free_API();
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3');
-            $iconLang = 'fas fa-language';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconLang = 'fas fa-language icon_blue';
-        };
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $iconLang = 'fas fa-language icon_blue';
+        $updateicon = false;
+
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des langues : ' . $logicalinfo['systemName']);
         $system->AddCommand('langue Box', 'lang', 'info', 'string', 'default', null, 'default', 1, 'default', '4GStatut', 0, $iconLang, 1, 'default', 'default', 50, '0', false, false, null, true);
         log::add('Freebox_OS', 'debug', '└─────────');
@@ -1080,23 +952,14 @@ class Free_CreateEq
             $VMscreen = 'fas fa-desktop';
             $VMdisk = 'fas fa-hdd';
             $VMstatus = 'fas fa-info-circle';
-            if (version_compare(jeedom::version(), "4", "<")) {
-                log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-                $VMOn = 'fas fa-play';
-                $VMOff = 'fas fa-stop';
-                $VMRestart = 'fas fa-sync';
-                $VMUSB = 'fab fa-usb';
-                $VMstatus = 'fas fa-info-circle';
-                $TemplateVM = 'default';
-            } else {
-                log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-                $VMOn = 'fas fa-play icon_green';
-                $VMOff = 'fas fa-stop icon_red';
-                $VMRestart = 'fas fa-sync icon_red';
-                $VMUSB = 'fab fa-usb icon_green';
-                $VMstatus = 'fas fa-info-circle icon_green';
-                $TemplateVM = 'Freebox_OS::VM';
-            };
+            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+            $VMOn = 'fas fa-play icon_green';
+            $VMOff = 'fas fa-stop icon_red';
+            $VMRestart = 'fas fa-sync icon_red';
+            $VMUSB = 'fab fa-usb icon_green';
+            $VMstatus = 'fas fa-info-circle icon_green';
+            $TemplateVM = 'Freebox_OS::VM';
+
 
             foreach ($result as $Equipement) {
                 if ($Equipement['name'] == null && $Equipement['cloudinit_hostname'] != null) {
@@ -1129,27 +992,17 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['wifiName']);
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $TemplateWifiOnOFF = 'default';
-            $iconWifiOn = 'fas fa-wifi';
-            $iconWifiOff = 'fas fa-times';
-            $iconWifiPlanningOn = 'fas fa-calendar-alt';
-            $iconWifiPlanningOff = 'fas fa-calendar-times';
-            $iconWifiWPSOn = 'fas fa-ethernet';
-            $iconWifiWPSOff = 'fas fa-ethernet';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $TemplateWifiOnOFF = 'Freebox_OS::Wifi';
-            $TemplateWifiPlanningOnOFF = 'Freebox_OS::Planning Wifi';
-            $TemplateWifiWPSOnOFF = 'Freebox_OS::Wfi WPS';
-            $iconWifiOn = 'fas fa-wifi icon_green';
-            $iconWifiOff = 'fas fa-times icon_red';
-            $iconWifiPlanningOn = 'fas fa-calendar-alt icon_green';
-            $iconWifiPlanningOff = 'fas fa-calendar-times icon_red';
-            $iconWifiWPSOn = 'fas fa-ethernet icon_green';
-            $iconWifiWPSOff = 'fas fa-ethernet icon_red';
-        };
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $TemplateWifiOnOFF = 'Freebox_OS::Wifi';
+        $TemplateWifiPlanningOnOFF = 'Freebox_OS::Planning Wifi';
+        $TemplateWifiWPSOnOFF = 'Freebox_OS::Wfi WPS';
+        $iconWifiOn = 'fas fa-wifi icon_green';
+        $iconWifiOff = 'fas fa-times icon_red';
+        $iconWifiPlanningOn = 'fas fa-calendar-alt icon_green';
+        $iconWifiPlanningOff = 'fas fa-calendar-times icon_red';
+        $iconWifiWPSOn = 'fas fa-ethernet icon_green';
+        $iconWifiWPSOff = 'fas fa-ethernet icon_red';
+
         $Wifi = Freebox_OS::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null, null, '*/5 * * * *');
         $StatusWifi = $Wifi->AddCommand('Etat Wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateicon, true);
         $Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
@@ -1172,16 +1025,10 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiAPName']);
 
-        $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $iconWifi = 'fas fa-wifi';
-            $TemplateWifi = 'default';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconWifi = 'fas fa-wifi icon_blue';
-            $TemplateWifi = 'Freebox_OS::Wifi Statut carte';
-        };
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $iconWifi = 'fas fa-wifi icon_blue';
+        $TemplateWifi = 'Freebox_OS::Wifi Statut carte';
+
         $order = 50;
         $Free_API = new Free_API();
         //$result = $Free_API->universal_get('wifi', null, null, 'ap');
@@ -1202,16 +1049,11 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '┌───────── Création équipement spécifique : ' . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiWPSName']);
 
+        log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
+        $iconWifiSessionWPSOn = 'fas fa-link icon_orange';
+        $iconWifiSessionWPSOff = 'fas fa-link icon_red';
         $updateicon = false;
-        if (version_compare(jeedom::version(), "4", "<")) {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V3 ');
-            $iconWifiSessionWPSOn = 'fas fa-link';
-            $iconWifiSessionWPSOff = 'fas fa-link';
-        } else {
-            log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
-            $iconWifiSessionWPSOn = 'fas fa-link icon_orange';
-            $iconWifiSessionWPSOff = 'fas fa-link icon_red';
-        };
+
         $order = 30;
         $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order, '0', $updateicon, false, false, true);
         $order++;

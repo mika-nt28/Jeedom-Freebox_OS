@@ -609,6 +609,7 @@ class Free_Refresh
                     }
                 }
                 if (is_object($Command)) {
+                    $Ipv6 = null;
                     foreach ($result_network as $result) {
 
                         $cmd = $EqLogics->getCmd('info', $result['id']);

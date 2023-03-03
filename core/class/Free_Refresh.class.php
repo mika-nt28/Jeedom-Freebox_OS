@@ -609,6 +609,7 @@ class Free_Refresh
                     }
                 }
                 if (is_object($Command)) {
+                    $Ipv6 = null;
                     foreach ($result_network as $result) {
 
                         $cmd = $EqLogics->getCmd('info', $result['id']);
@@ -669,6 +670,7 @@ class Free_Refresh
                             "IPV6" => $Ipv6,
                             "mac_address" => $mac_address,
                             "order" => $order,
+                            "repeatevent" => true,
                             "repeat" => true,
                         );
                         $EqLogics->AddCommand($result['primary_name'], $result['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true, null, null, null, null, null, null, null, null, null, null, null, $Parameter, $name_connectivity_type);

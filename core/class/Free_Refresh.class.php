@@ -1019,17 +1019,20 @@ class Free_Refresh
     }
     private static function refresh_titles_bool($EqLogic, $data, $log_result, $Cmd)
     {
+        /*  Suppression de cette inversion car c'est gérer par le core
         if ($EqLogic->getConfiguration('info') == 'mouv_sensor' && $Cmd->getConfiguration('info') == 'mouv_sensor') {
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '│──────────> Inversion de la valeur pour les détecteurs de mouvement pour être compatible avec Homebridge ');
+            log::add('Freebox_OS', 'debug', '│──────────> Inversion de la valeur pour les détecteurs de mouvement pour être compatible avec Homebridge');
             }
             $_value = false;
             if ($data['value'] == false) {
-                $_value = true;
+              $_value = true;
             }
         } else {
             $_value = $data['value'];
         }
+        */
+        $_value = $data['value'];
         //log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
         return $_value;
     }

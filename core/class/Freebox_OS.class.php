@@ -490,10 +490,12 @@ class Freebox_OS extends eqLogic
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
 				log::add('Freebox_OS', 'debug', '│ Paramétrage : ' . $_home_config_eq);
-				if ($invertBinary_display != null && $SubType == 'binary') {
+				if ($invertBinary_display != '0' && $SubType == 'binary') {
 					$Cmd->setdisplay('invertBinary', 1);
+				} else {
+					$Cmd->setdisplay('invertBinary', 0);
 				}
-				if ($invertBinary_config != null && $SubType == 'binary') {
+				if ($invertBinary_config != '0' && $SubType == 'binary') {
 					$Cmd->setConfiguration('invertBinary', 1);
 				}
 				$Cmd->setConfiguration('info', $_home_config_eq);

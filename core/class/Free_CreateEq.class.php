@@ -231,6 +231,8 @@ class Free_CreateEq
         $Connexion->AddCommand('IPv6', 'ipv6', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  8, '0', $updateicon, true);
         $Connexion->AddCommand('Réponse Ping', 'ping', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  9, '0', $updateicon, true);
         $Connexion->AddCommand('Proxy Wake on Lan', 'wol', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  10, '0', $updateicon, true);
+        $Connexion->AddCommand('Reçu', 'bytes_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Go', null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  11, '0', $updateicon, true, null, true, null, '#value#  / 1000000000', '2');
+        $Connexion->AddCommand('Émis', 'bytes_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Go', null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  12, '0', $updateicon, true, null, true, null, '#value#  / 1000000000', '2');
         log::add('Freebox_OS', 'debug', '└─────────');
         if ($result['sfp_present'] != null) {
             Free_CreateEq::createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $result);

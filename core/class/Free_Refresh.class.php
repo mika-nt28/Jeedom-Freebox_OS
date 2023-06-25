@@ -206,6 +206,12 @@ class Free_Refresh
                         case "bandwidth_up":
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['bandwidth_up']);
                             break;
+                        case "bytes_down":
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['bytes_down']);
+                            break;
+                        case "bytes_up":
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['bytes_up']);
+                            break;
                         case "ipv4":
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['ipv4']);
                             break;
@@ -1263,8 +1269,18 @@ class Free_Refresh
             foreach ($results as $result) {
                 foreach ($result['data'] as $data) {
                     $cmd = $EqLogics->getCmd('info', $data['ep_id']);
-                    if (!is_object($cmd)) break;
-                    Free_Refresh::refresh_titles_CMD($cmd, $EqLogics, $data, $data['ep_id'], false);
+                    if (is_object($cmd)) {
+                        Free_Refresh::refresh_titles_CMD($cmd, $EqLogics, $data, $data['ep_id'], false);
+                    } else {
+                        $cmdaction = $EqLogics->getCmd('action', $data['ep_id']);
+                        if (is_object($cmdaction)) {
+                            // LOG Pour TEST
+                            // Log::add('Freebox_OS', 'debug', '│==========================>  ID DE TYPE : ACTION ' . $data['ep_id'] . ' - ' . $data['name']);
+                        } else {
+                            // LOG Pour TEST
+                            // Log::add('Freebox_OS', 'debug', '│==========================>  ID DE TYPE : INFO MAIS NON REMONTEE ' . $data['ep_id'] . ' - ' . $data['name']);
+                        }
+                    }
                 }
             }
         }

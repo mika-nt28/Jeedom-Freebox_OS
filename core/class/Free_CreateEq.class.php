@@ -71,10 +71,7 @@ class Free_CreateEq
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4);
                 break;
             case 'system':
-                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP_lang($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system_full($logicalinfo, $templatecore_V4);
                 break;
             case 'wifi':
                 Free_CreateEq::createEq_wifi($logicalinfo, $templatecore_V4);
@@ -97,11 +94,7 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES PLAYERS SOUS TENSION');
                 log::add('Freebox_OS', 'debug', '================= ENSEMBLE DES VM');
                 log::add('Freebox_OS', 'debug', '====================================================================================');
-                Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_system_SP_lang($logicalinfo, $templatecore_V4);
-                Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
+                Free_CreateEq::createEq_system_full($logicalinfo, $templatecore_V4);
                 log::add('Freebox_OS', 'debug', '====================================================================================');
                 log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
@@ -804,46 +797,58 @@ class Free_CreateEq
         $Free_API->universal_get('universalAPI', null, null, '/notif/targets', true, true, false);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_system($logicalinfo, $templatecore_V4)
+    private static function createEq_system_full($logicalinfo, $templatecore_V4)
+    {
+        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
+        $order = 10;
+        Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4, $order, $system);
+        $order = 1;
+        Free_CreateEq::createEq_system_lan($logicalinfo, $templatecore_V4, $order, $system);
+        $order = 20;
+        Free_CreateEq::createEq_system_SP($logicalinfo, $templatecore_V4, $order, $system);
+        $order = 49;
+        Free_CreateEq::createEq_system_SP_lang($logicalinfo, $templatecore_V4, $order, $system);
+    }
+    private static function createEq_system($logicalinfo, $templatecore_V4, $order = 10, $system)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes : ' . $logicalinfo['systemName']);
         log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         $iconReboot = 'fas fa-sync icon_red';
         $updateicon = false;
 
-        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
-        $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  31, '0', true, false, null, true);
-        $system->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateicon, true);
-        $system->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true);
-        $system->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  3, '0', $updateicon, true);
-        $system->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  4, '0', $updateicon, true);
-        $system->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  5, '0', $updateicon, true);
-        $system->AddCommand('Type de Freebox', 'pretty_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info', 0, null, 0, 'default', 'default',  63, '0', $updateicon, true);
-        $system->AddCommand('Type de Wifi', 'wifi_type', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'model_info',  0, null, 0, 'default', 'default',  64, '0', $updateicon, true);
-        $system->AddCommand('Modele de Freebox', 'model_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info',  0, null, 0, 'default', 'default',  65, '0', $updateicon, true);
+
+        $system->AddCommand('Modele de Freebox', 'model_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info',  0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Freebox firmware version', 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Mac', 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Allumée depuis', 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Serial', 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Type de Freebox', 'pretty_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Type de Wifi', 'wifi_type', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'model_info',  0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $order = 130;
+        $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',   $order++, '0', true, false, null, true);
+
         //$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateicon);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_system_lan($logicalinfo, $templatecore_V4)
+    private static function createEq_system_lan($logicalinfo, $templatecore_V4, $order = 1, $system)
     {
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifique Type de Freebox : ' . $logicalinfo['systemName']);
         log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         $updateicon = false;
 
-        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
-        $system->AddCommand('Nom Freebox', 'name', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 60, '0', $updateicon, true);
-        $system->AddCommand('Mode Freebox', 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  61, '0', $updateicon, true);
-        $system->AddCommand('Ip', 'ip', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  62, '0', $updateicon, true);
+        $system->AddCommand('Nom Freebox', 'name', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Mode Freebox', 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        $system->AddCommand('Ip', 'ip', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
 
         Free_Refresh::RefreshInformation($logicalinfo['systemID']);
     }
 
-    private static function createEq_system_SP($logicalinfo, $templatecore_V4)
+    private static function createEq_system_SP($logicalinfo, $templatecore_V4, $order = 20, $system)
     {
         $Free_API = new Free_API();
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des commandes spécifiques Capteurs : ' . $logicalinfo['systemName']);
-        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
         log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         $Template4G = 'Freebox_OS::4G';
         $templatecore_V4  = 'core::';
@@ -853,7 +858,7 @@ class Free_CreateEq
         $icon4Goff = 'fas fa-broadcast-tower icon_red';
 
         $boucle_num = 1; // 1 = sensors - 2 = fans - 3 = extension
-        $_order = 6;
+
         while ($boucle_num <= 3) {
 
             if ($boucle_num == 1) {
@@ -905,21 +910,22 @@ class Free_CreateEq
                         log::add('Freebox_OS', 'debug', '│ Name : ' . $_name . ' -- id : ' . $_id . ' -- value : ' . $_value . ' -- unité : ' . $_unit . ' -- type : ' . $_type);
                         if ($_name != '') {
 
-                            $system->AddCommand($_name, $_id, 'info', $_type, $templatecore_V4 . 'line', $_unit, null, $IsVisible, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, $_order, 0, false, true, null, $_iconname);
+                            $system->AddCommand($_name, $_id, 'info', $_type, $templatecore_V4 . 'line', $_unit, null, $IsVisible, 'default', $link_logicalId, 0, $icon, 0, $_min, $_max, $order, 0, false, true, null, $_iconname, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
 
                             $system->checkAndUpdateCmd($_id, $_value);
 
                             if ($boucle_update == 'expansions') {
                                 if ($Equipement['type'] == 'dsl_lte') {
                                     // Début ajout 4G
-                                    $_4G = $system->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', 32, '0', false, 'never', null, true);
-                                    $system->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icon4Gon, 1, 'default', 'default', 33, '0', false, false, null, true);
-                                    $system->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icon4Goff, 0, 'default', 'default', 34, '0', false, false, null, true);
-                                    $system->AddCommand('Etat du réseau 4G', 'state_lte', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', 35, '0', false, false, null, true);
-                                    $system->AddCommand('Etat de la radio 4G', 'associated_lte', 'info', 'binary', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', 36, '0', false, false, null, true);
+                                    $order = 31;
+                                    $_4G = $system->AddCommand('Etat 4G ', '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '', '', '', 1, 'default', 'default', $order++, '0', false, 'never', null, true);
+                                    $system->AddCommand('4G On', '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icon4Gon, 1, 'default', 'default', $order++, '0', false, false, null, true);
+                                    $system->AddCommand('4G Off', '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icon4Goff, 0, 'default', 'default', $order++, '0', false, false, null, true);
+                                    $system->AddCommand('Etat du réseau 4G', 'state_lte', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', false, false, null, true);
+                                    $system->AddCommand('Etat de la radio 4G', 'associated_lte', 'info', 'binary', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', false, false, null, true);
                                 }
                             }
-                            $_order++;
+                            $order++;
                         }
                     }
                 }
@@ -931,16 +937,15 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└─────────');
     }
-    private static function createEq_system_SP_lang($logicalinfo, $templatecore_V4)
+    private static function createEq_system_SP_lang($logicalinfo, $templatecore_V4, $order = 49, $system)
     {
-        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *');
         $Free_API = new Free_API();
         log::add('Freebox_OS', 'debug', '│ Application des Widgets ou Icônes pour le core V4');
         $iconLang = 'fas fa-language icon_blue';
         $updateicon = false;
 
         log::add('Freebox_OS', 'debug', '┌───────── Ajout des langues : ' . $logicalinfo['systemName']);
-        $system->AddCommand('langue Box', 'lang', 'info', 'string', 'default', null, 'default', 1, 'default', '4GStatut', 0, $iconLang, 1, 'default', 'default', 50, '0', false, false, null, true);
+        $system->AddCommand('langue Box', 'lang', 'info', 'string', 'default', null, 'default', 1, 'default', '4GStatut', 0, $iconLang, 1, 'default', 'default', $order++, '0', false, false, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_VM($logicalinfo, $templatecore_V4)

@@ -123,6 +123,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<div class=" eqLogicThumbnailContainer">
 			<?php
 			$eqLogic_tiles = 0;
+			$count_tiles = 0;
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getConfiguration('eq_group') === 'tiles' || $eqLogic->getConfiguration('eq_group') === 'nodes' || $eqLogic->getConfiguration('eq_group') === 'tiles_SP') {
 					$count_tiles++;

@@ -451,7 +451,7 @@ class Free_CreateTil
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
                                             if ($setting['Search'] != 'pir_battery_r_nodes' && $setting['Search'] != 'kfb_battery_r_nodes') {
                                                 $order = $setting['Order'];
-                                                $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, true, null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
+                                                $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, $setting['Repeatevent'], null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
                                                 $order++;
                                             } else {
                                                 $Name = 'Batterie';
@@ -931,6 +931,7 @@ class Free_CreateTil
         $TypeCMD = null;
         $CreateCMD = true;
         $Label_sup = null;
+        $repeatevent  = 'never';
         if ($Access == "rw") {
             $Label_sup = 'Etat ';
         }
@@ -977,6 +978,7 @@ class Free_CreateTil
                 $_Max  = 4;
                 $IsVisible_I = 1;
                 $IsHistorized = 1;
+                $repeatevent = 'always';
                 break;
             case 'alarm_control_battery_r_tiles':
             case 'pir_battery_r_nodes':
@@ -1126,7 +1128,10 @@ class Free_CreateTil
             "Templatecore" => $Templatecore,
             "ForceLineB" => $ForceLineB,
             "Iconname" => $_Iconname,
-            "TypeCMD" => $TypeCMD
+            "TypeCMD" => $TypeCMD,
+            // Action
+            "Repeatevent" => $repeatevent
+
         );
         return $Setting;
     }

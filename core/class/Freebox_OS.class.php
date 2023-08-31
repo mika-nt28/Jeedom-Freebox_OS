@@ -565,6 +565,7 @@ class Freebox_OS extends eqLogic
 			}
 			$Cmd->setConfiguration('IPV4', $updatenetwork['IPV4']);
 			$Cmd->setConfiguration('IPV6', $updatenetwork['IPV6']);
+			//log::add('Freebox_OS', 'debug', '│ ========> IPV4/6 : ' . $Name . ' = ' . $updatenetwork['IPV4'] . ' / ' . $updatenetwork['IPV6']);
 			$Cmd->setConfiguration('mac_address', $updatenetwork['mac_address']);
 			if ($updatenetwork['order'] != null) {
 				$Cmd->setOrder($updatenetwork['order']);

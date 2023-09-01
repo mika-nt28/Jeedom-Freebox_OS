@@ -589,6 +589,8 @@ class Free_Refresh
         $noactive_list = null;
         $updatename = false;
         $_IsVisible = 'default';
+        $_UpdateVisible = false;
+        $IsVisible_option = true;
         $updateWidget = false;
         log::add('Freebox_OS', 'debug', '┌───────── Mise à jour : ' . $_network);
         $mac_address = null;
@@ -601,6 +603,13 @@ class Free_Refresh
         $result_network_DHCP = $Free_API->universal_get('universalAPI', null, null, 'dhcp/static_lease', true, true, true);
         $order_count_active = 100;
         $order_count_noactive = 400;
+        if ($EqLogics->getConfiguration('UpdateVisible') == true) {
+            $_UpdateVisible = true;
+            log::add('Freebox_OS', 'debug', '│===========> Masquer les équipements avec statut 0 : ' . $_UpdateVisible);
+        } else {
+            $_UpdateVisible = false;
+            log::add('Freebox_OS', 'debug', '│===========> Affichage les équipements avec statut 0');
+        }
         if (!$result_network_ping['success']) {
             log::add('Freebox_OS', 'debug', '│===========> RESULTAT  Requête pas correct ou Pas d\'appareil trouvé' . $result_network_ping['success']);
         } else {
@@ -670,9 +679,11 @@ class Free_Refresh
                                     $active_list .= '|' . $result['primary_name'] . '(' . $mac_address . ')';
                                 }
                                 $value = true;
+                                $IsVisible_option = true;
                             } else {
                                 $order = $order_count_noactive++;
                                 $value = 0;
+                                $IsVisible_option = false;
                                 // Liste des non actifs
                                 if ($noactive_list == null) {
                                     $noactive_list = $result['primary_name'] . ' (' . $mac_address . ')';
@@ -682,6 +693,7 @@ class Free_Refresh
                             }
                         } else {
                             $value = 0;
+                            $IsVisible_option = false;
                         }
 
                         $Parameter = array(
@@ -693,9 +705,16 @@ class Free_Refresh
                             "order" => $order,
                             "repeatevent" => true,
                             "repeat" => true,
+                            "UpdateVisible" => $_UpdateVisible,
+                            "IsVisible_option" => $IsVisible_option
                         );
                         $EqLogics->AddCommand($result['primary_name'], $result['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true, null, null, null, null, null, null, null, null, null, null, null, $Parameter, $name_connectivity_type);
                         $EqLogics->checkAndUpdateCmd($cmd, $value);
+                        /* if ($EqLogics->getConfiguration('UpdateVisible') == false) {
+                            $Command->setIsVisible(false);
+                            $Command->save();
+                            log::add('Freebox_OS', 'debug', '│=====================================================================> TEST 2000: ' . $IsVisible_option);
+                        }*/
                         break;
                     }
                 }

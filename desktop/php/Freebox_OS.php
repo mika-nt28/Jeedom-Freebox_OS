@@ -303,8 +303,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l\'IPv4 sur le widget" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l\'IPv6 sur le widget" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l'IPv4 sur le widget" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l'IPv6 sur le widget" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
 								</div>
 							</div>
 							<div class="form-group IPV">
@@ -313,6 +313,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</label>
 								<div class="col-sm-6">
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Désactiver la mise à jour des noms" data-l1key="configuration" data-l2key="UpdateName" />{{Désactiver}}</label>
+								</div>
+							</div>
+							<div class="form-group IPV">
+								<label class="col-sm-4 control-label">{{Afficher uniquement les connectés}}
+									<sup><i class="fas fa-question-circle" title="{{Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard)}}"></i></sup>
+								</label>
+								<div class="col-sm-6">
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Afficher uniquement les équipements connectés" data-l1key="configuration" data-l2key="UpdateVisible" />{{Activer}}</label>
 								</div>
 							</div>
 							<div class="form-group ADD_EQLOGIC">

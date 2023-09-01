@@ -585,6 +585,7 @@ class Free_Refresh
     {
         $value = null;
         $active_list = null;
+        $active_listIP = null;
         $noactive_list = null;
         $updatename = false;
         $_IsVisible = 'default';
@@ -597,6 +598,7 @@ class Free_Refresh
             $_networkinterface = 'wifiguest';
         }
         $result_network_ping = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true);
+        $result_network_DHCP = $Free_API->universal_get('universalAPI', null, null, 'dhcp/static_lease', true, true, true);
         $order_count_active = 100;
         $order_count_noactive = 400;
         if (!$result_network_ping['success']) {
@@ -644,9 +646,21 @@ class Free_Refresh
                             $ident = $result['l2ident'];
                             if ($ident['type'] == 'mac_address') {
                                 $mac_address = $ident['id'];
+                                if (isset($result_network_DHCP['result'])) {
+                                    foreach ($result_network_DHCP['result'] as $IP) {
+                                        if ($IP['mac'] == $mac_address) {
+                                            $Ipv4 = $IP['ip'];
+                                            if ($active_listIP == null) {
+                                                $active_listIP = $IP['hostname'] . '(' . $IP['ip'] . ')';
+                                            } else {
+                                                $active_listIP .= '|' . $IP['hostname'] . '(' . $IP['ip'] . ')';
+                                            }
+                                        }
+                                    }
+                                }
                             }
                         }
-                        //$cmd->setConfiguration('host_type', $result['host_type']);
+
                         if (isset($result['active'])) {
                             if ($result['active'] == true) {
                                 $order = $order_count_active++;
@@ -688,6 +702,7 @@ class Free_Refresh
             }
         }
         log::add('Freebox_OS', 'debug', '│===========> Appareil(s) connecté(s) : ' . $active_list);
+        log::add('Freebox_OS', 'debug', '│===========> Appareil(s) connecté(s) avec IP Fixe : ' . $active_listIP);
         log::add('Freebox_OS', 'debug', '│===========> Appareil(s) non connecté(s) : ' . $noactive_list);
         log::add('Freebox_OS', 'debug', '└─────────');
     }

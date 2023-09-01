@@ -536,7 +536,6 @@ class Freebox_OS extends eqLogic
 
 		// Mise à jour des noms de la commande pour le Network
 		if ($updatenetwork != false) {
-
 			if ($updatenetwork['updatename'] == true) {
 				if ($Name != $Cmd->getName()) {
 					log::add('Freebox_OS', 'debug', '│===========> Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Cmd->getName());
@@ -563,14 +562,23 @@ class Freebox_OS extends eqLogic
 					}
 				}
 			}
+			if ($updatenetwork['UpdateVisible'] == true) {
+				if ($updatenetwork['IsVisible_option'] == 0) {
+					//log::add('Freebox_OS', 'debug', '│===============================> PAS VISIBLE : ' . $updatenetwork['IsVisible_option']);
+					$Cmd->setIsVisible(0);
+					$Cmd->save();
+				} else {
+					$Cmd->setIsVisible(1);
+					$Cmd->save();
+				}
+				//log::add('Freebox_OS', 'debug', '│===============================> TEST 2000: ' . $updatenetwork['IsVisible_option']);
+			}
 			$Cmd->setConfiguration('host_type', $updatenetwork['host_type']);
 			if ($repeatevent == $updatenetwork['repeatevent'] && $Type == 'info') {
 				$Cmd->setConfiguration('repeatEventManagement', 'never');
-				//log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
 			}
 			$Cmd->setConfiguration('IPV4', $updatenetwork['IPV4']);
 			$Cmd->setConfiguration('IPV6', $updatenetwork['IPV6']);
-			//log::add('Freebox_OS', 'debug', '│ ========> IPV4/6 : ' . $Name . ' = ' . $updatenetwork['IPV4'] . ' / ' . $updatenetwork['IPV6']);
 			$Cmd->setConfiguration('mac_address', $updatenetwork['mac_address']);
 			if ($updatenetwork['order'] != null) {
 				$Cmd->setOrder($updatenetwork['order']);

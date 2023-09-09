@@ -295,19 +295,21 @@ class Free_CreateEq
             $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         }
         $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
+        $order_i1 = 0;
         if ($result != false) {
             foreach ($result['result'] as $disks) {
                 if ($disks['temp'] != 0) {
                     log::add('Freebox_OS', 'debug', '──────────> Température : ' . $disks['temp'] . '°C' . '- Disque [' . $disks['serial'] . '] - ' . $disks['id']);
-                    $disk->AddCommand('Disque [' . $disks['serial'] . '] Temperature', $disks['id'] . '_temp', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $icontemp, 0, '0', '100', null, 0, false, true, null, null);
+                    $disk->AddCommand('Disque [' . $disks['serial'] . '] Temperature', $disks['id'] . '_temp', 'info', 'numeric', $templatecore_V4 . 'line', '°C', null, 1, 'default', 'default', 0, $icontemp, 0, '0', '100', $order_i1++, 0, false, true, null, true, null, null, null, null, null, null, null, true);
                 }
                 if ($disks['serial'] != null) {
                     log::add('Freebox_OS', 'debug', '──────────> Tourne : ' . $disks['spinning'] . '- Disque [' . $disks['serial'] . '] - ' . $disks['id']);
-                    $disk->AddCommand('Disque [' . $disks['serial'] . '] Tourne', $disks['id'] . '_spinning', 'info', 'binary', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, null, '0', false, false, 'never', null, null, null);
+                    $disk->AddCommand('Disque [' . $disks['serial'] . '] Tourne', $disks['id'] . '_spinning', 'info', 'binary', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i1++, '0', false, false, 'never', null, null, null, null, null, null, null, null, true);
                 }
                 foreach ($disks['partitions'] as $partition) {
+                    $order_i2 = 200;
                     log::add('Freebox_OS', 'debug', '│──────────> ID :' . $partition['id'] . ' : Disque [' . $disks['type'] . '] - ' . $disks['id'] . ' - Partitions : ' . $partition['label']);
-                    $disk->AddCommand($partition['label'] . ' - ' . $disks['type'] . ' - ' . $partition['fstype'], $partition['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, null, '0', false, false, 'never', null, true, '#value#*100', 2);
+                    $disk->AddCommand($partition['label'] . ' - ' . $disks['type'] . ' - ' . $partition['fstype'], $partition['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, $order_i2++, '0', false, false, 'never', null, true, '#value#*100', 2, null, null, null, null, true);
                 }
             }
         }
@@ -324,20 +326,16 @@ class Free_CreateEq
             $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid', true, true, false);
 
             if ($result != false) {
-                $order_i = 0;
+                $order_i = 100;
                 foreach ($result as $raid) {
                     log::add('Freebox_OS', 'debug', '│──────────> RAID : ' . $raid['name']);
-                    $order_i--;
-                    $disk->AddCommand('Raid ' . $raid['name'] . ' state', $raid['id'] . '_state', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
-                    $order_i--;
-                    $disk->AddCommand('Raid ' . $raid['name'] . ' sync_action', $raid['id'] . '_sync_action', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
-                    $order_i--;
-                    $disk->AddCommand('Raid ' . $raid['name'] . ' degraded', $raid['id'] . '_degraded', 'info', 'binary', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
-                    $order_i--;
+                    $disk->AddCommand('Raid ' . $raid['name'] . ' state', $raid['id'] . '_state', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i++, '0', false, false, 'never', null, null, null, null, null, null, null, null, true);
+                    $disk->AddCommand('Raid ' . $raid['name'] . ' sync_action', $raid['id'] . '_sync_action', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i++, '0', false, false, 'never', null, null, null, null, null, null, null, null, true);
+                    $disk->AddCommand('Raid ' . $raid['name'] . ' degraded',     $raid['id'] . '_degraded', 'info', 'binary', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i++, '0', false, false, 'never', null, null, null, null, null, null, null, null, true);
+                    $order_i = 200;
                     if (isset($raid['members'])) {
                         foreach ($raid['members'] as $members_raid) {
-                            $disk->AddCommand('Etat Role Disque ' . $members_raid['disk']['serial'], $members_raid['id'] . '_role', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i, '0', false, false, 'never', null, null, null);
-                            $order_i--;
+                            $disk->AddCommand('Etat Role Disque ' . $members_raid['disk']['serial'], $members_raid['id'] . '_role', 'info', 'string', 'default', null, null, 1, 'default', 'default', 0, null, 0, null, null, $order_i++, '0', false, false, 'never', null, null, null, null, null, null, null, null, true);
                         }
                     }
                 }
@@ -617,12 +615,8 @@ class Free_CreateEq
             }
             log::add('Freebox_OS', 'debug', '│──────────> Boucle pour Création des commandes : ' . $name);
             $netshareSTATUS = $netshare->AddCommand($name, $Logical_ID, "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', $icon, 0, 'default', 'default', '0', $_order, $updateicon, true);
-            $_order++;
-            $netshare->AddCommand('Activer ' . $name, $Logical_ID . 'On', 'action', 'other', $template, null, 'LIGHT_ON', 1, $netshareSTATUS, '', 0, $icon . $color_on, 0, 'default', 'default', $_order, '0', $updateicon, false);
-            $_order++;
-            $netshare->AddCommand('Désactiver ' . $name, $Logical_ID  . 'Off', 'action', 'other', $template, null, 'LIGHT_OFF', 1, $netshareSTATUS, '', 0, $icon . $color_off, 0, 'default', 'default', $_order, '0', $updateicon, false);
-            $_order++;
-
+            $netshare->AddCommand('Activer ' . $name, $Logical_ID . 'On', 'action', 'other', $template, null, 'LIGHT_ON', 1, $netshareSTATUS, '', 0, $icon . $color_on, 0, 'default', 'default', $_order++, '0', $updateicon, false);
+            $netshare->AddCommand('Désactiver ' . $name, $Logical_ID  . 'Off', 'action', 'other', $template, null, 'LIGHT_OFF', 1, $netshareSTATUS, '', 0, $icon . $color_off, 0, 'default', 'default', $_order++, '0', $updateicon, false);
             $boucle_num++;
         }
         log::add('Freebox_OS', 'debug', '└─────────');

@@ -219,7 +219,7 @@ class Free_CreateTil
             if ($Equipement['label'] != '') {
                 $Label_ETAT =  $Equipement['label'];
                 $order = $Equipement['id'] * 100;
-                $homeadaptersLink = $homeadapters->AddCommand($Label_ETAT, $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', $order, 0, false, false);
+                $homeadaptersLink = $homeadapters->AddCommand($Label_ETAT, $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', $order, 0, false, false, null, null, null, null, null, null, null, null, null, true);
                 //$homeadapters->AddCommand('ON ' . $Label_ETAT, 'PB_On' . $Equipement['id'], 'action', 'other', $templatecore_V4 . 'binarySwitch', null, null, 1, $homeadaptersLink, $Equipement['id'], 0, null, 0, 'default', 'default', $order + 1, 0, false, false);
                 //$homeadapters->AddCommand('OFF ' . $Label_ETAT, 'PB_Off' . $Equipement['id'], 'action', 'other', $templatecore_V4 . 'binarySwitch', null, null, 1, $homeadaptersLink, $Equipement['id'], 0, null, 0, 'default', 'default', $order + 2, 0, false, false);
                 if ($Equipement['status'] == 'active') {

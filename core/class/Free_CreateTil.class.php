@@ -219,7 +219,7 @@ class Free_CreateTil
             if ($Equipement['label'] != '') {
                 $Label_ETAT =  $Equipement['label'];
                 $order = $Equipement['id'] * 100;
-                $homeadaptersLink = $homeadapters->AddCommand($Label_ETAT, $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', $order, 0, false, false);
+                $homeadaptersLink = $homeadapters->AddCommand($Label_ETAT, $Equipement['id'], 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', $order, 0, false, false, null, null, null, null, null, null, null, null, null, true);
                 //$homeadapters->AddCommand('ON ' . $Label_ETAT, 'PB_On' . $Equipement['id'], 'action', 'other', $templatecore_V4 . 'binarySwitch', null, null, 1, $homeadaptersLink, $Equipement['id'], 0, null, 0, 'default', 'default', $order + 1, 0, false, false);
                 //$homeadapters->AddCommand('OFF ' . $Label_ETAT, 'PB_Off' . $Equipement['id'], 'action', 'other', $templatecore_V4 . 'binarySwitch', null, null, 1, $homeadaptersLink, $Equipement['id'], 0, null, 0, 'default', 'default', $order + 2, 0, false, false);
                 if ($Equipement['status'] == 'active') {
@@ -277,7 +277,7 @@ class Free_CreateTil
                         } else {
                             $_eq_action = null;
                         }
-                        log::add('Freebox_OS', 'debug', '>> ================ >> ' . $Equipement['label'] . ' / ' . $_eq_action . ' / ' . $Equipement['id']);
+                        log::add('Freebox_OS', 'debug', '>> ********** START ****************************************************************************************================ >> ' . $Equipement['label'] . ' / ' . $_eq_action . ' / ' . $Equipement['id']);
                     } else {
                         $_eq_category = false;
                     }
@@ -334,6 +334,7 @@ class Free_CreateTil
                     );
                     $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);
                     if ($_eq_type != 'camera' && $boucle_num != 2) {
+                        log::add('Freebox_OS', 'debug', '>> ********** START ****************************************************************************************================ >> ' . $Equipement['label']);
                         $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2, $eq_group);
                     } else {
                         $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2, $eq_group);
@@ -449,6 +450,7 @@ class Free_CreateTil
                                         }
 
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
+                                            log::add('Freebox_OS', 'debug', '│----------=================================================================================================--> Range Icon ' . $setting['Search']);
                                             if ($setting['Search'] != 'pir_battery_r_nodes' && $setting['Search'] != 'kfb_battery_r_nodes') {
                                                 $order = $setting['Order'];
                                                 $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, $setting['Repeatevent'], null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
@@ -508,7 +510,6 @@ class Free_CreateTil
                                             } else {
                                                 $_eq_type_battery =  $_eq_type;
                                             }
-
                                             $battery = Free_CreateTil::Battery_type($_eq_type_battery);
                                             if ($_eq_type == 'alarm_control') {
                                                 $Tile->batteryStatus($Command['value']);
@@ -632,6 +633,7 @@ class Free_CreateTil
                             //log::add('Freebox_OS', 'debug', '└─────────');
                         }
                     }
+                    log::add('Freebox_OS', 'debug', '>> ********** END ******************************************************************************************================ >> ' . $Equipement['label']);
                 }
             }
             $boucle_num++;
@@ -691,6 +693,8 @@ class Free_CreateTil
         $Label = $Label_O;
         $CreateCMD = true;
         $TypeCMD_BOOL = null;
+        $ForceLineB = 'default';
+        $ForceLineA = null;
         $LabelON =  null;
         $LabelOFF = null;
 
@@ -754,6 +758,8 @@ class Free_CreateTil
             "LabelON" => $LabelON,
             "LabelOFF" => $LabelOFF,
             "TypeCMD" => $TypeCMD_BOOL,
+            "ForceLineB" => $ForceLineB,
+            "ForceLineA" => $ForceLineA,
             "Generic_type_I" => $Generic_type_I,
             "Generic_type" => $Generic_type
         );
@@ -782,6 +788,7 @@ class Free_CreateTil
         $Templatecore = 'default';
         $SubType = 'other';
         $ForceLineB = 'default';
+        $ForceLineA = null;
         $_Iconname = null;
         $Home_config_eq = null;
         $Label_I = null;
@@ -888,6 +895,7 @@ class Free_CreateTil
             "SubType" => $SubType,
             "Templatecore" => $Templatecore,
             "ForceLineB" => $ForceLineB,
+            "ForceLineA" => $ForceLineA,
             "Iconname" => $_Iconname,
             "TypeCMD" => $TypeCMD_BOOL,
             "Home_config_eq" => $Home_config_eq
@@ -922,6 +930,7 @@ class Free_CreateTil
         $IsVisible_I = '0';
         $IsHistorized = '0';
         $ForceLineB = 'default';
+        $ForceLineA = null;
         $_Iconname = null;
         $InvertSlide = null;
         $SubType = 'slider';
@@ -981,6 +990,7 @@ class Free_CreateTil
                 $repeatevent = 'always';
                 break;
             case 'alarm_control_battery_r_tiles':
+            case 'alarm_control_battery_warning_r_tiles':
             case 'pir_battery_r_nodes':
             case 'dws_battery_r_nodes':
             case 'kfb_battery_r_nodes':
@@ -1047,6 +1057,7 @@ class Free_CreateTil
             case 'alarm_sound_rw_nodes':
                 $Icon_I = 'fas fa-stopwatch';
                 $Icon = 'fas fa-stopwatch icon_green';
+                $IsVisible = '0';
                 switch ($Search) {
                     case 'alarm_timeout1_rw_nodes':
                         $Order = 20;
@@ -1127,6 +1138,7 @@ class Free_CreateTil
             "SubType" => $SubType,
             "Templatecore" => $Templatecore,
             "ForceLineB" => $ForceLineB,
+            "ForceLineA" => $ForceLineA,
             "Iconname" => $_Iconname,
             "TypeCMD" => $TypeCMD,
             // Action
@@ -1180,6 +1192,8 @@ class Free_CreateTil
         $InvertBinary_config = 0;
         $Order = 0;
         $Order_A = 0;
+        $ForceLineB = 'default';
+        $ForceLineA = null;
         $_Home_config_eq = null;
         $IsVisible = 1;
         $IsVisible_PB = null;
@@ -1453,6 +1467,8 @@ class Free_CreateTil
             "Templatecore" => $Templatecore,
             "TemplatecoreON" => $TemplatecoreON,
             "TemplatecoreOFF" => $TemplatecoreOFF,
+            "ForceLineB" => $ForceLineB,
+            "ForceLineA" => $ForceLineA,
             "Search" => $Search,
             "InvertBinary_config" => $InvertBinary_config
         );
@@ -1464,6 +1480,7 @@ class Free_CreateTil
         switch ($Type_eq) {
             case 'alarm':
             case 'alarm_control':
+            case 'alarm_battery_r_nodes':
                 $Battery = '2 x AA/LR6';
                 break;
             case 'alarm_sensor_mouv_sensor':
@@ -1474,6 +1491,9 @@ class Free_CreateTil
             case 'kfb_battery_r_nodes':
             case 'kfb':
             case 'alarm_sensor':
+            case 'alarm_sensor_battery_warning_r_tiles':
+            case 'pir_battery_r_nodes':
+            case 'dws':
                 $Battery = '1 x CR2450';
                 break;
             default:

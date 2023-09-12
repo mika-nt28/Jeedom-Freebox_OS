@@ -222,33 +222,35 @@ class Free_API
             } else {
                 $result = json_decode($content, true);
                 if ($result == null) return false;
-                if (!$result['success']) {
-                    if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
-                        log::add('Freebox_OS', 'error', 'Erreur Droits : '  . $result['msg']);
-                        return false;
-                    } else if ($result['error_code'] == "auth_required") {
-                        log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['error_code']);
-                        $this->close_session();
-                        $this->getFreeboxOpenSessionData();
-                        log::add('Freebox_OS', 'Debug', '[Redémarrage session Terminée à cause de l\'erreur] : ' . $result['error_code']);
-                        $result = 'auth_required';
-                        return $result;
-                    } else if ($result['error_code'] == 'denied_from_external_ip') {
-                        log::add('Freebox_OS', 'error', 'Erreur Accès : '  . $result['msg']);
-                        return false;
-                    } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
-                        log::add('Freebox_OS', 'error', 'Erreur Application : '  . $result['msg']);
-                        return false;
-                    } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
-                        log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
-                        return false;
-                    } else if ($result['error_code'] == 'invalid_api_version') {
-                        log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg'] . ' - ' . $requetURL);
-                        $result = $result['error_code'];
-                        return $result;
-                    } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
-                        log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
-                        return false;
+                if (isset($result['success']) || isset($result['error_code'])) {
+                    if (!$result['success']) {
+                        if ($result['error_code'] == "insufficient_rights" || $result['error_code'] == 'missing_right') {
+                            log::add('Freebox_OS', 'error', 'Erreur Droits : '  . $result['msg']);
+                            return false;
+                        } else if ($result['error_code'] == "auth_required") {
+                            log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['error_code']);
+                            $this->close_session();
+                            $this->getFreeboxOpenSessionData();
+                            log::add('Freebox_OS', 'Debug', '[Redémarrage session Terminée à cause de l\'erreur] : ' . $result['error_code']);
+                            $result = 'auth_required';
+                            return $result;
+                        } else if ($result['error_code'] == 'denied_from_external_ip') {
+                            log::add('Freebox_OS', 'error', 'Erreur Accès : '  . $result['msg']);
+                            return false;
+                        } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
+                            log::add('Freebox_OS', 'error', 'Erreur Application : '  . $result['msg']);
+                            return false;
+                        } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
+                            log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
+                            return false;
+                        } else if ($result['error_code'] == 'invalid_api_version') {
+                            log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg'] . ' - ' . $requetURL);
+                            $result = $result['error_code'];
+                            return $result;
+                        } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
+                            log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
+                            return false;
+                        }
                     }
                 }
                 //log::add('Freebox_OS', 'debug', '└─────────');
@@ -445,7 +447,7 @@ class Free_API
         if ($result === false) {
             return false;
         }
-        if ($result['success']) {
+        if (isset($result['success'])) {
             $value = 0;
             if ($update_type == 'freeplug') {
                 $update = 'freeplug';

@@ -710,8 +710,8 @@ class Free_Refresh
                         );
                         $EqLogics->AddCommand($result['primary_name'], $result['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true, null, null, null, null, null, null, null, null, null, null, null, $Parameter, $name_connectivity_type);
                         $EqLogics->checkAndUpdateCmd($cmd, $value);
-                        /* if ($EqLogics->getConfiguration('UpdateVisible') == false) {
-                            $Command->setIsVisible(false);
+                        /* if ($_UpdateVisible == true) {
+                            $Command->setIsVisible($IsVisible_option);
                             $Command->save();
                             log::add('Freebox_OS', 'debug', '│=====================================================================> TEST 2000: ' . $IsVisible_option);
                         }*/

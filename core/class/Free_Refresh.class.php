@@ -959,7 +959,7 @@ class Free_Refresh
             }
         }
     }
-    private static function refresh_titles_string($EqLogic, $data, $log_result, $Cmd)
+    private static function refresh_titles_string($EqLogic, $data, $log_result, $Cmd, $logicalId_name = null, $_cmd_id = null)
     {
         $_Alarm_mode_value = null;
         $_Alarm_stat_value = null;
@@ -1057,10 +1057,8 @@ class Free_Refresh
         }
         return $_value;
     }
-    private static function refresh_titles_bool($EqLogic, $data, $log_result, $Cmd)
+    private static function refresh_titles_bool($EqLogic, $data, $log_result, $Cmd, $logicalId_name = null, $_cmd_id = null)
     {
-        $logicalId_name = $Cmd->getName();
-        $_cmd_id = $Cmd->getLogicalId();
         /*  Suppression de cette inversion car c'est gérer par le core
         if ($EqLogic->getConfiguration('info') == 'mouv_sensor' && $Cmd->getConfiguration('info') == 'mouv_sensor') {
             if ($log_result == true) {
@@ -1080,10 +1078,8 @@ class Free_Refresh
         }
         return $_value;
     }
-    private static function refresh_titles_int($EqLogic, $data, $log_result, $Cmd)
+    private static function refresh_titles_int($EqLogic, $data, $log_result, $Cmd, $logicalId_name = null, $_cmd_id = null)
     {
-        $logicalId_name = $Cmd->getName();
-        $_cmd_id = $Cmd->getLogicalId();
         if ($Cmd->getDisplay('invertBinary') == 1) {
             if ($data['value'] === $Cmd->getConfiguration('maxValue')) {
                 $_value = $Cmd->getConfiguration('minValue');
@@ -1183,16 +1179,18 @@ class Free_Refresh
             $_value = $data['value'];
             $EqLogic->batteryStatus($_value);
         }
+        $logicalId_name = $cmd->getName();
+        $_cmd_id = $cmd->getLogicalId();
 
         switch ($cmd->getSubType()) {
             case 'numeric':
-                $_value = Free_Refresh::refresh_titles_int($EqLogic, $data, $log_result, $cmd);
+                $_value = Free_Refresh::refresh_titles_int($EqLogic, $data, $log_result, $cmd, $logicalId_name, $_cmd_id);
                 break;
             case 'string':
-                $_value = Free_Refresh::refresh_titles_string($EqLogic, $data, $log_result, $cmd);
+                $_value = Free_Refresh::refresh_titles_string($EqLogic, $data, $log_result, $cmd, $logicalId_name, $_cmd_id);
                 break;
             case 'binary':
-                $_value = Free_Refresh::refresh_titles_bool($EqLogic, $data, $log_result, $cmd);
+                $_value = Free_Refresh::refresh_titles_bool($EqLogic, $data, $log_result, $cmd, $logicalId_name, $_cmd_id);
                 break;
         }
         if ($cmd->getConfiguration('TypeNode') == 'nodes') { // 
@@ -1234,8 +1232,6 @@ class Free_Refresh
     }
     private static function refresh_titles_nodes($EqLogics, $Free_API, $ep_id, $log_result, $Cmd)
     {
-        $logicalId_name = $Cmd->getName();
-        $_cmd_id = $Cmd->getLogicalId();
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $EqLogics->getLogicalId(), true, true, FALSE);
         foreach ($result['show_endpoints'] as $Cmd) {
             foreach ($EqLogics->getCmd('info') as $Command) {

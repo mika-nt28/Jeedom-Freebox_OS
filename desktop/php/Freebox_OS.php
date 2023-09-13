@@ -69,6 +69,21 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<?php
 			endif;
 			?>
+			<?php
+			// à conserver
+			// sera afficher uniquement si l'utilisateur est en version 4.4 ou supérieur
+			$jeedomVersion  = jeedom::version() ?? '0';
+			$displayInfoValue = version_compare($jeedomVersion, '4.4.0', '>=');
+			if ($displayInfoValue) {
+			?>
+				<div class="cursor eqLogicAction info tippied" data-action="createCommunityPost">
+					<i class="fas fa-ambulance"></i>
+					<br>
+					<span style="color:var(--txt-color)">{{Créer un post Community}}</span>
+				</div>
+			<?php
+			}
+			?>
 		</div>
 		<!-- Champ de recherche -->
 		<div class="input-group" style="margin-bottom:5px;">

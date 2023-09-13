@@ -744,6 +744,19 @@ class Freebox_OS extends eqLogic
 	public function postRemove()
 	{
 	}
+	public static function getConfigForCommunity()
+	{
+		$box = "Type de Box = " . config::byKey('TYPE_FREEBOX', 'Freebox_OS');
+		$box_name = config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS');
+		$box_mode = "Mode Box = " . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS');
+		$IP = "IP Box = " . config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS');
+		$Name = "Nom = " . config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS');
+		$API = "API = " . config::byKey('FREEBOX_API', 'Freebox_OS');
+		$tiles = "Freebox Compatible Tiles = " . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
+		$tiles_cron = "Cron Global Tiles = " . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS');
+		$FreeboxInfo = $box . ' / ' . $box_name . '<br>' . $box_mode . '<br>' . $IP . '<br>' . $Name . '<br>' . '<br>' . $API . '<br>' . '<br>' . $tiles . '<br>' . $tiles_cron;
+		return $FreeboxInfo;
+	}
 
 	/*     * **********************Getteur Setteur*************************** */
 

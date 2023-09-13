@@ -36,7 +36,6 @@ class Free_Refresh
             //Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, $log_result);
         }
 
-
         if (is_object($EqLogics) && $EqLogics->getIsEnable()) {
             if ($EqLogics->getConfiguration('type') == 'player' || $EqLogics->getConfiguration('type') == 'parental' || $EqLogics->getConfiguration('type') == 'freeplug' || $EqLogics->getConfiguration('type') == 'VM') {
                 $refresh = $EqLogics->getConfiguration('type');
@@ -1060,6 +1059,8 @@ class Free_Refresh
     }
     private static function refresh_titles_bool($EqLogic, $data, $log_result, $Cmd)
     {
+        $logicalId_name = $Cmd->getName();
+        $_cmd_id = $Cmd->getLogicalId();
         /*  Suppression de cette inversion car c'est gérer par le core
         if ($EqLogic->getConfiguration('info') == 'mouv_sensor' && $Cmd->getConfiguration('info') == 'mouv_sensor') {
             if ($log_result == true) {
@@ -1074,7 +1075,9 @@ class Free_Refresh
         }
         */
         $_value = $data['value'];
-        //log::add('Freebox_OS', 'debug', '│──────────> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
+        if ($log_result == true) {
+            Log::add('Freebox_OS', 'debug', '│──────────> ' . $EqLogic->getName() . ' => ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
+        }
         return $_value;
     }
     private static function refresh_titles_int($EqLogic, $data, $log_result, $Cmd)
@@ -1094,9 +1097,6 @@ class Free_Refresh
                 $nb_pushed = count($data['history']);
                 $nb_pushed_k = $nb_pushed - 1;
                 $_value = $data['history'][$nb_pushed_k]['value'];
-                if ($log_result == true) {
-                    log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value);
-                }
             } else {
                 if ($data['value'] == null || $data['value'] == '') {
                     $_value = '0';
@@ -1105,111 +1105,19 @@ class Free_Refresh
                 }
             }
         }
-        // Activation log provisoire pour test
-        if ($log_result == true) {
+        if (($log_result == true & $data['name'] != 'pushed')) {
             Log::add('Freebox_OS', 'debug', '│──────────> ' . $EqLogic->getName() . ' => ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
         }
         return $_value;
     }
-    private static function refresh_titles_CmdbyCmd($EqLogic, $Free_API, $log_result = false)
-    {
-        $_eqName = $EqLogic->getName();
-        $EqLogicID = eqlogic::byId($EqLogic->getId());
-        if ($log_result == true) {
-            log::add('Freebox_OS', 'debug', '******************** UPDATE POUR  : ' . $_eqName . ' **************************************** ');
-        }
-        foreach ($EqLogic->getCmd('info') as $Cmd) {
-            if ($Cmd->getLogicalId() == 'ALARM_enable' || $Cmd->getLogicalId() == 'ALARM_state' || $Cmd->getLogicalId() == 'ALARM_mode') {
-                //break;
-            } else {
 
-                $result = $Free_API->universal_get('universalAPI', $Cmd->getLogicalId(), null, 'home/tileset/' . $EqLogic->getLogicalId(), true, $log_result);
-                if ($Cmd->getLogicalId() == '11' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
-                    $Name = 'state';
-                    if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '│ =========================> ───────── OPTION SPECIFIQUE POUR STATE ALARME : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
-                    }
-                } else if ($Cmd->getLogicalId() == '2' && ($EqLogic->getConfiguration('type') == 'alarm_remote' || $EqLogic->getConfiguration('type2') == 'kfb')) {
-                    $Name = 'pushed';
-                    if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '│ =========================> ───────── OPTION SPECIFIQUE POUR BOUTON TELECOMMANDE : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
-                    }
-                } else if ($Cmd->getLogicalId() == '13' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
-                    $Name = 'error';
-                    if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '│ =========================> ───────── OPTION SPECIFIQUE POUR ERREUR ALARME : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
-                    }
-                } else {
-                    $Name = $Cmd->getName();
-                }
-                $data = array(
-                    "name" => $Name,
-                    "value" => $result['value'],
-                    "value_type" => $result['value_type'],
-                    "history" => $result['history']
-                );
-                switch ($result['value_type']) {
-                    case 'string':
-                        $_value = Free_Refresh::refresh_titles_string($EqLogic, $data, $log_result, $Cmd);
-                        $EqLogicID->checkAndUpdateCmd($Cmd, $_value);
-                        if ($log_result == true) {
-                            log::add('Freebox_OS', 'debug', '│ Type de données : ' . $result['value_type'] . ' (' . $Cmd->getLogicalId() . ' - ' . $Cmd->getName() . ') : '  . $_value . ' [' . $EqLogic->getLogicalId() . ' '  . $_eqName . ']');
-                        }
-                        break;
-                    case 'bool':
-                        $_value = Free_Refresh::refresh_titles_bool($EqLogic, $data, $log_result, $Cmd);
-                        $EqLogicID->checkAndUpdateCmd($Cmd, $_value);
-                        $EqLogicID->checkAndUpdateCmd($Cmd, $_value);
-                        if ($log_result == true) {
-                            log::add('Freebox_OS', 'debug', '│ Type de données : ' . $result['value_type'] . ' (' . $Cmd->getLogicalId() . ' - ' . $Cmd->getName() . ') : '  . $_value . ' [' . $EqLogic->getLogicalId() . ' '  . $_eqName . ']');
-                        }
-                        break;
-                    case 'int':
-                        $_value = Free_Refresh::refresh_titles_int($EqLogic, $data, $log_result, $Cmd);
-                        $EqLogicID->checkAndUpdateCmd($Cmd, $_value);
-                        if ($Cmd->getGeneric_type() == 'BATTERY') {
-                            $EqLogic->batteryStatus($_value);
-                        }
-                        $EqLogicID->checkAndUpdateCmd($Cmd, $_value);
-                        if ($log_result == true) {
-                            log::add('Freebox_OS', 'debug', '│ Type de données : ' . $result['value_type'] . ' (' . $Cmd->getLogicalId() . ' - ' . $Cmd->getName() . ') : '  . $_value . ' [' . $EqLogic->getLogicalId() . ' '  . $_eqName . ']');
-                        }
-                        break;
-                    default:
-                        if ($log_result == true) {
-                            log::add('Freebox_OS', 'debug', '│ Aucun Traitement POUR CE TYPE DE DONNEES : ' .  $result['value_type']);
-                        }
-                        break;
-                }
-            }
-        }
-        if ($log_result == true) {
-            log::add('Freebox_OS', 'debug', '**************************************************************************************************** ');
-        }
-    }
-    private static function refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, $log_result)
-    {
-        $EqLogics = eqLogic::byType('Freebox_OS');
-        foreach ($EqLogics as $EqLogic) {
-            if ($EqLogic->getConfiguration('eq_group') == 'tiles' || $EqLogic->getConfiguration('eq_group') == 'nodes') {
-                $_eqName = $EqLogic->getName();
-                if ($log_result == true) {
-                    log::add('Freebox_OS', 'debug', '=========================> ───────── UPDATE EQUIPEMENT : ' . $EqLogic->getLogicalId() . ' - '  . $_eqName);
-                }
-                foreach ($EqLogic->getCmd('info') as $Cmd) {
-                    if (is_object($Cmd)) {
-                        log::add('Freebox_OS', 'debug', '=========================> ───────── TEST UPDATE COMMANDE : ' . $Cmd->getLogicalId() . ' - '  . $Cmd->getName());
-                        $result_config2 = $Free_API->universal_get('universalAPI', null, null, 'home/tileset/25' . ' / ' . $Cmd->getLogicalId(), true, true, null);
-                        //$result_config2 = $Free_API->universal_get('universalAPI', null, null, 'home/enpoints/25/3' . $EqLogic->getLogicalId() . '/' . $Cmd->getLogicalId(), true, true, null);
-                    }
-                }
-                //Free_Refresh::refresh_titles_CmdbyCmd($EqLogic, $Free_API, false);
-            }
-        }
-    }
     private static function refresh_titles_global($EqLogics, $Free_API)
     {
         $boucle_num = 1; // 1 = Tiles - 2 = Node 
+        $log_result = true;
+        if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+            $log_result == false;
+        }
         while ($boucle_num <= 2) {
             if ($boucle_num == 2) {
                 $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes', false, false, null);
@@ -1222,14 +1130,11 @@ class Free_Refresh
                     $_eq_type = $node['category'];
                     $_eq_data = $node['show_endpoints'];
                     $_eq_node = $node['id'];
-                    $_type_boucle = 'NODE';
                 } else if ($boucle_num == 1) {
                     $_eq_type = $node['type'];
                     $_eq_data = $node['data'];
                     $_eq_node = $node['node_id'];
-                    $_type_boucle = 'TILES';
                 }
-                //log::add('Freebox_OS', 'debug', '******************** Update Boucle : ' . $_type_boucle . ' ******************** ');
                 if ($boucle_num == 1 && $_eq_type == 'camera') {
                 } else {
                     $EqLogic = eqLogic::byLogicalId($_eq_node, 'Freebox_OS');
@@ -1241,7 +1146,7 @@ class Free_Refresh
                                     $_cmd_id = $data['ep_id'];
                                     $cmd = $EqLogic->getCmd('info', $_cmd_id);
                                     if (is_object($cmd)) {
-                                        Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, false);
+                                        Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, $log_result);
                                     }
                                 } else {
                                     $_cmd_id = $data['id'];
@@ -1249,7 +1154,7 @@ class Free_Refresh
                                     if (is_object($cmd)) {
                                         if ($cmd->getConfiguration('TypeNode') == 'nodes') {
                                             if ($EqLogic->getConfiguration('type2') == 'pir' || $EqLogic->getConfiguration('type2') == 'kfb' || $EqLogic->getConfiguration('type2') == 'dws' || $EqLogic->getConfiguration('type2') == 'alarm' || $EqLogic->getConfiguration('type') == 'camera'  || $EqLogic->getConfiguration('type2') == 'basic_shutter' || $EqLogic->getConfiguration('type2') == 'opener' || $EqLogics['category'] == 'shutter'  || $EqLogic->getConfiguration('type') == 'light') {
-                                                Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, false);
+                                                Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, $log_result);
                                             }
                                         } else {
                                             //log::add('Freebox_OS', 'debug', '│──────────> Id : ' . $_cmd_id . ' -- AUCUNE MISE A JOUR A FAIRE AVEC LA REQUETE NODE');
@@ -1300,12 +1205,16 @@ class Free_Refresh
     private static function refresh_titles($EqLogics, $Free_API)
     {
         $results = $Free_API->universal_get('tiles', $EqLogics->getLogicalId(), null, null, true, true, FALSE);
+        $log_result = true;
+        if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
+            $log_result == false;
+        }
         if ($results != false) {
             foreach ($results as $result) {
                 foreach ($result['data'] as $data) {
                     $cmd = $EqLogics->getCmd('info', $data['ep_id']);
                     if (is_object($cmd)) {
-                        Free_Refresh::refresh_titles_CMD($cmd, $EqLogics, $data, $data['ep_id'], false);
+                        Free_Refresh::refresh_titles_CMD($cmd, $EqLogics, $data, $data['ep_id'], $log_result);
                     } else {
                         $cmdaction = $EqLogics->getCmd('action', $data['ep_id']);
                         if (is_object($cmdaction)) {
@@ -1320,11 +1229,13 @@ class Free_Refresh
             }
         }
         if ($EqLogics->getConfiguration('type2') == 'pir' || $EqLogics->getConfiguration('type2') == 'alarm' || $EqLogics->getConfiguration('type2') == 'dws' || $EqLogics->getConfiguration('type') == 'camera' || $EqLogics->getConfiguration('type2') == 'alarm' || $EqLogics->getConfiguration('type2') == 'kfb' || $EqLogics->getConfiguration('type2') == 'shutter' || $EqLogics->getConfiguration('type2') == 'basic_shutter') {
-            Free_Refresh::refresh_titles_nodes($EqLogics, $Free_API, $data['ep_id']);
+            Free_Refresh::refresh_titles_nodes($EqLogics, $Free_API, $data['ep_id'], $log_result, $cmd);
         }
     }
-    private static function refresh_titles_nodes($EqLogics, $Free_API, $ep_id)
+    private static function refresh_titles_nodes($EqLogics, $Free_API, $ep_id, $log_result, $Cmd)
     {
+        $logicalId_name = $Cmd->getName();
+        $_cmd_id = $Cmd->getLogicalId();
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/nodes/' . $EqLogics->getLogicalId(), true, true, FALSE);
         foreach ($result['show_endpoints'] as $Cmd) {
             foreach ($EqLogics->getCmd('info') as $Command) {

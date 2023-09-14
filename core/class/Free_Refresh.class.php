@@ -629,7 +629,7 @@ class Free_Refresh
                     $Ipv4 = null;
                     foreach ($result_network as $result) {
 
-                        $cmd = $EqLogics->getCmd('info', $result['id']);
+                        $Cmd = $EqLogics->getCmd('info', $result['id']);
                         if ($Command->getLogicalId() != $result['id']) continue;
 
                         if (isset($result['access_point'])) {
@@ -641,10 +641,10 @@ class Free_Refresh
                             foreach ($result['l3connectivities'] as $Ip) {
                                 if ($Ip['active']) {
                                     if ($Ip['af'] == 'ipv4') {
-                                        $cmd->setConfiguration('IPV4', $Ip['addr']);
+                                        $Cmd->setConfiguration('IPV4', $Ip['addr']);
                                         $Ipv4 = $Ip['addr'];
                                     } else {
-                                        $cmd->setConfiguration('IPV6', $Ip['addr']);
+                                        $Cmd->setConfiguration('IPV6', $Ip['addr']);
                                         $Ipv6 = $Ip['addr'];
                                     }
                                 }
@@ -692,7 +692,7 @@ class Free_Refresh
                             }
                         } else {
                             $value = 0;
-                            $IsVisible_option = false;
+                            $IsVisible_option = '0';
                         }
 
                         $Parameter = array(
@@ -708,12 +708,12 @@ class Free_Refresh
                             "IsVisible_option" => $IsVisible_option
                         );
                         $EqLogics->AddCommand($result['primary_name'], $result['id'], 'info', 'binary', 'Freebox_OS::Network', null, null, $_IsVisible, 'default', 'default', 0, null, 0, 'default', 'default', null, '0', $updateWidget, true, null, null, null, null, null, null, null, null, null, null, null, $Parameter, $name_connectivity_type);
-                        $EqLogics->checkAndUpdateCmd($cmd, $value);
-                        /* if ($_UpdateVisible == true) {
-                            $Command->setIsVisible($IsVisible_option);
-                            $Command->save();
-                            log::add('Freebox_OS', 'debug', '│=====================================================================> TEST 2000: ' . $IsVisible_option);
-                        }*/
+                        $EqLogics->checkAndUpdateCmd($Cmd, $value);
+                        if ($_UpdateVisible == true) {
+                            $Cmd->setIsVisible($IsVisible_option);
+                            $Cmd->save();
+                            //log::add('Freebox_OS', 'debug', '│=====================================================================> TEST 2000: ' . $result['primary_name'] . '(' . $mac_address . ')' . ' - ' . $IsVisible_option);
+                        }
                         break;
                     }
                 }

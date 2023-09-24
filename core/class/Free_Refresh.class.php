@@ -1089,16 +1089,10 @@ class Free_Refresh
                 $_value = ($Cmd->getConfiguration('maxValue') - $Cmd->getConfiguration('minValue')) - $data['value'];
             }
         } else {
-            if ($data['name'] == 'pushed') {
-                $nb_pushed = count($data['history']);
-                $nb_pushed_k = $nb_pushed - 1;
-                $_value = $data['history'][$nb_pushed_k]['value'];
+            if ($data['value'] == null || $data['value'] == '') {
+                $_value = '0';
             } else {
-                if ($data['value'] == null || $data['value'] == '') {
-                    $_value = '0';
-                } else {
-                    $_value = $data['value'];
-                }
+                $_value = $data['value'];
             }
         }
         if (($log_result == true & $data['name'] != 'pushed')) {
@@ -1165,40 +1159,58 @@ class Free_Refresh
             $boucle_num++;
         }
     }
-    private static function refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, $log_result)
+    private static function refresh_titles_remote($EqLogic, $data, $log_result, $Cmd)
     {
-        if ($data['name'] == 'pushed') {
-            $nb_pushed = count($data['history']);
-            $nb_pushed_k = $nb_pushed - 1;
-            $_value_history = $data['history'][$nb_pushed_k]['value'];
+        $nb_pushed = count($data['history']);
+        $nb_pushed_k = $nb_pushed - 1;
+        $_value = $data['history'][$nb_pushed_k]['value'];
+        $timestamp = $data['history'][$nb_pushed_k]['timestamp'];
+        if ($log_result == true) {
+            log::add('Freebox_OS', 'debug', '│ ========> ' . $EqLogic->getName() . ' [' . $Cmd->getName() . ']' . ' : Nb de valeur enregistrée -1 = ' . $nb_pushed_k . ' -- Valeur historique récente = ' . $_value . ' [' . date("d/m/Y H:i:s", $timestamp) . ' - ' . $timestamp  . ']');
+        }
+        if ($Cmd->getConfiguration('history_remote') == $timestamp) {
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '│ Nb pushed -1  : ' . $nb_pushed_k . ' -- Valeur historique récente  : ' . $_value_history);
+                log::add('Freebox_OS', 'debug', '│ ========> ' . 'PAS DE CHANGEMENENT DE LA VALEUR DE LA TELECOMMANDE');
             }
-        };
+        } else {
+            $Cmd->setConfiguration('history_remote', $timestamp);
+            $Cmd->save();
+            if ($log_result == true) {
+                log::add('Freebox_OS', 'debug', '│ ========> ' . 'CHANGEMENENT DE LA VALEUR NECESSAIRE DE LA TELECOMMANDE');
+            }
+            $EqLogic->checkAndUpdateCmd($Cmd, $_value);
+        }
+    }
+    private static function refresh_titles_CMD($Cmd, $EqLogic, $data, $_cmd_id, $log_result)
+    {
         if ($data['name'] == 'battery' || $data['name'] == 'battery_warning') {
             $_value = $data['value'];
             $EqLogic->batteryStatus($_value);
         }
-        $logicalId_name = $cmd->getName();
-        $_cmd_id = $cmd->getLogicalId();
+        $logicalId_name = $Cmd->getName();
+        $_cmd_id = $Cmd->getLogicalId();
 
-        switch ($cmd->getSubType()) {
-            case 'numeric':
-                $_value = Free_Refresh::refresh_titles_int($EqLogic, $data, $log_result, $cmd, $logicalId_name, $_cmd_id);
-                break;
-            case 'string':
-                $_value = Free_Refresh::refresh_titles_string($EqLogic, $data, $log_result, $cmd, $logicalId_name, $_cmd_id);
-                break;
-            case 'binary':
-                $_value = Free_Refresh::refresh_titles_bool($EqLogic, $data, $log_result, $cmd, $logicalId_name, $_cmd_id);
-                break;
-        }
-        if ($cmd->getConfiguration('TypeNode') == 'nodes') { // 
-            $_cmd_ep_id = $data['id'];
+        if ($data['name'] == 'pushed' & $EqLogic->getConfiguration('type') == 'alarm_remote') {
+            Free_Refresh::refresh_titles_remote($EqLogic, $data, $log_result, $Cmd);
         } else {
-            $_cmd_ep_id = $data['ep_id'];
+            switch ($Cmd->getSubType()) {
+                case 'numeric':
+                    $_value = Free_Refresh::refresh_titles_int($EqLogic, $data, $log_result, $Cmd, $logicalId_name, $_cmd_id);
+                    break;
+                case 'string':
+                    $_value = Free_Refresh::refresh_titles_string($EqLogic, $data, $log_result, $Cmd, $logicalId_name, $_cmd_id);
+                    break;
+                case 'binary':
+                    $_value = Free_Refresh::refresh_titles_bool($EqLogic, $data, $log_result, $Cmd, $logicalId_name, $_cmd_id);
+                    break;
+            }
+            if ($Cmd->getConfiguration('TypeNode') == 'nodes') { // 
+                $_cmd_ep_id = $data['id'];
+            } else {
+                $_cmd_ep_id = $data['ep_id'];
+            }
+            $EqLogic->checkAndUpdateCmd($_cmd_ep_id, $_value);
         }
-        $EqLogic->checkAndUpdateCmd($_cmd_ep_id, $_value);
     }
     private static function refresh_titles($EqLogics, $Free_API)
     {

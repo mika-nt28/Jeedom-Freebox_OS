@@ -746,15 +746,23 @@ class Freebox_OS extends eqLogic
 	}
 	public static function getConfigForCommunity()
 	{
-		$box = "Type de Box = " . config::byKey('TYPE_FREEBOX', 'Freebox_OS');
-		$box_name = config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS');
-		$box_mode = "Mode Box = " . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS');
-		$IP = "IP Box = " . config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS');
-		$Name = "Nom = " . config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS');
-		$API = "API = " . config::byKey('FREEBOX_API', 'Freebox_OS');
-		$tiles = "Freebox Compatible Tiles = " . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
-		$tiles_cron = "Cron Global Tiles = " . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS');
-		$FreeboxInfo = $box . ' / ' . $box_name . '<br>' . $box_mode . '<br>' . $IP . '<br>' . $Name . '<br>' . '<br>' . $API . '<br>' . '<br>' . $tiles . '<br>' . $tiles_cron;
+		$box = "Box [" . config::byKey('TYPE_FREEBOX', 'Freebox_OS') . ' / ' . $box_name = config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS') . ']';
+		$box_mode = "Mode [" . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') . ']';
+		$IP = "IP Box [" . config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS') . ']';
+		$ligne1 = $box . ' ; ' . $box_mode . ' ; ' . $IP;
+
+		$Name = "Nom [" . config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS') . ']';
+		$API = "API [" . config::byKey('FREEBOX_API', 'Freebox_OS') . ']';
+		$tiles = "Freebox Compatible Tiles [" . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') . ']';
+		$tiles_cron = "Cron Tiles [" . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') . ']';
+		$ligne2 = $Name . ' ; ' . $API . ' ; ' . $tiles . ' ; ' . $tiles_cron;
+
+		$SEARCH_EQ = "EQ [" . config::byKey('SEARCH_EQ', 'Freebox_OS') . ']';
+		$SEARCH_TILES = "Tiles [" . config::byKey('SEARCH_TILES', 'Freebox_OS') . ']';
+		$SEARCH_PARENTAL = "Parental [" . config::byKey('SEARCH_PARENTAL', 'Freebox_OS') . ']';
+		$ligne3 = 'Scans : ' . $SEARCH_EQ . ' ; ' . $SEARCH_TILES . ' ; ' . $SEARCH_PARENTAL;
+
+		$FreeboxInfo = $ligne1 . '<br>' . $ligne2 . '<br>' . $ligne3;
 		return $FreeboxInfo;
 	}
 

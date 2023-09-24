@@ -23,6 +23,8 @@ class Free_CreateTil
 
     public static function createTil($create = 'default')
     {
+        $date = time();
+        $date = date("d/m/Y H:i:s", $date);
         if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == '') {
             Free_CreateTil::createTil_modelBox();
         }
@@ -62,6 +64,7 @@ class Free_CreateTil
                 default:
                     Freebox_OS::FreeboxAPI();
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
+                    config::save('SEARCH_TILES', config::byKey('SEARCH_TILES', 'Freebox_OS', $date), 'Freebox_OS');
                     break;
             }
             if (isset($result['result'])) {

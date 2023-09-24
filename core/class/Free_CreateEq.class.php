@@ -22,6 +22,8 @@ class Free_CreateEq
 {
     public static function createEq($create = 'default', $IsVisible = true)
     {
+        $date = time();
+        $date = date("d/m/Y H:i:s", $date);
         $logicalinfo = Freebox_OS::getlogicalinfo();
         if (version_compare(jeedom::version(), "4", "<")) {
             $templatecore_V4 = null;
@@ -54,6 +56,7 @@ class Free_CreateEq
                 break;
             case 'parental':
                 Free_CreateEq::createEq_parental($logicalinfo, $templatecore_V4, $order);
+                config::save('SEARCH_PARENTAL', config::byKey('SEARCH_PARENTAL', 'Freebox_OS', $date), 'Freebox_OS');
                 break;
             case 'network':
                 Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4, $order);
@@ -132,6 +135,7 @@ class Free_CreateEq
                 } else {
                     log::add('Freebox_OS', 'debug', '================= BOX NON COMPATIBLE AVEC LES VM  ==================');
                 }
+                config::save('SEARCH_EQ', config::byKey('SEARCH_EQ', 'Freebox_OS', $date), 'Freebox_OS');
                 break;
         }
     }

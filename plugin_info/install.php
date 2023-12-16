@@ -109,17 +109,17 @@ function Freebox_OS_update()
 			removeLogicId($eqLogic, 'modulation'); // Amélioration 20221208
 
 			// a faire plus tard
-			//removeLogicId($eqLogic, 'add_del_mac'); // Amélioration 20220827
-			//removeLogicId($eqLogic, 'WakeonLAN'); // Amélioration 20220827
-			//removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
-			//removeLogicId($eqLogic, 'redir'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'add_del_mac'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'WakeonLAN'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'redir'); // Amélioration 20220827
 			//
-			//removeLogicId($eqLogic, 'host_info'); // Amélioration 20220827
-			//removeLogicId($eqLogic, 'host'); // Amélioration 20220827
-			//removeLogicId($eqLogic, 'host_mac'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'host_info'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'host'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'host_mac'); // Amélioration 20220827
 			//
-			//removeLogicId($eqLogic, 'wifimac_filter_state'); // Amélioration 20220827
-			//removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'wifimac_filter_state'); // Amélioration 20220827
+			removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
 			//=> Libre
 			//removeLogicId($eqLogic, 'schedule'); // Amélioration 20210627
 			//removeLogicId($eqLogic, ' schedule'); // Amélioration 20210627
@@ -156,7 +156,7 @@ function Freebox_OS_update()
 			config::save('FREEBOX_REBOOT_DEAMON', FALSE, 'Freebox_OS');
 		}
 
-		//message::add('Freebox_OS', 'Merci pour la mise à jour de ce plugin, n\'oubliez pas de lancer les divers Scans afin de bénéficier des nouveautés');
+		message::add('Freebox_OS', 'Cette mise nécessite de lancer les divers Scans afin de bénéficier des nouveautés et surtout des correctifs');
 	} catch (Exception $e) {
 		$e = print_r($e, 1);
 		log::add('Freebox_OS', 'error', 'Freebox_OS update ERROR : ' . $e);

@@ -385,13 +385,13 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = false, $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary_display = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = '0')
 	{
 		if ($listValue_Update == true) {
 			log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue);
 		} else if ($updatenetwork != false) {
 		} else {
-			log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser : ' . $invertBinary . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
+			log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser Affichage : ' . $invertBinary_display . ' -- Inverser Valeur Binaire : ' . $invertBinary_config . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
 		}
 		$Cmd = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Cmd)) {
@@ -428,7 +428,7 @@ class Freebox_OS extends eqLogic
 			}
 			$Cmd->setIsVisible($IsVisible);
 			$Cmd->setIsHistorized($IsHistorized);
-			if ($invertBinary != null && $SubType == 'binary') {
+			if ($invertBinary_display != null && $SubType == 'binary') {
 				$Cmd->setdisplay('invertBinary', 1);
 			}
 			if ($invertSlide != null) {
@@ -490,8 +490,13 @@ class Freebox_OS extends eqLogic
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
 				log::add('Freebox_OS', 'debug', '│ Paramétrage : ' . $_home_config_eq);
-				if ($invertBinary != null && $SubType == 'binary') {
+				if ($invertBinary_display != '0' && $SubType == 'binary') {
 					$Cmd->setdisplay('invertBinary', 1);
+				} else {
+					$Cmd->setdisplay('invertBinary', 0);
+				}
+				if ($invertBinary_config != '0' && $SubType == 'binary') {
+					$Cmd->setConfiguration('invertBinary', 1);
 				}
 				$Cmd->setConfiguration('info', $_home_config_eq);
 			}
@@ -506,11 +511,16 @@ class Freebox_OS extends eqLogic
 		if ($_logicalId_slider != null) { // logical Id spécial Slider
 			$Cmd->setConfiguration('logicalId_slider', $link_I);
 		}
-
-		if ($repeatevent == true && $Type == 'info') {
-			$Cmd->setConfiguration('repeatEventManagement', 'never');
-			//log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
+		if ($Type == 'info') {
+			if ($repeatevent === true || $repeatevent === 'never') {
+				//log::add('Freebox_OS', 'debug', '│ ====================> NE PAS Répéter les valeurs identiques pour l\'info avec le nom : ' . $Name . ' (' . $repeatevent . ')');
+				$Cmd->setConfiguration('repeatEventManagement', 'never');
+			} else {
+				$Cmd->setConfiguration('repeatEventManagement', 'always');
+				//log::add('Freebox_OS', 'debug', '│ ====================> Répéter les valeurs identiques pour l\'info avec le nom : ' . $Name . ' (' . $repeatevent . ')');
+			}
 		}
+
 		if ($valuemin != 'default') {
 			$Cmd->setConfiguration('minValue', $valuemin);
 		}
@@ -526,7 +536,6 @@ class Freebox_OS extends eqLogic
 
 		// Mise à jour des noms de la commande pour le Network
 		if ($updatenetwork != false) {
-
 			if ($updatenetwork['updatename'] == true) {
 				if ($Name != $Cmd->getName()) {
 					log::add('Freebox_OS', 'debug', '│===========> Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Cmd->getName());
@@ -553,10 +562,20 @@ class Freebox_OS extends eqLogic
 					}
 				}
 			}
+			if ($updatenetwork['UpdateVisible'] == true) {
+				if ($updatenetwork['IsVisible_option'] == 0) {
+					//log::add('Freebox_OS', 'debug', '│===============================> PAS VISIBLE : ' . $updatenetwork['IsVisible_option']);
+					$Cmd->setIsVisible(0);
+					$Cmd->save();
+				} else {
+					$Cmd->setIsVisible(1);
+					$Cmd->save();
+				}
+				//log::add('Freebox_OS', 'debug', '│===============================> TEST 2000: ' . $updatenetwork['IsVisible_option']);
+			}
 			$Cmd->setConfiguration('host_type', $updatenetwork['host_type']);
 			if ($repeatevent == $updatenetwork['repeatevent'] && $Type == 'info') {
 				$Cmd->setConfiguration('repeatEventManagement', 'never');
-				//log::add('Freebox_OS', 'debug', '│ No Repeat pour l\'info avec le nom : ' . $Name);
 			}
 			$Cmd->setConfiguration('IPV4', $updatenetwork['IPV4']);
 			$Cmd->setConfiguration('IPV6', $updatenetwork['IPV6']);
@@ -724,6 +743,27 @@ class Freebox_OS extends eqLogic
 
 	public function postRemove()
 	{
+	}
+	public static function getConfigForCommunity()
+	{
+		$box = "Box [" . config::byKey('TYPE_FREEBOX', 'Freebox_OS') . ' / ' . $box_name = config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS') . ']';
+		$box_mode = "Mode [" . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') . ']';
+		$IP = "IP Box [" . config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS') . ']';
+		$ligne1 = $box . ' ; ' . $box_mode . ' ; ' . $IP;
+
+		$Name = "Nom [" . config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS') . ']';
+		$API = "API [" . config::byKey('FREEBOX_API', 'Freebox_OS') . ']';
+		$tiles = "Freebox Compatible Tiles [" . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') . ']';
+		$tiles_cron = "Cron Tiles [" . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') . ']';
+		$ligne2 = $Name . ' ; ' . $API . ' ; ' . $tiles . ' ; ' . $tiles_cron;
+
+		$SEARCH_EQ = "EQ [" . config::byKey('SEARCH_EQ', 'Freebox_OS') . ']';
+		$SEARCH_TILES = "Tiles [" . config::byKey('SEARCH_TILES', 'Freebox_OS') . ']';
+		$SEARCH_PARENTAL = "Parental [" . config::byKey('SEARCH_PARENTAL', 'Freebox_OS') . ']';
+		$ligne3 = 'Scans : ' . $SEARCH_EQ . ' ; ' . $SEARCH_TILES . ' ; ' . $SEARCH_PARENTAL;
+
+		$FreeboxInfo = $ligne1 . '<br>' . $ligne2 . '<br>' . $ligne3;
+		return $FreeboxInfo;
 	}
 
 	/*     * **********************Getteur Setteur*************************** */

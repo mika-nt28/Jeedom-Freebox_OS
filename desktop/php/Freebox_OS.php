@@ -69,6 +69,21 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<?php
 			endif;
 			?>
+			<?php
+			// à conserver
+			// sera afficher uniquement si l'utilisateur est en version 4.4 ou supérieur
+			$jeedomVersion  = jeedom::version() ?? '0';
+			$displayInfoValue = version_compare($jeedomVersion, '4.4.0', '>=');
+			if ($displayInfoValue) :
+			?>
+				<div class="cursor eqLogicAction info tippied" data-action="createCommunityPost">
+					<i class="fas fa-ambulance"></i>
+					<br>
+					<span style="color:var(--txt-color)">{{Créer un post Community}}</span>
+				</div>
+			<?php
+			endif;
+			?>
 		</div>
 		<!-- Champ de recherche -->
 		<div class="input-group" style="margin-bottom:5px;">
@@ -123,6 +138,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<div class=" eqLogicThumbnailContainer">
 			<?php
 			$eqLogic_tiles = 0;
+			$count_tiles = 0;
 			foreach ($eqLogics as $eqLogic) {
 				if ($eqLogic->getConfiguration('eq_group') === 'tiles' || $eqLogic->getConfiguration('eq_group') === 'nodes' || $eqLogic->getConfiguration('eq_group') === 'tiles_SP') {
 					$count_tiles++;
@@ -211,7 +227,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<div class="input-group pull-right" style="display:inline-flex;">
 			<span class="input-group-btn">
 				<!-- Les balises <a></a> sont volontairement fermées à la ligne suivante pour éviter les espaces. Ne pas modifier -->
-				<a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure" title="{{Configuration de l'équipement}}"><i class="fa fa-cogs"></i><span class="hidden-xs"> {{Configuration avancée}}</span>
+				<a class="btn btn-sm btn-default eqLogicAction roundedLeft" data-action="configure" title="{{Configuration de l'équipement}}"><i class="fas fa-cogs"></i><span class="hidden-xs"> {{Configuration avancée}}</span>
 				</a><a class="btn btn-sm btn-info eqLogicAction Equipement" title="{{Recherche les commandes supplémentaire de l'équipement}}"><i class="fas fa-search"></i><span class="hidden-xs"> {{Recherche des commandes}}</span>
 				</a><a class="btn btn-sm btn-success eqLogicAction" data-action="save"><i class="fas fa-check-circle"></i> {{Sauvegarder}}
 				</a><a class="btn btn-sm btn-danger eqLogicAction roundedRight" data-action="remove"><i class="fas fa-minus-circle"></i><span class="hidden-xs"> {{Supprimer}}</span>
@@ -221,7 +237,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<!-- Onglets -->
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fas fa-arrow-circle-left"></i></a></li>
-			<li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> {{Equipement}}</a></li>
+			<li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> {{Équipement}}</a></li>
 			<li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fas fa-list-alt"></i> {{Commandes}}</a></li>
 		</ul>
 		<div class="tab-content">
@@ -302,8 +318,8 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<sup><i class="fas fa-question-circle" title="{{Si la case est cochée cela affiche l'IPv4 our l'IPv6 sur le widget}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l\'IPv4 sur le widget" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
-									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l\'IPv6 sur le widget" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l'IPv4 sur le widget" data-l1key="configuration" data-l2key="IPV4" />{{IPv4}}</label>
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Affiche l'IPv6 sur le widget" data-l1key="configuration" data-l2key="IPV6" />{{IPv6}}</label>
 								</div>
 							</div>
 							<div class="form-group IPV">
@@ -312,6 +328,14 @@ $eqLogics = eqLogic::byType($plugin->getId());
 								</label>
 								<div class="col-sm-6">
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Désactiver la mise à jour des noms" data-l1key="configuration" data-l2key="UpdateName" />{{Désactiver}}</label>
+								</div>
+							</div>
+							<div class="form-group IPV">
+								<label class="col-sm-4 control-label">{{Afficher uniquement les connectés}}
+									<sup><i class="fas fa-question-circle" title="{{Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard)}}"></i></sup>
+								</label>
+								<div class="col-sm-6">
+									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Afficher uniquement les équipements connectés" data-l1key="configuration" data-l2key="UpdateVisible" />{{Activer}}</label>
 								</div>
 							</div>
 							<div class="form-group ADD_EQLOGIC">

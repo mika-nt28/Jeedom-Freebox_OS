@@ -28,7 +28,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 			<th></th>
 			<th>{{Equipement}}</th>
 			<th>{{ID}}</th>
-			<th>{{logicalId}}</th>
+			<th>{{LogicalId}}</th>
 			<th>{{Type d'équipement}}</th>
 			<th>{{Type d'action}}</th>
 			<th>{{Statut}}</th>

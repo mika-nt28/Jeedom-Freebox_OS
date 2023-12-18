@@ -78,7 +78,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 				$status = '<span class="label label-warning" style="font-size : 1em;cursor:default;">{{DEMON NOK}}</span>';
 			} else {
 				if ($eqLogic->getIsEnable() == 0) {
-					$status = '<span class="label label-warning" style="font-size : 1em;cursor:default;">{{NON ACTIVER}}</span>';
+					$status = '<span class="label label-warning" style="font-size : 1em;cursor:default;">{{NON ACTIVÉ}}</span>';
 				} else {
 					if ($eqLogic->getStatus('state') == 'nok') {
 						$status = '<span class="label label-danger" style="font-size : 1em;cursor:default;">{{NOK}}</span>';

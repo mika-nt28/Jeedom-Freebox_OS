@@ -215,7 +215,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				}
 			}
 			if ($eqLogic_parental === 0) {
-				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun Contrôle parental" trouvé, lancer un "Scan Contrôle parental"}}</div>';
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{"Aucun Contrôle parental" trouvé, lancer un "Scan Contrôle parental"}}</div>';
 			}
 			?>
 		</div>

@@ -16,7 +16,7 @@
  */
 
 if (!isConnect('admin')) {
-	throw new Exception('401 - Accès non autorisé');
+	throw new Exception('{{401 - Accès non autorisé}}');
 }
 $eqLogics = Freebox_OS::byType('Freebox_OS');
 include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');

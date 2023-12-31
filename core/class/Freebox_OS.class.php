@@ -371,6 +371,9 @@ class Freebox_OS extends eqLogic
 				$EqLogic->setConfiguration('action', $logicalID_equip);
 			}
 		}
+		if ($Player != null) {
+			$EqLogic->setConfiguration('player', $Player);
+		}
 		if ($type_save == false) {
 			$EqLogic->save();
 		} else {

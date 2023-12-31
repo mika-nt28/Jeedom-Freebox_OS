@@ -1268,8 +1268,9 @@ class Free_Refresh
     private static function refresh_player($EqLogics, $Free_API)
     {
         if ($EqLogics->getConfiguration('player') == 'OK') {
-            $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
-            $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $EqLogics->getConfiguration('action') . '/api/v6/status', false, false, false);
+            $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $EqLogics->getConfiguration('action') . '/api/v6/status', true, true, true);
+        } else {
+            log::add('Freebox_OS', 'debug', '>───────── PLAYER : Freebox Player -- Il n\'est pas possible de récupérer le status du Player');
         }
 
         log::add('Freebox_OS', 'debug', '│──────────> Player OK ? : ' . $EqLogics->getConfiguration('player'), null, null, true, true, null);

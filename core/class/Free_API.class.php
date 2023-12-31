@@ -349,7 +349,6 @@ class Free_API
             $API_version = 'v9';
             log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
         };
-
         $config_log = null;
         $fonction = "GET";
         $Parameter = null;

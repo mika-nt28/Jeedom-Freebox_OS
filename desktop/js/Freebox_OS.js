@@ -80,7 +80,7 @@ $('.health').on('click', function () {
 
 $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 	$('#div_alert').showAlert({
-		message: '{{Recherche des <b>Equipements standards</b>}}',
+		message: '{{Recherche des Équipements standards}}',
 		level: 'warning'
 	});
 	$.ajax({
@@ -94,7 +94,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 		global: false,
 		error: function (request, status, error) {
 			$('#div_alert').showAlert({
-				message: '{{Erreur recherche des <b>Equipements standards</b>}}',
+				message: '{{Erreur recherche des Équipements standards}}',
 				level: 'danger'
 			});
 		},
@@ -112,7 +112,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 
 $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 	$('#div_alert').showAlert({
-		message: '{{Recherche <b>Contrôle Parental</b>}}',
+		message: '{{Recherche Contrôle Parental}}',
 		level: 'warning'
 	});
 	$.ajax({
@@ -126,7 +126,7 @@ $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 		global: false,
 		error: function (request, status, error) {
 			$('#div_alert').showAlert({
-				message: '{{Erreur recherche <b>Contrôle Parental</b>}}',
+				message: '{{Erreur recherche Contrôle Parental}}',
 				level: 'danger'
 			});
 		},
@@ -144,7 +144,7 @@ $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 
 $('.eqLogicAction[data-action=search_debugTile]').on('click', function () {
 	$('#div_alert').showAlert({
-		message: '{{Recherche <b>Debug Tiles</b>}}',
+		message: '{{Recherche Debug Tiles}}',
 		level: 'warning'
 	});
 	$.ajax({
@@ -158,7 +158,7 @@ $('.eqLogicAction[data-action=search_debugTile]').on('click', function () {
 		global: false,
 		error: function (request, status, error) {
 			$('#div_alert').showAlert({
-				message: '{{Erreur recherche <b>Debug Tiles</b>}}',
+				message: '{{Erreur recherche Debug Tiles}}',
 				level: 'danger'
 			});
 		},
@@ -176,7 +176,7 @@ $('.eqLogicAction[data-action=search_debugTile]').on('click', function () {
 
 $('.eqLogicAction[data-action=tile]').on('click', function () {
 	$('#div_alert').showAlert({
-		message: '{{Recherche des <b>Tiles</b>}}',
+		message: '{{Recherche des Tiles}}',
 		level: 'warning'
 	});
 	$.ajax({
@@ -190,7 +190,7 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 		global: false,
 		error: function (request, status, error) {
 			$('#div_alert').showAlert({
-				message: '{{Erreur recherche des <b>Tiles</b>}}',
+				message: '{{Erreur recherche des Tiles}}',
 				level: 'danger'
 			});
 		},
@@ -210,7 +210,7 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 
 $('.Equipement').on('click', function () {
 	$('#div_alert').showAlert({
-		message: '{{Recherche des <b>commandes</b>}}',
+		message: '{{Recherche des commandes}}',
 		level: 'warning'
 	});
 	$.ajax({
@@ -225,7 +225,7 @@ $('.Equipement').on('click', function () {
 		global: false,
 		error: function (request, status, error) {
 			$('#div_alert').showAlert({
-				message: '{{Erreur recherche des <b>commandes</b>}}',
+				message: '{{Erreur recherche des commandes}}',
 				level: 'danger'
 			});
 
@@ -331,7 +331,7 @@ function addCmdToTable(_cmd) {
   	tr += '<span class="input-group-btn"><a class="cmdAction btn btn-sm btn-default" data-l1key="chooseIcon" title="{{Choisir une icône}}"><i class="fas fa-icons"></i></a></span>'
   	tr += '<span class="cmdAttr input-group-addon roundedRight" data-l1key="display" data-l2key="icon" style="font-size:19px;padding:0 5px 0 0!important;"></span>'
   	tr += '</div>'
-  	tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display:none;margin-top:5px;" title="{{Commande info liée}}">'
+  	tr += '<select class="cmdAttr form-control input-sm" data-l1key="value" style="display:none;margin-top:5px;" title="{{Commande information liée}}">'
   	tr += '<option value="">{{Aucune}}</option>'
   	tr += '</select>'
   	tr += '</td>'
@@ -357,8 +357,8 @@ function addCmdToTable(_cmd) {
 	tr += '</td>';
 	tr += '<td>'
 	if (is_numeric(_cmd.id)) {
-		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure"><i class="fas fa-cogs"></i></a> '
-		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> Tester</a>'
+		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="configure" title="{{Configuration avancée}}"><i class="fas fa-cogs"></i></a> '
+		tr += '<a class="btn btn-default btn-xs cmdAction" data-action="test"><i class="fas fa-rss"></i> {{Tester}}</a>'
 	}
 	tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i></td>'
 	tr += '</tr>'

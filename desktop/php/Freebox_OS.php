@@ -108,7 +108,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						$template = $eqLogic->getLogicalId();
 					}
 					if (count($eqLogics) == 0) {
-						echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun équipement détecté. Lancez un \"Scan équipements standards\".}}</div>';
+						echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{"Aucun équipement détecté". Lancez un \"Scan équipements standards\".}}</div>';
 					} else {
 						$opacity = ($eqLogic->getIsEnable()) ? '' : 'disableCard';
 						echo '<div class="eqLogicDisplayCard cursor ' . $opacity . '" data-eqLogic_id="' . $eqLogic->getId() . '">';
@@ -126,7 +126,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				}
 			}
 			if ($eqLogic_system === 0) {
-				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun équipement Standard trouvé, lancer un "Scan équipements standards"}}</div>';
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{"Aucun équipement Standard" trouvé, lancer un "Scan équipements standards"}}</div>';
 			}
 			?>
 		</div>
@@ -184,7 +184,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				}
 			}
 			if ($eqLogic_tiles === 0) {
-				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun équipement Home - Tiles trouvé ou Box non compatible, lancer un "Scan Tiles"}}</div>';
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{"Aucun équipement Home - Tiles" trouvé ou Box non compatible, lancer un "Scan Tiles"}}</div>';
 			}
 			?>
 		</div>
@@ -215,7 +215,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				}
 			}
 			if ($eqLogic_parental === 0) {
-				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{Aucun Contrôle parental" trouvé, lancer un "Scan Contrôle parental"}}</div>';
+				echo '<br><div class="text-center" style="font-size:1.2em;font-weight:bold;">{{"Aucun Contrôle parental" trouvé, lancer un "Scan Contrôle parental"}}</div>';
 			}
 			?>
 		</div>

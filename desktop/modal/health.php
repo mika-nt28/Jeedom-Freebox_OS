@@ -28,7 +28,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 			<th></th>
 			<th>{{Equipement}}</th>
 			<th>{{ID}}</th>
-			<th>{{logicalId}}</th>
+			<th>{{LogicalId}}</th>
 			<th>{{Type d'équipement}}</th>
 			<th>{{Type d'action}}</th>
 			<th>{{Statut}}</th>
@@ -78,7 +78,7 @@ include_file('desktop', 'Freebox_OS', 'js', 'Freebox_OS');
 				$status = '<span class="label label-warning" style="font-size : 1em;cursor:default;">{{DEMON NOK}}</span>';
 			} else {
 				if ($eqLogic->getIsEnable() == 0) {
-					$status = '<span class="label label-warning" style="font-size : 1em;cursor:default;">{{NON ACTIVER}}</span>';
+					$status = '<span class="label label-warning" style="font-size : 1em;cursor:default;">{{NON ACTIVÉ}}</span>';
 				} else {
 					if ($eqLogic->getStatus('state') == 'nok') {
 						$status = '<span class="label label-danger" style="font-size : 1em;cursor:default;">{{NOK}}</span>';

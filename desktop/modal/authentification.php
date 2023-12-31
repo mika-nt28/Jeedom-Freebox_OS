@@ -386,8 +386,7 @@ if (!isConnect('admin')) {
                             <div class="caption">
                                 <h4>{{Mes Equipements}}</h4>
                                 <p></p>
-                                <p class="text-center"><a class="btn bt_eqlogic_standard">{{Scan des équipements standards
-                                    }} <i class="fas fa-bullseye logoPrimary"></i></a></p>
+                                <p class="text-center"><a class="btn bt_eqlogic_standard">{{Scan des équipements standards}} <i class="fas fa-bullseye logoPrimary"></i></a></p>
                                 <p></p>
                                 <p>{{Ici vous scannez les équipements <b>systèmes</b> de la Freebox}}</p>
                             </div>
@@ -398,8 +397,7 @@ if (!isConnect('admin')) {
                             <div class="caption">
                                 <h4>{{Mes Contrôles parentaux}}</h4>
                                 <p></p>
-                                <p class="text-center"><a class="btn bt_eqlogic_control_parental">{{Scan des Contrôles
-                                    parentaux }} <i class="fas fa-user-shield logoPrimary"></i></a></p>
+                                <p class="text-center"><a class="btn bt_eqlogic_control_parental">{{Scan des Contrôles parentaux}} <i class="fas fa-user-shield logoPrimary"></i></a></p>
                                 <p></p>
                                 <p>{{Ici vous scannez les <b>contrôles parentaux</b> présents dans la Freebox}}</p>
                             </div>
@@ -410,7 +408,7 @@ if (!isConnect('admin')) {
                             <div class="caption">
                                 <h4>{{Mes Equipements Home - Tiles}}</h4>
                                 <p></p>
-                                <p class="text-center"><a class="btn bt_eqlogic_tiles">{{Scan des Tiles }} <i class="fas fa-search logoPrimary"></i></a></p>
+                                <p class="text-center"><a class="btn bt_eqlogic_tiles">{{Scan des Tiles}} <i class="fas fa-search logoPrimary"></i></a></p>
                                 <p></p>
                                 <p>{{Ici vous scannez les équipements de type <b>Home et Tiles</b> (Maison).}}</p>
                                 <p><i>{{Uniquement sur la Freebox Delta}}</i></p>
@@ -421,8 +419,7 @@ if (!isConnect('admin')) {
                 <br />
                 <div>
                     <center>
-                        <div class="alert alert-info">{{Une fois les scans effectués, cliquez simplement sur le bouton
-                        suivant}}
+                        <div class="alert alert-info">{{Une fois les scans effectués, cliquez simplement sur le bouton suivant}}
                         </div>
                     </center>
                 </div>

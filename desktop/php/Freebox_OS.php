@@ -44,17 +44,17 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				<span>{{Santé}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
-				<i class="fas fa-bullseye"></i>
+				<i class="fas fa-bullseye" title="{{Cette fonction permet de créer les commandes pour les équipements standards}}"></i>
 				<br />
 				<span>{{Scan}}<br />{{équipements standards}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary" data-action="control_parental">
-				<i class="fas fa-user-shield"></i>
+				<i class="fas fa-user-shield" title="{{Cette fonction permet de créer les commandes pour le contrôle parental}}"></i>
 				<br>
 				<span>{{Scan}}<br />{{Contrôle parental}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary titleAction" data-action="tile">
-				<i class="fas fa-search" title="{{Cette fonction permet de créer les commandes pour la partie}}"></i>
+				<i class="fas fa-home" title="{{Cette fonction permet de créer les commandes pour la Domotique}}"></i>
 				<br>
 				<span>{{Scan}}<br />{{Tiles}}</span>
 			</div>
@@ -76,7 +76,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			$displayInfoValue = version_compare($jeedomVersion, '4.4.0', '>=');
 			if ($displayInfoValue) :
 			?>
-				<div class="cursor eqLogicAction info tippied" data-action="createCommunityPost">
+				<div class="cursor eqLogicAction info" data-action="createCommunityPost">
 					<i class="fas fa-ambulance"></i>
 					<br>
 					<span style="color:var(--txt-color)">{{Créer un post Community}}</span>
@@ -119,7 +119,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						if ($eqLogic->getConfiguration('autorefresh', '') != '') {
 							echo '<span class="label label-info">' . $eqLogic->getConfiguration('autorefresh') . '</span>';
 						}
-						echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+						echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Équipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Équipement non visible}}"></i>';
 						echo '</span>';
 						echo '</div>';
 					}
@@ -178,7 +178,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					if ($eqLogic->getConfiguration('autorefresh', '') != '') {
 						echo '<span class="label label-info">' . $eqLogic->getConfiguration('autorefresh') . '</span>';
 					}
-					echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+					echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Équipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Équipement non visible}}"></i>';
 					echo '</span>';
 					echo '</div>';
 				}
@@ -209,7 +209,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					if ($eqLogic->getConfiguration('autorefresh', '') != '') {
 						echo '<span class="label label-info">' . $eqLogic->getConfiguration('autorefresh') . '</span>';
 					}
-					echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Equipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Equipement non visible}}"></i>';
+					echo ($eqLogic->getIsVisible() == 1) ? '<i class="fas fa-eye" title="{{Équipement visible}}"></i>' : '<i class="fas fa-eye-slash" title="{{Équipement non visible}}"></i>';
 					echo '</span>';
 					echo '</div>';
 				}
@@ -238,7 +238,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 		<ul class="nav nav-tabs" role="tablist">
 			<li role="presentation"><a href="#" class="eqLogicAction" aria-controls="home" role="tab" data-toggle="tab" data-action="returnToThumbnailDisplay"><i class="fas fa-arrow-circle-left"></i></a></li>
 			<li role="presentation" class="active"><a href="#eqlogictab" aria-controls="home" role="tab" data-toggle="tab"><i class="fas fa-tachometer-alt"></i> {{Équipement}}</a></li>
-			<li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fas fa-list-alt"></i> {{Commandes}}</a></li>
+			<li role="presentation"><a href="#commandtab" aria-controls="profile" role="tab" data-toggle="tab"><i class="fas fa-list"></i> {{Commandes}}</a></li>
 		</ul>
 		<div class="tab-content">
 			<!-- Onglet de configuration de l'équipement -->
@@ -303,7 +303,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<div id="CRON_TILES" class="input-group">
 										<input id="CRON_TILES" type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh" placeholder="{{Cliquer sur ? pour afficher l'assistant cron}}" />
 										<span class="input-group-btn">
-											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="Assistant cron">
+											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="{{Assistant cron}}">
 												<i class="fas fa-question-circle"></i>
 											</a>
 										</span>
@@ -346,7 +346,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 									<div class="input-group">
 										<input type="text" class="eqLogicAttr form-control roundedLeft" data-l1key="configuration" data-l2key="autorefresh_eqLogic" placeholder="{{Cliquer sur ? pour afficher l'assistant cron, Vide pas d'ajout}}" />
 										<span class="input-group-btn">
-											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="Assistant cron">
+											<a class="btn btn-default cursor jeeHelper roundedRight" data-helper="cron" title="{{Assistant cron}}">
 												<i class="fas fa-question-circle"></i>
 											</a>
 										</span>

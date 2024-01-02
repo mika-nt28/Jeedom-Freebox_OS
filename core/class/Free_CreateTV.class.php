@@ -87,17 +87,6 @@ class Free_CreateTV
                         if ($player_STATE == 'OK') {
                             $EqLogic->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
                         }
-                        // Channel
-                        /*
-                        $config_message = array(
-                            'title_disable' => 1,
-                            'message_placeholder' => 'Chaine',
-
-                        );
-                        $add_channel = $EqLogic->AddCommand('Chaine choisi', 'channel_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_channel, 0, 'default', 'default', 8, '0', false, false, null, true, null, null, null, null);
-                        $EqLogic->AddCommand('Choix Chaine', 'channel', 'action', 'message', 'default', null, null, $_IsVisible, $add_channel, 'default', 0, $icon_channel, 0, 'default', 'default', 9, '0', false, true, null, true, null, null, null, null, null, null, null, null, null, null, null, null, $config_message);
-                        */
-                        //Free_Refresh::RefreshInformation($EqLogic->getId());
                     } else {
                         log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- L\'Id est vide donc pas de création de l\'équipement (mettre sous tension le player pour résoudre ce problème)');
                     }

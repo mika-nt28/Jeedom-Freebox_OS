@@ -1279,34 +1279,74 @@ class Free_Refresh
                 $player_power_state = $results_playerID['power_state'];
             }
         } else {
+            $player_power_state = 'NOK';
             log::add('Freebox_OS', 'debug', '│──────────> PLAYER : Freebox Player -- Il n\'est pas possible de récupérer le status du Player');
         }
 
         $results_players = $Free_API->universal_get('universalAPI', null, null, 'player/', true, true, true);
-        $cmd_mac = $EqLogics->getCmd('info', 'mac');
+        /* $cmd_mac = $EqLogics->getCmd('info', 'mac');
         $cmd_stb_type = $EqLogics->getCmd('info', 'stb_type');
         $cmd_device_model = $EqLogics->getCmd('info', 'device_model');
         $cmd_api_version = $EqLogics->getCmd('info', 'api_version');
         $cmd_api_available = $EqLogics->getCmd('info', 'api_available');
         $cmd_reachable = $EqLogics->getCmd('info', 'reachable');
-        $cmd_powerState = $EqLogics->getCmd('info', 'power_state');
+        $cmd_powerState = $EqLogics->getCmd('info', 'power_state');*/
 
         $results_players = $results_players['result'];
         foreach ($results_players as $results_player) {
             if ($results_player['id'] != $EqLogics->getConfiguration('action')) continue;
-
-            if ($results_player['api_available']) {
-                if ($cmd_stb_type) $EqLogics->checkAndUpdateCmd($cmd_stb_type->getLogicalId(), $results_player['stb_type']);
-                if ($cmd_device_model) $EqLogics->checkAndUpdateCmd($cmd_device_model->getLogicalId(), $results_player['device_model']);
-                if ($cmd_api_version) $EqLogics->checkAndUpdateCmd($cmd_api_version->getLogicalId(), $results_player['api_version']);
+            foreach ($EqLogics->getCmd('info') as $cmd) {
+                if (is_object($cmd)) {
+                    switch ($cmd->getLogicalId()) {
+                        case "mac":
+                            log::add('Freebox_OS', 'debug', '│──────────> Adresse Mac : ' . $results_player['mac']);
+                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['mac']);
+                            break;
+                        case "stb_type":
+                            log::add('Freebox_OS', 'debug', '│──────────> Type : ' . $results_player['stb_type']);
+                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['stb_type']);
+                            break;
+                        case "api_version":
+                            log::add('Freebox_OS', 'debug', '│──────────> API : ' . $results_player['api_version']);
+                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['api_version']);
+                            break;
+                        case "device_model":
+                            log::add('Freebox_OS', 'debug', '│──────────> Modele : ' . $results_player['device_model']);
+                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['device_model']);
+                            break;
+                        case "reachable":
+                            log::add('Freebox_OS', 'debug', '│──────────> Disponible sur le réseau : ' . $results_player['reachable']);
+                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['reachable']);
+                            break;
+                        case "power_state":
+                            if ($player_power_state != 'NOK') {
+                                log::add('Freebox_OS', 'debug', '│──────────> Etat : ' . $player_power_state);
+                                $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $player_power_state);
+                            }
+                            break;
+                        case "api_available":
+                            log::add('Freebox_OS', 'debug', '│──────────> API Disponible : ' . $results_player['api_available']);
+                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['api_available']);
+                            break;
+                    }
+                }
             }
 
-            if ($cmd_mac) $EqLogics->checkAndUpdateCmd($cmd_mac->getLogicalId(), $results_player['mac']);
-            if ($cmd_api_available) $EqLogics->checkAndUpdateCmd($cmd_api_available->getLogicalId(), $results_player['api_available']);
-            if ($cmd_reachable) $EqLogics->checkAndUpdateCmd($cmd_reachable->getLogicalId(), $results_player['reachable']);
+
+
+
+            if ($results_player['api_available']) {
+                //if ($cmd_stb_type) $EqLogics->checkAndUpdateCmd($cmd_stb_type->getLogicalId(), $results_player['stb_type']);
+                //if ($cmd_device_model) $EqLogics->checkAndUpdateCmd($cmd_device_model->getLogicalId(), $results_player['device_model']);
+                //if ($cmd_api_version) $EqLogics->checkAndUpdateCmd($cmd_api_version->getLogicalId(), $results_player['api_version']);
+            }
+
+            // if ($cmd_mac) $EqLogics->checkAndUpdateCmd($cmd_mac->getLogicalId(), $results_player['mac']);
+            // if ($cmd_api_available) $EqLogics->checkAndUpdateCmd($cmd_api_available->getLogicalId(), $results_player['api_available']);
+            //if ($cmd_reachable) $EqLogics->checkAndUpdateCmd($cmd_reachable->getLogicalId(), $results_player['reachable']);
         }
-        log::add('Freebox_OS', 'debug', '│──────────> Player STATUS ACTUEL : ' . $results_playerID['power_state']);
-        if (isset($cmd_powerState)) $EqLogics->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $player_power_state);
+        // log::add('Freebox_OS', 'debug', '│──────────> Player STATUS ACTUEL : ' . $player_power_state);
+        //if (isset($cmd_powerState)) $EqLogics->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $player_power_state);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function refresh_freeplug($EqLogics, $Free_API)

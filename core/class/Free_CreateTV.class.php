@@ -64,22 +64,27 @@ class Free_CreateTV
                             $player_STATE = 'NOK';
                             $player_log = ' -- Il n\'est pas possible de récupérer le status du Player donc pas de création des commandes d\'état';
                         }
-
+                        $player_ID = $Equipement['id'];
+                        $player_MAC = null;
                         log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- Id : ' . $Equipement['id'] . $player_log);
-                        $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $Equipement['id'], 'multimedia', true, 'player', null, $Equipement['id'], '*/5 * * * *', null, $player_STATE, null, 'system', true);
-                        log::add('Freebox_OS', 'debug', '│ Nom : ' . $_devicename . ' -- id : player_' . $Equipement['id'] . ' -- FREE-ID : ' . $Equipement['id']);
-                        $EqLogic->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
-                        $EqLogic->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
-                        $EqLogic->AddCommand('Modèle', 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);
-                        $EqLogic->AddCommand('Version', 'api_version', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
-                        $EqLogic->AddCommand('API Disponible', 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
-                        $EqLogic->AddCommand('Disponible sur le réseau', 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
-                        if ($player_STATE == 'OK') {
-                            $EqLogic->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
-                        }
                     } else {
-                        log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- L\'Id est vide donc pas de création de l\'équipement (mettre sous tension le player pour résoudre ce problème)');
+                        $player_ID = $Equipement['mac'];
+                        $player_MAC = 'MAC';
+                        $player_STATE = 'NOK';
+                        log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- Mac : ' . $Equipement['mac'] . ' -- L\'Id est vide donc il n\'est pas possible de récupérer le status du Player donc pas de création des commandes d\'état');
                     }
+                    $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $player_ID, 'multimedia', true, 'player', null, $player_ID, '*/5 * * * *', null, $player_STATE, null, 'system', true, $player_MAC);
+                    log::add('Freebox_OS', 'debug', '│ Nom : ' . $_devicename . ' -- id : player_' . $Equipement['id'] . ' -- FREE-ID : ' . $Equipement['id']);
+                    $EqLogic->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
+                    $EqLogic->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
+                    $EqLogic->AddCommand('Modèle', 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);
+                    $EqLogic->AddCommand('Version', 'api_version', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
+                    $EqLogic->AddCommand('API Disponible', 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
+                    $EqLogic->AddCommand('Disponible sur le réseau', 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
+                    if ($player_STATE == 'OK') {
+                        $EqLogic->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
+                    }
+
                     log::add('Freebox_OS', 'debug', '│===========> FIN CONFIGURATION PLAYER : ' . $nb_player . ' / ' . $_devicename);
                     $nb_player++;
                 }

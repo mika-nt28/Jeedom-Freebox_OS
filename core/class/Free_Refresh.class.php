@@ -1284,14 +1284,6 @@ class Free_Refresh
         }
 
         $results_players = $Free_API->universal_get('universalAPI', null, null, 'player/', true, true, true);
-        /* $cmd_mac = $EqLogics->getCmd('info', 'mac');
-        $cmd_stb_type = $EqLogics->getCmd('info', 'stb_type');
-        $cmd_device_model = $EqLogics->getCmd('info', 'device_model');
-        $cmd_api_version = $EqLogics->getCmd('info', 'api_version');
-        $cmd_api_available = $EqLogics->getCmd('info', 'api_available');
-        $cmd_reachable = $EqLogics->getCmd('info', 'reachable');
-        $cmd_powerState = $EqLogics->getCmd('info', 'power_state');*/
-
         $results_players = $results_players['result'];
         foreach ($results_players as $results_player) {
             if ($results_player['id'] != $EqLogics->getConfiguration('action')) continue;
@@ -1331,22 +1323,7 @@ class Free_Refresh
                     }
                 }
             }
-
-
-
-
-            if ($results_player['api_available']) {
-                //if ($cmd_stb_type) $EqLogics->checkAndUpdateCmd($cmd_stb_type->getLogicalId(), $results_player['stb_type']);
-                //if ($cmd_device_model) $EqLogics->checkAndUpdateCmd($cmd_device_model->getLogicalId(), $results_player['device_model']);
-                //if ($cmd_api_version) $EqLogics->checkAndUpdateCmd($cmd_api_version->getLogicalId(), $results_player['api_version']);
-            }
-
-            // if ($cmd_mac) $EqLogics->checkAndUpdateCmd($cmd_mac->getLogicalId(), $results_player['mac']);
-            // if ($cmd_api_available) $EqLogics->checkAndUpdateCmd($cmd_api_available->getLogicalId(), $results_player['api_available']);
-            //if ($cmd_reachable) $EqLogics->checkAndUpdateCmd($cmd_reachable->getLogicalId(), $results_player['reachable']);
         }
-        // log::add('Freebox_OS', 'debug', '│──────────> Player STATUS ACTUEL : ' . $player_power_state);
-        //if (isset($cmd_powerState)) $EqLogics->checkAndUpdateCmd($cmd_powerState->getLogicalId(), $player_power_state);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function refresh_freeplug($EqLogics, $Free_API)

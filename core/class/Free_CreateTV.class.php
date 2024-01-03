@@ -65,7 +65,7 @@ class Free_CreateTV
                             $player_log = ' -- Il n\'est pas possible de récupérer le status du Player donc pas de création des commandes d\'état';
                         }
                         $player_ID = $Equipement['id'];
-                        $player_MAC = null;
+                        $player_MAC = 'ID';
                         log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- Id : ' . $Equipement['id'] . $player_log);
                     } else {
                         $player_ID = $Equipement['mac'];
@@ -74,7 +74,7 @@ class Free_CreateTV
                         log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- Mac : ' . $Equipement['mac'] . ' -- L\'Id est vide donc il n\'est pas possible de récupérer le status du Player donc pas de création des commandes d\'état');
                     }
                     $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $player_ID, 'multimedia', true, 'player', null, $player_ID, '*/5 * * * *', null, $player_STATE, null, 'system', true, $player_MAC);
-                    log::add('Freebox_OS', 'debug', '│ Nom : ' . $_devicename . ' -- id : player_' . $Equipement['id'] . ' -- FREE-ID : ' . $Equipement['id']);
+                    log::add('Freebox_OS', 'debug', '│ Nom : ' . $_devicename . ' -- id / mac : player_' . $Equipement['id'] . ' / ' . $Equipement['mac'] . ' -- FREE-ID : ' . $Equipement['id'] . ' -- TYPE-ID : ' . $player_MAC);
                     $EqLogic->AddCommand('Mac', 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
                     $EqLogic->AddCommand('Type', 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
                     $EqLogic->AddCommand('Modèle', 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);

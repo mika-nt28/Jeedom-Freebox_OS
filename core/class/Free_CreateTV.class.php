@@ -62,7 +62,7 @@ class Free_CreateTV
                             $player_log = ' -- Il est possible de récupérer le status du Player';
                         } else {
                             $player_STATE = 'NOK';
-                            $player_log = ' -- Il n\'est pas possible de récupérer le status du Player donc pas de création des commandes d\'état';
+                            $player_log = ' -- Il n\'est pas possible de récupérer le status du Player donc pas de création de la commande d\'état';
                         }
                         $player_ID = $Equipement['id'];
                         $player_MAC = 'ID';
@@ -71,7 +71,7 @@ class Free_CreateTV
                         $player_ID = $Equipement['mac'];
                         $player_MAC = 'MAC';
                         $player_STATE = 'NOK';
-                        log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- Mac : ' . $Equipement['mac'] . ' -- L\'Id est vide donc il n\'est pas possible de récupérer le status du Player donc pas de création des commandes d\'état');
+                        log::add('Freebox_OS', 'debug', '│===========> PLAYER : ' . $_devicename . ' -- Mac : ' . $Equipement['mac'] . ' -- L\'Id est vide donc il n\'est pas possible de récupérer le status du Player donc pas de création de la commande d\'état');
                     }
                     $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $player_ID, 'multimedia', true, 'player', null, $player_ID, '*/5 * * * *', null, $player_STATE, null, 'system', true, $player_MAC);
                     log::add('Freebox_OS', 'debug', '│ Nom : ' . $_devicename . ' -- id / mac : player_' . $Equipement['id'] . ' / ' . $Equipement['mac'] . ' -- FREE-ID : ' . $Equipement['id'] . ' -- TYPE-ID : ' . $player_MAC);

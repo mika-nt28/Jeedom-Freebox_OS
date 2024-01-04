@@ -289,7 +289,7 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'debug', '>> ================ >> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId);
 		return $EqLogic;
 	}
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', '>> ================ >> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
@@ -327,6 +327,9 @@ class Freebox_OS extends eqLogic
 				}
 				if ($Player != null) {
 					$EqLogic->setConfiguration('player', $Player);
+					if ($Player_MAC != null) {
+						$EqLogic->setConfiguration('player_MAC', $Player_MAC);
+					}
 				}
 			}
 			if ($eq_group != null) {
@@ -373,6 +376,9 @@ class Freebox_OS extends eqLogic
 		}
 		if ($Player != null) {
 			$EqLogic->setConfiguration('player', $Player);
+			if ($Player_MAC != null) {
+				$EqLogic->setConfiguration('player_MAC', $Player_MAC);
+			}
 		}
 		if ($type_save == false) {
 			$EqLogic->save();

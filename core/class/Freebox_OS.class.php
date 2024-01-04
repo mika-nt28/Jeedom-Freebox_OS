@@ -506,6 +506,7 @@ class Freebox_OS extends eqLogic
 				}
 				if ($invertBinary_config != '0' && $SubType == 'binary') {
 					$Cmd->setConfiguration('invertBinary', 1);
+					$Cmd->setdisplay('invertBinary', 1); // spécifique pour l'affichage pour permettre d'utiliser le widget standard
 				}
 				$Cmd->setConfiguration('info', $_home_config_eq);
 			}

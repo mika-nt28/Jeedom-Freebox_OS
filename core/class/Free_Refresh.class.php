@@ -712,7 +712,6 @@ class Free_Refresh
                         if ($_UpdateVisible == true) {
                             $Cmd->setIsVisible($IsVisible_option);
                             $Cmd->save();
-                            //log::add('Freebox_OS', 'debug', '│=====================================================================> TEST 2000: ' . $result['primary_name'] . '(' . $mac_address . ')' . ' - ' . $IsVisible_option);
                         }
                         break;
                     }

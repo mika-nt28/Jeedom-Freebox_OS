@@ -554,7 +554,7 @@ class Free_CreateTil
                                             $_cmd_ep_id_link = '0';
                                         }
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
-                                            $infoCmd = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'info', 'binary', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary_display'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $eq_group, $setting['Eq_type_home'], null, null, null, null, null, null, $setting['InvertBinary_config']);
+                                            $infoCmd = $Tile->AddCommand($setting['Label'], $_cmd_ep_id, 'info', 'binary', $setting['Templatecore'], $_unit, $setting['Generic_type'], $setting['IsVisible'], 'default', $link_logicalId, $setting['InvertBinary_display'], $setting['Icon'], 0, 'default', 'default',  $setting['Order'], 0, false, true, null, null, $_home_config_eq, null, null, null, null, null, $eq_group, $setting['Eq_type_home'], null, null, null, null, null, $setting['InvertBinary_config']);
                                             $Tile->checkAndUpdateCmd($_cmd_ep_id, $Command['value']);
                                             if ($_eq_action == 'store') {
                                                 //$Link_I_store = $infoCmd;
@@ -1417,7 +1417,7 @@ class Free_CreateTil
                 $Generic_type = 'PRESENCE';
                 $Templatecore = $Templatecore_V4 . 'presence';
                 $_Home_config_eq = 'mouv_sensor';
-                $InvertBinary_display = 0;
+                $InvertBinary_display = 1;
                 $InvertBinary_config = 1;
                 break;
             case 'light_switch_rw_nodes':

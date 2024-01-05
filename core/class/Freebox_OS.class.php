@@ -440,6 +440,9 @@ class Freebox_OS extends eqLogic
 			if ($invertBinary_display != null && $SubType == 'binary') {
 				$Cmd->setdisplay('invertBinary', 1);
 			}
+			if ($invertBinary_config != null) {
+				$Cmd->setConfiguration('invertBinary', 1);
+			}
 			if ($invertSlide != null) {
 				if ($Type == 'action') {
 					$Cmd->setConfiguration('invertslide', 1);
@@ -498,15 +501,10 @@ class Freebox_OS extends eqLogic
 				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
-				log::add('Freebox_OS', 'debug', '│ Paramétrage : ' . $_home_config_eq);
-				if ($invertBinary_display != '0' && $SubType == 'binary') {
-					$Cmd->setdisplay('invertBinary', 1);
-				} else {
-					$Cmd->setdisplay('invertBinary', 0);
-				}
-				if ($invertBinary_config != '0' && $SubType == 'binary') {
-					$Cmd->setConfiguration('invertBinary', 1);
-					$Cmd->setdisplay('invertBinary', 1); // spécifique pour l'affichage pour permettre d'utiliser le widget standard
+				if ($invertBinary_config != null  && $SubType == 'binary') { //Correction pour prise en compte fonction Core
+					log::add('Freebox_OS', 'debug', '│ ==========================================================================================> Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
+					$Cmd->setConfiguration('invertBinary', $invertBinary_config);
+					$Cmd->setdisplay('invertBinary', $invertBinary_display);
 				}
 				$Cmd->setConfiguration('info', $_home_config_eq);
 			}

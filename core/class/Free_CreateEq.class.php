@@ -58,6 +58,9 @@ class Free_CreateEq
                 Free_CreateEq::createEq_parental($logicalinfo, $templatecore_V4, $order);
                 config::save('SEARCH_PARENTAL', config::byKey('SEARCH_PARENTAL', 'Freebox_OS', $date), 'Freebox_OS');
                 break;
+            case 'management':
+                Free_CreateEq::createEq_management($logicalinfo, $templatecore_V4, $order);
+                break;
             case 'network':
                 Free_CreateEq::createEq_network_interface($logicalinfo, $templatecore_V4, $order);
                 Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4,  $order, 'LAN');
@@ -498,7 +501,7 @@ class Free_CreateEq
         // Pour test Visibilité
         $_IsVisible = 0;
 
-        $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *');
+        $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *', null, null, null, 'system', true, null);
         // Type de phériphérique
         $host_type_list = "other|Autre;ip_camera|Caméra IP;vg_console|Console de jeux;freebox_crystal|Freebox Crystal;freebox_delta|Freebox Delta;freebox_hd|Freebox HD;freebox_mini|Freebox Mini;freebox_one|Freebox One;freebox_player|Freebox Player;freebox_pop|Freebox Pop;freebox_wifi|Freebox Wi-Fi Pop;printer|Imprimante;nas|NAS;workstation|Ordinateur Fixe;laptop|Ordinateur Portable;multimedia_device|Périphérique multimédia;networking_device|Périphérique réseau;smartphone|Smartphone;tablet|Tablette;ip_phone|Téléphone IP;television|Télévision;car|Véhicule connecté";
         $host_type = $EqLogic->AddCommand('Type de périphérique choisi', 'host_type_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_host_type, 0, 'default', 'default', $order, '0', false, true, null, true);
@@ -538,6 +541,8 @@ class Free_CreateEq
         // Commande Action
         $EqLogic->AddCommand('Modifier Appareil', 'start', 'action', 'other',  'default', null, null, 0, 'default', 'default', 0, $icon_dhcp, 0, 'default', 'default',  $order++, '0', $updateWidget, false, null, true, null, null, null, null, null);
 
+        log::add('Freebox_OS', 'debug', '│===========> La commande "Appareil connecté choisi" sera créée par l\'équipement : ' . $logicalinfo['networkName'] . ' et/ou ' . $logicalinfo['networkwifiguestName']);
+        log::add('Freebox_OS', 'debug', '│===========> La commande "Sélection appareil connecté" sera créée par l\'équipement : ' . $logicalinfo['networkName'] . ' et/ou ' . $logicalinfo['networkwifiguestName']);
         log::add('Freebox_OS', 'debug', '└─────────');
     }
     private static function createEq_network($logicalinfo, $templatecore_V4,  $order = 0, $_network = 'LAN')
@@ -764,7 +769,10 @@ class Free_CreateEq
             log::add('Freebox_OS', 'debug', '│===========> Appareil(s) connecté(s) ' . $active_list);
             log::add('Freebox_OS', 'debug', '│===========> Appareil(s) non connecté(s) ' . $noactive_list);
             $_IsVisible = 0;
-            $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *');
+            log::add('Freebox_OS', 'debug', '└─────────');
+            //$_networkname = $logicalinfo['managementName'];
+            log::add('Freebox_OS', 'debug', '┌───────── Ajout et mise à jour des commandes spécifiques dans l\'équipement : ' . $logicalinfo['managementName']);
+            $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *', null, null, null, 'system', true, null);
             $host_type = $EqLogic->AddCommand('Appareil connecté choisi', 'host_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_network, 0, 'default', 'default', 14, '0', false, true, null, true);
             $EqLogic->AddCommand('Sélection appareil connecté', 'host', 'action', 'select', null, null, null, $_IsVisible, $host_type, 'default', 0, $icon_network, 0, 'default', 'default', 15, '0', false, true, null, true, null, null, null, null, null, null, null, null, $network_list, null, null);
             $EqLogic->refreshWidget();

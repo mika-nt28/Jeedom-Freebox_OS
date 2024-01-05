@@ -100,26 +100,26 @@ function Freebox_OS_update()
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		foreach ($eqLogics as $eqLogic) {
 			//=> Suppression des anciennes commandes Airmedia
-			removeLogicId($eqLogic, 'ActualAirmedia'); // Amélioration 20220806
-			removeLogicId($eqLogic, 'airmediastart'); // Amélioration 20220806
-			removeLogicId($eqLogic, 'airmediastop'); // Amélioration 20220806
+			//removeLogicId($eqLogic, 'ActualAirmedia'); // Amélioration 20220806
+			//removeLogicId($eqLogic, 'airmediastart'); // Amélioration 20220806
+			//removeLogicId($eqLogic, 'airmediastop'); // Amélioration 20220806
 
 			// 4G => Nouvelle API
-			removeLogicId($eqLogic, 'protocol'); // Amélioration 20221208
-			removeLogicId($eqLogic, 'modulation'); // Amélioration 20221208
+			//removeLogicId($eqLogic, 'protocol'); // Amélioration 20221208
+			//removeLogicId($eqLogic, 'modulation'); // Amélioration 20221208
 
 			// a faire plus tard
-			removeLogicId($eqLogic, 'add_del_mac'); // Amélioration 20220827
-			removeLogicId($eqLogic, 'WakeonLAN'); // Amélioration 20220827
-			removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
-			removeLogicId($eqLogic, 'redir'); // Amélioration 20220827
+			// removeLogicId($eqLogic, 'add_del_mac'); // Amélioration 20220827
+			// removeLogicId($eqLogic, 'WakeonLAN'); // Amélioration 20220827
+			// removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
+			// removeLogicId($eqLogic, 'redir'); // Amélioration 20220827
 			//
-			removeLogicId($eqLogic, 'host_info'); // Amélioration 20220827
-			removeLogicId($eqLogic, 'host'); // Amélioration 20220827
-			removeLogicId($eqLogic, 'host_mac'); // Amélioration 20220827
+			// removeLogicId($eqLogic, 'host_info'); // Amélioration 20220827
+			// removeLogicId($eqLogic, 'host'); // Amélioration 20220827
+			// removeLogicId($eqLogic, 'host_mac'); // Amélioration 20220827
 			//
-			removeLogicId($eqLogic, 'wifimac_filter_state'); // Amélioration 20220827
-			removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
+			//removeLogicId($eqLogic, 'wifimac_filter_state'); // Amélioration 20220827
+			//removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
 			//=> Libre
 			//removeLogicId($eqLogic, 'schedule'); // Amélioration 20210627
 			//removeLogicId($eqLogic, ' schedule'); // Amélioration 20210627

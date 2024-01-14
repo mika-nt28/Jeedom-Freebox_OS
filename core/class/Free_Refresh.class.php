@@ -604,10 +604,10 @@ class Free_Refresh
         $order_count_noactive = 400;
         if ($EqLogics->getConfiguration('UpdateVisible') == true) {
             $_UpdateVisible = true;
-            log::add('Freebox_OS', 'debug', '│===========> Masquer les équipements avec statut 0 : ' . $_UpdateVisible);
+            log::add('Freebox_OS', 'debug', '│===========> ETAT Option "Afficher uniquement les connectés" = ' . $_UpdateVisible . ' => : les équipements avec statut 0 ne seront pas affichés');
         } else {
             $_UpdateVisible = false;
-            log::add('Freebox_OS', 'debug', '│===========> Affichage les équipements avec statut 0');
+            log::add('Freebox_OS', 'debug', '│===========> ETAT Option "Afficher uniquement les connectés" = 0 => : les équipements avec statut 0 seront affichés');
         }
         if (!$result_network_ping['success']) {
             log::add('Freebox_OS', 'debug', '│===========> RESULTAT  Requête pas correct ou Pas d\'appareil trouvé' . $result_network_ping['success']);

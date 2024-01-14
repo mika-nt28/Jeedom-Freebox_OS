@@ -394,7 +394,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary_display = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = '0')
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary_display = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = null)
 	{
 		if ($listValue_Update == true) {
 			log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue);
@@ -502,7 +502,7 @@ class Freebox_OS extends eqLogic
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
 				if ($invertBinary_config != null  && $SubType == 'binary') { //Correction pour prise en compte fonction Core
-					log::add('Freebox_OS', 'debug', '│ ==========================================================================================> Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
+					log::add('Freebox_OS', 'debug', '│ Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
 					$Cmd->setConfiguration('invertBinary', $invertBinary_config);
 					$Cmd->setdisplay('invertBinary', $invertBinary_display);
 				}
@@ -579,7 +579,6 @@ class Freebox_OS extends eqLogic
 					$Cmd->setIsVisible(1);
 					$Cmd->save();
 				}
-				//log::add('Freebox_OS', 'debug', '│===============================> TEST 2000: ' . $updatenetwork['IsVisible_option']);
 			}
 			$Cmd->setConfiguration('host_type', $updatenetwork['host_type']);
 			if ($repeatevent == $updatenetwork['repeatevent'] && $Type == 'info') {
@@ -588,6 +587,7 @@ class Freebox_OS extends eqLogic
 			$Cmd->setConfiguration('IPV4', $updatenetwork['IPV4']);
 			$Cmd->setConfiguration('IPV6', $updatenetwork['IPV6']);
 			$Cmd->setConfiguration('mac_address', $updatenetwork['mac_address']);
+			$Cmd->setConfiguration('invertBinary', 0); //│===============================> Correction Bug du 14.01.2024
 			if ($updatenetwork['order'] != null) {
 				$Cmd->setOrder($updatenetwork['order']);
 			}

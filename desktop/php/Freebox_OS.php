@@ -46,17 +46,17 @@ $eqLogics = eqLogic::byType($plugin->getId());
 			<div class="cursor eqLogicAction logoPrimary" data-action="eqlogic_standard">
 				<i class="fas fa-bullseye" title="{{Cette fonction permet de créer les commandes pour les équipements standards}}"></i>
 				<br />
-				<span>{{Scan}}<br />{{équipements standards}}</span>
+				<span>{{Scan équipements standards}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary" data-action="control_parental">
 				<i class="fas fa-user-shield" title="{{Cette fonction permet de créer les commandes pour le contrôle parental}}"></i>
 				<br>
-				<span>{{Scan}}<br />{{Contrôle parental}}</span>
+				<span>{{Scan contrôle parental}}</span>
 			</div>
 			<div class="cursor eqLogicAction logoPrimary titleAction" data-action="tile">
 				<i class="fas fa-home" title="{{Cette fonction permet de créer les commandes pour la Domotique}}"></i>
 				<br>
-				<span>{{Scan}}<br />{{Tiles}}</span>
+				<span>{{Scan tiles}}</span>
 			</div>
 			<?php
 			if (log::getLogLevel('Freebox_OS') <= 200) :
@@ -68,16 +68,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 				</div>
 			<?php
 			endif;
-			?>
-			<?php
-			$jeedomVersion  = jeedom::version() ?? '0';
-			$displayInfo = version_compare($jeedomVersion, '4.4.0', '>=');
-			if ($displayInfo) {
-				echo '<div class="cursor eqLogicAction info" data-action="createCommunityPost">';
-				echo '<i class="fas fa-ambulance"></i><br>';
-				echo '<span>{{Community}}</span>';
-				echo '</div>';
-			}
 			?>
 		</div>
 		<!-- Champ de recherche -->
@@ -110,7 +100,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 						echo '<img src="plugins/Freebox_OS/core/img/' . $template . '.png"/>';
 						echo '<br>';
 						echo '<span class="name">' . $eqLogic->getHumanName(true, true) . '</span>';
-						echo '<span class="hidden hiddenAsCard displayTableRight">';
+						echo '<span class="hiddenAsCard displayTableRight hidden">';
 						if ($eqLogic->getConfiguration('autorefresh', '') != '') {
 							echo '<span class="label label-info">' . $eqLogic->getConfiguration('autorefresh') . '</span>';
 						}

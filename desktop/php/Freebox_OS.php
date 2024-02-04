@@ -66,19 +66,6 @@ $eqLogics = eqLogic::byType($plugin->getId());
 					<br />
 					<span>{{Debug Tiles}}</span>
 				</div>
-			<?php
-			endif;
-			?>
-			<?php
-			$jeedomVersion  = jeedom::version() ?? '0';
-			$displayInfo = version_compare($jeedomVersion, '4.4.0', '>=');
-			if ($displayInfo) {
-				echo '<div class="cursor eqLogicAction info" data-action="createCommunityPost">';
-				echo '<i class="fas fa-ambulance"></i><br>';
-				echo '<span>{{Community}}</span>';
-				echo '</div>';
-			}
-			?>
 		</div>
 		<!-- Champ de recherche -->
 		<div class="input-group" style="margin-bottom:5px;">

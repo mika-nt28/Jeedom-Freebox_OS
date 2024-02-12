@@ -25,6 +25,7 @@ class Free_Refresh
         $Free_API = new Free_API();
         $EqLogics = eqlogic::byId($_freeboxID);
         $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
+        $TYPE_FREEBOX_TILES = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         if ($API_version == null || $API_version === 'TEST_V8') {
             $result_API = Freebox_OS::FreeboxAPI();
             log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $result_API);
@@ -66,19 +67,24 @@ class Free_Refresh
                     Free_Refresh::refresh_LCD($EqLogics, $Free_API);
                     break;
                 case 'homeadapters':
-                    $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
-                    foreach ($EqLogics->getCmd('info') as $Command) {
-                        foreach ($result as $Cmd) {
-                            if ($Cmd['id'] == $Command->getLogicalId()) {
-                                if ($Cmd['status'] == 'active') {
-                                    $homeadapters_value = 1;
-                                } else {
-                                    $homeadapters_value = 0;
+                    if ($TYPE_FREEBOX_TILES == 'OK') {
+                        $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
+                        foreach ($EqLogics->getCmd('info') as $Command) {
+                            foreach ($result as $Cmd) {
+                                if ($Cmd['id'] == $Command->getLogicalId()) {
+                                    if ($Cmd['status'] == 'active') {
+                                        $homeadapters_value = 1;
+                                    } else {
+                                        $homeadapters_value = 0;
+                                    }
+                                    log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $Cmd['id'] . ' -- Nom : ' . $Cmd['label'] . ' -- Etat : ' . $homeadapters_value);
+                                    $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $homeadapters_value);
                                 }
-                                log::add('Freebox_OS', 'debug', '│──────────> Update pour Id : ' . $Cmd['id'] . ' -- Nom : ' . $Cmd['label'] . ' -- Etat : ' . $homeadapters_value);
-                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $homeadapters_value);
                             }
                         }
+                    } else {
+                        log::add('Freebox_OS', 'debug', '│ La box n\'est plus comptatible avec cette application');
+                        log::add('Freebox_OS', 'debug', '└─────────');
                     }
                     break;
                 case 'parental':
@@ -112,8 +118,14 @@ class Free_Refresh
                     Free_Refresh::refresh_wifi($EqLogics, $Free_API);
                     break;
                 default:
-                    Free_Refresh::refresh_titles($EqLogics, $Free_API);
-                    // Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, true);
+                    if ($TYPE_FREEBOX_TILES == 'OK') {
+                        Free_Refresh::refresh_titles($EqLogics, $Free_API);
+                        // Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, true);
+                    } else {
+                        log::add('Freebox_OS', 'debug', '│ La box n\'est plus comptatible avec cette application');
+                        log::add('Freebox_OS', 'debug', '└─────────');
+                    }
+
                     break;
             }
         }

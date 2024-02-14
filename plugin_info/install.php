@@ -179,6 +179,11 @@ function Freebox_OS_remove()
 		$cron->stop();
 		$cron->remove();
 	}
+	$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxAPI');
+	if (is_object($cron)) {
+		$cron->stop();
+		$cron->remove();
+	}
 }
 
 function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = null, $_calculValueOffset = null, $_historizeRound = null)

@@ -244,7 +244,6 @@ class Freebox_OS extends eqLogic
 	{
 		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		if (!is_array($action)) {
-			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
 			return;
 		}
 		if (!isset($action[0])) {
@@ -253,7 +252,31 @@ class Freebox_OS extends eqLogic
 		if ($action[0] == '') {
 			return;
 		}
-		log::add('Freebox_OS', 'debug', '[INFO] - Action pour l\'action : ' . $action[0]['Name'] . '(' . $action[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
+		$value_log = ' ';
+		if ($action[0]['LogicalIdEqLogic'] == 'management') {
+			switch ($action[0]['LogicalId']) {
+				case 'host':
+				case 'host_type':
+				case 'method':
+				case 'host_type_info':
+					//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action[0]['Options']['select']);
+					$value_log = ' : ' . $action[0]['Options']['select'] . ' - ';
+					break;
+				case 'primary_name_info':
+					//log::add('Freebox_OS', 'debug', '[testNotArray] - MESSAGE' . $action[0]['Options']['message']);
+					$value_log = ' : ' . $action[0]['Options']['message'] . ' - ';
+					break;
+				case 'start':
+					$value_log = ' ';
+				default:
+					//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action[0]['Options']['message']);
+					$value_log = ' : ' . $action[0]['Options']['message'] . ' - ';
+					break;
+			}
+		}
+
+
+		log::add('Freebox_OS', 'debug', '[INFO] - Action pour l\'action : ' . $action[0]['Name'] . ' (' . $action[0]['LogicalId'] . ')' . $value_log . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
 		Free_Update::UpdateAction($action[0]['LogicalId'], $action[0]['SubType'], $action[0]['Name'], $action[0]['Value'], $action[0]['Config'], $action[0]['EqLogic'], $action[0]['Options'], $action[0]['This']);
 		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		array_shift($action);
@@ -1082,6 +1105,7 @@ class Freebox_OSCmd extends cmd
 			'Config' => $this->getConfiguration('logicalId'),
 			'EqLogic' => $this->getEqLogic(),
 			'NameEqLogic' => $this->getEqLogic()->getName(),
+			'LogicalIdEqLogic' => $this->getEqLogic()->getLogicalId(),
 			'Options' => $_options,
 		);
 

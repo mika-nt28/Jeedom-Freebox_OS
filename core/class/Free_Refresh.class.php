@@ -396,45 +396,51 @@ class Free_Refresh
                     }
                 }
             }
+        } else {
+            log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN DISQUE');
         }
-        $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
-        if ($Type_box == 'OK') {
+        $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
+        if ($Type_box != 'fbxgw1r' && $Type_box != 'fbxgw2r') {
             $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid', true, true, null);
-            if (is_object($Command)) {
-                foreach ($result as $raid) {
-                    foreach ($EqLogics->getCmd('info') as $Command) {
-                        switch ($Command->getLogicalId()) {
-                            case $raid['id'] . '_state':
-                                log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_state : ' . $raid['state']);
-                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['state']);
-                                break;
-                            case $raid['id'] . '_sync_action':
-                                log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_sync_action : ' . $raid['sync_action']);
-                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['sync_action']);
-                                break;
-                            case $raid['id'] . '_role':
-                                log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_role : ' . $raid['role']);
-                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['role']);
-                                break;
-                            case $raid['id'] . '_degraded':
-                                log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_degraded : ' . $raid['degraded']);
-                                $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['degraded']);
-                                break;
+            if ($result != false) {
+                if (is_object($Command)) {
+                    foreach ($result as $raid) {
+                        foreach ($EqLogics->getCmd('info') as $Command) {
+                            switch ($Command->getLogicalId()) {
+                                case $raid['id'] . '_state':
+                                    log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_state : ' . $raid['state']);
+                                    $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['state']);
+                                    break;
+                                case $raid['id'] . '_sync_action':
+                                    log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_sync_action : ' . $raid['sync_action']);
+                                    $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['sync_action']);
+                                    break;
+                                case $raid['id'] . '_role':
+                                    log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_role : ' . $raid['role']);
+                                    $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['role']);
+                                    break;
+                                case $raid['id'] . '_degraded':
+                                    log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_degraded : ' . $raid['degraded']);
+                                    $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['degraded']);
+                                    break;
+                            }
                         }
-                    }
-                    if (isset($raid['members'])) {
-                        foreach ($raid['members'] as $members_raid) {
-                            foreach ($EqLogics->getCmd('info') as $Command) {
-                                switch ($Command->getLogicalId()) {
-                                    case $members_raid['id'] . '_role':
-                                        log::add('Freebox_OS', 'debug', '---> Role pour le disque ' . $members_raid['disk']['serial'] . ' : ' . $members_raid['role']);
-                                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $members_raid['role']);
-                                        break;
+                        if (isset($raid['members'])) {
+                            foreach ($raid['members'] as $members_raid) {
+                                foreach ($EqLogics->getCmd('info') as $Command) {
+                                    switch ($Command->getLogicalId()) {
+                                        case $members_raid['id'] . '_role':
+                                            log::add('Freebox_OS', 'debug', '---> Role pour le disque ' . $members_raid['disk']['serial'] . ' : ' . $members_raid['role']);
+                                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $members_raid['role']);
+                                            break;
+                                    }
                                 }
                             }
                         }
                     }
                 }
+            } else {
+                log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN DISQUE RAID');
             }
         }
     }

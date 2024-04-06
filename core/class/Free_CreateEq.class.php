@@ -323,8 +323,8 @@ class Free_CreateEq
         if ($result == 'auth_required') {
             $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         }
-        $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, null, 'system', true);
         if ($result != false) {
+            $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, null, 'system', true);
             foreach ($result['result'] as $disks) {
                 if ($disks['temp'] != 0) {
                     log::add('Freebox_OS', 'debug', '---> Température : ' . $disks['temp'] . '°C' . '- Disque [' . $disks['serial'] . '] - ' . $disks['id']);
@@ -340,6 +340,8 @@ class Free_CreateEq
                     $disk->AddCommand($partition['label'] . ' - ' . $disks['type'] . ' - ' . $partition['fstype'], $partition['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, $order2++, '0', false, false, 'never', null, true, '#value#*100', 2, null, null, null, null, true);
                 }
             }
+        } else {
+            log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN DISQUE');
         }
         log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CREATION DES COMMANDES SPECIFIQUES POUR : ' . $logicalinfo['diskName']);
     }

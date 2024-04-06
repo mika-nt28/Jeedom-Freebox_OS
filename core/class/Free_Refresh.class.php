@@ -1406,6 +1406,8 @@ class Free_Refresh
                     }
                 }
             }
+        } else {
+            Freebox_OS::DisableEqLogic($EqLogics, false);
         }
     }
     private static function refresh_WebSocket($EqLogics, $Free_API)

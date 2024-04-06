@@ -50,12 +50,6 @@ try {
 			Free_CreateTil::createTil('Tiles_group');
 			$objects = "";
 			$objects = $objects . '<option value="">Default</option>';
-			/*foreach ((jeeObject::buildTree(null, false)) as $object) {
-				$options .= '<option value="' . $object->getId() . '">' . str_repeat('&nbsp;&nbsp;', $object->getConfiguration("parentNumber")) . $object->getName() . '</option>';
-			}*/
-			/*foreach (jeeObject::all() as $object) {
-				$objects = $objects . '<option value="' . $object->getId() . '">' . $object->getName() . '</option>';
-			}*/
 			$objects = $objects . '</select>';
 			$result = array(
 				"piece" => Free_CreateTil::createTil('Tiles_group'),
@@ -84,7 +78,8 @@ try {
 			$deamon = Freebox_OS::deamon_info();
 			$Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
 			if ($deamon['state'] == 'ok' && $Type_box != 'OK') {
-				Free_CreateTil::createTil('box');
+				Free_CreateEq::createEq('box');
+				//Free_CreateTil::createTil('box');
 			}
 			$result = array(
 				"Type_box" => config::byKey('TYPE_FREEBOX', 'Freebox_OS', "null"),
@@ -96,7 +91,6 @@ try {
 		case 'GetSetting':
 			$result = array(
 				"ip" => config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS'),
-				//"VersionAPP" => config::byKey('FREEBOX_SERVER_APP_VERSION', 'Freebox_OS'),
 				"NameAPP" => config::byKey('FREEBOX_SERVER_APP_NAME', 'Freebox_OS'),
 				"IdApp" => config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS'),
 				"DeviceName" => config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS'),
@@ -109,7 +103,6 @@ try {
 		case 'GetSettingTiles':
 			$result = array(
 				"CronTiles" => config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'),
-				//"CmdbyCmd" => config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS')
 			);
 			ajax::success($result);
 			break;
@@ -119,13 +112,11 @@ try {
 			break;
 		case 'SetSettingTiles':
 			config::save('FREEBOX_TILES_CRON', init('cron_tiles'), 'Freebox_OS');
-			//config::save('FREEBOX_TILES_CmdbyCmd', init('CmdbyCmd'), 'Freebox_OS');
 			Free_CreateTil::createTil('SetSettingTiles');
 			ajax::success(true);
 			break;
 		case 'SetSetting':
 			config::save('FREEBOX_SERVER_IP', init('ip'), 'Freebox_OS');
-			//config::save('FREEBOX_SERVER_APP_VERSION', init('VersionAPP'), 'Freebox_OS');
 			config::save('defaultParentObject', init('Categorie'), 'Freebox_OS');
 			ajax::success(true);
 			break;

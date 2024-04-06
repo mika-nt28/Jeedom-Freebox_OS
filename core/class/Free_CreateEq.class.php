@@ -40,6 +40,9 @@ class Free_CreateEq
             case 'airmedia':
                 Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4, $order);
                 break;
+            case 'box':
+                Free_CreateEq::createEq_Type_Box();
+                break;
             case 'connexion':
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4, $order);
                 Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
@@ -143,7 +146,25 @@ class Free_CreateEq
                 break;
         }
     }
-
+    private static function createEq_Type_Box()
+    {
+        log::add('Freebox_OS', 'info', '[WARNING] - DEBUT TEST COMPATIBILITE DOMOTIQUE');
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('system', null, null);
+        if ($result['board_name'] == 'fbxgw7r') {
+            $Type_box = 'OK';
+        } else {
+            $Type_box = 'NOK';
+        }
+        config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
+        log::add('Freebox_OS', 'info', '---> Board name : ' . config::byKey('TYPE_FREEBOX', 'Freebox_OS'));
+        config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
+        log::add('Freebox_OS', 'info', '---> Type de box : ' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'));
+        config::save('TYPE_FREEBOX_TILES', $Type_box, 'Freebox_OS');
+        log::add('Freebox_OS', 'info', '[INFO] ---> Compatibilité Domotique : ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
+        log::add('Freebox_OS', 'info', '[  OK  ] - FIN TEST COMPATIBILITE DOMOTIQUE');
+        return $Type_box;
+    }
     private static function createEq_airmedia($logicalinfo, $templatecore_V4, $order = 0)
     {
         log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION DES COMMANDES POUR : ' . $logicalinfo['airmediaName']);

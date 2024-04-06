@@ -367,8 +367,6 @@ function GetSetting() {
         success: function (data) {
             $('#input_freeboxIP').val(data.result.ip);
             logs('info', "IP : " + data.result.ip);
-            //$('#input_freeAppVersion').val(data.result.VersionAPP);
-            //logs('info', "Version API : " + data.result.VersionAPP);
             $('#input_freeNameAPP').val(data.result.NameAPP);
             logs('info', "Nom API : " + data.result.NameAPP);
             $('#input_IdApp').val(data.result.IdApp);
@@ -433,15 +431,6 @@ function GetSettingTiles() {
                 console.log('Cron Global Titles ACTIVATION - TRUE - : ' + data.result.CronTiles);
                 $('.checkbox_freeboxTiles').prop('checked',true);
             };
-            /*if (data.result.CmdbyCmd == 0) {
-                logs('info', "================= Actualisation par commande : NOK");
-                console.log('Actualisation par commande - FALSE - : ' + data.result.CmdbyCmd);
-                $('.checkbox_freeboxCmdbyCmd').prop('checked', false);
-            } else {
-                logs('info', "================= Actualisation par commande : OK");
-                console.log('Actualisation par commande - TRUE - : ' + data.result.CmdbyCmd);
-                $('.checkbox_freeboxCmdbyCmd').prop('checked',true);
-            };*/
         }
     });
 }
@@ -470,7 +459,6 @@ function SetSetting(ip, VersionAPP, Categorie) {
         data: {
             action: "SetSetting",
             ip: ip,
-            //VersionAPP: VersionAPP,
             Categorie: Categorie,
         },
         dataType: 'json',

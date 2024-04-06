@@ -49,7 +49,6 @@ function Freebox_OS_update()
 		$cron->setClass('Freebox_OS');
 		$cron->setFunction('RefreshToken');
 		$cron->setEnable(1);
-		//$cron->setDeamon(1);
 		$cron->setSchedule('*/30 * * * *');
 		$cron->setTimeout('10');
 		$cron->save();
@@ -61,7 +60,6 @@ function Freebox_OS_update()
 		$cron->setFunction('FreeboxPUT');
 		$cron->setEnable(1);
 		$cron->setDeamon(1);
-		//$cron->setDeamonSleepTime(1);
 		$cron->setSchedule('* * * * *');
 		$cron->setTimeout('1440');
 		$cron->save();
@@ -71,10 +69,8 @@ function Freebox_OS_update()
 		$cron = new cron();
 		$cron->setClass('Freebox_OS');
 		$cron->setFunction('FreeboxAPI');
-		//$cron->setDeamon(1);
 		$cron->setEnable(1);
 		$cron->setSchedule('0 0 * * 1');
-		//$cron->setDeamonSleepTime(1);
 		$cron->setTimeout('15');
 		$cron->save();
 	}

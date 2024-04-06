@@ -244,7 +244,6 @@ class Freebox_OS extends eqLogic
 	{
 		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		if (!is_array($action)) {
-			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
 			return;
 		}
 		if (!isset($action[0])) {
@@ -253,7 +252,31 @@ class Freebox_OS extends eqLogic
 		if ($action[0] == '') {
 			return;
 		}
-		log::add('Freebox_OS', 'debug', '[INFO] - Action pour l\'action : ' . $action[0]['Name'] . '(' . $action[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
+		$value_log = ' ';
+		if ($action[0]['LogicalIdEqLogic'] == 'management') {
+			switch ($action[0]['LogicalId']) {
+				case 'host':
+				case 'host_type':
+				case 'method':
+				case 'host_type_info':
+					//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action[0]['Options']['select']);
+					$value_log = ' : ' . $action[0]['Options']['select'] . ' - ';
+					break;
+				case 'primary_name_info':
+					//log::add('Freebox_OS', 'debug', '[testNotArray] - MESSAGE' . $action[0]['Options']['message']);
+					$value_log = ' : ' . $action[0]['Options']['message'] . ' - ';
+					break;
+				case 'start':
+					$value_log = ' ';
+				default:
+					//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action[0]['Options']['message']);
+					$value_log = ' : ' . $action[0]['Options']['message'] . ' - ';
+					break;
+			}
+		}
+
+
+		log::add('Freebox_OS', 'debug', '[INFO] - Action pour l\'action : ' . $action[0]['Name'] . ' (' . $action[0]['LogicalId'] . ')' . $value_log . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
 		Free_Update::UpdateAction($action[0]['LogicalId'], $action[0]['SubType'], $action[0]['Name'], $action[0]['Value'], $action[0]['Config'], $action[0]['EqLogic'], $action[0]['Options'], $action[0]['This']);
 		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		array_shift($action);
@@ -262,12 +285,7 @@ class Freebox_OS extends eqLogic
 	public static function FreeboxGET()
 	{
 		try {
-			//log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
-			//if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
-			//	Free_Refresh::RefreshInformation('Tiles_global_CmdbyCmd');
-			//} else {
 			Free_Refresh::RefreshInformation('Tiles_global');
-			//	}
 			sleep(15);
 		} catch (Exception $exc) {
 			log::add('Freebox_OS', 'error', '[CRITICAL] - ' . __('ERREUR CRON UPDATE TILES/NODE ', __FILE__));
@@ -296,6 +314,25 @@ class Freebox_OS extends eqLogic
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', '---> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId);
 		return $EqLogic;
+	}
+	public static function DisableEqLogic($EqLogic, $TILES = false)
+	{
+		if ($EqLogic != null) {
+			log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE DESACTIVATION DE : ' . $EqLogic->getname());
+			if (!is_object($EqLogic->getLogicalId())) {
+				$EqLogic->setIsEnable(0);
+				$EqLogic->save(true);
+			}
+			log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE DESACTIVATION DE : ' . $EqLogic->getname());
+		}
+		if ($TILES == true) {
+			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+			if (is_object($cron)) {
+				log::add('Freebox_OS', 'debug', '[WARNING] - SUPPRESSION CRON GLOBAL TITLES');
+				$cron->stop();
+				$cron->remove();
+			}
+		}
 	}
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
@@ -903,6 +940,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
 		log::add('Freebox_OS', 'info', '---> Mise à jour de Version dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		log::add('Freebox_OS', 'info', '[  OK  ] - FIN TEST VERSION API DE LA FREEBOX');
+		Free_CreateEq::createEq('box');
 		return $API_version;
 	}
 	public static function updateLogicalID($eq_version, $_update = false)
@@ -1082,6 +1120,7 @@ class Freebox_OSCmd extends cmd
 			'Config' => $this->getConfiguration('logicalId'),
 			'EqLogic' => $this->getEqLogic(),
 			'NameEqLogic' => $this->getEqLogic()->getName(),
+			'LogicalIdEqLogic' => $this->getEqLogic()->getLogicalId(),
 			'Options' => $_options,
 		);
 

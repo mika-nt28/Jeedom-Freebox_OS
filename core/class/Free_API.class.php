@@ -250,6 +250,9 @@ class Free_API
                         } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                             log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
                             return false;
+                        } else if ($result['error_code'] == "no_such_vm") {
+                            log::add('Freebox_OS', 'error', 'Erreur VM : '  . $result['msg']);
+                            return false;
                         }
                     }
                 }

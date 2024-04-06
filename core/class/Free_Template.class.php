@@ -174,6 +174,7 @@ class Free_Template
 				array('operation' => "#value# == 'dfs'", 'state_light' => '<i class=\'icon_blue icon fas fa-wifi\'></i>'),
 				array('operation' => "#value# == 'active'", 'state_light' => '<i class=\'icon_green icon fas fa-wifi\'></i>'),
 				array('operation' => "#value# == 'failed'", 'state_light' => '<i class=\'icon_orange icon fas fa-user-shield\'></i>'),
+				array('operation' => "#value# == 'disabled_power_saving'", 'state_light' => '<i class=\'icon_orange icon fas fa-wifi\'></i>'),
 				array('operation' => "#value# == ''", 'state_light' => '<i class=\'icon_orange icon fas fa-question\'></i>'),
 			)
 		);

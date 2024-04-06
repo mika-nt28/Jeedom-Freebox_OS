@@ -103,7 +103,20 @@ function Freebox_OS_update()
 			// 4G => Nouvelle API
 			//removeLogicId($eqLogic, 'protocol'); // Amélioration 20221208
 			//removeLogicId($eqLogic, 'modulation'); // Amélioration 20221208
+			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'fbxgw9-r1') {
+				// Amélioration - Suppression des commandes en cas de migration de freebox de la delta a l'ultra
+				removeLogicId($eqLogic, 'temp_cpu_cp_master');
+				removeLogicId($eqLogic, 'temp_cpu_ap'); // Amélioration 20220827
+				removeLogicId($eqLogic, 'temp_cpu_cp_slave'); // Amélioration 20220827
+				removeLogicId($eqLogic, 'temp_hdd0');
+				removeLogicId($eqLogic, 'temp_t1');
+				removeLogicId($eqLogics, 'temp_t2');
+				removeLogicId($eqLogic, 'temp_t3');
+				removeLogicId($eqLogic, 'fan1_speed');
 
+				// removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
+				// removeLogicId($eqLogic, 'redir'); // Amélioration 20220827
+			}
 			// a faire plus tard
 			// removeLogicId($eqLogic, 'add_del_mac'); // Amélioration 20220827
 			// removeLogicId($eqLogic, 'WakeonLAN'); // Amélioration 20220827

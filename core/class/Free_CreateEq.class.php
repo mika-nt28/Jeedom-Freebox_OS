@@ -47,6 +47,8 @@ class Free_CreateEq
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4, $order);
                 Free_CreateEq::createEq_connexion_4G($logicalinfo, $templatecore_V4);
                 break;
+            case 'disk_check':
+                Free_CreateEq::createEq_disk_check($logicalinfo);
             case 'disk':
                 Free_CreateEq::createEq_disk_SP($logicalinfo, $templatecore_V4, $order);
                 Free_CreateEq::createEq_disk_RAID($logicalinfo, $templatecore_V4, $order);
@@ -111,7 +113,13 @@ class Free_CreateEq
                 //log::add('Freebox_OS', 'debug', '====================================================================================');
                 //log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_FreePlug($logicalinfo, $templatecore_V4, $order);
-                Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4, $order);
+                $result_disk = Free_CreateEq::createEq_disk_check($logicalinfo);
+                if ($result_disk == true) {
+                    Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4, $order);
+                } else {
+                    log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN DISQUE => PAS DE CREATION DE L\'EQUIPEMENT : ' . $logicalinfo['diskName']);
+                }
+
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4, $order);
                 Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4, $order);
                 $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
@@ -123,7 +131,12 @@ class Free_CreateEq
                 }
                 if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
                     Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4, $order);
-                    Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4, $order);
+                    if ($result_disk == true) {
+                        Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4, $order);
+                    } else {
+                        log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN DISQUE => PAS DE CREATION DE L\'EQUIPEMENT : ' . $logicalinfo['downloadsName']);
+                    }
+
                     Free_CreateEq::createEq_management($logicalinfo, $templatecore_V4, $order);
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, $order, 'LAN');
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, $order, 'WIFIGUEST');
@@ -306,11 +319,25 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CREATION DES COMMANDES SPECIFIQUES POUR 4G: ' . $logicalinfo['connexionName']);
     }
 
-    private static function createEq_disk($logicalinfo, $templatecore_V4)
+    private static function createEq_disk_check($logicalinfo)
     {
         log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION DES COMMANDES POUR : ' . $logicalinfo['diskName']);
         Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, null, 'system', true);
         log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CREATION DES COMMANDES : ' . $logicalinfo['diskName']);
+    }
+
+    private static function createEq_disk($logicalinfo, $templatecore_V4)
+    {
+        $Free_API = new Free_API();
+        log::add('Freebox_OS', 'debug', '[WARNING] - CONTRÔLE PRESENCE DISQUE');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
+        if ($result != false) {
+            $result_disk = true;
+        } else {
+            $result_disk = false;
+        }
+        log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CONTRÔLE PRESENCE DISQUE');
+        return $result_disk;
     }
 
     private static function createEq_disk_SP($logicalinfo, $templatecore_V4, $order = 0)
@@ -824,7 +851,6 @@ class Free_CreateEq
         $system->AddCommand('Type de Wifi', 'wifi_type', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'model_info',  0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         $order = 130;
         $system->AddCommand('Reboot', 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',   $order++, '0', true, false, null, true);
-
         //$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateicon);
     }
     private static function createEq_system_lan($logicalinfo, $templatecore_V4, $order = 1, $system)

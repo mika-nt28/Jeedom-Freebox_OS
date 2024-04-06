@@ -398,6 +398,7 @@ class Free_Refresh
             }
         } else {
             log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN DISQUE');
+            Freebox_OS::DisableEqLogic($EqLogics, false);
         }
         $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
         if ($Type_box != 'fbxgw1r' && $Type_box != 'fbxgw2r') {
@@ -841,6 +842,17 @@ class Free_Refresh
                             case "model_name":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['name']);
                                 log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['name']);
+                                // config::save('Type_box', $result['model_info']['name'], 'Freebox_OS');
+                                /* if ($result['model_info']['name'] == 'fbxgw9-r1') {
+                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_cp_master'); // Amélioration 20220827
+                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_ap'); // Amélioration 20220827
+                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_cp_slave'); // Amélioration 20220827
+                                    Free_Refresh::removeCMD($EqLogics, 'temp_hdd0');
+                                    Free_Refresh::removeCMD($EqLogics, 'temp_t1');
+                                    Free_Refresh::removeCMD($EqLogics, 'temp_t2');
+                                    Free_Refresh::removeCMD($EqLogics, 'temp_t3');
+                                    Free_Refresh::removeCMD($EqLogics, 'fan1_speed');
+                                }*/
                                 break;
                             case "pretty_name":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['pretty_name']);
@@ -1476,6 +1488,14 @@ class Free_Refresh
                         break;
                 }
             }
+        }
+    }
+    private static function removeCMD($eqLogic, $from, $link_IA = null)
+    {
+        //  suppression fonction
+        $cmd = $eqLogic->getCmd(null, $from);
+        if (is_object($cmd)) {
+            $cmd->remove();
         }
     }
 }

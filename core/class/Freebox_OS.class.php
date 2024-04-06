@@ -317,13 +317,14 @@ class Freebox_OS extends eqLogic
 	}
 	public static function DisableEqLogic($EqLogic, $TILES = false)
 	{
+		$logicalinfo = Freebox_OS::getlogicalinfo();
 		if ($EqLogic != null) {
 			log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE DESACTIVATION DE : ' . $EqLogic->getname());
 			if (!is_object($EqLogic->getLogicalId())) {
 				$EqLogic->setIsEnable(0);
 				$EqLogic->save(true);
+				log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE DESACTIVATION DE : ' . $EqLogic->getname());
 			}
-			log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE DESACTIVATION DE : ' . $EqLogic->getname());
 		}
 		if ($TILES == true) {
 			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');

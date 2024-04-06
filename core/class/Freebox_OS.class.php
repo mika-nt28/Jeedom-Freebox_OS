@@ -285,12 +285,7 @@ class Freebox_OS extends eqLogic
 	public static function FreeboxGET()
 	{
 		try {
-			//log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
-			//if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
-			//	Free_Refresh::RefreshInformation('Tiles_global_CmdbyCmd');
-			//} else {
 			Free_Refresh::RefreshInformation('Tiles_global');
-			//	}
 			sleep(15);
 		} catch (Exception $exc) {
 			log::add('Freebox_OS', 'error', '[CRITICAL] - ' . __('ERREUR CRON UPDATE TILES/NODE ', __FILE__));
@@ -319,6 +314,25 @@ class Freebox_OS extends eqLogic
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', '---> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId);
 		return $EqLogic;
+	}
+	public static function DisableEqLogic($EqLogic, $TILES = false)
+	{
+		if ($EqLogic != null) {
+			log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE DESACTIVATION DE : ' . $EqLogic->getname());
+			if (!is_object($EqLogic->getLogicalId())) {
+				$EqLogic->setIsEnable(0);
+				$EqLogic->save(true);
+			}
+			log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE DESACTIVATION DE : ' . $EqLogic->getname());
+		}
+		if ($TILES == true) {
+			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+			if (is_object($cron)) {
+				log::add('Freebox_OS', 'debug', '[WARNING] - SUPPRESSION CRON GLOBAL TITLES');
+				$cron->stop();
+				$cron->remove();
+			}
+		}
 	}
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
@@ -926,6 +940,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
 		log::add('Freebox_OS', 'info', '---> Mise à jour de Version dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		log::add('Freebox_OS', 'info', '[  OK  ] - FIN TEST VERSION API DE LA FREEBOX');
+		Free_CreateEq::createEq('box');
 		return $API_version;
 	}
 	public static function updateLogicalID($eq_version, $_update = false)

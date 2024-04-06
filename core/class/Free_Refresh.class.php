@@ -83,7 +83,7 @@ class Free_Refresh
                         }
                     } else {
                         log::add('Freebox_OS', 'debug', '[WARNING] - La box n\'est plus comptatible avec cette application');
-                        log::add('Freebox_OS', 'debug', '└─────────');
+                        Freebox_OS::DisableEqLogic($EqLogics, true);
                     }
                     break;
                 case 'parental':
@@ -122,7 +122,7 @@ class Free_Refresh
                         // Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, true);
                     } else {
                         log::add('Freebox_OS', 'debug', '[WARNING] - La box n\'est plus comptatible avec cette application');
-                        //log::add('Freebox_OS', 'debug', '└─────────');
+                        Freebox_OS::DisableEqLogic($EqLogics, true);
                     }
 
                     break;

@@ -469,7 +469,7 @@ class Free_Update
                         case 'POST_WOL':
                             $update_WOL = 'POST_WOL';
                             $method_value = 'POST';
-                        default;
+                        default:
                             break;
                     }
                     if ($update_WIFI == 'WIFI') {

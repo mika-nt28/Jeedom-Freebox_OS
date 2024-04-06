@@ -26,7 +26,7 @@ class Free_CreateTil
         $date = time();
         $date = date("d/m/Y H:i:s", $date);
         if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == '') {
-            Free_CreateTil::createTil_modelBox();
+            Free_CreateEq::createEq('box');
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         log::add('Freebox_OS', 'debug', '[INFO] - Type de box compatible Tiles ? : ' . $Type_box);
@@ -34,14 +34,14 @@ class Free_CreateTil
         $Free_API = new Free_API();
         if ($Type_box == 'OK' || $create == "box") {
             $logicalinfo = Freebox_OS::getlogicalinfo();
-            if (version_compare(jeedom::version(), "4", "<")) {
-                $templatecore_V4 = null;
-            } else {
-                $templatecore_V4  = 'core::';
-            };
+            //if (version_compare(jeedom::version(), "4", "<")) {
+            //  $templatecore_V4 = null;
+            //} else {
+            $templatecore_V4  = 'core::';
+            //};
             switch ($create) {
                 case 'box':
-                    Free_CreateTil::createTil_modelBox();
+                    Free_CreateEq::createEq('box');
                     break;
                 case 'camera':
                     Free_CreateTil::createTil_Camera();
@@ -74,12 +74,13 @@ class Free_CreateTil
             }
         } else {
             if ($create == 'box') {
-                Free_CreateTil::createTil_modelBox();
+                Free_CreateEq::createEq_Type_Box();
                 $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
             }
             if ($Type_box == 'OK') {
                 log::add('Freebox_OS', 'error', '[INFO] - Votre Box prend en charge cette fonctionnalité de Tiles, merci de relancer le scan');
             } else {
+                Freebox_OS::DisableEqLogic(null, true);
                 log::add('Freebox_OS', 'error', '[ERROR] - Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
             }
             return;

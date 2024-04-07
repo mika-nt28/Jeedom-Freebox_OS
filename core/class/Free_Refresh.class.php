@@ -327,7 +327,7 @@ class Free_Refresh
                             if (isset($result['link_type'])) {
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
+                                Free_Refresh::Free_removeLogicId($EqLogics, $Command->getLogicalId());
                             }
                             break;
                         case "sfp_present":
@@ -340,21 +340,21 @@ class Free_Refresh
                             if (isset($result['sfp_alim_ok'])) {
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
+                                Free_Refresh::Free_removeLogicId($EqLogics, $Command->getLogicalId());
                             }
                             break;
                         case "sfp_pwr_tx":
                             if (isset($result['sfp_pwr_tx'])) {
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
+                                Free_Refresh::Free_removeLogicId($EqLogics, $Command->getLogicalId());
                             }
                             break;
                         case "sfp_pwr_rx":
                             if (isset($result['sfp_pwr_rx'])) {
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
+                                Free_Refresh::Free_removeLogicId($EqLogics, $Command->getLogicalId());
                             }
                             break;
                     }
@@ -772,15 +772,15 @@ class Free_Refresh
                             if (isset($result['smbv2_enabled'])) {
                                 log::add('Freebox_OS', 'debug', '---> Etat Samba SMBv2 : ' . $result['smbv2_enabled']);
                                 if ($result['smbv2_enabled'] == true) {
-                                    Free_Refresh::removeLogicId($EqLogics, 'print_share_enabledOn');
-                                    Free_Refresh::removeLogicId($EqLogics, 'print_share_enabledOff');
-                                    Free_Refresh::removeLogicId($EqLogics, 'print_share_enabled');
+                                    Free_Refresh::Free_removeLogicId($EqLogics, 'print_share_enabledOn');
+                                    Free_Refresh::Free_removeLogicId($EqLogics, 'print_share_enabledOff');
+                                    Free_Refresh::Free_removeLogicId($EqLogics, 'print_share_enabled');
                                 }
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['smbv2_enabled']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, 'smbv2_enabledOn');
-                                Free_Refresh::removeLogicId($EqLogics, 'smbv2_enabledOff');
-                                Free_Refresh::removeLogicId($EqLogics, 'smbv2_enabled');
+                                Free_Refresh::Free_removeLogicId($EqLogics, 'smbv2_enabledOn');
+                                Free_Refresh::Free_removeLogicId($EqLogics, 'smbv2_enabledOff');
+                                Free_Refresh::Free_removeLogicId($EqLogics, 'smbv2_enabled');
                             }
 
 
@@ -790,7 +790,7 @@ class Free_Refresh
             }
         }
     }
-    private static function removeLogicId($eqLogic, $from)
+    public static function Free_removeLogicId($eqLogic, $from)
     {
         //  suppression fonction
         $cmd = $eqLogic->getCmd(null, $from);
@@ -1488,14 +1488,6 @@ class Free_Refresh
                         break;
                 }
             }
-        }
-    }
-    private static function removeCMD($eqLogic, $from, $link_IA = null)
-    {
-        //  suppression fonction
-        $cmd = $eqLogic->getCmd(null, $from);
-        if (is_object($cmd)) {
-            $cmd->remove();
         }
     }
 }

@@ -179,7 +179,7 @@ class Free_CreateEq
         $eqLogics = eqLogic::byType('Freebox_OS');
         foreach ($eqLogics as $eqLogic) {
 
-            /*   if ($result['board_name'] == 'fbxgw9r') {
+            if ($result['board_name'] == 'fbxgw9r') {
                 log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE NETTOYAGE LORS MIGRATION DELTA VERS ULTRA');
                 // Amélioration - Suppression des commandes en cas de migration de freebox de la delta a l'ultra
                 Free_Refresh::Free_removeLogicId($eqLogic, 'temp_cpu_cp_master');
@@ -200,7 +200,7 @@ class Free_CreateEq
                 Free_Refresh::Free_removeLogicId($eqLogic, 'rx_max_rate_xdsl');
             } else {
                 log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE NETTOYAGE LORS MIGRATION DELTA VERS ULTRA');
-            }*/
+            }
         }
 
         return $Type_box;

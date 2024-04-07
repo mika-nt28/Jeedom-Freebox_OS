@@ -790,10 +790,10 @@ class Free_Refresh
             }
         }
     }
-    public static function Free_removeLogicId($eqLogic, $from)
+    public static function Free_removeLogicId($eqLogic, $cmdDell)
     {
         //  suppression fonction
-        $cmd = $eqLogic->getCmd(null, $from);
+        $cmd = $eqLogic->getCmd('info', $cmdDell);
         if (is_object($cmd)) {
             $cmd->remove();
         }
@@ -842,17 +842,6 @@ class Free_Refresh
                             case "model_name":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['name']);
                                 log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['name']);
-                                // config::save('Type_box', $result['model_info']['name'], 'Freebox_OS');
-                                /* if ($result['model_info']['name'] == 'fbxgw9-r1') {
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_cp_master'); // Amélioration 20220827
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_ap'); // Amélioration 20220827
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_cp_slave'); // Amélioration 20220827
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_hdd0');
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_t1');
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_t2');
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_t3');
-                                    Free_Refresh::removeCMD($EqLogics, 'fan1_speed');
-                                }*/
                                 break;
                             case "pretty_name":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['pretty_name']);

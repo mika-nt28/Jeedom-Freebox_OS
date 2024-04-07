@@ -98,21 +98,21 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE NETTOYAGE LORS MIGRATION DE BOX');
 		if (config::byKey('TYPE_FREEBOX', 'Freebox_OS') == 'fbxgw9r') {
 			// Amélioration - Suppression des commandes en cas de migration de freebox de la delta a l'ultra
-			removeLogicId2($eqLogics, 'temp_cpu_cp_master');
-			removeLogicId2($eqLogics, 'temp_cpu_ap');
-			removeLogicId2($eqLogics, 'temp_cpu_cp_slave');
-			removeLogicId2($eqLogics, 'temp_hdd0');
-			removeLogicId2($eqLogics, 'temp_t1');
-			removeLogicId2($eqLogics, 'temp_t2');
-			removeLogicId2($eqLogics, 'temp_t3');
-			removeLogicId2($eqLogics, 'fan1_speed');
+			removeLogicId('temp_cpu_cp_master');
+			removeLogicId('temp_cpu_ap');
+			removeLogicId('temp_cpu_cp_slave');
+			removeLogicId('temp_hdd0');
+			removeLogicId('temp_t1');
+			removeLogicId('temp_t2');
+			removeLogicId('temp_t3');
+			removeLogicId('fan1_speed');
 			// Amélioration - Suppression des commandes en cas de migration de freebox de la revolution a l'ultra
-			removeLogicId2($eqLogics, 'temp_cpum');
-			removeLogicId2($eqLogics, 'temp_cpub');
-			removeLogicId2($eqLogics, 'temp_sw');
-			removeLogicId2($eqLogics, 'tx_used_rate_xdsl');
-			removeLogicId2($eqLogics, 'rx_used_rate_xdsl');
-			removeLogicId2($eqLogics, 'rx_max_rate_xdsl');
+			removeLogicId('temp_cpum');
+			removeLogicId('temp_cpub');
+			removeLogicId('temp_sw');
+			removeLogicId('tx_used_rate_xdsl');
+			removeLogicId('rx_used_rate_xdsl');
+			removeLogicId('rx_max_rate_xdsl');
 		}
 
 		/*	function potager_update() {
@@ -231,7 +231,7 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = nu
 		$cmd->save();
 	}
 }
-function removeLogicId2($eqLogic, $cmdDel)
+function removeLogicId($cmdDel)
 {
 	$eqLogics = eqLogic::byType('Freebox_OS');
 	foreach ($eqLogics as $eqLogic) {

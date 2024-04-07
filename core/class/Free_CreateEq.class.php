@@ -176,33 +176,6 @@ class Free_CreateEq
         config::save('TYPE_FREEBOX_TILES', $Type_box, 'Freebox_OS');
         log::add('Freebox_OS', 'info', '[INFO] ---> Compatibilité Domotique : ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
         log::add('Freebox_OS', 'info', '[  OK  ] - FIN TEST COMPATIBILITE DOMOTIQUE');
-        $eqLogics = eqLogic::byType('Freebox_OS');
-        foreach ($eqLogics as $eqLogic) {
-
-            if ($result['board_name'] == 'fbxgw9r') {
-                log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE NETTOYAGE LORS MIGRATION DELTA VERS ULTRA');
-                // Amélioration - Suppression des commandes en cas de migration de freebox de la delta a l'ultra
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_cpu_cp_master');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_cpu_ap');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_cpu_cp_slave');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_hdd0');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_t1');
-                Free_Refresh::Free_removeLogicId($eqLogics, 'temp_t2');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_t3');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'fan1_speed');
-                // Amélioration - Suppression des commandes en cas de migration de freebox de la révolution a l'ultra
-                log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE NETTOYAGE LORS MIGRATION REVOLUTION VERS ULTRA');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_cpum');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_cpub');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'temp_sw');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'tx_used_rate_xdsl');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'rx_used_rate_xdsl');
-                Free_Refresh::Free_removeLogicId($eqLogic, 'rx_max_rate_xdsl');
-            } else {
-                log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE NETTOYAGE LORS MIGRATION DELTA VERS ULTRA');
-            }
-        }
-
         return $Type_box;
     }
     private static function createEq_airmedia($logicalinfo, $templatecore_V4, $order = 0)

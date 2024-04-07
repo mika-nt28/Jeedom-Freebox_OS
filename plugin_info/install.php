@@ -235,7 +235,7 @@ function removeLogicId2($eqLogic, $cmdDel)
 {
 	$eqLogics = eqLogic::byType('Freebox_OS');
 	foreach ($eqLogics as $eqLogic) {
-		$cmd = $eqLogic->getCmd(null, '$cmdDel');
+		$cmd = $eqLogic->getCmd(null, $cmdDel);
 		if (is_object($cmd)) {
 			$cmd->remove();
 		}

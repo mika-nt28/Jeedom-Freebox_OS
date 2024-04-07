@@ -241,14 +241,6 @@ function removeLogicId($cmdDel)
 		}
 	}
 }
-function removeLogicId($eqLogic, $cmdDell)
-{
-	//  suppression fonction
-	$cmd = $eqLogic->getCmd(null, $cmdDell);
-	if (is_object($cmd)) {
-		$cmd->remove();
-	}
-}
 
 function updateConfig()
 {

@@ -89,7 +89,12 @@ class Free_Refresh
                 case 'parental':
                     foreach ($EqLogics->getCmd('info') as $Command) {
                         $results = $Free_API->universal_get('parental', $EqLogics->getConfiguration('action'));
-                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
+                        if ($results != false) {
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
+                        } else {
+                            log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN CONTROLE PARENTAL AVEC CET ID');
+                            Freebox_OS::DisableEqLogic($EqLogics, false);
+                        }
                     }
                     break;
                 case 'phone':
@@ -327,7 +332,7 @@ class Free_Refresh
                             if (isset($result['link_type'])) {
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['link_type']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
+                                Free_Refresh::Free_removeLogicId($EqLogics, $Command->getLogicalId());
                             }
                             break;
                         case "sfp_present":
@@ -340,21 +345,21 @@ class Free_Refresh
                             if (isset($result['sfp_alim_ok'])) {
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_alim_ok']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
+                                Free_Refresh::Free_removeLogicId($EqLogics, $Command->getLogicalId());
                             }
                             break;
                         case "sfp_pwr_tx":
                             if (isset($result['sfp_pwr_tx'])) {
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_tx']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
+                                Free_Refresh::Free_removeLogicId($EqLogics, $Command->getLogicalId());
                             }
                             break;
                         case "sfp_pwr_rx":
                             if (isset($result['sfp_pwr_rx'])) {
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['sfp_pwr_rx']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, $Command->getLogicalId());
+                                Free_Refresh::Free_removeLogicId($EqLogics, $Command->getLogicalId());
                             }
                             break;
                     }
@@ -772,15 +777,15 @@ class Free_Refresh
                             if (isset($result['smbv2_enabled'])) {
                                 log::add('Freebox_OS', 'debug', '---> Etat Samba SMBv2 : ' . $result['smbv2_enabled']);
                                 if ($result['smbv2_enabled'] == true) {
-                                    Free_Refresh::removeLogicId($EqLogics, 'print_share_enabledOn');
-                                    Free_Refresh::removeLogicId($EqLogics, 'print_share_enabledOff');
-                                    Free_Refresh::removeLogicId($EqLogics, 'print_share_enabled');
+                                    Free_Refresh::Free_removeLogicId($EqLogics, 'print_share_enabledOn');
+                                    Free_Refresh::Free_removeLogicId($EqLogics, 'print_share_enabledOff');
+                                    Free_Refresh::Free_removeLogicId($EqLogics, 'print_share_enabled');
                                 }
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['smbv2_enabled']);
                             } else {
-                                Free_Refresh::removeLogicId($EqLogics, 'smbv2_enabledOn');
-                                Free_Refresh::removeLogicId($EqLogics, 'smbv2_enabledOff');
-                                Free_Refresh::removeLogicId($EqLogics, 'smbv2_enabled');
+                                Free_Refresh::Free_removeLogicId($EqLogics, 'smbv2_enabledOn');
+                                Free_Refresh::Free_removeLogicId($EqLogics, 'smbv2_enabledOff');
+                                Free_Refresh::Free_removeLogicId($EqLogics, 'smbv2_enabled');
                             }
 
 
@@ -790,10 +795,10 @@ class Free_Refresh
             }
         }
     }
-    private static function removeLogicId($eqLogic, $from)
+    public static function Free_removeLogicId($eqLogic, $cmdDell)
     {
         //  suppression fonction
-        $cmd = $eqLogic->getCmd(null, $from);
+        $cmd = $eqLogic->getCmd('info', $cmdDell);
         if (is_object($cmd)) {
             $cmd->remove();
         }
@@ -842,17 +847,6 @@ class Free_Refresh
                             case "model_name":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['name']);
                                 log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['name']);
-                                // config::save('Type_box', $result['model_info']['name'], 'Freebox_OS');
-                                /* if ($result['model_info']['name'] == 'fbxgw9-r1') {
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_cp_master'); // Amélioration 20220827
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_ap'); // Amélioration 20220827
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_cpu_cp_slave'); // Amélioration 20220827
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_hdd0');
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_t1');
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_t2');
-                                    Free_Refresh::removeCMD($EqLogics, 'temp_t3');
-                                    Free_Refresh::removeCMD($EqLogics, 'fan1_speed');
-                                }*/
                                 break;
                             case "pretty_name":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['pretty_name']);
@@ -1049,28 +1043,6 @@ class Free_Refresh
         };
 
         if ($data['ui']['display'] == 'color') {
-            $color = Free_Color::hexToRgb($data['value']);
-            //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
-            //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);
-            //$color = dechex($data['value']);
-            //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
-            //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);
-            //$_value = $color;
-            /*$_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
-            $_value2 = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
-            $result = Free_Color::convertRGBToXY($data['value']);
-            log::add('Freebox_OS', 'debug', '│──────────> x : ' . $result['x'] . ' -- y : ' . $result['y'] . ' -- bri : ' . $result['bri']);
-            $RGB = Free_Color::convertxyToRGB($result['x'], $result['y'], $result['bri']);
-            $rouge = substr($_value2, 1, 2);
-            $vert  = substr($_value2, 3, 2);
-            $bleu  = substr($_value2, 5, 2);
-            log::add('Freebox_OS', 'debug', '│──────────> Value 1 : ' . $_value);
-            log::add('Freebox_OS', 'debug', '│──────────> Value 2 : ' . $_value2);
-            log::add('Freebox_OS', 'debug', '│──────────> rouge : ' . $rouge . ' -- Vert : ' . $vert . ' -- Bleu : ' . $bleu);
-            $_light = hexdec(substr($_value, 7, 2));
-            $_value = '#' . substr($_value2, -6);
-            log::add('Freebox_OS', 'debug', '>──────────> Display de Type : ' . $data['ui']['display'] . ' -- Light : ' . $_light . ' -- Valeur : ' . $_value);
-        */
             $_value = $data['value'];
         } else {
             if ($data['name'] == 'error' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
@@ -1425,6 +1397,7 @@ class Free_Refresh
                 }
             }
         } else {
+            log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN VM AVEC CET ID');
             Freebox_OS::DisableEqLogic($EqLogics, false);
         }
     }
@@ -1488,14 +1461,6 @@ class Free_Refresh
                         break;
                 }
             }
-        }
-    }
-    private static function removeCMD($eqLogic, $from, $link_IA = null)
-    {
-        //  suppression fonction
-        $cmd = $eqLogic->getCmd(null, $from);
-        if (is_object($cmd)) {
-            $cmd->remove();
         }
     }
 }

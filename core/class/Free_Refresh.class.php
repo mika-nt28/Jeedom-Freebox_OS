@@ -89,7 +89,12 @@ class Free_Refresh
                 case 'parental':
                     foreach ($EqLogics->getCmd('info') as $Command) {
                         $results = $Free_API->universal_get('parental', $EqLogics->getConfiguration('action'));
-                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
+                        if ($results != false) {
+                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
+                        } else {
+                            log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN CONTROLE PARENTAL AVEC CET ID');
+                            Freebox_OS::DisableEqLogic($EqLogics, false);
+                        }
                     }
                     break;
                 case 'phone':
@@ -1038,28 +1043,6 @@ class Free_Refresh
         };
 
         if ($data['ui']['display'] == 'color') {
-            $color = Free_Color::hexToRgb($data['value']);
-            //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
-            //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);
-            //$color = dechex($data['value']);
-            //log::add('Freebox_OS', 'debug', '│──────────> Value Freebox : ' . $data['value']);
-            //log::add('Freebox_OS', 'debug', '│──────────> Couleur : ' . $color);
-            //$_value = $color;
-            /*$_value = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
-            $_value2 = str_pad(dechex($data['value']), 8, "0", STR_PAD_LEFT);
-            $result = Free_Color::convertRGBToXY($data['value']);
-            log::add('Freebox_OS', 'debug', '│──────────> x : ' . $result['x'] . ' -- y : ' . $result['y'] . ' -- bri : ' . $result['bri']);
-            $RGB = Free_Color::convertxyToRGB($result['x'], $result['y'], $result['bri']);
-            $rouge = substr($_value2, 1, 2);
-            $vert  = substr($_value2, 3, 2);
-            $bleu  = substr($_value2, 5, 2);
-            log::add('Freebox_OS', 'debug', '│──────────> Value 1 : ' . $_value);
-            log::add('Freebox_OS', 'debug', '│──────────> Value 2 : ' . $_value2);
-            log::add('Freebox_OS', 'debug', '│──────────> rouge : ' . $rouge . ' -- Vert : ' . $vert . ' -- Bleu : ' . $bleu);
-            $_light = hexdec(substr($_value, 7, 2));
-            $_value = '#' . substr($_value2, -6);
-            log::add('Freebox_OS', 'debug', '>──────────> Display de Type : ' . $data['ui']['display'] . ' -- Light : ' . $_light . ' -- Valeur : ' . $_value);
-        */
             $_value = $data['value'];
         } else {
             if ($data['name'] == 'error' && ($EqLogic->getConfiguration('type') == 'alarm_control' || $EqLogic->getConfiguration('type2') == 'alarm')) {
@@ -1414,6 +1397,7 @@ class Free_Refresh
                 }
             }
         } else {
+            log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN VM AVEC CET ID');
             Freebox_OS::DisableEqLogic($EqLogics, false);
         }
     }

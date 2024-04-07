@@ -755,29 +755,6 @@ class Free_Update
                 }
                 break;
             case 'color':
-                /*list($r, $g, $b) = str_split(str_replace('#', '', $_options['color']), 2);
-                $info = Free_Color::convertRGBToXY(hexdec($r), hexdec($g), hexdec($b));
-                $replace['#color#'] = round($info['x'] * 65535) . '::' . round($info['y'] * 65535);
-
-
-                if ($replace['#color#'] == '000000') {
-                    $bright = '00';
-                    log::add('Freebox_OS', 'debug', '>──────────> ETEINDRE LA LAMPE');
-                } else {
-                    //$_value = $bright . $color;
-                    //$_value = hexdec($_value);
-                    log::add('Freebox_OS', 'debug', '>──────────> RGB EN HEX : ' . $replace['#color#']);
-                    $parametre['value'] = $replace['#color#'];
-                    $parametre['value_type'] = 'int';
-                    
-                    $cmd = cmd::byid($_cmd->getConfiguration('binaryID'));
-                    if ($cmd !== false) {
-                        if ($cmd->execCmd() == 0) {
-                            $_execute = 0;
-                            log::add('Freebox_OS', 'debug', '│ Pas d\'action car l\'équipement est éteint');
-                        }
-                    }
-                }*/
                 break;
             case 'message':
                 $parametre['value'] = $_options['message'];

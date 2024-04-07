@@ -93,44 +93,27 @@ function Freebox_OS_update()
 
 		log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Update(s) nouveautée(s) + correction(s) commande(s)');
 
-		$eqLogics = eqLogic::byType('Freebox_OS');
-		foreach ($eqLogics as $eqLogic) {
-			//=> Suppression des anciennes commandes Airmedia
-			//removeLogicId($eqLogic, 'ActualAirmedia'); // Amélioration 20220806
-			//removeLogicId($eqLogic, 'airmediastart'); // Amélioration 20220806
-			//removeLogicId($eqLogic, 'airmediastop'); // Amélioration 20220806
 
-			// 4G => Nouvelle API
-			//removeLogicId($eqLogic, 'protocol'); // Amélioration 20221208
-			//removeLogicId($eqLogic, 'modulation'); // Amélioration 20221208
-			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'fbxgw9-r1') {
-				// Amélioration - Suppression des commandes en cas de migration de freebox de la delta a l'ultra
-				removeLogicId($eqLogic, 'temp_cpu_cp_master');
-				removeLogicId($eqLogic, 'temp_cpu_ap');
-				removeLogicId($eqLogic, 'temp_cpu_cp_slave');
-				removeLogicId($eqLogic, 'temp_hdd0');
-				removeLogicId($eqLogic, 'temp_t1');
-				removeLogicId($eqLogics, 'temp_t2');
-				removeLogicId($eqLogic, 'temp_t3');
-				removeLogicId($eqLogic, 'fan1_speed');
-			}
-			// a faire plus tard
-			// removeLogicId($eqLogic, 'add_del_mac'); // Amélioration 20220827
-			// removeLogicId($eqLogic, 'WakeonLAN'); // Amélioration 20220827
-			// removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
-			// removeLogicId($eqLogic, 'redir'); // Amélioration 20220827
-			//
-			// removeLogicId($eqLogic, 'host_info'); // Amélioration 20220827
-			// removeLogicId($eqLogic, 'host'); // Amélioration 20220827
-			// removeLogicId($eqLogic, 'host_mac'); // Amélioration 20220827
-			//
-			//removeLogicId($eqLogic, 'wifimac_filter_state'); // Amélioration 20220827
-			//removeLogicId($eqLogic, 'mac_filter_state'); // Amélioration 20220827
-			//=> Libre
-			//removeLogicId($eqLogic, 'schedule'); // Amélioration 20210627
-			//removeLogicId($eqLogic, ' schedule'); // Amélioration 20210627
-
+		log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE NETTOYAGE LORS MIGRATION DE BOX');
+		if (config::byKey('TYPE_FREEBOX', 'Freebox_OS') == 'fbxgw9r') {
+			// Amélioration - Suppression des commandes en cas de migration de freebox de la delta a l'ultra
+			removeLogicId('temp_cpu_cp_master');
+			removeLogicId('temp_cpu_ap');
+			removeLogicId('temp_cpu_cp_slave');
+			removeLogicId('temp_hdd0'); // Température disque Dur
+			removeLogicId('temp_t1');
+			removeLogicId('temp_t2');
+			removeLogicId('temp_t3');
+			removeLogicId('fan1_speed');
+			// Amélioration - Suppression des commandes en cas de migration de freebox de la revolution a l'ultra
+			removeLogicId('temp_cpum');
+			removeLogicId('temp_cpub');
+			removeLogicId('temp_sw');
+			removeLogicId('tx_used_rate_xdsl');
+			removeLogicId('rx_used_rate_xdsl');
+			removeLogicId('rx_max_rate_xdsl');
 		}
+		log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE NETTOYAGE LORS MIGRATION DE BOX');
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Changement de nom de certains équipements');
 		$eq_version = '2.1';
@@ -209,13 +192,14 @@ function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = nu
 		$cmd->save();
 	}
 }
-
-function removeLogicId($eqLogic, $from, $link_IA = null)
+function removeLogicId($cmdDel)
 {
-	//  suppression fonction
-	$cmd = $eqLogic->getCmd(null, $from);
-	if (is_object($cmd)) {
-		$cmd->remove();
+	$eqLogics = eqLogic::byType('Freebox_OS');
+	foreach ($eqLogics as $eqLogic) {
+		$cmd = $eqLogic->getCmd(null, $cmdDel);
+		if (is_object($cmd)) {
+			$cmd->remove();
+		}
 	}
 }
 

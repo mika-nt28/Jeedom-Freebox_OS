@@ -25,7 +25,7 @@ class Free_API
         // Gestion API
         $Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
         if (empty($Config_KEY)) {
-            log::add('Freebox_OS', 'debug', '│──────────> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
+            log::add('Freebox_OS', 'debug', '---> Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
             $this->API_version = 'v10';
         } else {
             $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
@@ -38,7 +38,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '---> La version API est nulle mise en place version provisoire : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
             $http = new com_http($_URL);
@@ -68,7 +68,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '---> La version API est nulle mise en place version provisoire : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
             $http = new com_http($_URL . $this->track_id);
@@ -88,7 +88,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '---> La version API est nulle mise en place version provisoire : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/';
             $http = new com_http($_URL);
@@ -117,7 +117,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '---> La version API est nulle mise en place version provisoire : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/session/';
             $http = new com_http($_URL);
@@ -161,7 +161,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '---> La version API est nulle mise en place version provisoire : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/session';
             $http = new com_http($_URL);
@@ -187,7 +187,7 @@ class Free_API
             }
             $requetURL = '[Freebox Request Connexion] : ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')';
             if ($log_request  != false) {
-                log::add('Freebox_OS', 'debug', '│ ' . $requetURL);
+                log::add('Freebox_OS', 'debug', $requetURL);
             };
             $ch = curl_init();
             curl_setopt($ch, CURLOPT_URL, $this->serveur . $api_url);
@@ -215,10 +215,10 @@ class Free_API
 
             if ($log_result  != false) {
 
-                log::add('Freebox_OS', 'debug', '│ ' . '[Freebox Request Result] : ' . $content);
+                log::add('Freebox_OS', 'debug', '[Freebox Request Result] : ' . $content);
             }
             if ($errorno !== 0) {
-                return '│ Erreur de connexion cURL vers ' . $this->serveur . $api_url . ': ' . $error;
+                return '[WARNING] Erreur de connexion cURL vers ' . $this->serveur . $api_url . ': ' . $error;
             } else {
                 $result = json_decode($content, true);
                 if ($result == null) return false;
@@ -250,21 +250,22 @@ class Free_API
                         } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
                             log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
                             return false;
+                        } else if ($result['error_code'] == "no_such_vm") {
+                            log::add('Freebox_OS', 'error', 'Erreur VM : '  . $result['msg']);
+                            return false;
                         }
                     }
                 }
-                //log::add('Freebox_OS', 'debug', '└─────────');
                 return $result;
             }
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'error', '│ [Freebox Request] : '  . $e->getCode());
-            log::add('Freebox_OS', 'debug', '└─────────');
+            log::add('Freebox_OS', 'error', '[Freebox Request] : '  . $e->getCode());
         }
     }
 
     public function close_session()
     {
-        log::add('Freebox_OS', 'debug', '│──────────> Close Session  ');
+        log::add('Freebox_OS', 'debug', '[INFO] - Close Session  ');
         try {
             $Challenge = cache::byKey('Freebox_OS::Challenge');
             if (is_object($Challenge)) {
@@ -277,7 +278,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '---> La version API est nulle mise en place version provisoire : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/logout/';
             $http = new com_http($_URL);
@@ -297,15 +298,14 @@ class Free_API
 
     public function PortForwarding($id, $fonction = "GET", $active = null, $Mac = null)
     {
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
         $API_version = $this->API_version;
         $PortForwardingUrl = '/' . 'api/' . $API_version . '/fw/redir/';
         $PortForwarding = $this->fetch($PortForwardingUrl, null, "GET", true, true);
         $id = str_replace("ether-", "", $id);
         $id = strtoupper($id);
-        log::add('Freebox_OS', 'debug', '│──────────> Lecture des Ports l\'adresse Mac : '  . $Mac . ' - FONCTION ' . $fonction . ' - action ' . $active);
+        log::add('Freebox_OS', 'debug', '---> Lecture des Ports l\'adresse Mac : '  . $Mac . ' - FONCTION ' . $fonction . ' - action ' . $active);
         if ($PortForwarding === false) {
-            log::add('Freebox_OS', 'debug', '│──────────> Aucune donnée');
+            log::add('Freebox_OS', 'debug', '---> Aucune donnée');
             return false;
         }
         if ($fonction == "GET") {
@@ -347,7 +347,7 @@ class Free_API
         $API_version = $this->API_version;
         if ($API_version == null) {
             $API_version = 'v10';
-            log::add('Freebox_OS', 'debug', '>───────── La version API est nulle mise en place version provisoire : ' . $API_version);
+            log::add('Freebox_OS', 'debug', '---> La version API est nulle mise en place version provisoire : ' . $API_version);
         };
         $config_log = null;
         $fonction = "GET";
@@ -362,10 +362,6 @@ class Free_API
                 $config = 'api/' . $API_version . '/connection/' . $update_type;
                 $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
                 break;
-                // Fonction download intégré dans universalAPI => 20221209
-                //case 'download':
-                //$config = 'api/' . $API_version . '/downloads/' . $update_type;
-                //break;
             case 'notification_ID':
                 $config = 'api/' . $API_version . '/notif/targets' . $id;
                 $config_log = 'Etat des notifications';
@@ -385,7 +381,6 @@ class Free_API
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
             case 'network':
-                //case 'network_ping':
                 $config = 'api/' . $API_version . '/' . $update_type;
                 break;
             case 'universalAPI':
@@ -394,7 +389,6 @@ class Free_API
                 } else {
                     $config = 'api/' . $API_version . '/' . $update_type . $id;
                 }
-                //case 'wifi':
 
                 $config_log = 'Traitement de la Mise à jour de l\'id ';
                 break;
@@ -421,10 +415,6 @@ class Free_API
                     "event" => 'VmStateChange',
                 );
                 break;
-                //case 'wifi':
-                //  $config = 'api/' . $update_type;
-                // $config_log = 'Traitement de la Mise à jour de wifi/' . $update_type . ' avec la valeur';
-                //break;
             case 'PortForwarding':
                 $config = '/api/' . $API_version . '/fw/redir/';
                 $config_log = 'Redirection de port';
@@ -439,7 +429,6 @@ class Free_API
             $result = $this->fetch('/' . $config, $Parameter, $fonction);
         }
         if ($result === 'invalid_api_version') {
-            //log::add('Freebox_OS', 'info', '>─────────── API NON COMPATIBLE avec la version suivante : ' . $API_version . ' -- ' . $result);
             $result = 'invalid_api_version';
             return $result;
         }
@@ -455,9 +444,6 @@ class Free_API
                 case 'connexion':
                     return $result['result'];
                     break;
-                    //case 'disk':
-                    //case 'network_ping':
-                    //case 'network':
                 case 'notification':
                 case 'freeplug':
                     //case 'wifi':
@@ -478,7 +464,7 @@ class Free_API
                 default:
                     if ($config_log != null && $id != null && $id != '/all') {
                         if ($log_request == true) {
-                            log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' : ' . $id);
+                            log::add('Freebox_OS', 'debug', '---> ' . $config_log . ' : ' . $id);
                         }
                     }
 
@@ -509,7 +495,6 @@ class Free_API
     }
     public function downloads_put($Etat)
     {
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
         $API_version = $this->API_version;
         $DownloadUrl = '/api/' . $API_version . '/downloads/';
         $result = $this->fetch($DownloadUrl);
@@ -535,7 +520,6 @@ class Free_API
     }
     public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null, $_options_2 = null)
     {
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
         $API_version = $this->API_version;
         $fonction = "PUT";
         $config_log = null;
@@ -543,18 +527,6 @@ class Free_API
             $id = $id . '/';
         }
         switch ($update) {
-                // Fonction 4G intégré dans universalAPI => 20221209
-                //case '4G':
-                //  $config = 'api/' . $API_version . '/connection/lte/config';
-                //$config_log = 'Mise à jour de : Activation 4G';
-                //$cmd_config = 'enabled';
-                //break;
-
-                // Fonction phone intégré dans universalAPI => 20221209
-                //case 'phone':
-                //  $config = 'api/' . $API_version . '/call/log/' . $_options;
-                //$fonction = "POST";
-                //break;
             case 'notification_ID':
                 $config = 'api/' . $API_version . '/notif/targets/' . $id;
                 if ($_options == 'DELETE') {
@@ -615,7 +587,7 @@ class Free_API
                     $config = 'api/' . $API_version . '/' . $_options;
                     $fonction = "POST";
                 }
-                log::add('Freebox_OS', 'debug', '│──────────> Type de requête : ' . $fonction);
+                log::add('Freebox_OS', 'debug', '---> Type de requête : ' . $fonction);
                 break;
             case 'VM':
                 $config = 'api/' . $API_version . '/vm/' . $id  . '/' . $_options_2;
@@ -632,7 +604,7 @@ class Free_API
                     $fonction = "POST";
                     $cmd_config = 'session_id';
                 } else if ($_options == 'mac_filter') {
-                    log::add('Freebox_OS', 'debug', '>───────── Fonction : ' . $_options_2['function']);
+                    log::add('Freebox_OS', 'debug', '---> Fonction : ' . $_options_2['function']);
                     $fonction = $_options_2['function'];
                     if ($fonction != 'POST') {
                         $id = $_options_2['mac_address'] . '-' . $_options_2['filter'];
@@ -644,7 +616,7 @@ class Free_API
                         $id = null;
                         $parametre = array("mac" => $mac_adress, "type" => $_filter, "comment" => $comment);
                     }
-                    log::add('Freebox_OS', 'debug', '>───────── Fonction 2 : ' . $fonction);
+                    log::add('Freebox_OS', 'debug', '---> Fonction 2 : ' . $fonction);
                 } else if ($_options == 'config' && $_options_2 == 'mac_filter_state') {
                     $cmd_config = 'mac_filter_state';
                 } else {
@@ -657,7 +629,7 @@ class Free_API
                 }
                 break;
             case 'set_tiles':
-                //log::add('Freebox_OS', 'debug', '>───────── Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
+                //log::add('Freebox_OS', 'debug', '---> Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
                 $config = 'api/' . $API_version . '/home/endpoints/';
                 $cmd_config = 'enabled';
                 $config_log = 'Mise à jour de : ';
@@ -687,7 +659,7 @@ class Free_API
             $return = $this->fetch('/' . $config . '/', null, $fonction, true, true);
         } else {
             if ($config_log != null) {
-                log::add('Freebox_OS', 'debug', '>───────── ' . $config_log . ' avec la valeur : ' . $parametre);
+                log::add('Freebox_OS', 'debug', '---> ' . $config_log . ' avec la valeur : ' . $parametre);
             }
             if ($cmd_config != null) {
                 $requet = array($cmd_config => $parametre);
@@ -720,7 +692,6 @@ class Free_API
 
     public function nb_appel_absence()
     {
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
         $API_version = $this->API_version;
         $listNumber_missed = null;
         $listNumber_accepted = null;
@@ -804,7 +775,6 @@ class Free_API
 
     public function mac_filter_list()
     {
-        //log::add('Freebox_OS', 'debug', '│──────────> Version API Compatible avec la Freebox : ' . $this->API_version);
         $API_version = $this->API_version;
         $listmac_whitelist = null;
         $listmac_blacklist = null;

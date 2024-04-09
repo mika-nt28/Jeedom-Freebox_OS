@@ -26,22 +26,22 @@ class Free_CreateTil
         $date = time();
         $date = date("d/m/Y H:i:s", $date);
         if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == '') {
-            Free_CreateTil::createTil_modelBox();
+            Free_CreateEq::createEq('box');
         }
         $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
-        log::add('Freebox_OS', 'debug', '>───────── Type de box compatible Tiles ? : ' . $Type_box);
+        log::add('Freebox_OS', 'debug', '[INFO] - Type de box compatible Tiles ? : ' . $Type_box);
         $API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         $Free_API = new Free_API();
         if ($Type_box == 'OK' || $create == "box") {
             $logicalinfo = Freebox_OS::getlogicalinfo();
-            if (version_compare(jeedom::version(), "4", "<")) {
-                $templatecore_V4 = null;
-            } else {
-                $templatecore_V4  = 'core::';
-            };
+            //if (version_compare(jeedom::version(), "4", "<")) {
+            //  $templatecore_V4 = null;
+            //} else {
+            $templatecore_V4  = 'core::';
+            //};
             switch ($create) {
                 case 'box':
-                    Free_CreateTil::createTil_modelBox();
+                    Free_CreateEq::createEq('box');
                     break;
                 case 'camera':
                     Free_CreateTil::createTil_Camera();
@@ -74,13 +74,14 @@ class Free_CreateTil
             }
         } else {
             if ($create == 'box') {
-                Free_CreateTil::createTil_modelBox();
+                Free_CreateEq::createEq_Type_Box();
                 $Type_box = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
             }
             if ($Type_box == 'OK') {
-                log::add('Freebox_OS', 'error', 'Votre Box prend en charge cette fonctionnalité de Tiles, merci de relancer le scan');
+                log::add('Freebox_OS', 'error', '[INFO] - Votre Box prend en charge cette fonctionnalité de Tiles, merci de relancer le scan');
             } else {
-                log::add('Freebox_OS', 'error', 'Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
+                Freebox_OS::DisableEqLogic(null, true);
+                log::add('Freebox_OS', 'error', '[ERROR] - Votre Box ne prend pas en charge cette fonctionnalité de Tiles');
             }
             return;
         }
@@ -190,7 +191,7 @@ class Free_CreateTil
             log::add('Freebox_OS', 'debug', '│ Changement URL du flux en RSTP : ' . $URLrtsp);
         }
         $EqLogic->save();
-        log::add('Freebox_OS', 'debug', '└─────────');
+        log::add('Freebox_OS', 'debug', '[  OK  ]');
     }
 
     public static function createTil_Group()
@@ -203,7 +204,7 @@ class Free_CreateTil
             if ($group == "" || $group == null) continue;
             if (!in_array($group, $result_GP)) {
                 array_push($result_GP, $group);
-                log::add('Freebox_OS', 'debug', '>───────── Pièce : ' . $group);
+                log::add('Freebox_OS', 'debug', '---> Pièce : ' . $group);
             }
         }
         return $result_GP;
@@ -211,11 +212,13 @@ class Free_CreateTil
 
     private static function createTil_homeadapters($Free_API, $logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '>───────── Création équipement : Home Adapters');
+        log::add('Freebox_OS', 'debug', '[WARNING] - Création équipement : Home Adapters');
         Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, null, 'tiles_SP');
+        log::add('Freebox_OS', 'debug', '[  OK  ] - Création équipement : Home Adapters');
     }
     public static function createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4)
     {
+        log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION : ' . $logicalinfo['homeadaptersName']);
         $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, null, 'tiles_SP');
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
@@ -233,22 +236,23 @@ class Free_CreateTil
                 //$homeadapters->checkAndUpdateCmd($Equipement['id'], $homeadapters_value);
             }
         }
+        log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CREATION : ' . $logicalinfo['homeadaptersName']);
     }
     private static function createTil_debug($Free_API, $logicalinfo, $templatecore_V4)
     {
         //log::remove('Freebox_OS');
-        log::add('Freebox_OS', 'debug', '********************');
-        log::add('Freebox_OS', 'debug', '******************** LOG DEBUG : ' . 'TILES / NODES ********************');
-        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'NODES');
+        log::add('Freebox_OS', 'debug', '[WARNING]');
+        log::add('Freebox_OS', 'debug', '[WARNING] - LOG DEBUG : ' . 'TILES / NODES');
+        log::add('Freebox_OS', 'debug', '[INFO] - LOG POUR DEBUG : ' . 'NODES');
         $Free_API->universal_get('universalAPI', null, null, 'home/nodes');
-        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'TILES');
+        log::add('Freebox_OS', 'debug', '[INFO] - LOG POUR DEBUG : ' . 'TILES');
         $Free_API->universal_get('tiles');
-        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'CAMERA');
+        log::add('Freebox_OS', 'debug', '[INFO]- LOG POUR DEBUG : ' . 'CAMERA');
         $Free_API->universal_get('universalAPI', null, null, 'camera');
-        log::add('Freebox_OS', 'debug', '>> ================ >> LOG POUR DEBUG : ' . 'HOME ADAPTERS');
+        log::add('Freebox_OS', 'debug', '[INFO] - LOG POUR DEBUG : ' . 'HOME ADAPTERS');
         $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
-        log::add('Freebox_OS', 'debug', '********************  FIN LOG DEBUG : ' . 'TILES / NODES ********************');
-        log::add('Freebox_OS', 'debug', '********************');
+        log::add('Freebox_OS', 'debug', '[  OK  ] - FIN LOG DEBUG : ' . 'TILES / NODES');
+        log::add('Freebox_OS', 'debug', '[  OK  ]');
     }
     private static function createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4)
     {
@@ -280,7 +284,7 @@ class Free_CreateTil
                         } else {
                             $_eq_action = null;
                         }
-                        log::add('Freebox_OS', 'debug', '>> ********** START ****************************************************************************************================ >> ' . $Equipement['label'] . ' / ' . $_eq_action . ' / ' . $Equipement['id']);
+                        log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION : ' . $Equipement['label'] . ' / ' . $_eq_action . ' / ' . $Equipement['id']);
                     } else {
                         $_eq_category = false;
                     }
@@ -337,18 +341,20 @@ class Free_CreateTil
                     );
                     $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);
                     if ($_eq_type != 'camera' && $boucle_num != 2) {
-                        log::add('Freebox_OS', 'debug', '>> ********** START ****************************************************************************************================ >> ' . $Equipement['label']);
+                        log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION : ' . $Equipement['label']);
                         $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2, $eq_group);
                     } else {
+                        //log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION : ' . $Equipement['label']);
                         $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2, $eq_group);
                     }
 
                     $_eqLogic = null;
+                    log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION DES COMMANDES POUR : ' . $Equipement['label']);
                     $Setting_mouv_sensor = null;
                     foreach ($_eq_data as $Command) {
                         if ($boucle_num == 2) { // 
                             $_cmd_ep_id = $Command['id'];
-                            log::add('Freebox_OS', 'debug', '>> ======== >> Label  ' . $Command['label'] . ' - id : ' . $_cmd_ep_id . ' - name : ' . $Command['name'] . ' -- Access : ' . $Command['ui']['access'] . ' -- Type de Valeur : ' . $Command['value_type']);
+                            //log::add('Freebox_OS', 'debug', '---> Label : ' . $Command['label'] . ' - id : ' . $_cmd_ep_id . ' - name : ' . $Command['name'] . ' -- Access : ' . $Command['ui']['access'] . ' -- Type de Valeur : ' . $Command['value_type']);
                         } else if ($boucle_num == 1) {
                             $_cmd_ep_id = $Command['ep_id'];
                         }
@@ -368,51 +374,46 @@ class Free_CreateTil
                                 $parameter['id'] = 'FreeboxCamera_' . $_eq_node;
                                 $parameter['room'] = $_eq_room;
                                 $parameter['url'] = $Command['value'];
-                                log::add('Freebox_OS', 'debug', '>> ================ >> ' . $parameter['name']);
-                                log::add('Freebox_OS', 'debug', '┌───────── Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
-                                log::add('Freebox_OS', 'debug', '│ Id : ' . $parameter['id']);
+                                //log::add('Freebox_OS', 'debug', '[WARNING] - PARAMETRAGE POUR LES CAMERAS : ' . $parameter['name']);
+                                log::add('Freebox_OS', 'debug', '---> Caméra trouvée pour l\'équipement FREEBOX : ' . $parameter['name'] . ' -- Pièce : ' . $parameter['room']);
+                                log::add('Freebox_OS', 'debug', '---> Id : ' . $parameter['id']);
 
                                 $WebcamOK = false;
                                 foreach (eqLogic::byLogicalId($parameter['id'], 'camera', true) as $_eqLogic) {
                                     $WebcamOK = 1;
-                                    log::add('Freebox_OS', 'debug', '│ La caméra a déjà été créée ');
+                                    log::add('Freebox_OS', 'debug', '---> La caméra a déjà été créée ');
                                 };
                                 if ($WebcamOK == false) {
                                     event::add('Freebox_OS::camera', json_encode($parameter));
                                     $WebcamOKAll = 1;
                                 }
-                                log::add('Freebox_OS', 'debug', '└─────────');
+                                //log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CREATION POUR LES CAMERAS');
                                 continue;
                             }
 
                             if (!is_object($Tile)) continue;
-                            //log::add('Freebox_OS', 'debug', '┌───────── Commande trouvée pour l\'équipement FREEBOX : ' . $Equipement['label'] . ' -- Pièce : ' . $_eq_room . ' (Node ID ' . $_eq_node . ')');
                             $command['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Command['label']);
-                            log::add('Freebox_OS', 'debug', '│ Label : ' . $Command['label'] . ' -- Name : ' . $Command['name'] . ' -- Type (eq) : ' . $_eq_type . ' -- Action (eq): ' . $_eq_action . ' -- Index : ' . $_cmd_ep_id . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
+                            log::add('Freebox_OS', 'debug', '---> Label : ' . $Command['label'] . ' -- Name : ' . $Command['name'] . ' -- Type (eq) : ' . $_eq_type . ' -- Action (eq): ' . $_eq_action . ' -- Index : ' . $_cmd_ep_id . ' -- Value Type : ' . $Command['value_type'] . ' -- Access : ' . $Command['ui']['access']);
                             if (isset($Command['ui']['unit'])) {
                                 $_unit = $Command['ui']['unit'];
                             } else {
                                 $_unit = null;
                             }
-                            //log::add('Freebox_OS', 'debug', '│ Valeur actuelle : ' . $Command['value'] . ' ' . $_unit);
                             $order_range = 0;
                             if (isset($Command['ui']['icon_color_range'])) {
                                 foreach ($Command['ui']['icon_color_range'] as $range) {
-                                    //log::add('Freebox_OS', 'debug', '│------------> Range Color ' . $order_range . ' : ' . $range);
                                     $order_range++;
                                 }
                             }
                             $order_range = 0;
                             if (isset($Command['ui']['range'])) {
                                 foreach ($Command['ui']['range'] as $range) {
-                                    //log::add('Freebox_OS', 'debug', '│------------> Range ' . $order_range . ' : ' . $range);
                                     $order_range++;
                                 }
                             }
                             $order_range = 0;
                             if (isset($Command['ui']['icon_range'])) {
                                 foreach ($Command['ui']['icon_range'] as $range) {
-                                    //log::add('Freebox_OS', 'debug', '│------------> Range Icon ' . $order_range . ' : ' . $range);
                                     $order_range++;
                                 }
                             }
@@ -453,7 +454,7 @@ class Free_CreateTil
                                         }
 
                                         if ($Command['ui']['access'] === 'rw' ||  $Command['ui']['access'] === 'r') {
-                                            log::add('Freebox_OS', 'debug', '│----------=================================================================================================--> Range Icon ' . $setting['Search']);
+                                            log::add('Freebox_OS', 'debug', '-----> Range Icon ' . $setting['Search']);
                                             if ($setting['Search'] != 'pir_battery_r_nodes' && $setting['Search'] != 'kfb_battery_r_nodes') {
                                                 $order = $setting['Order'];
                                                 $Info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', $setting['SubType_I'], $Templatecore_I, $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', $link_logicalId, 0, $setting['Icon_I'], $setting['ForceLineB'], $setting['Min'], $setting['Max'],  $setting['Order'], $setting['IsHistorized'], false, $setting['Repeatevent'], null, true, null, null, null, null, $setting['invertSlide'], null, $eq_group);
@@ -517,10 +518,10 @@ class Free_CreateTil
                                             if ($_eq_type == 'alarm_control') {
                                                 $Tile->batteryStatus($Command['value']);
                                             } elseif ($Command['value'] != '' || $Command['value'] != null) {
-                                                log::add('Freebox_OS', 'debug', '│ Valeur Batterie : ' . $Command['value']);
+                                                log::add('Freebox_OS', 'debug', '-----> Valeur Batterie : ' . $Command['value']);
                                                 $Tile->batteryStatus($Command['value']);
                                             } else {
-                                                log::add('Freebox_OS', 'debug', '│ La valeur de la batterie est nulle ' . $Command['value'] . ' ==> PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
+                                                log::add('Freebox_OS', 'debug', '[WARNING] - La valeur de la batterie est nulle ' . $Command['value'] . ' ==> PAS DE TRAITEMENT PAR JEEDOM DE L\'ALARME BATTERIE');
                                             }
                                             $Tile->batteryStatus($Command['value']);
                                             $Tile->setConfiguration("battery_type", $battery);
@@ -530,8 +531,6 @@ class Free_CreateTil
                                     //}
                                     break;
                                 case "bool":
-                                    //foreach (str_split($Command['ui']['access']) as $access) {
-                                    //$IsVisible = 1;
                                     $link_logicalId = 'default';
                                     $order = null;
                                     $_unit = null;
@@ -540,9 +539,6 @@ class Free_CreateTil
                                     if ($Command['label'] == 'Détection') {
                                         $Setting_mouv_sensor = '_' . 'mouv_sensor';
                                     }
-                                    //if ($Command['label'] == 'Enclenché' || ($Command['name'] == 'switch' && $_eq_action == 'toggle')) {
-                                    //  $Type_command = 'PB';
-                                    //}
                                     $setting = Free_CreateTil::search_setting_bool($_eq_action, $Command['ui']['access'], $Command['name'], $_eq_type, $Command['label'], $eq_group, $_cmd_ep_id, $templatecore_V4);
                                     $_home_config_eq = $setting['Home_config_eq'];
                                     if ($_eq_type == 'kfb' || $_eq_type == 'pir' || $_eq_type == 'dws' || $_eq_type == 'alarm_remote') {
@@ -600,12 +596,12 @@ class Free_CreateTil
                                             $info = $Tile->AddCommand($setting['Label_I'], $_cmd_ep_id, 'info', 'string', $setting['Templatecore'], $_unit, $setting['Generic_type_I'], $setting['IsVisible_I'], 'default', 'default', 0, $setting['Icon_I'], 0, 'default', 'default', $setting['Order'], 0, false, true, null, true, null, null, null, null, null, null, $eq_group);
                                             $Link_I_ALARM = $info;
                                             if ($Command['name'] == "state" && $_eq_type == 'alarm_control') {
-                                                log::add('Freebox_OS', 'debug', '│──────────> Ajout commande spécifique pour Homebridge');
+                                                log::add('Freebox_OS', 'debug', '[WARNING] - Ajout commande spécifique pour Homebridge');
                                                 $ALARM_ENABLE = $Tile->AddCommand('Actif', 'ALARM_enable', 'info', 'binary', 'core::lock', null, 'ALARM_ENABLE_STATE', 1, 'default', $_cmd_ep_id, 0, null, 0, 'default', 'default', 1, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
                                                 $Link_I_ALARM_ENABLE = $ALARM_ENABLE;
                                                 $Tile->AddCommand('Statut', 'ALARM_state', 'info', 'binary', 'core::alert', null, 'ALARM_STATE', 1, 'default', $_cmd_ep_id, 1, null, 0, 'default', 'default',  2, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
                                                 $Tile->AddCommand('Mode', 'ALARM_mode', 'info', 'string', null, null, 'ALARM_MODE', 0, 0, $_cmd_ep_id, 0, null, 0, 'default', 'default', 3, 1, false, true, null, null, null, null, null, null, null, null, $eq_group);
-                                                log::add('Freebox_OS', 'debug', '│──────────> Fin Ajout commande spécifique pour Homebridge');
+                                                log::add('Freebox_OS', 'debug', '[  OK  ] - Fin Ajout commande spécifique pour Homebridge');
                                             }
 
                                             if ($Command['ui']['access'] === 'rw') {
@@ -633,10 +629,9 @@ class Free_CreateTil
                                 $action->setValue($info->getId());
                                 $action->save();
                             }
-                            //log::add('Freebox_OS', 'debug', '└─────────');
                         }
                     }
-                    log::add('Freebox_OS', 'debug', '>> ********** END ******************************************************************************************================ >> ' . $Equipement['label']);
+                    log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CREATION : ' . $Equipement['label']);
                 }
             }
             $boucle_num++;
@@ -683,7 +678,7 @@ class Free_CreateTil
             $Label_O = str_replace("État", "Etat", $Label_O);
         }
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
-        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting STRING pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '-----> Setting STRING pour  : ' . $Search);
         $IsVisible = 1;
         $IsVisible_I = 1;
         $Templatecore = null;
@@ -727,15 +722,6 @@ class Free_CreateTil
                 $Icon = 'far fa-save icon_green';
                 $Icon_I = 'far fa-save';
                 break;
-                /*case 'shutter_state_r_nodes':
-                $Generic_type = 'FLAP_STATE';
-                $Icon = 'icon jeedom-volet-ouvert';
-                $Templatecore = 'shutter';
-                $Order = 7;
-                $TypeCMD_BOOL = 'PB_SP';
-                $LabelON = 'Haut - Ouvert';
-                $LabelOFF = 'Bas - Fermée';
-                break;*/
             case 'alarm_pin_r_nodes':
             case 'alarm_pin_rw_nodes':
             case 'camera_disk_r_nodes':
@@ -799,7 +785,7 @@ class Free_CreateTil
         $_Cmd_ep_id2 = null;
         $TypeCMD_BOOL = 'null';
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
-        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting VOID pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '-----> Setting VOID pour  : ' . $Search);
 
         switch ($Search) {
             case 'shutter_toggle_w_nodes':
@@ -919,7 +905,7 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
-        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting INT pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '-----> Setting INT pour  : ' . $Search);
 
         $Generic_type = null;
         $Generic_type_I = null;
@@ -1167,7 +1153,7 @@ class Free_CreateTil
         }
 
         $Search =  $Setting1 . '_' . $Setting2  . $Setting3 . $Setting4 . "_" . $Access  . $eq_group;
-        log::add('Freebox_OS', 'debug', '│-----=============================================-------> Setting BOOL pour  : ' . $Search);
+        log::add('Freebox_OS', 'debug', '-----> Setting BOOL pour  : ' . $Search);
 
         // Reset Template
         $TemplatecoreON = null;

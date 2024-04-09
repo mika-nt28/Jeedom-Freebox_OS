@@ -52,12 +52,12 @@ class Freebox_OS extends eqLogic
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-			log::add('Freebox_OS', 'debug', '================= Etat du Démon ' . $deamon_info['state'] . ' ==================');
+			log::add('Freebox_OS', 'debug', '[INFO] - Etat du Démon ' . $deamon_info['state']);
 			Freebox_OS::deamon_start();
 			$Free_API = new Free_API();
 			$Free_API->getFreeboxOpenSession();
 			$deamon_info = self::deamon_info();
-			log::add('Freebox_OS', 'debug', '================= Redémarrage du démon : ' . $deamon_info['state'] . ' ==================');
+			log::add('Freebox_OS', 'debug', '[INFO] - Redémarrage du démon : ' . $deamon_info['state']);
 		}
 		foreach ($eqLogics as $eqLogic) {
 			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
@@ -68,13 +68,14 @@ class Freebox_OS extends eqLogic
 					if ($eqLogic->getIsEnable()) {
 						if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
 						} else {
-							log::add('Freebox_OS', 'debug', '================= CRON pour l\'actualisation de : ' . $eqLogic->getName() . ' ==================');
+							log::add('Freebox_OS', 'debug', '[INFO] - CRON pour l\'actualisation de : ' .  $eqLogic->getName());
 							Free_Refresh::RefreshInformation($eqLogic->getId());
+							log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CRON de l\'actualisation de : ' .  $eqLogic->getName());
 						}
 					}
 				}
 				if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-					log::add('Freebox_OS', 'debug', '================= PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state'] . ' ==================');
+					log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state']);
 				}
 			} catch (Exception $exc) {
 				//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
@@ -114,14 +115,14 @@ class Freebox_OS extends eqLogic
 					try {
 						$cron = new Cron\CronExpression($autorefresh_eqLogic, new Cron\FieldFactory);
 						if ($cron->isDue()) {
-							log::add('Freebox_OS', 'debug', '================= CRON ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
+							log::add('Freebox_OS', 'debug', '[INFO] - CRON ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement  : ' . $eqLogic->getName());
 							if ($_crondailyEq != null) {
 								Free_CreateEq::createEq($_crondailyEq, false);
 							}
 							if ($_crondailyTil != null) {
 								Free_CreateTil::createTil($_crondailyTil, false);
 							}
-							log::add('Freebox_OS', 'debug', '================= FIN CRON ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement  : ' . $eqLogic->getName() . ' ==================');
+							log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CRON ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement  : ' . $eqLogic->getName());
 						}
 					} catch (Exception $e) {
 						log::add('Freebox_OS', 'error', __('Expression Cron Actualisation Ajout nouvelle commande  non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh_eqLogic);
@@ -243,7 +244,6 @@ class Freebox_OS extends eqLogic
 	{
 		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		if (!is_array($action)) {
-			//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action);
 			return;
 		}
 		if (!isset($action[0])) {
@@ -252,7 +252,31 @@ class Freebox_OS extends eqLogic
 		if ($action[0] == '') {
 			return;
 		}
-		log::add('Freebox_OS', 'debug', '********************  Action pour l\'action : ' . $action[0]['Name'] . '(' . $action[0]['LogicalId'] . ') ' . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
+		$value_log = ' ';
+		if ($action[0]['LogicalIdEqLogic'] == 'management') {
+			switch ($action[0]['LogicalId']) {
+				case 'host':
+				case 'host_type':
+				case 'method':
+				case 'host_type_info':
+					//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action[0]['Options']['select']);
+					$value_log = ' : ' . $action[0]['Options']['select'] . ' - ';
+					break;
+				case 'primary_name_info':
+					//log::add('Freebox_OS', 'debug', '[testNotArray] - MESSAGE' . $action[0]['Options']['message']);
+					$value_log = ' : ' . $action[0]['Options']['message'] . ' - ';
+					break;
+				case 'start':
+					$value_log = ' ';
+				default:
+					//log::add('Freebox_OS', 'debug', '[testNotArray]' . $action[0]['Options']['message']);
+					$value_log = ' : ' . $action[0]['Options']['message'] . ' - ';
+					break;
+			}
+		}
+
+
+		log::add('Freebox_OS', 'debug', '[INFO] - Action pour l\'action : ' . $action[0]['Name'] . ' (' . $action[0]['LogicalId'] . ')' . $value_log . 'de l\'équipement : ' . $action[0]['NameEqLogic']);
 		Free_Update::UpdateAction($action[0]['LogicalId'], $action[0]['SubType'], $action[0]['Name'], $action[0]['Value'], $action[0]['Config'], $action[0]['EqLogic'], $action[0]['Options'], $action[0]['This']);
 		$action = cache::byKey("Freebox_OS::actionlist")->getValue();
 		array_shift($action);
@@ -261,38 +285,61 @@ class Freebox_OS extends eqLogic
 	public static function FreeboxGET()
 	{
 		try {
-			//log::add('Freebox_OS', 'debug', '********************  CRON UPDATE TILES/NODE ******************** ');
-			//if (config::byKey('FREEBOX_TILES_CmdbyCmd', 'Freebox_OS') == 1) {
-			//	Free_Refresh::RefreshInformation('Tiles_global_CmdbyCmd');
-			//} else {
 			Free_Refresh::RefreshInformation('Tiles_global');
-			//	}
 			sleep(15);
 		} catch (Exception $exc) {
-			log::add('Freebox_OS', 'error', __('********************  ERREUR CRON UPDATE TILES/NODE ', __FILE__));
+			log::add('Freebox_OS', 'error', '[CRITICAL] - ' . __('ERREUR CRON UPDATE TILES/NODE ', __FILE__));
 		}
 	}
 	public static function resetConfig()
 	{
+		log::add('Freebox_OS', 'debug', '[INFO] >> RESET DES PARAMETRES STANDARDS');
 		config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
 		//config::save('FREEBOX_SERVER_APP_VERSION', "v5.0.0", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_NAME', "Plugin Freebox OS", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_ID', "plugin.freebox.jeedom", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
 		config::save('FREEBOX_API', "v10", 'Freebox_OS');
+		log::add('Freebox_OS', 'debug', 'RESET [  OK  ]');
 		config::save('FREEBOX_REBOOT_DEAMON', FALSE, 'Freebox_OS');
+		log::add('Freebox_OS', 'debug', '[INFO] >> RESET DU TYPE DE BOX');
+		config::save('TYPE_FREEBOX', '', 'Freebox_OS');
+		config::save('TYPE_FREEBOX_NAME', "", 'Freebox_OS');
+		config::save('TYPE_FREEBOX_TILES', "", 'Freebox_OS');
+		log::add('Freebox_OS', 'debug', 'RESET [  OK  ]');
 	}
 
 	public static function EqLogic_ID($Name, $_logicalId)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', '>> ================ >> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId);
+		log::add('Freebox_OS', 'debug', '---> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId);
 		return $EqLogic;
+	}
+	public static function DisableEqLogic($EqLogic, $TILES = false)
+	{
+		$logicalinfo = Freebox_OS::getlogicalinfo();
+		if ($EqLogic != null) {
+			log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE DESACTIVATION DE : ' . $EqLogic->getname());
+			if (!is_object($EqLogic->getLogicalId())) {
+				$EqLogic->setIsEnable(0);
+				$EqLogic->save(true);
+				log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE DESACTIVATION DE : ' . $EqLogic->getname());
+			}
+		}
+		if ($TILES == true) {
+			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+			if (is_object($cron)) {
+				log::add('Freebox_OS', 'debug', '[WARNING] - SUPPRESSION CRON GLOBAL TITLES');
+				$cron->stop();
+				$cron->remove();
+			}
+		}
 	}
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', '>> ================ >> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
+		log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION EQUIPEMENT : ' . $Name);
+		log::add('Freebox_OS', 'debug', '---> Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
 		if (!is_object($EqLogic)) {
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
@@ -385,7 +432,7 @@ class Freebox_OS extends eqLogic
 		} else {
 			$EqLogic->save(true);
 		}
-
+		log::add('Freebox_OS', 'debug', '[  OK  ] - FIN CREATION EQUIPEMENT : ' . $Name);
 		return $EqLogic;
 	}
 
@@ -397,10 +444,10 @@ class Freebox_OS extends eqLogic
 	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary_display = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = null)
 	{
 		if ($listValue_Update == true) {
-			log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue);
+			log::add('Freebox_OS', 'debug', '[INFO] - CREATION COMMANDE : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue);
 		} else if ($updatenetwork != false) {
 		} else {
-			log::add('Freebox_OS', 'debug', '│ Name : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser Affichage : ' . $invertBinary_display . ' -- Inverser Valeur Binaire : ' . $invertBinary_config . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
+			log::add('Freebox_OS', 'debug', '[INFO] - CREATION COMMANDE : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser Affichage : ' . $invertBinary_display . ' -- Inverser Valeur Binaire : ' . $invertBinary_config . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order);
 		}
 		$Cmd = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Cmd)) {
@@ -494,15 +541,15 @@ class Freebox_OS extends eqLogic
 				$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Name);
 				$this->setConfiguration('SetModePresent', "NOT");
 				$this->setConfiguration('ModeAbsent', $Name);
-				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : SetModePresent => NOT' . ' -- Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '-----> Paramétrage du Mode Homebridge Set Mode : SetModePresent => NOT' . ' -- Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'SetModeNuit') {
 				$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Name);
 				$this->setConfiguration('ModeNuit', $Name);
-				log::add('Freebox_OS', 'debug', '│ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '-----> Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
 				if ($invertBinary_config != null  && $SubType == 'binary') { //Correction pour prise en compte fonction Core
-					log::add('Freebox_OS', 'debug', '│ Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
+					log::add('Freebox_OS', 'debug', '-----> Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
 					$Cmd->setConfiguration('invertBinary', $invertBinary_config);
 					$Cmd->setdisplay('invertBinary', $invertBinary_display);
 				}
@@ -521,11 +568,9 @@ class Freebox_OS extends eqLogic
 		}
 		if ($Type == 'info') {
 			if ($repeatevent === true || $repeatevent === 'never') {
-				//log::add('Freebox_OS', 'debug', '│ ====================> NE PAS Répéter les valeurs identiques pour l\'info avec le nom : ' . $Name . ' (' . $repeatevent . ')');
 				$Cmd->setConfiguration('repeatEventManagement', 'never');
 			} else {
 				$Cmd->setConfiguration('repeatEventManagement', 'always');
-				//log::add('Freebox_OS', 'debug', '│ ====================> Répéter les valeurs identiques pour l\'info avec le nom : ' . $Name . ' (' . $repeatevent . ')');
 			}
 		}
 
@@ -546,7 +591,7 @@ class Freebox_OS extends eqLogic
 		if ($updatenetwork != false) {
 			if ($updatenetwork['updatename'] == true) {
 				if ($Name != $Cmd->getName()) {
-					log::add('Freebox_OS', 'debug', '│===========> Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Cmd->getName());
+					log::add('Freebox_OS', 'debug', '-----> Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Cmd->getName());
 					if ($name_connectivity_type != 'Wifi Ethernet ?') {
 						$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
 					} else {
@@ -555,6 +600,8 @@ class Freebox_OS extends eqLogic
 					$Name_wifi = $Name . ' (Wifi)';
 					$Name_ethernet = $Name . ' (Ethernet)';
 					if ($Name_verif == $Cmd->getName() || $Name_wifi == $Cmd->getName() || $Name_ethernet == $Cmd->getName()) {
+						$Cmd->setName($Name_verif);
+						$Cmd->save();
 					} else {
 						if ($name_connectivity_type != null) {
 							if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name))) {
@@ -566,13 +613,13 @@ class Freebox_OS extends eqLogic
 						}
 						if ($Name_verif != $Cmd->getName()) {
 							$Cmd->setName($Name_verif);
+							$Cmd->save();
 						}
 					}
 				}
 			}
 			if ($updatenetwork['UpdateVisible'] == true) {
 				if ($updatenetwork['IsVisible_option'] == 0) {
-					//log::add('Freebox_OS', 'debug', '│===============================> PAS VISIBLE : ' . $updatenetwork['IsVisible_option']);
 					$Cmd->setIsVisible(0);
 					$Cmd->save();
 				} else {
@@ -665,8 +712,9 @@ class Freebox_OS extends eqLogic
 
 	public function postSave()
 	{
+		log::add('Freebox_OS', 'debug', '[INFO] - SAUVEGARDE : ' . $this->getName());
 		if ($this->getConfiguration('type') == 'alarm_control') {
-			log::add('Freebox_OS', 'debug', '******************** Mise à jour des paramètrages spécifiques pour Homebridge : ' . $this->getConfiguration('type') . ' **************************************** ');
+			log::add('Freebox_OS', 'debug', '[INFO] - Mise à jour des paramètrages spécifiques pour Homebridge : ' . $this->getConfiguration('type'));
 			foreach ($this->getCmd('action') as $Cmd) {
 				if (is_object($Cmd)) {
 					switch ($Cmd->getLogicalId()) {
@@ -681,7 +729,7 @@ class Freebox_OS extends eqLogic
 					}
 					if (isset($_home_config_eq)) {
 						if ($_home_config_eq != null) {
-							log::add('Freebox_OS', 'debug', '│──────────> Mode : ' . $_home_config_eq . '(Commande : ' . $Cmd->getName() . ')');
+							log::add('Freebox_OS', 'debug', '---> Mode : ' . $_home_config_eq . '(Commande : ' . $Cmd->getName() . ')');
 							$this->setConfiguration($_home_mode, $Cmd->getName());
 							$this->save(true);
 							$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Cmd->getName());
@@ -697,11 +745,13 @@ class Freebox_OS extends eqLogic
 					}
 				}
 			}
-			log::add('Freebox_OS', 'debug', '**************************************************************************************************** ');
+			log::add('Freebox_OS', 'debug', '[INFO] - Fin mise à jour des paramètrages spécifiques pour Homebridge : ' . $this->getConfiguration('type'));
 		}
+		log::add('Freebox_OS', 'debug', '[  OK  ] - FIN SAUVEGARDE : ' . $this->getName());
 		if ($this->getIsEnable()) {
 			if (($this->getConfiguration('eq_group') == 'nodes' || $this->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
 			} else {
+
 				Free_Refresh::RefreshInformation($this->getId());
 			}
 		}
@@ -732,10 +782,10 @@ class Freebox_OS extends eqLogic
 	{
 		if (!$this->getIsEnable()) return;
 		if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1 && $this->getConfiguration('eq_group') == 'tiles') {
-			log::add('Freebox_OS', 'debug', '================= CRON : Pas de vérification car Cron global titles actif');
+			log::add('Freebox_OS', 'debug', '[INFO] - CRON : Pas de vérification car Cron global titles actif');
 		} else {
 			if ($this->getConfiguration('autorefresh') == '') {
-				log::add('Freebox_OS', 'error', '================= CRON : Temps de rafraichissement est vide pour l\'équipement : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
+				log::add('Freebox_OS', 'error', '[CRITICAL] CRON : Temps de rafraichissement est vide pour l\'équipement : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
 				throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide : ' . $this->getName(), __FILE__));
 			}
 		}
@@ -778,20 +828,20 @@ class Freebox_OS extends eqLogic
 
 	public static function RefreshToken()
 	{
-		log::add('Freebox_OS', 'debug', '=================   REFRESH TOKEN    ==================');
+		log::add('Freebox_OS', 'debug', '[WARNING] - REFRESH TOKEN');
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (is_object($cron)) {
-			log::add('Freebox_OS', 'debug', '>───────── ARRET CRON FreeboxPUT');
+			log::add('Freebox_OS', 'debug', '[WARNING] - ARRET CRON FreeboxPUT');
 			$cron->stop();
 		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 		if (is_object($cron)) {
-			log::add('Freebox_OS', 'debug', '>───────── ARRET CRON FreeboxGET');
+			log::add('Freebox_OS', 'debug', '[WARNING] - ARRET CRON FreeboxGET');
 			$cron->stop();
 		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxAPI');
 		if (is_object($cron)) {
-			log::add('Freebox_OS', 'debug', '>───────── ARRET CRON FreeboxAPI');
+			log::add('Freebox_OS', 'debug', '[WARNING] - ARRET CRON FreeboxAPI');
 			$cron->stop();
 		}
 		sleep(1);
@@ -806,7 +856,7 @@ class Freebox_OS extends eqLogic
 		if (!is_object($cron)) {
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		} else {
-			log::add('Freebox_OS', 'debug', '>───────── REDEMARRAGE CRON FreeboxPUT');
+			log::add('Freebox_OS', 'debug', '[INFO] - REDEMARRAGE CRON FreeboxPUT');
 			$cron->run();
 		}
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
@@ -815,12 +865,12 @@ class Freebox_OS extends eqLogic
 				if (!is_object($cron)) {
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				} else {
-					log::add('Freebox_OS', 'debug', '>───────── REDEMARRAGE CRON FreeboxGET');
+					log::add('Freebox_OS', 'debug', '[INFO] - REDEMARRAGE CRON FreeboxGET');
 					$cron->run();
 				}
 			}
 		}
-		log::add('Freebox_OS', 'debug', '================= FIN REFRESH TOKEN  ==================');
+		log::add('Freebox_OS', 'debug', '[  OK  ] - FIN REFRESH TOKEN');
 	}
 	public static function getlogicalinfo()
 	{
@@ -872,25 +922,26 @@ class Freebox_OS extends eqLogic
 	}
 	public static function FreeboxAPI()
 	{
-		log::add('Freebox_OS', 'info', '================= DEBUT TEST VERSION API DE LA FREEBOX ==================');
-		log::add('Freebox_OS', 'info', '================= Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue ==================');
+		log::add('Freebox_OS', 'info', '[WARNING] - DEBUT TEST VERSION API DE LA FREEBOX');
+		log::add('Freebox_OS', 'info', '[ALERT] - Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue');
 		$Free_API = new Free_API();
 		$result = $Free_API->universal_get('universalAPI', null, null, 'api_version', true, true, true);
-		log::add('Freebox_OS', 'info', '│──────────> Type Box : ' . $result['box_model_name']);
-		log::add('Freebox_OS', 'info', '│──────────> API URL : ' . $result['api_base_url']);
-		log::add('Freebox_OS', 'info', '│──────────> Port https : ' . $result['https_port']);
-		log::add('Freebox_OS', 'info', '│──────────> Nom Box : ' . $result['device_name']);
-		log::add('Freebox_OS', 'info', '│──────────> Https disponible : ' . $result['https_available']);
-		log::add('Freebox_OS', 'info', '│──────────> Modele de box : ' . $result['box_model']);
-		log::add('Freebox_OS', 'info', '│──────────> Type de box : ' . $result['device_type']);
-		log::add('Freebox_OS', 'info', '│──────────> API domaine : ' . $result['api_domain']);
-		log::add('Freebox_OS', 'info', '│──────────> API version : ' . $result['api_version']);
+		log::add('Freebox_OS', 'info', '---> Type Box : ' . $result['box_model_name']);
+		log::add('Freebox_OS', 'info', '---> API URL : ' . $result['api_base_url']);
+		log::add('Freebox_OS', 'info', '---> Port https : ' . $result['https_port']);
+		log::add('Freebox_OS', 'info', '---> Nom Box : ' . $result['device_name']);
+		log::add('Freebox_OS', 'info', '---> Https disponible : ' . $result['https_available']);
+		log::add('Freebox_OS', 'info', '---> Modele de box : ' . $result['box_model']);
+		log::add('Freebox_OS', 'info', '---> Type de box : ' . $result['device_type']);
+		log::add('Freebox_OS', 'info', '---> API domaine : ' . $result['api_domain']);
+		log::add('Freebox_OS', 'info', '---> API version : ' . $result['api_version']);
 		$API_version = 'v'  . $result['api_version'];
 		$API_version = strstr($API_version, '.', true);
-		log::add('Freebox_OS', 'info', '│──────────> Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '---> Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
-		log::add('Freebox_OS', 'info', '│──────────> Nouvelle Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
-		log::add('Freebox_OS', 'info', '================= FIN TEST VERSION API DE LA FREEBOX ==================');
+		log::add('Freebox_OS', 'info', '---> Mise à jour de Version dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '[  OK  ] - FIN TEST VERSION API DE LA FREEBOX');
+		Free_CreateEq::createEq('box');
 		return $API_version;
 	}
 	public static function updateLogicalID($eq_version, $_update = false)
@@ -1070,6 +1121,7 @@ class Freebox_OSCmd extends cmd
 			'Config' => $this->getConfiguration('logicalId'),
 			'EqLogic' => $this->getEqLogic(),
 			'NameEqLogic' => $this->getEqLogic()->getName(),
+			'LogicalIdEqLogic' => $this->getEqLogic()->getLogicalId(),
 			'Options' => $_options,
 		);
 

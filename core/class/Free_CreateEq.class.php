@@ -168,13 +168,23 @@ class Free_CreateEq
             $Type_box = 'OK';
         } else {
             $Type_box = 'NOK';
+            config::save('FREEBOX_TILES_CRON', 0, 'Freebox_OS');
         }
         config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
-        log::add('Freebox_OS', 'info', '---> Board name : ' . config::byKey('TYPE_FREEBOX', 'Freebox_OS'));
+        log::add('Freebox_OS', 'info', '[INFO] ---> Board name : ' . config::byKey('TYPE_FREEBOX', 'Freebox_OS'));
         config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
-        log::add('Freebox_OS', 'info', '---> Type de box : ' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'));
+        log::add('Freebox_OS', 'info', '[INFO] ---> Type de box : ' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'));
         config::save('TYPE_FREEBOX_TILES', $Type_box, 'Freebox_OS');
         log::add('Freebox_OS', 'info', '[INFO] ---> Compatibilité Domotique : ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
+        log::add('Freebox_OS', 'info', '[INFO] ---> Etat CRON Domotique : ' . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'));
+        if ($result['board_name'] == 'fbxgw9r') {
+            $cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
+            if (is_object($cron)) {
+                $cron->stop();
+                $cron->remove();
+                log::add('Freebox_OS', 'info', '[  OK  ] - SUPPRESSION CRON DOMOTIQUE');
+            }
+        }
         log::add('Freebox_OS', 'info', '[  OK  ] - FIN TEST COMPATIBILITE DOMOTIQUE');
         return $Type_box;
     }

@@ -496,7 +496,7 @@ class Free_CreateEq
         // Affichage Orientation
         $StatusLCD = $LCD->AddCommand('Etat Orientation', 'orientation', "info", 'string', null, null, null, 0, '', '', '', $iconorientation, 0, '0', 100, $order++, 2, $updateicon, true, false, true);
         $listValue = '0|Horizontal;90|90 degrés;180|180 degrés;270|270 degrés';
-        $LCD->AddCommand('Orientation', 'orientation', 'action', 'select', null, null, null, 1, $StatusLCD, 'default', 0, $iconorientation, 0, '0', 100, $order++, '0', $updateicon, false, null, true, null, null . null, null, null, null, null, null, $listValue);
+        $LCD->AddCommand('Orientation', 'orientation', 'action', 'select', null, null, null, 1, $StatusLCD, 'default', 0, $iconorientation, 0, '0', 100, $order++, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
 

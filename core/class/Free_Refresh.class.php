@@ -626,6 +626,7 @@ class Free_Refresh
         $result_network_ping = $Free_API->universal_get('universalAPI', null, null, 'lan/browser/' . $_networkinterface, true, true, true);
         $result_network_DHCP = $Free_API->universal_get('universalAPI', null, null, 'dhcp/static_lease', true, true, true);
         $order_count_active = 100;
+        $result_network = null;
         $order_count_noactive = 400;
         if ($EqLogics->getConfiguration('UpdateVisible') == true) {
             $_UpdateVisible = true;
@@ -634,18 +635,18 @@ class Free_Refresh
             $_UpdateVisible = false;
             log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT Option "Afficher uniquement les connectés" = 0 => : les équipements avec statut 0 seront affichés');
         }
+
         if (!$result_network_ping['success']) {
-            log::add('Freebox_OS', 'debug', '| ───▶︎ RESULTAT  Requête pas correct ou Pas d\'appareil trouvé' . $result_network_ping['success']);
+            log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ RESULTAT Requête pas correct ou Pas d\'appareil trouvé' . ':/fg:');
         } else {
             foreach ($EqLogics->getCmd('info') as $Command) {
-
                 $result_network = $result_network_ping['result'];
                 $_control_id = array_search($Command->getLogicalId(), array_column($result_network, 'id'), true);
 
                 if ($_control_id  === false) {
                     if ($Command->getLogicalId() == 'host_info' || $Command->getLogicalId() == 'host_type_info' || $Command->getLogicalId() == 'method_info' || $Command->getLogicalId() == 'add_del_ip_info' || $Command->getLogicalId() == 'primary_name_info' || $Command->getLogicalId() == 'comment_info') {
                     } else {
-                        log::add('Freebox_OS', 'debug', '| ───▶︎ APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
+                        log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION' . ':/fg:');
                         $Command->remove();
                     }
                 }
@@ -742,10 +743,10 @@ class Free_Refresh
                     }
                 }
             }
+            log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) connecté(s) : ' . $active_list);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) connecté(s) avec IP Fixe : ' . $active_listIP);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) non connecté(s) : ' . $noactive_list);
         }
-        log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) connecté(s) : ' . $active_list);
-        log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) connecté(s) avec IP Fixe : ' . $active_listIP);
-        log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) non connecté(s) : ' . $noactive_list);
     }
 
     private static function refresh_netshare($EqLogics, $Free_API)
@@ -1275,8 +1276,6 @@ class Free_Refresh
             }
         } else {
             $player_power_state = 'KO';
-            // $EqLogics->setConfiguration('player', 'KO');
-            // $EqLogics->save();
             log::add('Freebox_OS', 'debug', ':fg-info:Il n\'est pas possible de récupérer le status du Player :/fg:');
         }
 
@@ -1289,7 +1288,7 @@ class Free_Refresh
             } else {
                 $results_player_ID = $results_player['id'];
             }
-            if ($results_player_ID != $EqLogics->getConfiguration('action')) continue;
+            if ($results_player_ID != $EqLogics->getConfiguration('player_MAC')) continue;
             foreach ($EqLogics->getCmd('info') as $cmd) {
                 if (is_object($cmd)) {
                     switch ($cmd->getLogicalId()) {
@@ -1337,7 +1336,7 @@ class Free_Refresh
     private static function refresh_freeplug($EqLogics, $Free_API)
     {
         $result = $Free_API->universal_get('universalAPI', $EqLogics->getLogicalId(), null, 'freeplug', true, true, false);
-        if ($result != false) {
+        if ($result['success'] === true) {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
@@ -1358,6 +1357,8 @@ class Free_Refresh
                     }
                 }
             }
+        } else {
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ AUCUN FREEPLUG AVEC CET ID' . ':/fg:');
         }
     }
     private static function refresh_VM($EqLogics, $Free_API)
@@ -1405,7 +1406,7 @@ class Free_Refresh
                 }
             }
         } else {
-            log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN VM AVEC CET ID');
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ AUCUNE VM AVEC CET ID' . ':/fg:');
             Freebox_OS::DisableEqLogic($EqLogics, false);
         }
     }

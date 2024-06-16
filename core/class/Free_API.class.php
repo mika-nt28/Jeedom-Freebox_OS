@@ -436,6 +436,7 @@ class Free_API
             return false;
         }
         if (isset($result['success'])) {
+
             $value = 0;
             if ($update_type == 'freeplug') {
                 $update = 'freeplug';

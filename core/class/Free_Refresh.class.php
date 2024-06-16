@@ -28,7 +28,7 @@ class Free_Refresh
         $TYPE_FREEBOX_TILES = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         if ($API_version == null || $API_version === 'TEST_V8') {
             $result_API = Freebox_OS::FreeboxAPI();
-            log::add('Freebox_OS', 'debug', '[INFO] - Version API Compatible avec la Freebox : ' . $result_API);
+            log::add('Freebox_OS', 'debug', ':fg-info: Version API Compatible avec la Freebox : ' . $result_API . ':/fg:');
         }
         if ($_freeboxID == 'Tiles_global') {
             Free_Refresh::refresh_titles_global($EqLogics, $Free_API);
@@ -36,7 +36,7 @@ class Free_Refresh
 
         if (is_object($EqLogics) && $EqLogics->getIsEnable()) {
             if ($_freeboxID != 'Tiles_global') {
-                log::add('Freebox_OS', 'debug', '[INFO] - MISE A JOUR : ' . $EqLogics->getName());
+                log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : ' . $EqLogics->getName() . ' :/fg: ◀︎───────────');
             }
             if ($EqLogics->getConfiguration('type') == 'player' || $EqLogics->getConfiguration('type') == 'parental' || $EqLogics->getConfiguration('type') == 'freeplug' || $EqLogics->getConfiguration('type') == 'VM') {
                 $refresh = $EqLogics->getConfiguration('type');
@@ -45,7 +45,7 @@ class Free_Refresh
             }
             switch ($refresh) {
                 case 'management':
-                    log::add('Freebox_OS', 'debug', '---> Pas de fonction rafraichir pour cet équipement');
+                    log::add('Freebox_OS', 'debug', '───▶︎ Pas de fonction rafraichir pour cet équipement');
                     break;
                 case 'airmedia':
                     Free_Refresh::refresh_airmedia($EqLogics, $Free_API);
@@ -76,13 +76,13 @@ class Free_Refresh
                                     } else {
                                         $homeadapters_value = 0;
                                     }
-                                    log::add('Freebox_OS', 'debug', '---> Update pour Id : ' . $Cmd['id'] . ' -- Nom : ' . $Cmd['label'] . ' -- Etat : ' . $homeadapters_value);
+                                    log::add('Freebox_OS', 'debug', '| ───▶︎ Update pour Id : ' . $Cmd['id'] . ' -- Nom : ' . $Cmd['label'] . ' -- Etat : ' . $homeadapters_value);
                                     $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $homeadapters_value);
                                 }
                             }
                         }
                     } else {
-                        log::add('Freebox_OS', 'debug', '[WARNING] - La box n\'est plus comptatible avec cette application');
+                        log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎  La box n\'est plus comptatible avec cette application :/fg:──');
                         Freebox_OS::DisableEqLogic($EqLogics, true);
                     }
                     break;
@@ -92,7 +92,7 @@ class Free_Refresh
                         if ($results != false) {
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
                         } else {
-                            log::add('Freebox_OS', 'debug', '[WARNING] - AUCUN CONTROLE PARENTAL AVEC CET ID');
+                            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎  AUCUN CONTROLE PARENTAL AVEC CET ID :/fg:──');
                             Freebox_OS::DisableEqLogic($EqLogics, false);
                         }
                     }
@@ -126,14 +126,14 @@ class Free_Refresh
                         Free_Refresh::refresh_titles($EqLogics, $Free_API);
                         // Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, true);
                     } else {
-                        log::add('Freebox_OS', 'debug', '[WARNING] - La box n\'est plus comptatible avec cette application');
+                        log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎  La box n\'est plus comptatible avec cette application :/fg:──');
                         Freebox_OS::DisableEqLogic($EqLogics, true);
                     }
 
                     break;
             }
             if ($_freeboxID != 'Tiles_global') {
-                log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE MISE A JOUR : ' . $EqLogics->getName());
+                log::add('Freebox_OS', 'debug', '───────────────────────────────────────────');
             }
         }
     }
@@ -157,7 +157,7 @@ class Free_Refresh
                                     $receivers_list .= ';' . $airmedia['name'] . '|' . $airmedia['name'];
                                 }
                             }
-                            log::add('Freebox_OS', 'debug', '---> Liste des Airmedia : ' . $receivers_list);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Liste des Airmedia : ' . $receivers_list);
                             $EqLogics->AddCommand('Choix du Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, 'default', 'default', null, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null, true);
                         }
                         // Gestion Liste déroulante Type de média
@@ -196,7 +196,7 @@ class Free_Refresh
                                                 $media_type_list .= ';' . 'video' . '|' . 'Vidéo';
                                             }
                                         }
-                                        log::add('Freebox_OS', 'debug', '--->  Liste des médias compatible pour : ' . $receivers_Value . ' avec les valeurs : ' . $media_type_list);
+                                        log::add('Freebox_OS', 'debug', '───▶︎  Liste des médias compatible pour : ' . $receivers_Value . ' avec les valeurs : ' . $media_type_list);
                                         $EqLogics->AddCommand('Choix du Media', 'media_type', 'action', 'select', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null, true);
                                         $EqLogics->refreshWidget();
                                     }
@@ -378,11 +378,11 @@ class Free_Refresh
                     foreach ($result as $disks) {
                         switch ($Command->getLogicalId()) {
                             case $disks['id'] . '_temp':
-                                log::add('Freebox_OS', 'debug', '---> Disque [' . $disks['serial'] . ' - ' . $disks['id'] . '] '  . 'Température :' . $disks['temp'] . '°C');
+                                log::add('Freebox_OS', 'debug', '───▶︎ Disque [' . $disks['serial'] . ' - ' . $disks['id'] . '] '  . 'Température :' . $disks['temp'] . '°C');
                                 $EqLogics->checkAndUpdateCmd($disks['id'] . '_temp', $disks['temp']);
                                 break;
                             case $disks['id'] . '_spinning':
-                                log::add('Freebox_OS', 'debug', '---> Disque [' . $disks['serial'] . ' - ' . $disks['id'] . '] '  . 'Tourne :' . $disks['spinning']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Disque [' . $disks['serial'] . ' - ' . $disks['id'] . '] '  . 'Tourne :' . $disks['spinning']);
                                 $EqLogics->checkAndUpdateCmd($disks['id'] . '_spinning', $disks['spinning']);
                                 break;
                         }
@@ -394,7 +394,7 @@ class Free_Refresh
                             } else {
                                 $value = 0;
                             }
-                            log::add('Freebox_OS', 'debug', '---> Occupation de la partition ' . $partition['label'] . ' : ' . $value . ' - Pour le disque  [' . $disks['type'] . '] - ' . $disks['id']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Occupation de la partition ' . $partition['label'] . ' : ' . $value . ' - Pour le disque  [' . $disks['type'] . '] - ' . $disks['id']);
 
                             $EqLogics->checkAndUpdateCmd($partition['id'], $value);
                         }
@@ -414,19 +414,19 @@ class Free_Refresh
                         foreach ($EqLogics->getCmd('info') as $Command) {
                             switch ($Command->getLogicalId()) {
                                 case $raid['id'] . '_state':
-                                    log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_state : ' . $raid['state']);
+                                    log::add('Freebox_OS', 'debug', '───▶︎ Raid_' . $raid['id'] . '_state : ' . $raid['state']);
                                     $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['state']);
                                     break;
                                 case $raid['id'] . '_sync_action':
-                                    log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_sync_action : ' . $raid['sync_action']);
+                                    log::add('Freebox_OS', 'debug', '───▶︎ Raid_' . $raid['id'] . '_sync_action : ' . $raid['sync_action']);
                                     $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['sync_action']);
                                     break;
                                 case $raid['id'] . '_role':
-                                    log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_role : ' . $raid['role']);
+                                    log::add('Freebox_OS', 'debug', '───▶︎ Raid_' . $raid['id'] . '_role : ' . $raid['role']);
                                     $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['role']);
                                     break;
                                 case $raid['id'] . '_degraded':
-                                    log::add('Freebox_OS', 'debug', '---> Raid_' . $raid['id'] . '_degraded : ' . $raid['degraded']);
+                                    log::add('Freebox_OS', 'debug', '───▶︎ Raid_' . $raid['id'] . '_degraded : ' . $raid['degraded']);
                                     $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $raid['degraded']);
                                     break;
                             }
@@ -436,7 +436,7 @@ class Free_Refresh
                                 foreach ($EqLogics->getCmd('info') as $Command) {
                                     switch ($Command->getLogicalId()) {
                                         case $members_raid['id'] . '_role':
-                                            log::add('Freebox_OS', 'debug', '---> Role pour le disque ' . $members_raid['disk']['serial'] . ' : ' . $members_raid['role']);
+                                            log::add('Freebox_OS', 'debug', '───▶︎ Role pour le disque ' . $members_raid['disk']['serial'] . ' : ' . $members_raid['role']);
                                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $members_raid['role']);
                                             break;
                                     }
@@ -577,9 +577,9 @@ class Free_Refresh
             if ($result['list_outgoing'] != null) {
                 $list_outgoing = ' -- Liste des appels passés : ' . $result['list_outgoing'];
             }
-            log::add('Freebox_OS', 'debug', '[INFO] - Nb Appels manqués : ' . $result['missed'] . $list_missed);
-            log::add('Freebox_OS', 'debug', '[INFO] - Nb Appels reçus : ' . $result['accepted'] . $list_accepted);
-            log::add('Freebox_OS', 'debug', '[INFO] - Nb Appels passés : ' . $result['outgoing'] . $list_outgoing);
+            log::add('Freebox_OS', 'debug', ':fg-info:Nb Appels manqués : ' . $result['missed'] . $list_missed . ':/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-info:Nb Appels reçus : ' . $result['accepted'] . $list_accepted . ':/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-info:Nb Appels passés : ' . $result['outgoing'] . $list_outgoing . ':/fg:');
             foreach ($EqLogics->getCmd('info') as $Command) {
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
@@ -629,13 +629,13 @@ class Free_Refresh
         $order_count_noactive = 400;
         if ($EqLogics->getConfiguration('UpdateVisible') == true) {
             $_UpdateVisible = true;
-            log::add('Freebox_OS', 'debug', '---> ETAT Option "Afficher uniquement les connectés" = ' . $_UpdateVisible . ' => : les équipements avec statut 0 ne seront pas affichés');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT Option "Afficher uniquement les connectés" = ' . $_UpdateVisible . ' => : les équipements avec statut 0 ne seront pas affichés');
         } else {
             $_UpdateVisible = false;
-            log::add('Freebox_OS', 'debug', '---> ETAT Option "Afficher uniquement les connectés" = 0 => : les équipements avec statut 0 seront affichés');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT Option "Afficher uniquement les connectés" = 0 => : les équipements avec statut 0 seront affichés');
         }
         if (!$result_network_ping['success']) {
-            log::add('Freebox_OS', 'debug', '---> RESULTAT  Requête pas correct ou Pas d\'appareil trouvé' . $result_network_ping['success']);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ RESULTAT  Requête pas correct ou Pas d\'appareil trouvé' . $result_network_ping['success']);
         } else {
             foreach ($EqLogics->getCmd('info') as $Command) {
 
@@ -645,7 +645,7 @@ class Free_Refresh
                 if ($_control_id  === false) {
                     if ($Command->getLogicalId() == 'host_info' || $Command->getLogicalId() == 'host_type_info' || $Command->getLogicalId() == 'method_info' || $Command->getLogicalId() == 'add_del_ip_info' || $Command->getLogicalId() == 'primary_name_info' || $Command->getLogicalId() == 'comment_info') {
                     } else {
-                        log::add('Freebox_OS', 'debug', '---> APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
+                        log::add('Freebox_OS', 'debug', '| ───▶︎ APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION');
                         $Command->remove();
                     }
                 }
@@ -743,9 +743,9 @@ class Free_Refresh
                 }
             }
         }
-        log::add('Freebox_OS', 'debug', '---> Appareil(s) connecté(s) : ' . $active_list);
-        log::add('Freebox_OS', 'debug', '---> Appareil(s) connecté(s) avec IP Fixe : ' . $active_listIP);
-        log::add('Freebox_OS', 'debug', '---> Appareil(s) non connecté(s) : ' . $noactive_list);
+        log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) connecté(s) : ' . $active_list);
+        log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) connecté(s) avec IP Fixe : ' . $active_listIP);
+        log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) non connecté(s) : ' . $noactive_list);
     }
 
     private static function refresh_netshare($EqLogics, $Free_API)
@@ -758,24 +758,24 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "file_share_enabled":
-                            log::add('Freebox_OS', 'debug', '---> Partage Fichier Windows : ' . $result['file_share_enabled']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Partage Fichier Windows : ' . $result['file_share_enabled']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['file_share_enabled']);
                             break;
                         case "FTP_enabled":
-                            log::add('Freebox_OS', 'debug', '---> Partage Fichier FTP : ' . $resultFTP['enabled']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Partage Fichier FTP : ' . $resultFTP['enabled']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $resultFTP['enabled']);
                             break;
                         case "mac_share_enabled":
-                            log::add('Freebox_OS', 'debug', '---> Partage Fichier Mac : ' . $resultmac['enabled']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Partage Fichier Mac : ' . $resultmac['enabled']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $resultmac['enabled']);
                             break;
                         case "print_share_enabled":
-                            log::add('Freebox_OS', 'debug', '---> Partage Imprimante : ' . $result['print_share_enabled']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Partage Imprimante : ' . $result['print_share_enabled']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['print_share_enabled']);
                             break;
                         case "smbv2_enabled":
                             if (isset($result['smbv2_enabled'])) {
-                                log::add('Freebox_OS', 'debug', '---> Etat Samba SMBv2 : ' . $result['smbv2_enabled']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Etat Samba SMBv2 : ' . $result['smbv2_enabled']);
                                 if ($result['smbv2_enabled'] == true) {
                                     Free_Refresh::Free_removeLogicId($EqLogics, 'print_share_enabledOn');
                                     Free_Refresh::Free_removeLogicId($EqLogics, 'print_share_enabledOff');
@@ -806,7 +806,7 @@ class Free_Refresh
 
     private static function refresh_system($EqLogics, $Free_API)
     {
-        log::add('Freebox_OS', 'debug', '---> Récupération des valeurs du Système');
+        log::add('Freebox_OS', 'debug', '───▶︎ Récupération des valeurs du Système');
         $result = $Free_API->universal_get('system', null, null, null, true, true, null);
         foreach ($EqLogics->getCmd('info') as $Command) {
             $logicalId = $Command->getConfiguration('logicalId');
@@ -816,7 +816,7 @@ class Free_Refresh
                     foreach ($result['sensors'] as $system) {
                         if ($Command->getLogicalId() != $system['id']) continue;
                         $value = $system['value'];
-                        log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
+                        log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
                         $EqLogics->checkAndUpdateCmd($system['id'], $value);
                         break;
                     }
@@ -825,7 +825,7 @@ class Free_Refresh
                     foreach ($result['fans'] as $system) {
                         if ($Command->getLogicalId() != $system['id']) continue;
                         $value = $system['value'];
-                        log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
+                        log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
                         $EqLogics->checkAndUpdateCmd($system['id'], $value);
                         break;
                     }
@@ -836,7 +836,7 @@ class Free_Refresh
                         if ($Command->getLogicalId() != $system['slot']) continue;
 
                         $value = $system['present'];
-                        log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['slot'] . ' -- valeur : ' . $value);
+                        log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $system['slot'] . ' -- valeur : ' . $value);
                         $EqLogics->checkAndUpdateCmd($system['slot'], $value);
                         break;
                     }
@@ -846,16 +846,16 @@ class Free_Refresh
                         switch ($Command->getLogicalId()) {
                             case "model_name":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['name']);
-                                log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['name']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['name']);
                                 break;
                             case "pretty_name":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['pretty_name']);
                                 config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
-                                log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['pretty_name']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['pretty_name']);
                                 break;
                             case "wifi_type":
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['wifi_type']);
-                                log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['wifi_type']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $Command->getLogicalId() . ' -- valeur : ' . $result['model_info']['wifi_type']);
                                 break;
                         }
                     }
@@ -864,7 +864,7 @@ class Free_Refresh
                         if (!isset($system['slot'])) continue;
                         if ($Command->getLogicalId() != $system['slot']) continue;
                         $value = $system['value'];
-                        log::add('Freebox_OS', 'debug', '---> Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
+                        log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
                         $EqLogics->checkAndUpdateCmd($system['id'], $value);
                         break;
                     }
@@ -873,7 +873,7 @@ class Free_Refresh
                     if (is_object($Command)) {
                         switch ($Command->getLogicalId()) {
                             case "mac":
-                                log::add('Freebox_OS', 'debug', '---> Update pour Adresse mac : ' . $result['mac']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Update pour Adresse mac : ' . $result['mac']);
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['mac']);
                                 break;
                             case "uptime":
@@ -884,20 +884,20 @@ class Free_Refresh
                                 $_uptime = str_replace(' minutes ', 'min ', $_uptime);
                                 $_uptime = str_replace(' secondes', 's', $_uptime);
                                 $_uptime = str_replace(' seconde', 's', $_uptime);
-                                log::add('Freebox_OS', 'debug', '---> Allumée depuis : ' . $_uptime);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Allumée depuis : ' . $_uptime);
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $_uptime);
                                 break;
                             case "board_name":
-                                log::add('Freebox_OS', 'debug', '---> Board name : ' . $result['board_name']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Board name : ' . $result['board_name']);
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['board_name']);
                                 config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
                                 break;
                             case "serial":
-                                log::add('Freebox_OS', 'debug', '---> Numéro de série : ' . $result['serial']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Numéro de série : ' . $result['serial']);
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['serial']);
                                 break;
                             case "firmware_version":
-                                log::add('Freebox_OS', 'debug', '---> Version Firmware : ' . $result['firmware_version']);
+                                log::add('Freebox_OS', 'debug', '───▶︎ Version Firmware : ' . $result['firmware_version']);
                                 $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['firmware_version']);
                                 break;
                             case "4GStatut": // toute la partie 4G
@@ -923,15 +923,15 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "4GStatut":
-                            log::add('Freebox_OS', 'debug', '---> Etat de la carte 4G : ' . $result['result']['enabled']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Etat de la carte 4G : ' . $result['result']['enabled']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['enabled']);
                             break;
                         case "associated_lte":
-                            log::add('Freebox_OS', 'debug', '---> Etat Radio 4G : ' . $result['result']['radio']['associated']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Etat Radio 4G : ' . $result['result']['radio']['associated']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['radio']['associated']);
                             break;
                         case "state_lte":
-                            log::add('Freebox_OS', 'debug', '---> Etat du réseau 4G : ' . $result['result']['state']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Etat du réseau 4G : ' . $result['result']['state']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['state']);
                             break;
                     }
@@ -948,16 +948,16 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "ip":
-                            log::add('Freebox_OS', 'debug', '---> IP : ' . $result['result']['ip']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ IP : ' . $result['result']['ip']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['ip']);
                             break;
                         case "mode":
-                            log::add('Freebox_OS', 'debug', '---> Mode : ' . $result['result']['mode']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Mode : ' . $result['result']['mode']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['mode']);
                             config::save('TYPE_FREEBOX_MODE', $result['result']['mode'], 'Freebox_OS');
                             break;
                         case "name":
-                            log::add('Freebox_OS', 'debug', '---> Nom : ' . $result['result']['name']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Nom : ' . $result['result']['name']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['result']['name']);
                             break;
                     }
@@ -974,7 +974,7 @@ class Free_Refresh
                 if (is_object($Command)) {
                     switch ($Command->getLogicalId()) {
                         case "lang":
-                            log::add('Freebox_OS', 'debug', '---> Lang : ' . $result['lang']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Lang : ' . $result['lang']);
                             $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['lang']);
                             break;
                     }
@@ -1032,13 +1032,13 @@ class Free_Refresh
                     break;
             }
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '---> Update commande spécifique pour Homebridge : ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
+                log::add('Freebox_OS', 'debug', '───▶︎ Update commande spécifique pour Homebridge : ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
             }
             $EqLogic->checkAndUpdateCmd('ALARM_state', $_Alarm_stat_value);
             $EqLogic->checkAndUpdateCmd('ALARM_enable', $_Alarm_enable_value);
             $EqLogic->checkAndUpdateCmd('ALARM_mode', $_Alarm_mode_value);
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '---> Statut (ALARM_state) = ' . $_Alarm_stat_value . ' / Actif (ALARM_enable) = ' . $_Alarm_enable_value . ' / Mode (ALARM_mode) = ' . $_Alarm_mode_value);
+                log::add('Freebox_OS', 'debug', '───▶︎ Statut (ALARM_state) = ' . $_Alarm_stat_value . ' / Actif (ALARM_enable) = ' . $_Alarm_enable_value . ' / Mode (ALARM_mode) = ' . $_Alarm_mode_value);
             }
         };
 
@@ -1049,7 +1049,7 @@ class Free_Refresh
                 if ($data['value'] == null) {
                     $_value = 'Pas de message d\'erreur';
                     if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '---> Update commande spécifique Message erreur : ' . $EqLogic->getConfiguration('type') . ' -- ' . $data['value']);
+                        log::add('Freebox_OS', 'debug', '───▶︎ Update commande spécifique Message erreur : ' . $EqLogic->getConfiguration('type') . ' -- ' . $data['value']);
                     }
                 }
             } else {
@@ -1063,7 +1063,7 @@ class Free_Refresh
         /*  Suppression de cette inversion car c'est gérer par le core
         if ($EqLogic->getConfiguration('info') == 'mouv_sensor' && $Cmd->getConfiguration('info') == 'mouv_sensor') {
             if ($log_result == true) {
-            log::add('Freebox_OS', 'debug', '---> Inversion de la valeur pour les détecteurs de mouvement pour être compatible avec Homebridge');
+            log::add('Freebox_OS', 'debug', '───▶︎ Inversion de la valeur pour les détecteurs de mouvement pour être compatible avec Homebridge');
             }
             $_value = false;
             if ($data['value'] == false) {
@@ -1075,7 +1075,7 @@ class Free_Refresh
         */
         $_value = $data['value'];
         if ($log_result == true) {
-            Log::add('Freebox_OS', 'debug', '---> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
+            Log::add('Freebox_OS', 'debug', '───▶︎ ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value);
         }
         return $_value;
     }
@@ -1097,7 +1097,7 @@ class Free_Refresh
             }
         }
         if (($log_result == true & $data['name'] != 'pushed')) {
-            Log::add('Freebox_OS', 'debug', '---> ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
+            Log::add('Freebox_OS', 'debug', '───▶︎ ' . $logicalId_name . ' (' . $_cmd_id . ') = ' . $_value . ' -- valeur Box = ' . $data['value'] . ' -- Etat Option Inverser = ' . $Cmd->getDisplay('invertBinary'));
         }
         return $_value;
     }
@@ -1133,7 +1133,7 @@ class Free_Refresh
                     $EqLogic = eqLogic::byLogicalId($_eq_node, 'Freebox_OS');
                     if (is_object($EqLogic)) {
                         if ($EqLogic->getIsEnable()) {
-                            log::add('Freebox_OS', 'debug', '[INFO] - MISE A JOUR POUR : ' . $EqLogic->getName() . ' - Boucle : ' . $boucle_name);
+                            log::add('Freebox_OS', 'debug', ':fg-info: MISE A JOUR POUR : ' . $EqLogic->getName() . ' - Boucle : ' . $boucle_name . ':/fg:');
                             foreach ($_eq_data as $data) {
                                 if ($boucle_num == 1) {
                                     $_cmd_id = $data['ep_id'];
@@ -1150,7 +1150,7 @@ class Free_Refresh
                                                 Free_Refresh::refresh_titles_CMD($cmd, $EqLogic, $data, $_cmd_id, $log_result);
                                             }
                                         } else {
-                                            //log::add('Freebox_OS', 'debug', '---> Aucune mise à jour avec la boucle : ' . $boucle_name);
+                                            //log::add('Freebox_OS', 'debug', '───▶︎ Aucune mise à jour avec la boucle : ' . $boucle_name);
                                         }
                                     }
                                 }
@@ -1169,17 +1169,17 @@ class Free_Refresh
         $_value = $data['history'][$nb_pushed_k]['value'];
         $timestamp = $data['history'][$nb_pushed_k]['timestamp'];
         if ($log_result == true) {
-            log::add('Freebox_OS', 'debug', '---> ' . '[' . $Cmd->getName() . ']' . ' : Nb de valeur enregistrée -1 = ' . $nb_pushed_k . ' -- Valeur historique récente = ' . $_value . ' [' . date("d/m/Y H:i:s", $timestamp) . ' - ' . $timestamp  . ']');
+            log::add('Freebox_OS', 'debug', '───▶︎ ' . '[' . $Cmd->getName() . ']' . ' : Nb de valeur enregistrée -1 = ' . $nb_pushed_k . ' -- Valeur historique récente = ' . $_value . ' [' . date("d/m/Y H:i:s", $timestamp) . ' - ' . $timestamp  . ']');
         }
         if ($Cmd->getConfiguration('history_remote') == $timestamp) {
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '---> ' . 'Pas de changement de la valeur de la télécommande');
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . 'Pas de changement de la valeur de la télécommande');
             }
         } else {
             $Cmd->setConfiguration('history_remote', $timestamp);
             $Cmd->save();
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '---> ' . 'Changement de la valeur nécessaire pour la télécommande');
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . 'Changement de la valeur nécessaire pour la télécommande');
             }
             $EqLogic->checkAndUpdateCmd($Cmd, $_value);
         }
@@ -1263,26 +1263,28 @@ class Free_Refresh
     }
     private static function refresh_player($EqLogics, $Free_API)
     {
-        log::add('Freebox_OS', 'debug', '---> ETAT PLAYER DISPONIBLE ? : ' . $EqLogics->getConfiguration('player'));
+        log::add('Freebox_OS', 'debug', '───▶︎ ETAT PLAYER DISPONIBLE ? : [  ' . $EqLogics->getConfiguration('player') . '  ]');
         if ($EqLogics->getConfiguration('player') == 'OK' && $EqLogics->getConfiguration('player_MAC') != 'MAC') {
             $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $EqLogics->getConfiguration('action') . '/api/v6/status', false, true, false);
             if (!isset($results_playerID['power_state'])) {
-                log::add('Freebox_OS', 'debug', '[ALERT] - l\'etat n\'est pas disponible car le Player n\'est pas joignable');
+                log::add('Freebox_OS', 'debug', ':fg-info:l\'etat n\'est pas disponible car le Player n\'est pas joignable:/fg:');
                 $player_power_state = 'standby';
             } else {
-                log::add('Freebox_OS', 'debug', '---> l\'etat est disponible');
+                log::add('Freebox_OS', 'debug', '───▶︎ l\'etat est disponible');
                 $player_power_state = $results_playerID['power_state'];
             }
         } else {
-            $player_power_state = 'NOK';
-            log::add('Freebox_OS', 'debug', '[ALERT] - Il n\'est pas possible de récupérer le status du Player');
+            $player_power_state = 'KO';
+            // $EqLogics->setConfiguration('player', 'KO');
+            // $EqLogics->save();
+            log::add('Freebox_OS', 'debug', ':fg-info:Il n\'est pas possible de récupérer le status du Player :/fg:');
         }
 
         $results_players = $Free_API->universal_get('universalAPI', null, null, 'player/', true, true, true);
         $results_players = $results_players['result'];
         foreach ($results_players as $results_player) {
             if ($EqLogics->getConfiguration('player_MAC') == 'MAC') {
-                log::add('Freebox_OS', 'debug', '---> PLAYER MAC');
+                log::add('Freebox_OS', 'debug', '───▶︎ PLAYER MAC');
                 $results_player_ID = $results_player['mac'];
             } else {
                 $results_player_ID = $results_player['id'];
@@ -1292,33 +1294,39 @@ class Free_Refresh
                 if (is_object($cmd)) {
                     switch ($cmd->getLogicalId()) {
                         case "mac":
-                            log::add('Freebox_OS', 'debug', '---> Adresse Mac : ' . $results_player['mac']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Adresse Mac : ' . $results_player['mac']);
                             $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['mac']);
                             break;
                         case "stb_type":
-                            log::add('Freebox_OS', 'debug', '---> Type : ' . $results_player['stb_type']);
-                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['stb_type']);
+                            if (isset($results_player['stb_type'])) {
+                                log::add('Freebox_OS', 'debug', '───▶︎ Type : ' . $results_player['stb_type']);
+                                $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['stb_type']);
+                            }
                             break;
                         case "api_version":
-                            log::add('Freebox_OS', 'debug', '---> API : ' . $results_player['api_version']);
-                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['api_version']);
+                            if (isset($results_player['api_version'])) {
+                                log::add('Freebox_OS', 'debug', '───▶︎ API : ' . $results_player['api_version']);
+                                $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['api_version']);
+                            }
                             break;
                         case "device_model":
-                            log::add('Freebox_OS', 'debug', '---> Modele : ' . $results_player['device_model']);
-                            $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['device_model']);
+                            if (isset($results_player['device_model'])) {
+                                log::add('Freebox_OS', 'debug', '───▶︎ Modele : ' . $results_player['device_model']);
+                                $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['device_model']);
+                            }
                             break;
                         case "reachable":
-                            log::add('Freebox_OS', 'debug', '---> Disponible sur le réseau : ' . $results_player['reachable']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ Disponible sur le réseau : ' . $results_player['reachable']);
                             $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['reachable']);
                             break;
                         case "power_state":
-                            if ($player_power_state != 'NOK') {
-                                log::add('Freebox_OS', 'debug', '---> Etat : ' . $player_power_state);
+                            if ($player_power_state != 'KO') {
+                                log::add('Freebox_OS', 'debug', '───▶︎ Etat : ' . $player_power_state);
                                 $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $player_power_state);
                             }
                             break;
                         case "api_available":
-                            log::add('Freebox_OS', 'debug', '---> API Disponible : ' . $results_player['api_available']);
+                            log::add('Freebox_OS', 'debug', '───▶︎ API Disponible : ' . $results_player['api_available']);
                             $EqLogics->checkAndUpdateCmd($cmd->getLogicalId(), $results_player['api_available']);
                             break;
                     }
@@ -1407,14 +1415,14 @@ class Free_Refresh
     }
     private static function refresh_wifi($EqLogics, $Free_API)
     {
-        log::add('Freebox_OS', 'debug', '---> Wifi : Update Liste Noire/Blanche');
+        log::add('Freebox_OS', 'debug', '───▶︎ Wifi : Update Liste Noire/Blanche');
         $listmac = $listmac = $Free_API->mac_filter_list();
         if ($listmac != false) {
             if ($listmac['listmac_blacklist'] != null || $listmac['listmac_whitelist'] != null) {
-                log::add('Freebox_OS', 'debug', '---> Liste Noire : ' . $listmac['listmac_blacklist']);
-                log::add('Freebox_OS', 'debug', '---> Liste Blanche : ' . $listmac['listmac_whitelist']);
+                log::add('Freebox_OS', 'debug', '───▶︎ Liste Noire : ' . $listmac['listmac_blacklist']);
+                log::add('Freebox_OS', 'debug', '───▶︎ Liste Blanche : ' . $listmac['listmac_whitelist']);
             } else {
-                log::add('Freebox_OS', 'debug', '---> Liste Noire/Blanche : Vide');
+                log::add('Freebox_OS', 'debug', '───▶︎ Liste Noire/Blanche : Vide');
             }
         }
         $result_config = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
@@ -1456,7 +1464,7 @@ class Free_Refresh
                         break;
                     default:
                         $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap/' . $Command->getLogicalId(), true, true);
-                        log::add('Freebox_OS', 'debug', '---> Status Carte ' . $result_ap['name'] . ' / ' . $Command->getLogicalId() . ' : ' . $result_ap['status']['state']);
+                        log::add('Freebox_OS', 'debug', '───▶︎ Status Carte ' . $result_ap['name'] . ' / ' . $Command->getLogicalId() . ' : ' . $result_ap['status']['state']);
                         $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result_ap['status']['state']);
                         break;
                 }

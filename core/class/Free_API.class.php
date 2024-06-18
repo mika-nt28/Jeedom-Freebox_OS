@@ -704,61 +704,66 @@ class Free_API
         }
         if ($result === false)
             return false;
-        if ($result['success']) {
-            $timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
+        if (isset($result['success'])) {
+            if ($result['success']) {
+                $timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
 
-            if (isset($result['result'])) {
-                $nb_call = count($result['result']);
-                $cptAppel_outgoing = 0;
-                $cptAppel_missed = 0;
-                $cptAppel_accepted = 0;
-                for ($k = 0; $k < $nb_call; $k++) {
-                    $jour = $result['result'][$k]['datetime'];
+                if (isset($result['result'])) {
+                    $nb_call = count($result['result']);
+                    $cptAppel_outgoing = 0;
+                    $cptAppel_missed = 0;
+                    $cptAppel_accepted = 0;
+                    for ($k = 0; $k < $nb_call; $k++) {
+                        $jour = $result['result'][$k]['datetime'];
 
-                    $time = date('H:i', $result['result'][$k]['datetime']);
-                    if ($timestampToday <= $jour) {
-                        if ($result['result'][$k]['name'] == null) {
-                            $name = $result['result'][$k]['number'];
-                        } else {
-                            $name = $result['result'][$k]['name'];
-                        }
+                        $time = date('H:i', $result['result'][$k]['datetime']);
+                        if ($timestampToday <= $jour) {
+                            if ($result['result'][$k]['name'] == null) {
+                                $name = $result['result'][$k]['number'];
+                            } else {
+                                $name = $result['result'][$k]['name'];
+                            }
 
-                        if ($result['result'][$k]['type'] == 'missed') {
-                            $cptAppel_missed++;
-                            if ($listNumber_missed == NULL) {
-                                $newligne = null;
-                            } else {
-                                $newligne = '<br>';
+                            if ($result['result'][$k]['type'] == 'missed') {
+                                $cptAppel_missed++;
+                                if ($listNumber_missed == NULL) {
+                                    $newligne = null;
+                                } else {
+                                    $newligne = '<br>';
+                                }
+                                $listNumber_missed .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
-                            $listNumber_missed .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
-                        }
-                        if ($result['result'][$k]['type'] == 'accepted') {
-                            $cptAppel_accepted++;
-                            if ($listNumber_accepted != NULL) {
-                                $newligne = null;
-                            } else {
-                                $newligne = '<br>';
+                            if ($result['result'][$k]['type'] == 'accepted') {
+                                $cptAppel_accepted++;
+                                if ($listNumber_accepted != NULL) {
+                                    $newligne = null;
+                                } else {
+                                    $newligne = '<br>';
+                                }
+                                $listNumber_accepted .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
-                            $listNumber_accepted .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
-                        }
-                        if ($result['result'][$k]['type'] == 'outgoing') {
-                            $cptAppel_outgoing++;
-                            if ($listNumber_outgoing != NULL) {
-                                $newligne = null;
-                            } else {
-                                $newligne = '<br>';
+                            if ($result['result'][$k]['type'] == 'outgoing') {
+                                $cptAppel_outgoing++;
+                                if ($listNumber_outgoing != NULL) {
+                                    $newligne = null;
+                                } else {
+                                    $newligne = '<br>';
+                                }
+                                $listNumber_outgoing .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
-                            $listNumber_outgoing .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                         }
                     }
+                    $retourFbx = array('missed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'list_outgoing' => $listNumber_outgoing);
+                } else {
+                    $retourFbx = array('missed' => 0, 'list_missed' => "", 'accepted' => 0, 'list_accepted' => "", 'outgoing' => 0, 'list_outgoing' => "");
                 }
-                $retourFbx = array('missed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'list_outgoing' => $listNumber_outgoing);
+                return $retourFbx;
             } else {
-                $retourFbx = array('missed' => 0, 'list_missed' => "", 'accepted' => 0, 'list_accepted' => "", 'outgoing' => 0, 'list_outgoing' => "");
+                return false;
             }
-            return $retourFbx;
-        } else
+        } else {
             return false;
+        }
     }
 
     function fmt_duree($duree)

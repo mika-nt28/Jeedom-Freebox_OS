@@ -590,12 +590,12 @@ class Freebox_OS extends eqLogic
 				if ($Name != $Cmd->getName()) {
 					log::add('Freebox_OS', 'debug', '| ───▶︎ Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Cmd->getName());
 					if ($name_connectivity_type != 'Wifi Ethernet ?') {
-						$Name_verif = $Name . ' (' . $name_connectivity_type . ')';
+						$Name_verif = $Name . ' (' . ucwords($name_connectivity_type)  . ')';
 					} else {
 						$Name_verif = $Name;
 					}
-					$Name_wifi = $Name . ' (Wifi)';
-					$Name_ethernet = $Name . ' (Ethernet)';
+					$Name_wifi = $Name . '(Wifi)';
+					$Name_ethernet = $Name . '(Ethernet)';
 					if ($Name_verif == $Cmd->getName() || $Name_wifi == $Cmd->getName() || $Name_ethernet == $Cmd->getName()) {
 						$Cmd->setName($Name_verif);
 						$Cmd->save();

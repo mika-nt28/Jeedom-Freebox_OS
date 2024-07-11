@@ -370,11 +370,11 @@ class Freebox_OS extends eqLogic
 				if ($EqLogic->getConfiguration('type', $eq_type) == 'parental' || $EqLogic->getConfiguration('type', $eq_type) == 'player') {
 					$EqLogic->setConfiguration('action', $logicalID_equip);
 				}
-				if ($Player != null) {
-					$EqLogic->setConfiguration('player', $Player);
-					if ($Player_MAC != null) {
-						$EqLogic->setConfiguration('player_MAC', $Player_MAC);
-					}
+			}
+			if ($Player != null) {
+				$EqLogic->setConfiguration('player', $Player);
+				if ($Player_MAC != null) {
+					$EqLogic->setConfiguration('player_MAC', $Player_MAC);
 				}
 			}
 			if ($eq_group != null) {
@@ -615,7 +615,7 @@ class Freebox_OS extends eqLogic
 					}
 				}
 			}
-			if ($updatenetwork['UpdateVisible'] == true) {
+			if (isset($updatenetwork['UpdateVisible']) && $updatenetwork['UpdateVisible'] == true) {
 				if ($updatenetwork['IsVisible_option'] == 0) {
 					$Cmd->setIsVisible(0);
 					$Cmd->save();
@@ -625,8 +625,10 @@ class Freebox_OS extends eqLogic
 				}
 			}
 			$Cmd->setConfiguration('host_type', $updatenetwork['host_type']);
-			if ($repeatevent == $updatenetwork['repeatevent'] && $Type == 'info') {
-				$Cmd->setConfiguration('repeatEventManagement', 'never');
+			if (isset($updatenetwork['repeatevent'])) {
+				if ($repeatevent == $updatenetwork['repeatevent'] && $Type == 'info') {
+					$Cmd->setConfiguration('repeatEventManagement', 'never');
+				}
 			}
 			$Cmd->setConfiguration('IPV4', $updatenetwork['IPV4']);
 			$Cmd->setConfiguration('IPV6', $updatenetwork['IPV6']);

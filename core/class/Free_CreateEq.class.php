@@ -472,14 +472,16 @@ class Free_CreateEq
         $iconReboot = 'fas fa-sync icon_red';
 
         $result = $Free_API->universal_get('universalAPI', null, null, 'freeplug', true, true, false);
-        foreach ($result['result'] as $freeplugs) {
-            foreach ($freeplugs['members'] as $freeplug) {
-                log::add('Freebox_OS', 'debug', '| ───▶︎ Création Freeplug : ' . $freeplug['id']);
-                $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugID'], null, null, '*/5 * * * *', null, null, null, 'system');
-                $FreePlug->AddCommand('Rôle', 'net_role', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
-                $FreePlug->AddCommand('Redémarrer', 'reset', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  1, '0', true, false, null, true);
-                //$FreePlug->AddCommand('Débit TX', 'tx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mb/s', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
-                //$FreePlug->AddCommand('Débit RX', 'rx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mb/s', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
+        if (isset($result['result'])) {
+            foreach ($result['result'] as $freeplugs) {
+                foreach ($freeplugs['members'] as $freeplug) {
+                    log::add('Freebox_OS', 'debug', '| ───▶︎ Création Freeplug : ' . $freeplug['id']);
+                    $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugID'], null, null, '*/5 * * * *', null, null, null, 'system');
+                    $FreePlug->AddCommand('Rôle', 'net_role', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
+                    $FreePlug->AddCommand('Redémarrer', 'reset', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  1, '0', true, false, null, true);
+                    //$FreePlug->AddCommand('Débit TX', 'tx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mb/s', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
+                    //$FreePlug->AddCommand('Débit RX', 'rx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mb/s', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
+                }
             }
         }
         log::add('Freebox_OS', 'debug', '└────────────────────');
@@ -682,6 +684,9 @@ class Free_CreateEq
     private static function createEq_network_SP($logicalinfo, $templatecore_V4, $order = 0, $_network = 'LAN', $IsVisible = true)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : '  . $_network . ':/fg: ──');
+        $icon_search = null;
+        $icon_network = 'fas fa-network-wired icon_green';
+        $updateWidget = false;
         if ($_network == 'LAN') {
             $_networkname = $logicalinfo['networkName'];
             $_networkID = $logicalinfo['networkID'];
@@ -692,10 +697,6 @@ class Free_CreateEq
             $_networkinterface = 'wifiguest';
             $icon_search = 'fas fa-broadcast-tower icon_green';
         }
-
-        $icon_network = 'fas fa-network-wired icon_green';
-        $updateWidget = false;
-
         if ($IsVisible == true) {
             $_IsVisible = 1;
         } else {

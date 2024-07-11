@@ -635,14 +635,13 @@ class Free_Update
                             "url" =>  $channel_value,
                         );
                         $playerURL = '/api/v6/control/open';
-                        log::add('Freebox_OS', 'debug', '│ =================> REQUETE');
+                        log::add('Freebox_OS', 'debug', '──────────▶︎ REQUETE');
                         $Free_API->universal_put(null, 'universal_put', null, null, 'player/' . $ID_Player .  $playerURL, null, $option);
-                        log::add('Freebox_OS', 'debug', '│ =================> FIN REQUETE');
+                        log::add('Freebox_OS', 'debug', '──────────▶︎ FIN REQUETE');
                         break;
                     }
                     //}
                 }
-                log::add('Freebox_OS', 'debug', '│ =================> FIN REQUETE 3');
                 break;
             default:
                 log::add('Freebox_OS', 'debug', '│ test : ');

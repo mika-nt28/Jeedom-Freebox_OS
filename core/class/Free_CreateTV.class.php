@@ -85,6 +85,8 @@ class Free_CreateTV
                                 $EqLogic->AddCommand('Etat', 'power_state', 'info', 'string', $TemplatePlayer, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 7, '0', false, false);
                             }
                         }
+                    } else {
+                        log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ AUCUNE INFO supplémentaire disponible pour le player:/fg:');
                     }
                     log::add('Freebox_OS', 'debug', '| ───▶︎ FIN CONFIGURATION PLAYER : ' . $nb_player . ' / ' . $_devicename);
                     $nb_player++;

@@ -337,7 +337,7 @@ class Freebox_OS extends eqLogic
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', ':fg-info:| Création équipement ' . $Name . ' : Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room . ':/fg:');
+		log::add('Freebox_OS', 'debug', ':fg-info:| Création équipement : :/fg:' . $Name . ' : Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
 		if (!is_object($EqLogic)) {
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
@@ -441,10 +441,10 @@ class Freebox_OS extends eqLogic
 	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary_display = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = null)
 	{
 		if ($listValue_Update == true) {
-			log::add('Freebox_OS', 'debug', ':fg-info:| Création de la commande : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue . ':/fg:');
+			log::add('Freebox_OS', 'debug', ':fg-info:| Création de la commande : :/fg:' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue . ':/fg:');
 		} else if ($updatenetwork != false) {
 		} else {
-			log::add('Freebox_OS', 'debug', ':fg-info:| Création de la commande : ' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser Affichage : ' . $invertBinary_display . ' -- Inverser Valeur Binaire : ' . $invertBinary_config . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order . ':/fg:');
+			log::add('Freebox_OS', 'debug', ':fg-info:| Création de la commande : :/fg:' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser Affichage : ' . $invertBinary_display . ' -- Inverser Valeur Binaire : ' . $invertBinary_config . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order . ':/fg:');
 		}
 		$Cmd = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Cmd)) {
@@ -925,7 +925,7 @@ class Freebox_OS extends eqLogic
 	public static function FreeboxAPI()
 	{
 		log::add('Freebox_OS', 'debug', '┌── :fg-success: Check Version API de la Freebox :/fg:──');
-		log::add('Freebox_OS', 'info', ':bg-warning: Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue :/fg:');
+		log::add('Freebox_OS', 'info', '|:fg-warning: Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue :/fg:');
 		$Free_API = new Free_API();
 		$result = $Free_API->universal_get('universalAPI', null, null, 'api_version', true, true, true);
 		log::add('Freebox_OS', 'info', '| ───▶︎ Type Box : ' . $result['box_model_name']);

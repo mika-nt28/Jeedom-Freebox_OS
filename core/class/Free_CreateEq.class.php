@@ -507,24 +507,29 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : '  . $logicalinfo['parentalName'] . ':/fg: ──');
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('parentalprofile', null, null, true, true, true, false);
-        $result =  $result['result'];
-        foreach ($result  as $Equipement) {
-            log::add('Freebox_OS', 'debug', '| :fg-success:───▶︎ Début de création des commandes spécifiques pour le contrôle parental' . ':/fg:');
-            $Templateparent = 'Freebox_OS::Parental';
-            $iconparent_allowed = 'fas fa-user-check icon_green';
-            $iconparent_denied = 'fas fa-user-lock icon_red';
-            $iconparent_temp = 'fas fa-user-clock icon_blue';
+        if (isset($result['result'])) {
+            $result =  $result['result'];
+            foreach ($result  as $Equipement) {
+                log::add('Freebox_OS', 'debug', '| :fg-success:───▶︎ Début de création des commandes spécifiques pour le contrôle parental' . ':/fg:');
+                $Templateparent = 'Freebox_OS::Parental';
+                $iconparent_allowed = 'fas fa-user-check icon_green';
+                $iconparent_denied = 'fas fa-user-lock icon_red';
+                $iconparent_temp = 'fas fa-user-clock icon_blue';
 
-            $category = 'default';
-            $Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
-            log::add('Freebox_OS', 'debug', '| ───▶︎ Nom du controle parental : ' . $Equipement['name']);
-            $parental = Freebox_OS::AddEqLogic($Equipement['name'], 'parental_' . $Equipement['id'], $category, true, 'parental', null, $Equipement['id'], '*/5 * * * *', null, null, null, 'parental_controls');
-            $StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', $order++, 1, false, true, null, true, null, null, null, null, null, null, null, true);
-            $parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconparent_allowed, 0, 'default', 'default', $order++, '0', false, false, null, true);
-            $parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconparent_denied, 0, 'default', 'default', $order++, '0', false, false, null, true);
-            $listValue = '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00';
-            $parental->AddCommand('Autoriser-Bloquer Temporairement', 'tempDenied', 'action', 'select', null, null, null, 1, $StatusParental, 'parentalStatus', '', $iconparent_temp, 0, 'default', 'default', $order++, '0', false, false, '', true, null, null, null, null, null, null, null, null, $listValue);
+                $category = 'default';
+                $Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
+                log::add('Freebox_OS', 'debug', '| ───▶︎ Nom du controle parental : ' . $Equipement['name']);
+                $parental = Freebox_OS::AddEqLogic($Equipement['name'], 'parental_' . $Equipement['id'], $category, true, 'parental', null, $Equipement['id'], '*/5 * * * *', null, null, null, 'parental_controls');
+                $StatusParental = $parental->AddCommand('Etat', $Equipement['id'], "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', $order++, 1, false, true, null, true, null, null, null, null, null, null, null, true);
+                $parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconparent_allowed, 0, 'default', 'default', $order++, '0', false, false, null, true);
+                $parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconparent_denied, 0, 'default', 'default', $order++, '0', false, false, null, true);
+                $listValue = '1800|0h30;3600|1h00;5400|1h30;7200|2h00;10800|3h00;14400|4h00';
+                $parental->AddCommand('Autoriser-Bloquer Temporairement', 'tempDenied', 'action', 'select', null, null, null, 1, $StatusParental, 'parentalStatus', '', $iconparent_temp, 0, 'default', 'default', $order++, '0', false, false, '', true, null, null, null, null, null, null, null, null, $listValue);
+            }
+        } else {
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎  AUCUN CONTROLE PARENTAL :/fg:──');
         }
+
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
     private static function createEq_phone($logicalinfo, $templatecore_V4, $order = 0)

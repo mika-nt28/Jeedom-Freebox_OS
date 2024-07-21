@@ -861,15 +861,17 @@ class Free_Refresh
                                 break;
                         }
                     }
-
-                    foreach ($result['model_info'] as $system) {
-                        if (!isset($system['slot'])) continue;
-                        if ($Command->getLogicalId() != $system['slot']) continue;
-                        $value = $system['value'];
-                        log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
-                        $EqLogics->checkAndUpdateCmd($system['id'], $value);
-                        break;
+                    if (config::byKey('TYPE_FREEBOX', 'Freebox_OS') == 'fbxgw7r') {
+                        foreach ($result['model_info'] as $system) {
+                            if (!isset($system['slot'])) continue;
+                            if ($Command->getLogicalId() != $system['slot']) continue;
+                            $value = $system['value'];
+                            log::add('Freebox_OS', 'debug', '───▶︎ Update pour Type : ' . $logicalId . ' -- Id : ' . $system['id'] . ' -- valeur : ' . $value);
+                            $EqLogics->checkAndUpdateCmd($system['id'], $value);
+                            break;
+                        }
                     }
+
                     break;
                 default:
                     if (is_object($Command)) {
@@ -1458,6 +1460,10 @@ class Free_Refresh
                         }
                         $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $value);
                         break;
+                    case "has_eco_wifi":
+                        $result = $Free_API->universal_get('system', null, null, null, true, true, null);
+                        log::add('Freebox_OS', 'debug', '───▶︎ Update Mode eco Wifi: ' . $result['model_info']['has_eco_wifi']);
+                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result['model_info']['has_eco_wifi']);
                     case "wifiWPS":
                         $value = false;
                         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/wps/config', true, true, true);
@@ -1468,6 +1474,15 @@ class Free_Refresh
                         break;
                     case "wifimac_filter_state":
                         $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $result_config['result']['mac_filter_state']);
+                        break;
+                    case "planning_mode":
+                        $result_mode = $Free_API->universal_get('universalAPI', null, null, 'standby/status', true, true, true);
+                        if ($result_mode['result']['planning_mode'] == 'suspend') {
+                            $value_mode = 'Veille totale';
+                        } else if ($result_mode['result']['planning_mode'] == 'wifi_off') {
+                            $value_mode = 'Veille WiFi';
+                        }
+                        $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $value_mode);
                         break;
                     default:
                         $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap/' . $Command->getLogicalId(), true, true);

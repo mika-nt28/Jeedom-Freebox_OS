@@ -60,7 +60,7 @@ class Free_CreateEq
                 break;
             case 'parental':
                 Free_CreateEq::createEq_parental($logicalinfo, $templatecore_V4, $order);
-                config::save('SEARCH_PARENTAL', config::byKey('SEARCH_PARENTAL', 'Freebox_OS', $date), 'Freebox_OS');
+                config::save('SEARCH_PARENTAL', $date, 'Freebox_OS');
                 break;
             case 'management':
                 Free_CreateEq::createEq_management($logicalinfo, $templatecore_V4, $order);
@@ -89,6 +89,8 @@ class Free_CreateEq
                 break;
             default:
                 Freebox_OS::FreeboxAPI();
+                log::add('Freebox_OS', 'debug', '[INFO] - ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS -- ' . $date);
+                config::save('SEARCH_EQ', config::byKey('SEARCH_EQ', 'Freebox_OS', $date), 'Freebox_OS');
                 log::add('Freebox_OS', 'debug', '[INFO] - ORDRE DE LA CREATION DES EQUIPEMENTS STANDARDS');
                 log::add('Freebox_OS', 'debug', ':fg-info:================= ' . $logicalinfo['systemName'] . ':/fg:');
                 log::add('Freebox_OS', 'debug', ':fg-info:================= ' . $logicalinfo['connexionName'] . ' / 4G' . ' / Fibre' . ' / xdsl' . ':/fg:');
@@ -161,7 +163,7 @@ class Free_CreateEq
                     log::add('Freebox_OS', 'debug', '| ───▶︎ BOX NON COMPATIBLE AVEC LES VM');
                 }
                 log::add('Freebox_OS', 'debug', '└────────────────────');
-                config::save('SEARCH_EQ', config::byKey('SEARCH_EQ', 'Freebox_OS', $date), 'Freebox_OS');
+                config::save('SEARCH_EQ', $date, 'Freebox_OS');
                 break;
         }
     }
@@ -1068,6 +1070,10 @@ class Free_CreateEq
         Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $order, $Wifi);
         $order = 39;
         Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $order, $Wifi);
+        $order = 50;
+        Free_CreateEq::createEq_wifi_Standby($logicalinfo, $templatecore_V4, $order, $Wifi);
+        $order = 60;
+        Free_CreateEq::createEq_wifi_Eco($logicalinfo, $templatecore_V4, $order, $Wifi);
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
 
@@ -1086,6 +1092,21 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', '| ──────▶︎ Nom de la commande : ' . 'Etat Wifi ' . $result['result'][$k]['name'] . ' - Id : ' . $result['result'][$k]['id'] . ' - Status : ' . $result['result'][$k]['status']['state']);
                 $Wifi->AddCommand('Etat Wifi ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, null, null, 0, $iconWifi, false, 'default', 'default', $order++, '0', $updateicon, false, false, true);
             }
+        }
+    }
+
+    private static function createEq_wifi_Eco($logicalinfo, $templatecore_V4, $order = 49, $Wifi)
+    {
+        log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes spécifiques pour : '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiECOName'] . ':/fg: ──');
+        $iconWifi = 'fas fa-wifi icon_blue';
+        $updateicon = false;;
+        $Free_API = new Free_API();
+        $result = $Free_API->universal_get('system', null, null, null, true, true, null);
+
+        if (isset($result['model_info']['has_eco_wifi'])) {
+            $Wifi->AddCommand('Mode Éco-WiFi', 'has_eco_wifi', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconWifi, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+        } else {
+            log::add('Freebox_OS', 'debug', '| ──────▶︎ Pas de mode Eco non supporté');
         }
     }
 
@@ -1117,6 +1138,37 @@ class Free_CreateEq
                 }
             }
         }
+    }
+    private static function createEq_wifi_Standby($logicalinfo, $templatecore_V4, $order = 29, $Wifi)
+    {
+        log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes spécifiques pour : ' . $logicalinfo['wifistandbyName'] . ':/fg: ──');
+        $iconWifiSessionWPSOn = 'fas fa-link icon_orange';
+        $iconWifiSessionWPSOff = 'fas fa-link icon_red';
+        $updateicon = false;
+
+        //$Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order++, '0', $updateicon, false, false, true);
+        $Free_API = new Free_API();
+        //$result = $Free_API->universal_get('wifi', null, null, 'bss');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'standby/status', true, true, true);
+        $Wifi->AddCommand('Mode de veille', 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
+        $listValue = 'normal|Mode normal;slow|Mode lent';
+        /* if ($result != false) {
+            foreach ($result['result'] as $wifibss) {
+                if ($wifibss['config']['wps_enabled'] != true) continue;
+                if ($wifibss['config']['use_default_config'] == true) {
+                    $WPSname = 'Wifi Session WPS (' . $wifibss['shared_bss_params']['ssid'] . ') On';
+                } else {
+                    $WPSname = 'Wifi Session WPS (' . $wifibss['config']['ssid'] . ') On';
+                }
+                $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
+                if ($wifibss['config']['use_default_config'] == true) {
+                    log::add('Freebox_OS', 'debug', '| ──────▶︎ Configuration Wifi commune pour l\'ensemble des cartes');
+                    break;
+                } else {
+                    //$order++;
+                }
+            }
+        }*/
     }
 
     private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $order = 39, $EqLogic)

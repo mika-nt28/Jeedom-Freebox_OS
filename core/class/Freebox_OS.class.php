@@ -919,7 +919,9 @@ class Freebox_OS extends eqLogic
 			'wifiWPSID' => 'wifiWPS',
 			'wifiWPSName' => 'Wifi WPS',
 			'wifiAPID' => 'wifiAP',
-			'wifiAPName' => 'Wifi Access Points'
+			'wifiAPName' => 'Wifi Access Points',
+			'wifistandbyName' => 'Planification Wifi',
+			'wifiECOName' => 'Mode Eco Wifi'
 		);
 	}
 	public static function FreeboxAPI()

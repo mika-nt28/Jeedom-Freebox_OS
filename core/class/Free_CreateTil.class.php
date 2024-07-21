@@ -59,7 +59,7 @@ class Free_CreateTil
                 default:
                     Freebox_OS::FreeboxAPI();
                     $result = Free_CreateTil::createTil_Tiles($Free_API, $logicalinfo, $templatecore_V4);
-                    config::save('SEARCH_TILES', config::byKey('SEARCH_TILES', 'Freebox_OS', $date), 'Freebox_OS');
+                    config::save('SEARCH_TILES', $date, 'Freebox_OS');
                     break;
             }
             if (isset($result['result'])) {

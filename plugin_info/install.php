@@ -120,9 +120,9 @@ function Freebox_OS_update()
 		$eqLogics = eqLogic::byType($plugin->getId());
 		foreach ($eqLogics as $eqLogic) {
 			//Changement Téléphonie 20240725
-			updateLogicalId($eqLogic, 'nbmissed', 'missed', null);
-			updateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
-			updateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
+			UpdateLogicalId($eqLogic, 'nbmissed', 'missed', null);
+			UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
+			UpdateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
 		}
 		$eq_version = '2.1';
 		Freebox_OS::updateLogicalID($eq_version, true);
@@ -183,7 +183,7 @@ function Freebox_OS_remove()
 	}
 }
 
-function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
+function UpdateLogicalId($eqLogic, $from, $to = null, $SubType = null)
 {
 	//  Fonction update commande (Changement equipement, changement sous type)
 	$cmd = $eqLogic->getCmd(null, $from);

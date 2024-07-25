@@ -78,6 +78,7 @@ function Freebox_OS_update()
 
 
 	try {
+		$plugin = plugin::byId('Freebox_OS');
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
 		/*$WifiEX = 0;
@@ -116,6 +117,13 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE NETTOYAGE LORS MIGRATION DE BOX');
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Changement de nom de certains équipements');
+		$eqLogics = eqLogic::byType($plugin->getId());
+		foreach ($eqLogics as $eqLogic) {
+			//Changement Téléphonie 20240725
+			updateLogicalId($eqLogic, 'nbmissed', 'missed', null);
+			updateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
+			updateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
+		}
 		$eq_version = '2.1';
 		Freebox_OS::updateLogicalID($eq_version, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Update paramétrage Plugin tiles');
@@ -175,7 +183,7 @@ function Freebox_OS_remove()
 	}
 }
 
-function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = null, $_calculValueOffset = null, $_historizeRound = null)
+function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null)
 {
 	//  Fonction update commande (Changement equipement, changement sous type)
 	$cmd = $eqLogic->getCmd(null, $from);

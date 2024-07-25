@@ -532,7 +532,7 @@ class Free_Refresh
             log::add('Freebox_OS', 'debug', ':fg-info:Nb Appels reçus : ' . $result['accepted'] . $list_accepted . ':/fg:');
             log::add('Freebox_OS', 'debug', ':fg-info:Nb Appels passés : ' . $result['outgoing'] . $list_outgoing . ':/fg:');
 */
-            $liste = 'missed,accepted,outgoing,listmissed,listaccepted,listoutgoing';
+            $liste = 'nbmissed,nbaccepted,nboutgoing,listmissed,listaccepted,listoutgoing';
             $fields = explode(',', $liste);
             foreach ($EqLogics->getCmd('info') as $Cmd) {
                 foreach ($fields as $fieldname) {

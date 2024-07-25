@@ -193,9 +193,9 @@ function UpdateLogicalId($eqLogic, $from, $to = null, $SubType = null)
 			$cmd->seteqLogic_id($to);
 		}
 		//Update sous type
-		if ($SubType != null) {
-			$cmd->setSubType($SubType);
-		}
+		//if ($SubType != null) {
+		//	$cmd->setSubType($SubType);
+		//}
 
 		$cmd->save();
 	}

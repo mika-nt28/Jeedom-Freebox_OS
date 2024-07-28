@@ -120,7 +120,7 @@ function Freebox_OS_update()
 		$eqLogics = eqLogic::byType($plugin->getId());
 		foreach ($eqLogics as $eqLogic) {
 			// Changement Id pour Wifi
-			UpdateLogicalId($eqLogic, 'listblack', 'blacklist', null);
+			UpdateLogicalId2($eqLogic, 'listblack', 'blacklist', null);
 			//Changement Téléphonie 20240725
 			//UpdateLogicalId($eqLogic, 'nbmissed', 'missed', null);
 			//UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
@@ -185,10 +185,22 @@ function Freebox_OS_remove()
 	}
 }
 
+function UpdateLogicalId2($eqLogic, $from, $to = null, $SubType = null)
+{
+	foreach ($eqLogic->getCmd() as $Cmd) {
+		foreach ($from as $fieldname) {
+			if ($Cmd->getLogicalId('data') == $fieldname) {
+				log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ';
+			}
+		}
+
+	}
+
 function UpdateLogicalId($eqLogic, $from, $to = null, $SubType = null)
 {
 	//  Fonction update commande (Changement equipement, changement sous type)
 	$cmd = $eqLogic->getCmd(null, $from);
+	//if ($cmd = $eqLogic->getLogicalId('data') == $fieldname
 	if (is_object($cmd)) {
 		//changement equipement
 		if ($to != null) {

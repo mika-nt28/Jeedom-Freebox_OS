@@ -125,9 +125,9 @@ function Freebox_OS_update()
 			UpdateLogicalId($eqLogic, 'wifimac_filter_state', 'mac_filter_state', null);
 			UpdateLogicalId($eqLogic, 'wifiPlanning', 'use_planning', null);
 			//Changement Téléphonie 20240725
-			//UpdateLogicalId($eqLogic, 'nbmissed', 'missed', null);
-			//UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
-			//UpdateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
+			UpdateLogicalId($eqLogic, 'nbmissed', 'missed', null);
+			UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
+			UpdateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
 		}
 		$eq_version = '2.1';
 		Freebox_OS::updateLogicalID($eq_version, true);

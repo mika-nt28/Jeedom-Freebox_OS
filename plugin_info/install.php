@@ -119,6 +119,8 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Changement de nom de certains équipements');
 		$eqLogics = eqLogic::byType($plugin->getId());
 		foreach ($eqLogics as $eqLogic) {
+			// Changement Id pour Wifi
+			UpdateLogicalId($eqLogic, 'listblack', 'blacklist', null);
 			//Changement Téléphonie 20240725
 			//UpdateLogicalId($eqLogic, 'nbmissed', 'missed', null);
 			//UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);

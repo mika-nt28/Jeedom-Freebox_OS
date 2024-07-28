@@ -1059,7 +1059,7 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
         $Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 11, '0', $updateicon, false);
         // Planification Wifi
-        $PlanningWifi = $Wifi->AddCommand('Etat Planning', 'wifiPlanning', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateicon, true);
+        $PlanningWifi = $Wifi->AddCommand('Etat Planning', 'use_planning', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateicon, true);
         $Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 12, '0', $updateicon, false);
         $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 13, '0', $updateicon, false);
         // Wifi WPS
@@ -1187,8 +1187,8 @@ class Free_CreateEq
         //$Statutmac = $EqLogic->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order++, 1, false, true, null, true);
         //$listValue = 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche';
         //$EqLogic->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order++, '0', false, false, null, true, null, null, null, null, null, null, null, null, $listValue);
-        $EqLogic->AddCommand('Liste Mac Blanche', 'listwhite', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_white, 0, 'default', 'default',  $order++, '0', null, true, false, true, null, null, null, null, null, null, null, true);
-        $EqLogic->AddCommand('Liste MAC Noire', 'listblack', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_black, 0, 'default', 'default',  $order++, '0', null, true, false, true, null, null, null, null, null, null, null, true);
+        $EqLogic->AddCommand('Liste Mac Blanche', 'whitelist', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_white, 0, 'default', 'default',  $order++, '0', null, true, false, true, null, null, null, null, null, null, null, true);
+        $EqLogic->AddCommand('Liste MAC Noire', 'blacklist', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_black, 0, 'default', 'default',  $order++, '0', null, true, false, true, null, null, null, null, null, null, null, true);
     }
     private static function createEq_upload($logicalinfo, $templatecore_V4)
     {

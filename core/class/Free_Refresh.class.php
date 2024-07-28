@@ -1355,8 +1355,27 @@ class Free_Refresh
     }
     private static function refresh_wifi($EqLogics, $Free_API)
     {
-        log::add('Freebox_OS', 'debug', '───▶︎ Wifi : Update Liste Noire/Blanche');
-        $listmac = $listmac = $Free_API->mac_filter_list();
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : Noire/Blanche' .  ':/fg:');
+        $result = $Free_API->mac_filter_list();
+        $liste = 'blacklist,whitelist';
+        Free_Refresh::refresh_wifi_list($EqLogics, $Free_API, $result, $liste);
+
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : Eco Energie' .  ':/fg:');
+        $result = $Free_API->universal_get('system', null, null, null, true, true, null);
+        $liste = 'has_eco_wifi';
+        Free_Refresh::refresh_wifi_list($EqLogics, $Free_API, $result, $liste, 'model_info');
+
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : Config' .  ':/fg:');
+        $liste = 'mac_filter_state';
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
+        Free_Refresh::refresh_wifi_list($EqLogics, $Free_API, $result, $liste, null);
+
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : Panning Mode' .  ':/fg:');
+        $liste = 'planning_mode';
+        $result = $Free_API->universal_get('universalAPI', null, null, 'standby/status', true, true, true);
+        Free_Refresh::refresh_wifi_list($EqLogics, $Free_API, $result, $liste, 'planning_mode');
+
+        //$listmac = $Free_API->mac_filter_list();
         $result_config = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
         $value = false;
         foreach ($EqLogics->getCmd('info') as $Cmd) {
@@ -1364,10 +1383,7 @@ class Free_Refresh
                 switch ($Cmd->getLogicalId()) {
                     case "blacklist":
                     case "whitelist":
-                        if (isset($listmac[$Cmd->getLogicalId()])) {
-                            $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $listmac[$Cmd->getLogicalId()]);
-                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $listmac[$Cmd->getLogicalId()]);
-                        }
+                        break;
                     case "wifiStatut":
                         $value = false;
                         if ($result_config['result']['enabled']) {
@@ -1376,6 +1392,8 @@ class Free_Refresh
                         $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $value);
                         break;
                     case "wifimac_filter_state":
+                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : TESTTTTT' .  ':/fg:');
+                        break;
                         $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $result_config['result']['mac_filter_state']);
                         break;
                     case "wifiPlanning":
@@ -1387,6 +1405,7 @@ class Free_Refresh
                         $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $value);
                         break;
                     case "has_eco_wifi":
+                        break;
                         $result = $Free_API->universal_get('system', null, null, null, true, true, null);
                         log::add('Freebox_OS', 'debug', '───▶︎ Update Mode eco Wifi: ' . $result['model_info']['has_eco_wifi']);
                         $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $result['model_info']['has_eco_wifi']);
@@ -1416,6 +1435,27 @@ class Free_Refresh
                 }
             }
         }
+    }
+    private  static function refresh_wifi_list($EqLogics, $Free_API, $result, $liste, $result_para = null)
+    {
+        if ($result_para != null) {
+            $result = $result[$result_para];
+            log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : TESTTTTT1' .  ':/fg:');
+        }
+        //if ($result != false) {
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : TESTTTTT2' .  ':/fg:');
+        $fields = explode(',', $liste);
+        foreach ($EqLogics->getCmd('info') as $Cmd) {
+            foreach ($fields as $fieldname) {
+                if ($Cmd->getLogicalId('data') == $fieldname) {
+                    if (isset($result[$fieldname])) {
+                        $EqLogics->checkAndUpdateCmd($fieldname, $result[$fieldname]);
+                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $result[$fieldname]);
+                    }
+                }
+            }
+        }
+        //}
     }
     private static function refresh_system_refresh($EqLogics, $Cmd, $fieldname, $result, $field = null)
     {

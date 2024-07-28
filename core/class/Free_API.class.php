@@ -784,9 +784,6 @@ class Free_API
         $whitelist = null;
         $blacklist = null;
         $result = $this->fetch('/api/' . $API_version . '/wifi/mac_filter/', null, null, true, true);
-        if ($result == 'auth_required') {
-            $result = $this->fetch('/api/' . $API_version . '/wifi/mac_filter/', null, null, true, true);
-        }
         if ($result === false)
             return false;
         if ($result['success']) {
@@ -804,7 +801,7 @@ class Free_API
                 }
                 $return = array('blacklist' => $blacklist, 'whitelist' => $whitelist);
             } else {
-                $return = array('blacklist' => '', 'whitelist' => "");
+                $return = array('blacklist' => 'vide', 'whitelist' => 'vide');
             }
             return $return;
         } else {

@@ -195,6 +195,7 @@ function UpdateLogicalId2($eqLogic, $from, $to = null, $SubType = null)
 		}
 
 	}
+}
 
 function UpdateLogicalId($eqLogic, $from, $to = null, $SubType = null)
 {

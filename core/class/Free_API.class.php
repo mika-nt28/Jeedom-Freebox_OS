@@ -781,8 +781,8 @@ class Free_API
     public function mac_filter_list()
     {
         $API_version = $this->API_version;
-        $listwhite = null;
-        $listblack = null;
+        $whitelist = null;
+        $blacklist = null;
         $result = $this->fetch('/api/' . $API_version . '/wifi/mac_filter/', null, null, true, true);
         if ($result == 'auth_required') {
             $result = $this->fetch('/api/' . $API_version . '/wifi/mac_filter/', null, null, true, true);
@@ -796,16 +796,15 @@ class Free_API
                 for ($k = 0; $k < $nb_mac; $k++) {
                     $name = $result['result'][$k]['hostname'];
                     if ($result['result'][$k]['type'] == 'whitelist') {
-                        $listwhite  .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        $whitelist  .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
                     }
                     if ($result['result'][$k]['type'] == 'blacklist') {
-                        $listblack .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        $blacklist .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
                     }
                 }
-                $return = array('listblack' => $listblack, 'listwhite' => $listwhite);
+                $return = array('blacklist' => $blacklist, 'whitelist' => $whitelist);
             } else {
-                log::add('Freebox_OS', 'debug', '───▶︎ Liste Noire/Blanche : TEST Vide');
-                $return = array('listblack' => '', 'listwhite' => "");
+                $return = array('blacklist' => '', 'whitelist' => "");
             }
             return $return;
         } else {

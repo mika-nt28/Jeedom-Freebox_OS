@@ -1362,8 +1362,8 @@ class Free_Refresh
         foreach ($EqLogics->getCmd('info') as $Cmd) {
             if (is_object($Cmd)) {
                 switch ($Cmd->getLogicalId()) {
-                    case "listblack":
-                    case "listwhite":
+                    case "blacklist":
+                    case "whitelist":
                         if (isset($listmac[$Cmd->getLogicalId()])) {
                             $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $listmac[$Cmd->getLogicalId()]);
                             log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $listmac[$Cmd->getLogicalId()]);

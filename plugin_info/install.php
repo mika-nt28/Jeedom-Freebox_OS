@@ -121,6 +121,7 @@ function Freebox_OS_update()
 		foreach ($eqLogics as $eqLogic) {
 			// Changement Id pour Wifi
 			UpdateLogicalId($eqLogic, 'listblack', 'blacklist', null);
+			UpdateLogicalId($eqLogic, 'listwhite', 'whitelist', null);
 			//Changement Téléphonie 20240725
 			//UpdateLogicalId($eqLogic, 'nbmissed', 'missed', null);
 			//UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);

@@ -1393,18 +1393,15 @@ class Free_Refresh
                     case "planning_mode":
                         break;
                     case "wifiStatut":
-                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : Wifi Statut ' .  ':/fg:');
                         $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $result['result']['enabled']);
                         log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $result['result']['enabled']);
                         break;
                     case "wifiWPS":
-                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : WPS ' .  ':/fg:');
                         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/wps/config', true, true, true);
                         $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $result['result']['enabled']);
                         log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $result['result']['enabled']);
                         break;
                     default:
-                        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : Cartes Wifi ' .  ':/fg:');
                         $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap/' . $Cmd->getLogicalId(), true, true);
                         $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $result_ap['status']['state']);
                         log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $result_ap['status']['state']);

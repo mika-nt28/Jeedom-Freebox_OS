@@ -1085,7 +1085,7 @@ class Free_Refresh
     }
     private static function refresh_wifi($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Noire/Blanche');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Liste Noire/Blanche');
         $result = $Free_API->mac_filter_list();
         $list = 'blacklist,whitelist';
         $para_result = array('nb' => 0, 1 => null, 2 => null, 3 => null);
@@ -1127,16 +1127,21 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_result, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         $para_LogicalId = null;
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Cartes');
-        foreach ($EqLogics->getCmd('info') as $Cmd) {
-            switch ($Cmd->getConfiguration('logicalId')) {
-                case "CARD":
-                    $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap/' . $Cmd->getLogicalId(), true, true);
-                    $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $result_ap['status']['state']);
-                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $result_ap['status']['state']);
-                    break;
-                default:
-                    break;
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Status des Cartes');
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
+        $nb_card = count($result['result']);
+        $Card_value = null;
+        $Card_id = null;
+        if ($result != false) {
+            for ($k = 0; $k < $nb_card; $k++) {
+                $Card_value = $result['result'][$k]['status']['state'];
+                $Card_id = $result['result'][$k]['id'];
+                foreach ($EqLogics->getCmd('info') as $Cmd) {
+                    if ($Cmd->getLogicalId('data') == $Card_id) {
+                        $EqLogics->checkAndUpdateCmd($Card_id, $Card_value);
+                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $Card_value);
+                    }
+                }
             }
         }
     }

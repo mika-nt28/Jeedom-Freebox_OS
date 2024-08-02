@@ -78,6 +78,7 @@ function Freebox_OS_update()
 
 
 	try {
+		$plugin = plugin::byId('Freebox_OS');
 		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
 
 		/*$WifiEX = 0;
@@ -116,6 +117,18 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE NETTOYAGE LORS MIGRATION DE BOX');
 
 		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Changement de nom de certains équipements');
+		$eqLogics = eqLogic::byType($plugin->getId());
+		foreach ($eqLogics as $eqLogic) {
+			// Changement Id pour Wifi
+			UpdateLogicalId($eqLogic, 'listblack', 'blacklist', null);
+			UpdateLogicalId($eqLogic, 'listwhite', 'whitelist', null);
+			UpdateLogicalId($eqLogic, 'wifimac_filter_state', 'mac_filter_state', null);
+			UpdateLogicalId($eqLogic, 'wifiPlanning', 'use_planning', null);
+			//Changement Téléphonie 20240725
+			UpdateLogicalId($eqLogic, 'nbmissed', 'missed', null);
+			UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
+			UpdateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
+		}
 		$eq_version = '2.1';
 		Freebox_OS::updateLogicalID($eq_version, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Update paramétrage Plugin tiles');
@@ -175,21 +188,26 @@ function Freebox_OS_remove()
 	}
 }
 
-function UpdateLogicId($eqLogic, $from, $to = null, $SubType = null, $unite = null, $_calculValueOffset = null, $_historizeRound = null)
+function updateLogicalId($eqLogic, $from, $to, $_historizeRound = null, $name = null, $unite = null)
 {
-	//  Fonction update commande (Changement equipement, changement sous type)
-	$cmd = $eqLogic->getCmd(null, $from);
-	if (is_object($cmd)) {
-		//changement equipement
+	$Cmd = $eqLogic->getCmd(null, $from);
+	if (is_object($Cmd)) {
 		if ($to != null) {
-			$cmd->seteqLogic_id($to);
+			$Cmd->setLogicalId($to);
 		}
-		//Update sous type
-		if ($SubType != null) {
-			$cmd->setSubType($SubType);
+		if ($_historizeRound != null) {
+			$Cmd->setConfiguration('historizeRound', $_historizeRound);
 		}
-
-		$cmd->save();
+		if ($name != null) {
+			//$command->setName($name);
+		}
+		if ($unite != null) {
+			if ($unite == 'DELETE') {
+				$unite = null;
+			}
+			$Cmd->setUnite($unite);
+		}
+		$Cmd->save();
 	}
 }
 function removeLogicId($cmdDel)

@@ -238,6 +238,12 @@ class Free_Update
             case 'brightness':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('brightness' => $_options['slider']));
                 break;
+            case 'orientation_forcedOn':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('orientation_forced' => true));
+                break;
+            case 'orientation_forcedOff':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('orientation_forcedy' => false));
+                break;
             case 'hide_wifi_keyOn':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => true));
                 break;
@@ -354,6 +360,7 @@ class Free_Update
                     }
                 }
                 if ($logicalId == 'start') {
+
                     $_networkinterface = 'pub';
                     $update_TYPE = null;
                     $update_IP = NULL;
@@ -408,7 +415,7 @@ class Free_Update
                                 "type" => $mac_filter_value,
                                 "comment" => $comment_value,
                             );
-                            $host_value_mac_ID = null;
+                            //$host_value_mac_ID = null;
                             $method_value = 'POST';
                             break;
                         case 'ADD_whitelist':
@@ -419,7 +426,7 @@ class Free_Update
                                 "type" => 'whitelist',
                                 "comment" => $comment_value,
                             );
-                            $host_value_mac_ID = null;
+                            //$host_value_mac_ID = null;
                             $method_value = 'POST';
                             break;
                         case 'DEL_blacklist':
@@ -472,27 +479,27 @@ class Free_Update
                         default:
                             break;
                     }
-                    if ($update_WIFI == 'WIFI') {
-                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
-                        if ($host_value == null || $add_del_ip_value == null || $mac_filter_value == null) {
+                    if ($update_WIFI === 'WIFI') {
+                        log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . '/' . $mac_filter_value  . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
+                        if ($host_value === null || $add_del_ip_value === null || $mac_filter_value === null) {
                             log::add('Freebox_OS', 'error', 'Gestion réseau : IP  ou adresse mac vide');
                             break;
                         }
-                    } else if ($update_TYPE == 'DEVICE') {
+                    } else if ($update_TYPE === 'DEVICE') {
                         log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Type : ' . $host_type_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
-                        if ($primary_name_value == null || $host_value == null || $host_type_value == null) {
+                        if ($primary_name_value === null || $host_value === null || $host_type_value === null) {
                             log::add('Freebox_OS', 'error', 'Gestion réseau : Les données sont incomplètes => Impossible de continuer');
                             break;
                         }
-                    } else if ($update_IP == 'IP') {
+                    } else if ($update_IP === 'IP') {
                         log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- IP : ' . $add_del_ip_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
-                        if ($host_value == '0' || $host_value == null || $add_del_ip_value == null) {
+                        if ($host_value === '0' || $host_value === null || $add_del_ip_value === null) {
                             log::add('Freebox_OS', 'error', 'Gestion réseau : IP  ou adresse mac vide => Impossible de continuer');
                             break;
                         }
-                    } else if ($update_WOL == 'POST_WOL') {
+                    } else if ($update_WOL === 'POST_WOL') {
                         log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
-                        if ($host_value == '0' || $host_value == null) {
+                        if ($host_value === '0' || $host_value === null) {
                             log::add('Freebox_OS', 'error', 'Gestion réseau : Adresse mac vide => Impossible de continuer');
                             break;
                         }
@@ -672,6 +679,10 @@ class Free_Update
                 break;
             case '4GOff':
                 $Free_API->universal_put(0, 'universalAPI', null, null, 'enabled', null, 'connection/aggregation');
+                break;
+            case 'avalaible':
+                log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes pour :  TESSST');
+                $Free_API->universal_put(null, 'universal_put', null, null, 'lang', 'POST', array('lang' => $_options['select']), null);
                 break;
         }
     }

@@ -389,8 +389,9 @@ class Free_API
                 } else {
                     $config = 'api/' . $API_version . '/' . $update_type . $id;
                 }
-
-                $config_log = 'Traitement de la Mise à jour de l\'id ';
+                if ($update_type != 'vm/') {
+                    $config_log = 'Traitement de la Mise à jour de l\'id ';
+                }
                 break;
             case 'network_ID':
                 $config = 'api/' . $API_version . '/lan/browser/' . $update_type  . $id;
@@ -585,6 +586,7 @@ class Free_API
                     $config = 'api/' . $API_version . '/' . $_options  . $id;
                     $fonction = $_status_cmd;
                 } else {
+                    log::add('Freebox_OS', 'debug', '───▶︎ Type de requête : ' . $_options);
                     $config = 'api/' . $API_version . '/' . $_options;
                     $fonction = "POST";
                 }
@@ -752,9 +754,9 @@ class Free_API
                             }
                         }
                     }
-                    $retourFbx = array('nbmissed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'nbaccepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'nboutgoing' => $cptAppel_outgoing, 'list_outgoing' => $listNumber_outgoing);
+                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
                 } else {
-                    $retourFbx = array('nbmissed' => 0, 'list_missed' => "", 'nbaccepted' => 0, 'list_accepted' => "", 'nboutgoing' => 0, 'list_outgoing' => "");
+                    $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
                 }
                 return $retourFbx;
             } else {

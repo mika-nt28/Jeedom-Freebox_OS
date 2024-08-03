@@ -1138,8 +1138,10 @@ class Free_Refresh
                 $Card_id = $result_ap['result'][$k]['id'];
                 foreach ($EqLogics->getCmd('info') as $Cmd) {
                     if ($Cmd->getLogicalId('data') == $Card_id) {
-                        $EqLogics->checkAndUpdateCmd($Card_id, $Card_value);
-                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $Card_value);
+                        if ($Cmd->getConfiguration('logicalId') == 'CARD') {
+                            $EqLogics->checkAndUpdateCmd($Card_id, $Card_value);
+                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $Card_value);
+                        }
                     }
                 }
             }

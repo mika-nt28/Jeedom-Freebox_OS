@@ -689,9 +689,9 @@ class Free_CreateEq
                 $template = 'Freebox_OS::Activer SMBv2';
             }
             log::add('Freebox_OS', 'debug', '| ───▶︎ Boucle pour Création des commandes : ' . $name);
-            $netshareSTATUS = $netshare->AddCommand($name, $Logical_ID, "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', $icon, 0, 'default', 'default', '0', $order, $updateicon, true);
-            $netshare->AddCommand('Activer ' . $name, $Logical_ID . 'On', 'action', 'other', $template, null, 'LIGHT_ON', 1, $netshareSTATUS, '', 0, $icon . $color_on, 0, 'default', 'default', $order++, '0', $updateicon, false);
-            $netshare->AddCommand('Désactiver ' . $name, $Logical_ID  . 'Off', 'action', 'other', $template, null, 'LIGHT_OFF', 1, $netshareSTATUS, '', 0, $icon . $color_off, 0, 'default', 'default', $order++, '0', $updateicon, false);
+            $netshareSTATUS = $netshare->AddCommand($name, $Logical_ID, "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', $icon, 0, 'default', 'default', '0', $order, $updateicon, true);
+            $netshare->AddCommand('Activer ' . $name, $Logical_ID . 'On', 'action', 'other', $template, null, 'SWITCH_ON', 1, $netshareSTATUS, '', 0, $icon . $color_on, 0, 'default', 'default', $order++, '0', $updateicon, false);
+            $netshare->AddCommand('Désactiver ' . $name, $Logical_ID  . 'Off', 'action', 'other', $template, null, 'SWITCH_OFF', 1, $netshareSTATUS, '', 0, $icon . $color_off, 0, 'default', 'default', $order++, '0', $updateicon, false);
             $boucle_num++;
         }
         log::add('Freebox_OS', 'debug', '└────────────────────');
@@ -1118,15 +1118,13 @@ class Free_CreateEq
         $Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
         $Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 11, '0', $updateicon, false);
         // Planification Wifi
-        $PlanningWifi = $Wifi->AddCommand('Etat Planning', 'use_planning', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateicon, true);
-        $Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 12, '0', $updateicon, false);
-        $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'LIGHT_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 13, '0', $updateicon, false);
-        // Wifi WPS
-        //$Wifi->AddCommand('Wifi WPS On', 'wifiWPSOn', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOn, 0, 'default', 'default', 14, '0', $updateicon, false);
-        //$Wifi->AddCommand('Wifi WPS Off', 'wifiWPSOff', 'action', 'other', $TemplateWifiWPSOnOFF, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiWPSOff, 0, 'default', 'default', 15, '0', $updateicon, false);
+        $PlanningWifi = $Wifi->AddCommand('Etat Planning', 'use_planning', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateicon, true);
+        $Wifi->AddCommand('Wifi Planning On', 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'SWITCH_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 12, '0', $updateicon, false);
+        $Wifi->AddCommand('Wifi Planning Off', 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'SWITCH_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 13, '0', $updateicon, false);
         $order = 49;
         Free_CreateEq::createEq_wifi_ap($logicalinfo, $templatecore_V4, $order, $Wifi);
         $order = 29;
+        // Wifi WPS
         Free_CreateEq::createEq_wifi_bss($logicalinfo, $templatecore_V4, $order, $Wifi);
         $order = 39;
         Free_CreateEq::createEq_mac_filter($logicalinfo, $templatecore_V4, $order, $Wifi);
@@ -1177,8 +1175,8 @@ class Free_CreateEq
         $iconWifiSessionWPSOff = 'fas fa-link icon_red';
         $updateicon = false;
 
-        $WifiWPS = $Wifi->AddCommand('Etat WPS', 'wifiWPS', "info", 'binary', null, null, 'LIGHT_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 3, $updateicon, true);
-        $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order++, '0', $updateicon, false, false, true);
+        $WifiWPS = $Wifi->AddCommand('Etat WPS', 'wifiWPS', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 3, $updateicon, true);
+        $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'SWITCH_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order++, '0', $updateicon, false, false, true);
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/bss', true, true, true);
         if ($result != false) {
@@ -1189,7 +1187,7 @@ class Free_CreateEq
                 } else {
                     $WPSname = 'Wifi Session WPS (' . $wifibss['config']['ssid'] . ') On';
                 }
-                $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
+                $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'SWITCH_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
                 if ($wifibss['config']['use_default_config'] == true) {
                     log::add('Freebox_OS', 'debug', '| ──────▶︎ Configuration Wifi commune pour l\'ensemble des cartes');
                     break;
@@ -1206,29 +1204,10 @@ class Free_CreateEq
         $iconWifiSessionWPSOff = 'fas fa-link icon_red';
         $updateicon = false;
 
-        //$Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'LIGHT_OFF', 1, null, null, 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order++, '0', $updateicon, false, false, true);
         $Free_API = new Free_API();
-        //$result = $Free_API->universal_get('wifi', null, null, 'bss');
         $result = $Free_API->universal_get('universalAPI', null, null, 'standby/status', true, true, true);
         $Wifi->AddCommand('Mode de veille', 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
         $listValue = 'normal|Mode normal;slow|Mode lent';
-        /* if ($result != false) {
-            foreach ($result['result'] as $wifibss) {
-                if ($wifibss['config']['wps_enabled'] != true) continue;
-                if ($wifibss['config']['use_default_config'] == true) {
-                    $WPSname = 'Wifi Session WPS (' . $wifibss['shared_bss_params']['ssid'] . ') On';
-                } else {
-                    $WPSname = 'Wifi Session WPS (' . $wifibss['config']['ssid'] . ') On';
-                }
-                $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'LIGHT_ON', 1, null, null, 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
-                if ($wifibss['config']['use_default_config'] == true) {
-                    log::add('Freebox_OS', 'debug', '| ──────▶︎ Configuration Wifi commune pour l\'ensemble des cartes');
-                    break;
-                } else {
-                    //$order++;
-                }
-            }
-        }*/
     }
 
     private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $order = 39, $EqLogic)

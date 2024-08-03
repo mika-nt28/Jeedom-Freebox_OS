@@ -1128,14 +1128,14 @@ class Free_Refresh
         $para_LogicalId = null;
 
         log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Status des Cartes');
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
-        $nb_card = count($result['result']);
+        $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
+        $nb_card = count($result_ap['result']);
         $Card_value = null;
         $Card_id = null;
-        if ($result != false) {
+        if ($result_ap != false) {
             for ($k = 0; $k < $nb_card; $k++) {
-                $Card_value = $result['result'][$k]['status']['state'];
-                $Card_id = $result['result'][$k]['id'];
+                $Card_value = $result_ap['result'][$k]['status']['state'];
+                $Card_id = $result_ap['result'][$k]['id'];
                 foreach ($EqLogics->getCmd('info') as $Cmd) {
                     if ($Cmd->getLogicalId('data') == $Card_id) {
                         $EqLogics->checkAndUpdateCmd($Card_id, $Card_value);
@@ -1147,19 +1147,18 @@ class Free_Refresh
     }
     private  static function refresh_VALUE($EqLogics, $result, $list, $para_result = null, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null, $Value_calcul = null)
     {
-
         if ($para_result['nb'] != 0) {
             if ($para_result['nb'] === 1) {
                 if (isset($result)) {
                     $result = $result[$para_result[1]];
-                    log::add('Freebox_OS', 'debug', ':fg-info:Niveau 1 ───▶︎ :/fg:' . $para_result[1]);
+                    //log::add('Freebox_OS', 'debug', ':fg-info:Niveau 1 ───▶︎ :/fg:' . $para_result[1]);
                 }
             } else if ($para_result['nb'] === 2) {
                 $result = $result[$para_result[1]][$para_result[2]];
-                log::add('Freebox_OS', 'debug', ':fg-info:Niveau 2 ───▶︎ :/fg:' . $para_result[1] . '/' . $para_result[2]);
+                //log::add('Freebox_OS', 'debug', ':fg-info:Niveau 2 ───▶︎ :/fg:' . $para_result[1] . '/' . $para_result[2]);
             } else if ($para_result['nb'] === 3) {
                 $result = $result[$para_result[1]][$para_result[2]][$para_result[3]];
-                log::add('Freebox_OS', 'debug', ':fg-info:Niveau 3 ───▶︎ :/fg:' . $para_result[1] . '/' . $para_result[2] . '/' . $para_result[3]);
+                //log::add('Freebox_OS', 'debug', ':fg-info:Niveau 3 ───▶︎ :/fg:' . $para_result[1] . '/' . $para_result[2] . '/' . $para_result[3]);
             }
         }
 

@@ -143,39 +143,43 @@ class Free_Refresh
     {
         $list = 'current_mode,cdayranges,macs';
         $result = $Free_API->universal_get('parental', $EqLogics->getConfiguration('action'));
-        $para_result = array('nb' => 0, 1 => null, 2 => null, 3 => null);
-        $cdayranges = null;
-        if ($result['cdayranges'] != null) {
+        if (isset($result['profile_id'])) {
+            $para_result = array('nb' => 0, 1 => null, 2 => null, 3 => null);
+            $cdayranges = null;
             if (isset($result['cdayranges'])) {
-                foreach ($result['cdayranges'] as $cdayrange) {
-                    if ($cdayrange == null) {
-                        $cdayranges = $cdayrange;
-                    } else {
-                        $cdayranges .= '<br>' . $cdayrange;
+                if ($result['cdayranges'] != null) {
+                    foreach ($result['cdayranges'] as $cdayrange) {
+                        if ($cdayrange == null) {
+                            $cdayranges = $cdayrange;
+                        } else {
+                            $cdayranges .= '<br>' . $cdayrange;
+                        }
                     }
+                } else {
+                    $cdayranges = 'Aucune periode de Vacances associées au profil';
                 }
             }
-        } else {
-            $cdayranges = 'Aucune periode de Vacances associées au profil';
-        }
-        //log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ Vacances : ' . $cdayranges . ':/fg:');
-        $macs = null;
-        if ($result['macs'] != null) {
+            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ Vacances : ' . $cdayranges . ':/fg:');
+            $macs = null;
             if (isset($result['macs'])) {
-                foreach ($result['macs'] as $MAC) {
-                    if ($macs == null) {
-                        $macs = $MAC;
-                    } else {
-                        $macs .= '<br>' . $MAC;
+                if ($result['macs'] != null) {
+                    foreach ($result['macs'] as $MAC) {
+                        if ($macs == null) {
+                            $macs = $MAC;
+                        } else {
+                            $macs .= '<br>' . $MAC;
+                        }
                     }
+                } else {
+                    $macs = 'Aucun appareil associé au profil';
                 }
             }
+            $Value_calcul = array('cdayranges' => $cdayranges, 'macs' => $macs);
+            Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_result, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $Value_calcul);
         } else {
-            $macs = 'Aucun appareil associé au profil';
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . 'Pas de contrôle de réseau existant avec ce profil' .  ':/fg:');
+            Freebox_OS::DisableEqLogic($EqLogics, false);
         }
-        //log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ Mac : ' . $macs . ':/fg:');
-        $Value_calcul = array('cdayranges' => $cdayrange, 'macs' => $macs);
-        Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_result, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $Value_calcul);
     }
 
 
@@ -363,7 +367,7 @@ class Free_Refresh
                     $list = 'state,sync_action,role,degraded';
                     $para_LogicalId = array('state' => $disks['id'] . '_state', 'sync_action' => $disks['id'] . '_sync_action', 'role' => $disks['id'] . '_role', 'degraded' => $disks['id'] . '_degraded');
                     $para_result = array('nb' => 0, 1 => null, 2 => null, 3 => null);
-                    Free_Refresh::refresh_VALUE($EqLogics, $disks, $list, $para_result, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $para_result3);
+                    Free_Refresh::refresh_VALUE($EqLogics, $disks, $list, $para_result, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
                     $para_LogicalId = null;
                     foreach ($disks['members'] as $members_raid) {
                         if ($Cmd->getLogicalId() != $members_raid['id'] . '_role') continue;
@@ -1029,55 +1033,32 @@ class Free_Refresh
     private static function refresh_VM($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
         $list = 'enable_screen,disk_type,mac,memory,name,status,vcpus,bind_usb_ports';
-        $log_Erreur = 'VM : Impossible de récupérer l’état de cette VM : La VM n\’existe pas';
+        $log_Erreur = 'VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas';
         $result = $Free_API->universal_get('universalAPI', $EqLogics->getConfiguration('action'), null, 'vm/', true, true, false);
         $para_result = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         $bind_usb_ports = null;
-        if ($result['bind_usb_ports'] != null) {
-            if (isset($result['bind_usb_ports'])) {
-                foreach ($result['cdayranges'] as $USB) {
-                    if ($bind_usb_ports == null) {
-                        $bind_usb_ports = $USB;
-                    } else {
-                        $bind_usb_ports .= '<br>' . $USB;
+        if (isset($result['id'])) {
+            if ($result['bind_usb_ports'] != null) {
+                if (isset($result['bind_usb_ports'])) {
+                    foreach ($result['cdayranges'] as $USB) {
+                        if ($bind_usb_ports == null) {
+                            $bind_usb_ports = $USB;
+                        } else {
+                            $bind_usb_ports .= '<br>' . $USB;
+                        }
                     }
                 }
+            } else {
+                $bind_usb_ports = 'Aucun port USB de connecté';
             }
+            $Value_calcul = array('bind_usb_ports' => $bind_usb_ports);
+            Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_result, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $Value_calcul);
+            $log_Erreur = null;
         } else {
-            $bind_usb_ports = 'Aucun port USB de connecté';
-        }
-        $Value_calcul = array('bind_usb_ports' => $bind_usb_ports);
-        Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_result, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $Value_calcul);
-        $log_Erreur = null;
-        /*
-        if ($result != false) {
-            foreach ($EqLogics->getCmd('info') as $Command) {
-                if (is_object($Command)) {
-                    switch ($Command->getLogicalId()) {
-                        case 'bind_usb_ports':
-                            $bind_usb_ports = null;
-                            if ($result['bind_usb_ports'] != null) {
-                                if (isset($result['bind_usb_ports'])) {
-                                    foreach ($result['bind_usb_ports'] as $USB) {
-                                        $bind_usb_ports .= '<br>' . $USB;
-                                    }
-                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Command->getName() . ' ::/fg: ' . $bind_usb_ports);
-                                }
-                            } else {
-                                $bind_usb_ports = 'Aucun port USB de connecté';
-                                log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Command->getName() . ' ::/fg: ' . $bind_usb_ports);
-                            }
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $bind_usb_ports);
-                            break;
-                        default:
-                            break;
-                    }
-                }
-            }
-        } else {
-            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ AUCUNE VM AVEC CET ID' . ':/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . $log_Erreur .  ':/fg:');
+            $log_Erreur = null;
             Freebox_OS::DisableEqLogic($EqLogics, false);
-        }*/
+        }
     }
     private static function refresh_WebSocket($EqLogics, $Free_API)
     {
@@ -1128,18 +1109,20 @@ class Free_Refresh
         $para_LogicalId = null;
 
         log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Status des Cartes');
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
-        $nb_card = count($result['result']);
+        $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
+        $nb_card = count($result_ap['result']);
         $Card_value = null;
         $Card_id = null;
-        if ($result != false) {
+        if ($result_ap != false) {
             for ($k = 0; $k < $nb_card; $k++) {
-                $Card_value = $result['result'][$k]['status']['state'];
-                $Card_id = $result['result'][$k]['id'];
+                $Card_value = $result_ap['result'][$k]['status']['state'];
+                $Card_id = $result_ap['result'][$k]['id'];
                 foreach ($EqLogics->getCmd('info') as $Cmd) {
                     if ($Cmd->getLogicalId('data') == $Card_id) {
-                        $EqLogics->checkAndUpdateCmd($Card_id, $Card_value);
-                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $Card_value);
+                        if ($Cmd->getConfiguration('logicalId') == 'CARD') {
+                            $EqLogics->checkAndUpdateCmd($Card_id, $Card_value);
+                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $Card_value);
+                        }
                     }
                 }
             }
@@ -1147,19 +1130,18 @@ class Free_Refresh
     }
     private  static function refresh_VALUE($EqLogics, $result, $list, $para_result = null, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null, $Value_calcul = null)
     {
-
         if ($para_result['nb'] != 0) {
             if ($para_result['nb'] === 1) {
                 if (isset($result)) {
                     $result = $result[$para_result[1]];
-                    log::add('Freebox_OS', 'debug', ':fg-info:Niveau 1 ───▶︎ :/fg:' . $para_result[1]);
+                    //log::add('Freebox_OS', 'debug', ':fg-info:Niveau 1 ───▶︎ :/fg:' . $para_result[1]);
                 }
             } else if ($para_result['nb'] === 2) {
                 $result = $result[$para_result[1]][$para_result[2]];
-                log::add('Freebox_OS', 'debug', ':fg-info:Niveau 2 ───▶︎ :/fg:' . $para_result[1] . '/' . $para_result[2]);
+                //log::add('Freebox_OS', 'debug', ':fg-info:Niveau 2 ───▶︎ :/fg:' . $para_result[1] . '/' . $para_result[2]);
             } else if ($para_result['nb'] === 3) {
                 $result = $result[$para_result[1]][$para_result[2]][$para_result[3]];
-                log::add('Freebox_OS', 'debug', ':fg-info:Niveau 3 ───▶︎ :/fg:' . $para_result[1] . '/' . $para_result[2] . '/' . $para_result[3]);
+                //log::add('Freebox_OS', 'debug', ':fg-info:Niveau 3 ───▶︎ :/fg:' . $para_result[1] . '/' . $para_result[2] . '/' . $para_result[3]);
             }
         }
 

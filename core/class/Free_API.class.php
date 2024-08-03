@@ -488,7 +488,7 @@ class Free_API
         } else {
             if ($update == "network_ping" || $update == "network_ID" || $update_type == "api_version") {
                 return $result;
-            } else if ($update_type == 'lte/config') {
+            } else if ($update_type == 'lte/config' || $update == 'parental') {
                 return $result['msg'];
             } else {
                 return false;
@@ -795,10 +795,18 @@ class Free_API
                 for ($k = 0; $k < $nb_mac; $k++) {
                     $name = $result['result'][$k]['hostname'];
                     if ($result['result'][$k]['type'] == 'whitelist') {
-                        $whitelist  .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        if ($whitelist == null) {
+                            $whitelist  = $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        } else {
+                            $whitelist  .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        }
                     }
                     if ($result['result'][$k]['type'] == 'blacklist') {
-                        $blacklist .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        if ($blacklist == null) {
+                            $blacklist .= $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        } else {
+                            $blacklist .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        }
                     }
                 }
                 $return = array('blacklist' => $blacklist, 'whitelist' => $whitelist);

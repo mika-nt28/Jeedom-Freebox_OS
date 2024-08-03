@@ -488,7 +488,7 @@ class Free_API
         } else {
             if ($update == "network_ping" || $update == "network_ID" || $update_type == "api_version") {
                 return $result;
-            } else if ($update_type == 'lte/config') {
+            } else if ($update_type == 'lte/config' || $update == 'parental') {
                 return $result['msg'];
             } else {
                 return false;

@@ -369,10 +369,14 @@ class Free_Refresh
                     $para_resultR = array('nb' => 0, 1 => null, 2 => null, 3 => null);
                     Free_Refresh::refresh_VALUE($EqLogics, $disks, $list, $para_resultR, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
                     $para_LogicalId = null;
-                    foreach ($disks['members'] as $members_raid) {
-                        if ($Cmd->getLogicalId() != $members_raid['id'] . '_role') continue;
-                        $EqLogics->checkAndUpdateCmd($members_raid['id'] . '_role', $members_raid['role']);
-                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $members_raid['role']);
+                    if (isset($disks['members'])) {
+                        foreach ($disks['members'] as $members_raid) {
+                            foreach ($EqLogics->getCmd('info') as $Cmd) {
+                                if ($Cmd->getLogicalId() != $members_raid['id'] . '_role') continue;
+                                $EqLogics->checkAndUpdateCmd($members_raid['id'] . '_role', $members_raid['role']);
+                                log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $members_raid['role']);
+                            }
+                        }
                     }
                 }
             } else {

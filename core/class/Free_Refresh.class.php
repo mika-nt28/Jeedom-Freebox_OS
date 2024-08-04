@@ -362,7 +362,6 @@ class Free_Refresh
         if ($Type_box != 'fbxgw1r' && $Type_box != 'fbxgw2r') {
             $result = $Free_API->universal_get('universalAPI', null, null, 'storage/raid', true, true, null);
             if ($result != false) {
-                log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Ancien Disque --- TEST 1');
                 foreach ($result as $disks) {
                     $list = 'state,sync_action,role,degraded';
                     $para_LogicalId = array('state' => $disks['id'] . '_state', 'sync_action' => $disks['id'] . '_sync_action', 'role' => $disks['id'] . '_role', 'degraded' => $disks['id'] . '_degraded');

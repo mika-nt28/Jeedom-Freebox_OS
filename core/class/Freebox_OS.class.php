@@ -403,7 +403,7 @@ class Freebox_OS extends eqLogic
 				$EqLogic->setConfiguration('autorefresh', '*/5 * * * *');
 			}
 		}
-		if ($tiles == true) {
+		if ($tiles === true) {
 			if ($eq_type != 'pir' && $eq_type != 'kfb' && $eq_type != 'dws' && $eq_type != 'alarm' && $eq_type != 'basic_shutter' && $eq_type != 'shutter'  && $eq_type != 'opener' && $eq_type != 'plug') {
 				$EqLogic->setConfiguration('type', $eq_type);
 			} else {
@@ -716,35 +716,36 @@ class Freebox_OS extends eqLogic
 
 	public function postSave()
 	{
-
-		if ($this->getConfiguration('type') == 'alarm_control') {
-			log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-warning: SAUVEGARDE : Mise à jour des paramètrages spécifiques pour Homebridge' . $this->getName() . '/' . $this->getConfiguration('type')  . ':/fg: ◀︎───────────');
-			foreach ($this->getCmd('action') as $Cmd) {
-				if (is_object($Cmd)) {
-					switch ($Cmd->getLogicalId()) {
-						case "1":
-							$_home_config_eq = 'SetModeAbsent';
-							$_home_mode = 'ModeAbsent';
-							break;
-						case "2":
-							$_home_config_eq = 'SetModeNuit';
-							$_home_mode = 'ModeNuit';
-							break;
-					}
-					if (isset($_home_config_eq)) {
-						if ($_home_config_eq != null) {
-							log::add('Freebox_OS', 'debug', '| ───▶︎ Mode : ' . $_home_config_eq . '(Commande : ' . $Cmd->getName() . ')');
-							$this->setConfiguration($_home_mode, $Cmd->getName());
-							$this->save(true);
-							$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Cmd->getName());
-							$this->save(true);
-							if ($_home_config_eq == 'SetModeAbsent') {
-								$this->setConfiguration('SetModePresent', "NOT");
-							} else {
+		if ($this->getConfiguration('eq_group') === 'tiles') {
+			if ($this->getConfiguration('type') === 'alarm_control') {
+				log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-warning: SAUVEGARDE : Mise à jour des paramètrages spécifiques pour Homebridge' . $this->getName() . '/' . $this->getConfiguration('type')  . ':/fg: ◀︎───────────');
+				foreach ($this->getCmd('action') as $Cmd) {
+					if (is_object($Cmd)) {
+						switch ($Cmd->getLogicalId()) {
+							case "1":
+								$_home_config_eq = 'SetModeAbsent';
+								$_home_mode = 'ModeAbsent';
+								break;
+							case "2":
+								$_home_config_eq = 'SetModeNuit';
+								$_home_mode = 'ModeNuit';
+								break;
+						}
+						if (isset($_home_config_eq)) {
+							if ($_home_config_eq != null) {
+								log::add('Freebox_OS', 'debug', '| ───▶︎ Mode : ' . $_home_config_eq . '(Commande : ' . $Cmd->getName() . ')');
+								$this->setConfiguration($_home_mode, $Cmd->getName());
+								$this->save(true);
 								$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Cmd->getName());
-							}
+								$this->save(true);
+								if ($_home_config_eq == 'SetModeAbsent') {
+									$this->setConfiguration('SetModePresent', "NOT");
+								} else {
+									$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Cmd->getName());
+								}
 
-							$_home_config_eq = null;
+								$_home_config_eq = null;
+							}
 						}
 					}
 				}
@@ -824,7 +825,10 @@ class Freebox_OS extends eqLogic
 		$SEARCH_PARENTAL = "Parental [" . config::byKey('SEARCH_PARENTAL', 'Freebox_OS') . ']';
 		$ligne3 = 'Scans : ' . $SEARCH_EQ . ' ; ' . $SEARCH_TILES . ' ; ' . $SEARCH_PARENTAL;
 
-		$FreeboxInfo = '<br>```<br>' . $ligne1 . '<br>' . $ligne2 . '<br>' . $ligne3 . '<br>```	';
+		$SEARCH_ECO = "ECO WIFI DISPO : [" . config::byKey('FREEBOX_HAS_ECO_WFI', 'Freebox_OS') . ']';
+		$ligne4 = $SEARCH_ECO;
+
+		$FreeboxInfo = '<br>```<br>' . $ligne1 . '<br>' . $ligne2 . '<br>' . $ligne3 . '<br>' . $ligne4 . '<br>```	';
 		return $FreeboxInfo;
 	}
 

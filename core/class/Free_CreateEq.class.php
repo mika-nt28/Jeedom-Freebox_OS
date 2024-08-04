@@ -383,7 +383,8 @@ class Free_CreateEq
                 foreach ($disks['partitions'] as $partition) {
                     $order2 = 200;
                     log::add('Freebox_OS', 'debug', '| ───▶︎ ID :' . $partition['id'] . ' : Disque [' . $disks['type'] . '] - ' . $disks['id'] . ' - Partitions : ' . $partition['label']);
-                    $disk->AddCommand($partition['label'] . ' - ' . $disks['type'] . ' - ' . $partition['fstype'], $partition['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, $order2++, '0', false, false, 'never', null, true, '#value#*100', 2, null, null, null, null, true);
+                    $name = $partition['label'] . ' - ' . $disks['type'] . ' - ' . $partition['fstype'];
+                    $disk->AddCommand($name, $partition['id'], 'info', 'numeric', 'core::horizontal', '%', null, 1, 'default', 'default', 0, 'fas fa-hdd fa-2x', 0, '0', 100, $order2++, '0', false, 'never', null, true, null, '#value#*100', 2, null, null, null, null, true, null, false, null);
                 }
             }
             if ($Type_box != 'fbxgw1r' && $Type_box != 'fbxgw2r') {

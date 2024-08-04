@@ -438,10 +438,10 @@ class Free_Refresh
         $order_count_noactive = 400;
         if ($EqLogics->getConfiguration('UpdateVisible') == true) {
             $_UpdateVisible = true;
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT Option "Afficher uniquement les connectés" = ' . $_UpdateVisible . ' => : les équipements avec statut 0 ne seront pas affichés');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:ETAT Option "Afficher uniquement les connectés" = :/fg:' . $_UpdateVisible . ' => : les équipements avec statut 0 ne seront pas affichés');
         } else {
             $_UpdateVisible = false;
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT Option "Afficher uniquement les connectés" = 0 => : les équipements avec statut 0 seront affichés');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:ETAT Option "Afficher uniquement les connectés" = 0 => :/fg:: les équipements avec statut 0 seront affichés');
         }
 
         if (!isset($result_network_ping['result'])) {

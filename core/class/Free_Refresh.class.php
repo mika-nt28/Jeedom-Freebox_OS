@@ -672,7 +672,7 @@ class Free_Refresh
                 foreach ($result['expansions'] as $system) {
                     if ($Cmd->getLogicalId('data') == $system['slot']) {
                         if (isset($system['present'])) {
-                            $EqLogics->checkAndUpdateCmd($system['id'], $system['present']);
+                            $EqLogics->checkAndUpdateCmd($system['slot'], $system['present']);
                             log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $system['present']);
                         }
                     }

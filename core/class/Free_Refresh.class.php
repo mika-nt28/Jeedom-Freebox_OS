@@ -438,10 +438,10 @@ class Free_Refresh
         $order_count_noactive = 400;
         if ($EqLogics->getConfiguration('UpdateVisible') == true) {
             $_UpdateVisible = true;
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT Option "Afficher uniquement les connectés" = ' . $_UpdateVisible . ' => : les équipements avec statut 0 ne seront pas affichés');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:ETAT Option "Afficher uniquement les connectés" = :/fg:' . $_UpdateVisible . ' => : les équipements avec statut 0 ne seront pas affichés');
         } else {
             $_UpdateVisible = false;
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT Option "Afficher uniquement les connectés" = 0 => : les équipements avec statut 0 seront affichés');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:ETAT Option "Afficher uniquement les connectés" = 0 => :/fg:: les équipements avec statut 0 seront affichés');
         }
 
         if (!isset($result_network_ping['result'])) {
@@ -619,6 +619,7 @@ class Free_Refresh
         $list = 'name,pretty_name,wifi_type,has_standby,has_eco_wifi';
         $para_LogicalId = array('name' => 'model_name');
         $result = $Free_API->universal_get('system', null, null, null, true, true, null);
+        $para_Config = array('has_eco_wifi' => 'FREEBOX_HAS_ECO_WFI');
         $para_resultSY = array('nb' => 1, 1 => 'model_info', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY, $para_LogicalId, $para_Value, $para_Config, $log_Erreur,  $para_Value_calcul);
         $para_LogicalId = null;
@@ -1026,7 +1027,11 @@ class Free_Refresh
         $para_Value = array('net_role__cco' => 'Coordinateur', 'net_role__sta' => 'Station');
         $result = $Free_API->universal_get('universalAPI', $EqLogics->getLogicalId(), null, 'freeplug', true, true, false);
         $para_resultFPL = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
-        Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultFPL, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
+        if (isset($result['result']['id'])) {
+            Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultFPL, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
+        } else {
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . $log_Erreur .  ':/fg:');
+        }
         $log_Erreur = null;
         $para_Value = null;
     }
@@ -1053,12 +1058,11 @@ class Free_Refresh
             }
             $Value_calcul = array('bind_usb_ports' => $bind_usb_ports);
             Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultVM, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $Value_calcul);
-            $log_Erreur = null;
         } else {
             log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . $log_Erreur .  ':/fg:');
-            $log_Erreur = null;
             Freebox_OS::DisableEqLogic($EqLogics, false);
         }
+        $log_Erreur = null;
     }
     private static function refresh_WebSocket($EqLogics, $Free_API)
     {

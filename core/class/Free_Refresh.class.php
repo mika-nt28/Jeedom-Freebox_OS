@@ -1027,7 +1027,11 @@ class Free_Refresh
         $para_Value = array('net_role__cco' => 'Coordinateur', 'net_role__sta' => 'Station');
         $result = $Free_API->universal_get('universalAPI', $EqLogics->getLogicalId(), null, 'freeplug', true, true, false);
         $para_resultFPL = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
-        Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultFPL, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
+        if (isset($result['result']['id'])) {
+            Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultFPL, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
+        } else {
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . $log_Erreur .  ':/fg:');
+        }
         $log_Erreur = null;
         $para_Value = null;
     }
@@ -1054,12 +1058,11 @@ class Free_Refresh
             }
             $Value_calcul = array('bind_usb_ports' => $bind_usb_ports);
             Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultVM, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $Value_calcul);
-            $log_Erreur = null;
         } else {
             log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . $log_Erreur .  ':/fg:');
-            $log_Erreur = null;
             Freebox_OS::DisableEqLogic($EqLogics, false);
         }
+        $log_Erreur = null;
     }
     private static function refresh_WebSocket($EqLogics, $Free_API)
     {

@@ -623,7 +623,7 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY, $para_LogicalId, $para_Value, $para_Config, $log_Erreur,  $para_Value_calcul);
         $para_LogicalId = null;
 
-        $list = 'firmware_version,mac,uptime,board_name,info';
+        $list = 'firmware_version,mac,uptime,board_name,info,serial';
         $para_Value_calcul  = array('uptime' => '_TIME_');
         $para_Config = array('board_name' => 'TYPE_FREEBOX');
         $para_resultSY = array('nb' => 0, 1 => null, 2 => null, 3 => null);

@@ -1200,8 +1200,6 @@ class Free_CreateEq
     private static function createEq_wifi_Standby($logicalinfo, $templatecore_V4, $order = 29, $Wifi)
     {
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes spécifiques pour : ' . $logicalinfo['wifistandbyName'] . ':/fg: ──');
-        $iconWifiSessionWPSOn = 'fas fa-link icon_orange';
-        $iconWifiSessionWPSOff = 'fas fa-link icon_red';
         $updateicon = false;
 
         $Free_API = new Free_API();
@@ -1213,13 +1211,8 @@ class Free_CreateEq
     private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $order = 39, $EqLogic)
     {
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes pour : ' . $logicalinfo['wifimmac_filter'] . ':/fg: ──');
-        $Templatemac = 'Freebox_OS::Filtrage Adresse Mac';
-        $iconmac_filter_state = 'fas fa-wifi icon_blue';
         $iconmac_list_white = 'fas fa-list-alt';
         $iconmac_list_black = 'far fa-list-alt';
-        $updateWidget = false;
-        // Pour test Visibilité
-        $_IsVisible = 0;
 
         //$Statutmac = $EqLogic->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order++, 1, false, true, null, true);
         //$listValue = 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche';

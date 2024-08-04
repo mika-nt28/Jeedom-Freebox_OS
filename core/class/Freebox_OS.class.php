@@ -824,7 +824,10 @@ class Freebox_OS extends eqLogic
 		$SEARCH_PARENTAL = "Parental [" . config::byKey('SEARCH_PARENTAL', 'Freebox_OS') . ']';
 		$ligne3 = 'Scans : ' . $SEARCH_EQ . ' ; ' . $SEARCH_TILES . ' ; ' . $SEARCH_PARENTAL;
 
-		$FreeboxInfo = '<br>```<br>' . $ligne1 . '<br>' . $ligne2 . '<br>' . $ligne3 . '<br>```	';
+		$SEARCH_ECO = "ECO WIFI DISPO : [" . config::byKey('FREEBOX_HAS_ECO_WFI', 'Freebox_OS') . ']';
+		$ligne4 = $SEARCH_ECO;
+
+		$FreeboxInfo = '<br>```<br>' . $ligne1 . '<br>' . $ligne2 . '<br>' . $ligne3 . '<br>' . $ligne4 . '<br>```	';
 		return $FreeboxInfo;
 	}
 

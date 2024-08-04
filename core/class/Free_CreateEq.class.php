@@ -1164,6 +1164,7 @@ class Free_CreateEq
         if (isset($result['model_info']['has_eco_wifi'])) {
             $Wifi->AddCommand('Mode Éco-WiFi', 'has_eco_wifi', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconWifi, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         } else {
+            config::save('FREEBOX_HAS_ECO_WFI', 0, 'Freebox_OS');
             log::add('Freebox_OS', 'debug', '| ──────▶︎ Pas de mode Eco non supporté');
         }
     }
@@ -1202,10 +1203,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes spécifiques pour : ' . $logicalinfo['wifistandbyName'] . ':/fg: ──');
         $updateicon = false;
 
-        $Free_API = new Free_API();
-        $result = $Free_API->universal_get('universalAPI', null, null, 'standby/status', true, true, true);
         $Wifi->AddCommand('Mode de veille', 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
-        $listValue = 'normal|Mode normal;slow|Mode lent';
     }
 
     private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $order = 39, $EqLogic)

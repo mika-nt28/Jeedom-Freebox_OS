@@ -619,6 +619,7 @@ class Free_Refresh
         $list = 'name,pretty_name,wifi_type,has_standby,has_eco_wifi';
         $para_LogicalId = array('name' => 'model_name');
         $result = $Free_API->universal_get('system', null, null, null, true, true, null);
+        $para_Config = array('has_eco_wifi' => 'FREEBOX_HAS_ECO_WFI');
         $para_resultSY = array('nb' => 1, 1 => 'model_info', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY, $para_LogicalId, $para_Value, $para_Config, $log_Erreur,  $para_Value_calcul);
         $para_LogicalId = null;

@@ -73,7 +73,7 @@ if (!isConnect('admin')) {
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_OS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
-                    </a><a class="btn btn-sm btn-danger bt_Freebox_OS_ResetConfig" title="{{Reset de la configuration}}"><i class="fas fa-trash"></i><span class="hidden-xs"> Reset de la configuration</span>
+                    </a><a class="btn btn-sm btn-danger bt_Freebox_OS_ResetConfig" title="{{Reset de la configuration}}"><i class="fas fa-trash"></i><span class="hidden-xs">{{Reset de la configuration}}</span>
                         <!--</a><a class="btn btn-sm btn-warning bt_Freebox_resetAPI" title="{{Reset de la version API }}"><i class="fas fa-exclamation-circle"></i><span class="hidden-xs"> {{Reset API Freebox}}</span>-->
                     </a><a class="btn btn-sm btn-success bt_Freebox_OS_Save"><i class="fas fa-save"></i><span class="hidden-xs"> {{Sauvegarder}}</span>
                     </a><a class="btn btn-sm bt_Freebox_OS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
@@ -87,8 +87,7 @@ if (!isConnect('admin')) {
                 <center><i class="fas fa-cogs" style="font-size: 8em;"></i></center>
                 <br />
                 <h3 class="textFreebox">{{}}</h3>
-                <div class="alert alert-info">{{C'est parti, lançons nous. Pour commencer nous allons valider les
-                    réglages}}
+                <div class="alert alert-info">{{C'est parti, lançons nous. Pour commencer nous allons valider les réglages}}
                 </div>
                 <form class="form-horizontal">
                     <fieldset>
@@ -129,8 +128,7 @@ if (!isConnect('admin')) {
                             </div>
                         </div>
                         <div class="form-group">
-                            <label class="col-md-5 control-label">{{Ajouter automatiquement les équipements détectés
-                                dans :}}</label>
+                            <label class="col-md-5 control-label">{{Ajouter automatiquement les équipements détectés dans :}}</label>
                             <div class="col-md-4">
                                 <select id="sel_object_default" class="configKey form-control" data-l1key="defaultParentObject">
                                     <option value="">{{Aucune}}</option>
@@ -205,13 +203,11 @@ if (!isConnect('admin')) {
                 <img class="img-responsive center-block hidden-xs" src="plugins/Freebox_OS/core/img/modification_droit.png" height="400" width="400" />
                 <br />
                 <center>
-                    <div class="alert alert-info">{{Se connecter à l’interface de la Freebox puis ouvrir les paramètres de
-                    la Freebox}}
+                    <div class="alert alert-info">{{Se connecter à l’interface de la Freebox puis ouvrir les paramètres de la Freebox}}
                         <br>
                         {{Ensuite Ouvrir la gestion des accès de la Freebox (ce réglage se trouve dans le mode avancé)}}
                         <br>
-                        {{Cliquer sur l’onglet Applications et dans la liste, choisir l’Application déclarée lors de
-                    l’installation du Plugin (par défaut : Jeedom Core)}}
+                        {{Cliquer sur l’onglet Applications et dans la liste, choisir l’Application déclarée lors de l’installation du Plugin (par défaut : Jeedom Core)}}
                         <br>
                         {{Cocher les cases comme ci-dessus et cliquer sur les boutons OK}}
                     </div>
@@ -406,7 +402,7 @@ if (!isConnect('admin')) {
                     <div id="centre">
                         <div class="thumbnail" style="box-shadow: 2px 2px 12px #872428; height: 310px;"><img src="plugins/Freebox_OS/core/img/homeadapters.png" alt="" style="border-radius:5px 5px 0 0; height: 100px;WIDTH: 100px">
                             <div class="caption">
-                                <h4>{{Mes Equipements Home - Tiles}}</h4>
+                                <h4>{{Mes Equipements}} Home - Tiles</h4>
                                 <p></p>
                                 <p class="text-center"><a class="btn bt_eqlogic_tiles">{{Scan des Tiles}} <i class="fas fa-search logoPrimary"></i></a></p>
                                 <p></p>
@@ -432,7 +428,7 @@ if (!isConnect('admin')) {
             <img class="img-responsive center-block" src="core/img/logo-jeedom-freebox-grand-nom-couleur.png" height="500" width="500" />
             <center>
                 <br />
-                <div class="alert alert-success">{{Bravo !!!}}</div>
+                <div class="alert alert-success">{{Bravo}} !!!</div>
             </center>
             <center>
                 <div class="alert alert-info Freebox_OK">{{Authentification réussie, Vous pouvez fermer cette fenêtre}}</div>

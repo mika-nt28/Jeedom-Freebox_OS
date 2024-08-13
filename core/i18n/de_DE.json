@@ -54,6 +54,7 @@
     },
     "plugins\/Freebox_OS\/desktop\/js\/authentification.js": {
         "Attente appuie sur le bouton V": "Warten drückt die Taste V",
+        "Authentification": "Authentifizierung",
         "Authentification réussi": "Authentifizierung erfolgreich",
         "BOX COMPATIBLE AVEC LES TILES": "BOX KOMPATIBEL MIT TILES",
         "FIN": "ENDE",
@@ -73,18 +74,23 @@
         "Lancement vérification des droits": "Start Rechteprüfung",
         "Les droits sont OK": "Die Rechte sind OK",
         "Merci d\\'appuyer sur le bouton V de votre Freebox, afin de confirmer l\\'autorisation d\\'accès à votre Freebox.": "Bitte drücken Sie die Taste V auf Ihrer Freebox, um die Berechtigung zum Zugriff auf Ihre Freebox zu bestätigen.",
+        "Nom API": "API-Name",
+        "Nom Jeedom": "Name Jeedom",
         "Objects Jeedom": "Jeedom-Objekte",
+        "Objet par défaut": "Standardobjekt",
         "Pièces Freebox": "Freebox-Teile",
         "REST OK : track_authorization -> Error 4 : Inconnue": "REST OK: track_authorization -> Error 4: Unbekannt",
         "Reset de la configuration": "Reset der Konfiguration",
         "Sauvegarde des Paramètres": "Einstellungen speichern",
         "Sauvegarde des Pièces des Tiles": "Sicherung der Räume der Tiles",
+        "Version API Freebox": "Freebox API-Version",
         "Votre Jeedom n\\'a pas de Nom, il est impossible de continuer l\\'appairage": "Ihr Jeedom hat keinen Namen, es ist nicht möglich, das Pairing fortzusetzen",
         "Vous avez refusé, il faut relancer l\\'authentification": "Sie haben abgelehnt, Sie müssen die Authentifizierung erneut starten",
         "Vous avez refusé, il faut relancer l\\'authentification. Merci": "Sie haben abgelehnt, Sie müssen die Authentifizierung erneut starten. Danke",
         "Vous n\\'avez pas encore validé l\\'application sur la Freebox.": "Sie haben die Anwendung noch nicht auf der Freebox freigeschaltet.",
         "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification": "Sie haben nicht rechtzeitig bestätigt, Sie müssen die Authentifizierung erneut starten",
-        "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification. Merci": "Sie haben nicht rechtzeitig bestätigt, Sie müssen die Authentifizierung erneut starten. Danke"
+        "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification. Merci": "Sie haben nicht rechtzeitig bestätigt, Sie müssen die Authentifizierung erneut starten. Danke",
+        "Étape": "Schritt"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/authentification.php": {
         "401 - Accès non autorisé": "401 - Nicht autorisierter Zugriff",

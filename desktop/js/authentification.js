@@ -244,7 +244,7 @@ function sendToBdd(jsonParser) {
 }
 
 function AskTrackAuthorization() {
-    if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "authentification") {
+    if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "{{Authentification}}") {
 
         $('.textFreebox').hide();
         $('.bt_Freebox_OS_Next').hide();
@@ -368,14 +368,14 @@ function GetSetting() {
             $('#input_freeboxIP').val(data.result.ip);
             logs('info', "IP : " + data.result.ip);
             $('#input_freeNameAPP').val(data.result.NameAPP);
-            logs('info', "Nom API : " + data.result.NameAPP);
+            logs('info', "{{Nom API}} : " + data.result.NameAPP);
             $('#input_IdApp').val(data.result.IdApp);
             logs('info', "Id API : " + data.result.IdApp);
             $('#input_DeviceName').val(data.result.DeviceName);
-            logs('info', "Nom Jeedom : " + data.result.DeviceName);
+            logs('info', "{{Nom Jeedom}} : " + data.result.DeviceName);
             $('#sel_object_default').val(data.result.Categorie);
-            logs('info', "Objet par défaut : " + data.result.Categorie);
-            logs('info', "Version API Freebox : " + data.result.API);
+            logs('info', "{{Objet par défaut}} : " + data.result.Categorie);
+            logs('info', "{{Version API Freebox}} : " + data.result.API);
             $('#input_API').val(data.result.API);
 
             console.log('IP : ' + data.result.ip)
@@ -637,7 +637,7 @@ function funNext() {
     $('.bt_Freebox_OS_Next').show();
     $('.bt_Freebox_OS_Previous').show();
 
-    logs('info', "================= Etape : " + $('.li_Freebox_OS_Summary.active').attr('data-href'));
+    logs('info', "================= {{Étape}} : " + $('.li_Freebox_OS_Summary.active').attr('data-href'));
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':

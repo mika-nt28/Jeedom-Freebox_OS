@@ -54,6 +54,7 @@
     },
     "plugins\/Freebox_OS\/desktop\/js\/authentification.js": {
         "Attente appuie sur le bouton V": "Botão de pressão de espera V",
+        "Authentification": "Autenticação",
         "Authentification réussi": "Autenticação bem sucedida",
         "BOX COMPATIBLE AVEC LES TILES": "CAIXA COMPATÍVEL COM AZULEJOS",
         "FIN": "FIM",
@@ -73,18 +74,23 @@
         "Lancement vérification des droits": "Verificação dos direitos de lançamento",
         "Les droits sont OK": "Os direitos são OK",
         "Merci d\\'appuyer sur le bouton V de votre Freebox, afin de confirmer l\\'autorisation d\\'accès à votre Freebox.": "Prima o botão V na sua Freebox para confirmar que está autorizado a aceder à sua Freebox.",
+        "Nom API": "Nome do PLC",
+        "Nom Jeedom": "Nome Jeedom",
         "Objects Jeedom": "Objectos Jeedom",
+        "Objet par défaut": "Objeto padrão",
         "Pièces Freebox": "Peças Freebox",
         "REST OK : track_authorization -> Error 4 : Inconnue": "REST OK : track_authorization -> Erro 4 : Desconhecido",
         "Reset de la configuration": "Repor a configuração",
         "Sauvegarde des Paramètres": "Guardar definições",
         "Sauvegarde des Pièces des Tiles": "Poupar peças de azulejo",
+        "Version API Freebox": "Versão da API do Freebox",
         "Votre Jeedom n\\'a pas de Nom, il est impossible de continuer l\\'appairage": "O seu Jeedom não tem nome, é impossível continuar a emparelhar",
         "Vous avez refusé, il faut relancer l\\'authentification": "Recusou, tem de reiniciar a autenticação",
         "Vous avez refusé, il faut relancer l\\'authentification. Merci": "Recusou, tem de reiniciar a autenticação. Obrigado",
         "Vous n\\'avez pas encore validé l\\'application sur la Freebox.": "Ainda não validou a aplicação na Freebox.",
         "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification": "A validação não foi efectuada a tempo, é necessário reiniciar a autenticação",
-        "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification. Merci": "Não validou a tempo, tem de reiniciar a autenticação. Obrigado"
+        "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification. Merci": "Não validou a tempo, tem de reiniciar a autenticação. Obrigado",
+        "Étape": "Degrau"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/authentification.php": {
         "401 - Accès non autorisé": "401 - Acesso não autorizado",

@@ -54,6 +54,7 @@
     },
     "plugins\/Freebox_OS\/desktop\/js\/authentification.js": {
         "Attente appuie sur le bouton V": "Pulsante di standby V",
+        "Authentification": "Autenticazione",
         "Authentification réussi": "Autenticazione di successo",
         "BOX COMPATIBLE AVEC LES TILES": "BOX COMPATIBILE CON LE PIASTRELLE",
         "FIN": "FINE",
@@ -73,18 +74,23 @@
         "Lancement vérification des droits": "Controllo dei diritti di lancio",
         "Les droits sont OK": "I diritti sono OK",
         "Merci d\\'appuyer sur le bouton V de votre Freebox, afin de confirmer l\\'autorisation d\\'accès à votre Freebox.": "Premete il tasto V sul vostro Freebox per confermare che siete autorizzati ad accedere al vostro Freebox.",
+        "Nom API": "Nome del PLC",
+        "Nom Jeedom": "Nome Jeedom",
         "Objects Jeedom": "Oggetti Jeedom",
+        "Objet par défaut": "Oggetto predefinito",
         "Pièces Freebox": "Componenti Freebox",
         "REST OK : track_authorization -> Error 4 : Inconnue": "REST OK : track_authorization -> Errore 4 : Sconosciuto",
         "Reset de la configuration": "Ripristino della configurazione",
         "Sauvegarde des Paramètres": "Salvataggio delle impostazioni",
         "Sauvegarde des Pièces des Tiles": "Risparmio di parti di piastrelle",
+        "Version API Freebox": "Versione API di Freebox",
         "Votre Jeedom n\\'a pas de Nom, il est impossible de continuer l\\'appairage": "Il vostro Jeedom non ha un nome, è impossibile continuare ad accoppiarlo",
         "Vous avez refusé, il faut relancer l\\'authentification": "Se si è rifiutato, è necessario riavviare l'autenticazione",
         "Vous avez refusé, il faut relancer l\\'authentification. Merci": "Hai rifiutato, devi riavviare l'autenticazione. Grazie",
         "Vous n\\'avez pas encore validé l\\'application sur la Freebox.": "L'applicazione non è ancora stata convalidata sul Freebox.",
         "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification": "La convalida non è avvenuta in tempo, è necessario riavviare l'autenticazione",
-        "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification. Merci": "La convalida non è avvenuta in tempo, è necessario riavviare l'autenticazione. Grazie"
+        "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification. Merci": "La convalida non è avvenuta in tempo, è necessario riavviare l'autenticazione. Grazie",
+        "Étape": "Passo"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/authentification.php": {
         "401 - Accès non autorisé": "401 - Accesso non autorizzato",

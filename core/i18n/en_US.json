@@ -54,6 +54,7 @@
     },
     "plugins\/Freebox_OS\/desktop\/js\/authentification.js": {
         "Attente appuie sur le bouton V": "Standby press V button",
+        "Authentification": "Authentication",
         "Authentification réussi": "Successful authentication",
         "BOX COMPATIBLE AVEC LES TILES": "TILE-COMPATIBLE BOX",
         "FIN": "END",
@@ -73,18 +74,23 @@
         "Lancement vérification des droits": "Launch rights check",
         "Les droits sont OK": "Rights are OK",
         "Merci d\\'appuyer sur le bouton V de votre Freebox, afin de confirmer l\\'autorisation d\\'accès à votre Freebox.": "Please press the V button on your Freebox to confirm your Freebox access authorization.",
+        "Nom API": "PLC name",
+        "Nom Jeedom": "Jeedom name",
         "Objects Jeedom": "Objects Jeedom",
+        "Objet par défaut": "Default object",
         "Pièces Freebox": "Freebox rooms",
         "REST OK : track_authorization -> Error 4 : Inconnue": "REST OK : track_authorization -> Error 4 : Unknown",
         "Reset de la configuration": "Reset configuration",
         "Sauvegarde des Paramètres": "Saving settings",
         "Sauvegarde des Pièces des Tiles": "Saving Tiles Rooms",
+        "Version API Freebox": "Freebox API version",
         "Votre Jeedom n\\'a pas de Nom, il est impossible de continuer l\\'appairage": "Your Jeedom has no Name, it is impossible to continue pairing",
         "Vous avez refusé, il faut relancer l\\'authentification": "You have refused, you must restart the authentication",
         "Vous avez refusé, il faut relancer l\\'authentification. Merci": "You have refused, you must restart the authentication. Thank you",
         "Vous n\\'avez pas encore validé l\\'application sur la Freebox.": "You have not yet validated the application on your Freebox.",
         "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification": "You did not validate in time, you need to restart the authentication",
-        "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification. Merci": "You didn't validate in time, you have to restart the authentication. Thank you"
+        "Vous n\\'avez pas validé à temps, il faut relancer l\\'authentification. Merci": "You didn't validate in time, you have to restart the authentication. Thank you",
+        "Étape": "Step"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/authentification.php": {
         "401 - Accès non autorisé": "401 - Unauthorized access",

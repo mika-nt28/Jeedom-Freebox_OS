@@ -389,8 +389,9 @@ class Free_API
                 } else {
                     $config = 'api/' . $API_version . '/' . $update_type . $id;
                 }
-
-                $config_log = 'Traitement de la Mise à jour de l\'id ';
+                if ($update_type != 'vm/') {
+                    $config_log = 'Traitement de la Mise à jour de l\'id ';
+                }
                 break;
             case 'network_ID':
                 $config = 'api/' . $API_version . '/lan/browser/' . $update_type  . $id;
@@ -487,7 +488,7 @@ class Free_API
         } else {
             if ($update == "network_ping" || $update == "network_ID" || $update_type == "api_version") {
                 return $result;
-            } else if ($update_type == 'lte/config') {
+            } else if ($update_type == 'lte/config' || $update == 'parental') {
                 return $result['msg'];
             } else {
                 return false;
@@ -585,6 +586,7 @@ class Free_API
                     $config = 'api/' . $API_version . '/' . $_options  . $id;
                     $fonction = $_status_cmd;
                 } else {
+                    log::add('Freebox_OS', 'debug', '───▶︎ Type de requête : ' . $_options);
                     $config = 'api/' . $API_version . '/' . $_options;
                     $fonction = "POST";
                 }
@@ -693,15 +695,14 @@ class Free_API
 
     public function nb_appel_absence()
     {
-        $API_version = $this->API_version;
         $listNumber_missed = null;
         $listNumber_accepted = null;
         $listNumber_outgoing = null;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-        if ($result == 'auth_required') {
-            $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-        }
+        //if ($result == 'auth_required') {
+        //  $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
+        // }
         if ($result === false)
             return false;
         if (isset($result['success'])) {
@@ -753,9 +754,9 @@ class Free_API
                             }
                         }
                     }
-                    $retourFbx = array('missed' => $cptAppel_missed, 'list_missed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'list_accepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'list_outgoing' => $listNumber_outgoing);
+                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
                 } else {
-                    $retourFbx = array('missed' => 0, 'list_missed' => "", 'accepted' => 0, 'list_accepted' => "", 'outgoing' => 0, 'list_outgoing' => "");
+                    $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
                 }
                 return $retourFbx;
             } else {
@@ -782,12 +783,9 @@ class Free_API
     public function mac_filter_list()
     {
         $API_version = $this->API_version;
-        $listmac_whitelist = null;
-        $listmac_blacklist = null;
+        $whitelist = null;
+        $blacklist = null;
         $result = $this->fetch('/api/' . $API_version . '/wifi/mac_filter/', null, null, true, true);
-        if ($result == 'auth_required') {
-            $result = $this->fetch('/api/' . $API_version . '/wifi/mac_filter/', null, null, true, true);
-        }
         if ($result === false)
             return false;
         if ($result['success']) {
@@ -797,15 +795,23 @@ class Free_API
                 for ($k = 0; $k < $nb_mac; $k++) {
                     $name = $result['result'][$k]['hostname'];
                     if ($result['result'][$k]['type'] == 'whitelist') {
-                        $listmac_whitelist  .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        if ($whitelist == null) {
+                            $whitelist  = $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        } else {
+                            $whitelist  .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        }
                     }
                     if ($result['result'][$k]['type'] == 'blacklist') {
-                        $listmac_blacklist .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        if ($blacklist == null) {
+                            $blacklist .= $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        } else {
+                            $blacklist .= '<br>' . $name . " - " . $result['result'][$k]['mac'] . " - " . $result['result'][$k]['comment'];
+                        }
                     }
                 }
-                $return = array('listmac_blacklist' => $listmac_blacklist, 'listmac_whitelist' => $listmac_whitelist);
+                $return = array('blacklist' => $blacklist, 'whitelist' => $whitelist);
             } else {
-                $return = array('listmac_blacklist' => '', 'listmac_whitelist' => "");
+                $return = array('blacklist' => 'vide', 'whitelist' => 'vide');
             }
             return $return;
         } else {

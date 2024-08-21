@@ -10,25 +10,25 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
 });
 
 $('.bt_eqlogic_standard').on('click', function () {
-    logs('info', "================= Lancement recherche des équipements standards");
+    logs('info', "================= {{Lancement recherche des équipements standards}}");
     SearchArchi();
     progress(85);
 });
 
 $('.bt_eqlogic_tiles').on('click', function () {
-    logs('info', "================= Lancement recherche des tiles");
+    logs('info', "================= {{Lancement recherche des tiles}}");
     SearchTile();
     progress(90);
 });
 
 $('.bt_eqlogic_control_parental').on('click', function () {
-    logs('info', "================= Lancement recherche des contrôles parentaux");
+    logs('info', "================= {{Lancement recherche des contrôles parentaux}}");
     SearchParental();
     progress(95);
 });
 
 $('.bt_Freebox_OS_Save').on('click', function () {
-    logs('info', "================= Sauvegarde des Paramètres");
+    logs('info', "================= {{Sauvegarde des Paramètres}}");
     ip = $('#input_freeboxIP').val();
     //VersionAPP = $('#input_freeAppVersion').val();
     VersionAPP = null;
@@ -37,32 +37,32 @@ $('.bt_Freebox_OS_Save').on('click', function () {
 });
 
 $('.bt_Freebox_Autorisation').on('click', function () {
-    logs('info', "================= Lancement autorisation Freebox");
+    logs('info', "================= {{Lancement autorisation Freebox}}");
     autorisationFreebox();
 });
 $('.bt_Freebox_resetAPI').on('click', function () {
-    logs('info', "================= Lancement Reset de la version API");
+    logs('info', "================= {{Lancement Reset de la version API}}");
     ResetAPI();
 });
 
 $('.bt_Freebox_droitVerif').on('click', function () {
-    logs('info', "================= Lancement vérification des droits");
+    logs('info', "================= {{Lancement vérification des droits}}");
     GetSessionData();
 });
 $('.bt_Freebox_droitVerif_pass').on('click', function () {
-    logs('info', "================= Ignorer vérification des droits");
+    logs('info', "================= {{Ignorer la vérification des droits}}");
     funNext();
 });
 
 $('.bt_Freebox_OS_ResetConfig').on('click', function () {
-    logs('info', "================= Reset de la configuration");
+    logs('info', "================= {{Reset de la configuration}}");
     SetDefaultSetting();
     GetSetting();
     $('.bt_Freebox_OS_Next').show();
 });
 
 $('.bt_Freebox_Room').on('click', function () {
-    logs('info', "================= Lancement Recherche des pièces");
+    logs('info', "================= {{Lancement Recherche des pièces}}");
     //SearchTile_room();
 });
 
@@ -87,7 +87,7 @@ $('.bt_Freebox_OS_Save_room').on('click', function () {
     //console.log('CMD BY CMD : ' +CmdbyCmd)
     //SetSettingTiles(cron_tiles, CmdbyCmd);
     SetSettingTiles(cron_tiles);
-    logs('info', "================= Sauvegarde des Pièces des Tiles");
+    logs('info', "================= {{Sauvegarde des Pièces des Tiles}}");
     //SaveTitelRoom();
 });
 
@@ -118,13 +118,13 @@ function autorisationFreebox() {
                     level: 'danger'
                 });
                 if (data.result.error_code == "new_apps_denied")
-                    $('.textFreebox').text('L\'association de nouvelles applications est désactivée. Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification');
-                logs('error', "L\'association de nouvelles applications est désactivée ou la version du Freebox Server n'est pas correct");
+                    $('.textFreebox').text('{{L\'association de nouvelles applications est désactivée. Merci de modifier les réglages de votre Freebox et relancer ensuite l\'authentification}}');
+                logs('error', "{{L\'association de nouvelles applications est désactivée ou la version du Freebox Server n'est pas correct}}");
                 return;
             } else {
                 sendToBdd(data.result);
                 $('.textFreebox').text('{{Merci d\'appuyer sur le bouton V de votre Freebox, afin de confirmer l\'autorisation d\'accès à votre Freebox.}}');
-                logs('info', '(' + data.result.error_code + ') ' + "Attente appuie sur le bouton V");
+                logs('info', '(' + data.result.error_code + ') ' + "{{Attente appuie sur le bouton V}}");
                 $('.img-freeboxOS').attr('src', 'plugins/Freebox_OS/core/img/authentification.jpg');
                 progress(40);
                 setTimeout(AskTrackAuthorization, 3000);
@@ -244,7 +244,7 @@ function sendToBdd(jsonParser) {
 }
 
 function AskTrackAuthorization() {
-    if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "authentification") {
+    if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "{{Authentification}}") {
 
         $('.textFreebox').hide();
         $('.bt_Freebox_OS_Next').hide();
@@ -276,7 +276,7 @@ function AskTrackAuthorization() {
                     switch (data.result.result.status) {
                         case "unknown":
                             $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
-                            logs('error', "ERREUR : " + '(' + data.result.result.status + ') ' + "L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification");
+                            logs('error', "ERREUR : " + '(' + data.result.result.status + ') ' + "{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification}}");
                             Good();
                             progress(-1);
                             break;
@@ -286,13 +286,13 @@ function AskTrackAuthorization() {
                             break;
                         case "timeout":
                             $('.textFreebox').text('{{Vous n\'avez pas validé à temps, il faut relancer l\'authentification. Merci}}');
-                            logs('error', "ERREUR : " + '(' + data.result.result.status + ') ' + "Vous n\'avez pas validé à temps, il faut relancer l\'authentification");
+                            logs('error', "ERREUR : " + '(' + data.result.result.status + ') ' + "{{Vous n\'avez pas validé à temps, il faut relancer l\'authentification}}");
                             Good();
                             progress(-1);
                             break;
                         case "granted":
                             $('.textFreebox').text('{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}');
-                            logs('info', '(' + data.result.result.status + ') ' + "Félicitation votre Freebox est maintenant reliée à Jeedom");
+                            logs('info', '(' + data.result.result.status + ') ' + "{{Félicitation votre Freebox est maintenant reliée à Jeedom}}");
                             $('.Freebox_OK').show();
                             $('.Freebox_OK_NEXT').show();
                             $('.Freebox_OS_Display.' + $(this).attr('rights')).show();
@@ -300,13 +300,13 @@ function AskTrackAuthorization() {
                             break;
                         case "denied":
                             $('.textFreebox').text('{{Vous avez refusé, il faut relancer l\'authentification. Merci}}');
-                            logs('error', '(' + data.result.result.status + ') ' + "Vous avez refusé, il faut relancer l\'authentification");
+                            logs('error', '(' + data.result.result.status + ') ' + "{{Vous avez refusé, il faut relancer l\'authentification}}");
                             progress(-1);
                             Good();
                             break;
                         default:
                             $('.textFreebox').text('{{REST OK : track_authorization -> Error 4 : Inconnue}}');
-                            logs('error', '(' + data.result.result.status + ') ' + "REST OK : track_authorization -> Error 4 : Inconnue");
+                            logs('error', '(' + data.result.result.status + ') ' + "{{REST OK : track_authorization -> Error 4 : Inconnue}}");
                             Good();
                             break;
                     }
@@ -343,7 +343,7 @@ function progress(ProgressPourcent) {
         $('#div_progressbar').addClass('progress-bar-success');
         $('#div_progressbar').width(ProgressPourcent + '%');
         $('#div_progressbar').attr('aria-valuenow', ProgressPourcent);
-        $('#div_progressbar').html('FIN');
+        $('#div_progressbar').html('{{FIN}}');
         return;
     }
     $('#div_progressbar').removeClass('active progress-bar-info progress-bar-danger progress-bar-warning');
@@ -368,14 +368,14 @@ function GetSetting() {
             $('#input_freeboxIP').val(data.result.ip);
             logs('info', "IP : " + data.result.ip);
             $('#input_freeNameAPP').val(data.result.NameAPP);
-            logs('info', "Nom API : " + data.result.NameAPP);
+            logs('info', "{{Nom API}} : " + data.result.NameAPP);
             $('#input_IdApp').val(data.result.IdApp);
             logs('info', "Id API : " + data.result.IdApp);
             $('#input_DeviceName').val(data.result.DeviceName);
-            logs('info', "Nom Jeedom : " + data.result.DeviceName);
+            logs('info', "{{Nom Jeedom}} : " + data.result.DeviceName);
             $('#sel_object_default').val(data.result.Categorie);
-            logs('info', "Objet par défaut : " + data.result.Categorie);
-            logs('info', "Version API Freebox : " + data.result.API);
+            logs('info', "{{Objet par défaut}} : " + data.result.Categorie);
+            logs('info', "{{Version API Freebox}} : " + data.result.API);
             $('#input_API').val(data.result.API);
 
             console.log('IP : ' + data.result.ip)
@@ -384,10 +384,10 @@ function GetSetting() {
             console.log('Version API : ' + data.result.API)
             if (data.result.DeviceName == null || data.result.DeviceName == "") {
                 $('.bt_Freebox_OS_Next').hide();
-                $('.textFreebox').text('Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage');
-                logs('error', "ERREUR : " + "Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage");
+                $('.textFreebox').text('{{Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage}}');
+                logs('error', "ERREUR : " + "{{Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage}}");
                 $('#div_alert').showAlert({
-                    message: 'Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage',
+                    message: '{{Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage}}',
                     level: 'danger'
                 });
             } else {
@@ -554,7 +554,7 @@ function GetSessionData() {
                     permissions.vm &&
                     permissions.profile &&
                     permissions.settings) {
-                    logs('info', "================= Les droits sont OK");
+                    logs('info', "================= {{Les droits sont OK}}");
                     $('.textFreebox').show();
                     $('.bt_Freebox_OS_Next').show();
                     $('.bt_Freebox_OS_Previous').show();
@@ -590,9 +590,9 @@ function getBox(type) {
                 } else {
                     funPrev()
                 }
-                logs('info', "================= BOX COMPATIBLE AVEC LES TILES : NOK");
+                logs('info', "================= {{BOX COMPATIBLE AVEC LES TILES}} : NOK");
             } else {
-                logs('info', "================= BOX COMPATIBLE AVEC LES TILES : OK");
+                logs('info', "================= {{BOX COMPATIBLE AVEC LES TILES}} : OK");
                 //SearchTile_room();
             }
         }
@@ -637,7 +637,7 @@ function funNext() {
     $('.bt_Freebox_OS_Next').show();
     $('.bt_Freebox_OS_Previous').show();
 
-    logs('info', "================= Etape : " + $('.li_Freebox_OS_Summary.active').attr('data-href'));
+    logs('info', "================= {{Étape}} : " + $('.li_Freebox_OS_Summary.active').attr('data-href'));
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':

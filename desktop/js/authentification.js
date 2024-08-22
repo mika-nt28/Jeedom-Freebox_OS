@@ -10,25 +10,25 @@ $('.bt_Freebox_OS_Previous').off('click').on('click', function () {
 });
 
 $('.bt_eqlogic_standard').on('click', function () {
-    logs('info', "================= {{Lancement recherche des équipements standards}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{recherche des équipements standards}} ◀︎───────────");
     SearchArchi();
     progress(85);
 });
 
 $('.bt_eqlogic_tiles').on('click', function () {
-    logs('info', "================= {{Lancement recherche des tiles}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{recherche des tiles}} ◀︎───────────");
     SearchTile();
     progress(90);
 });
 
 $('.bt_eqlogic_control_parental').on('click', function () {
-    logs('info', "================= {{Lancement recherche des contrôles parentaux}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{recherche des contrôles parentaux}} ◀︎───────────");
     SearchParental();
     progress(95);
 });
 
 $('.bt_Freebox_OS_Save').on('click', function () {
-    logs('info', "================= {{Sauvegarde des Paramètres}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Sauvegarde des Paramètres}}:/fg: ◀︎───────────");
     ip = $('#input_freeboxIP').val();
     //VersionAPP = $('#input_freeAppVersion').val();
     VersionAPP = null;
@@ -37,57 +37,57 @@ $('.bt_Freebox_OS_Save').on('click', function () {
 });
 
 $('.bt_Freebox_Autorisation').on('click', function () {
-    logs('info', "================= {{Lancement autorisation Freebox}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{Autorisation Freebox}} ◀︎───────────");
     autorisationFreebox();
 });
 $('.bt_Freebox_resetAPI').on('click', function () {
-    logs('info', "================= {{Lancement Reset de la version API}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{Reset de la version API}} ◀︎───────────");
     ResetAPI();
 });
 
 $('.bt_Freebox_droitVerif').on('click', function () {
-    logs('info', "================= {{Lancement vérification des droits}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{vérification des droits}} ◀︎───────────");
     GetSessionData();
 });
 $('.bt_Freebox_droitVerif_pass').on('click', function () {
-    logs('info', "================= {{Ignorer la vérification des droits}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Ignorer la vérification des droits}}:/fg: ◀︎───────────");
     funNext();
 });
 
 $('.bt_Freebox_OS_ResetConfig').on('click', function () {
-    logs('info', "================= {{Reset de la configuration}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Reset de la configuration}}:/fg: ◀︎───────────");
     SetDefaultSetting();
     GetSetting();
     $('.bt_Freebox_OS_Next').show();
 });
 
 $('.bt_Freebox_Room').on('click', function () {
-    logs('info', "================= {{Lancement Recherche des pièces}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{Recherche des pièces}} ◀︎───────────");
     //SearchTile_room();
 });
 
 $('.bt_Freebox_OS_Save_room').on('click', function () {
     checkvalue = $('.checkbox_freeboxTiles:checked').val();
     if (checkvalue == null) {
-        logs('info', "================= Cron Global Titles : NOK");
+        logs('info', "───▶︎ :fg-info:Cron Global Titles ::/fg: NOK");
         cron_tiles = '0';
     } else {
-        logs('info', "================= Cron Global Titles : OK");
+        logs('info', "───▶︎ :fg-info:Cron Global Titles ::/fg: OK:");
         cron_tiles = '1';
     };
     /*checkvalueCmd = $('.checkbox_freeboxCmdbyCmd:checked').val();
     if (checkvalueCmd == null) {
-        logs('info', "================= Actualisation par commande : NOK");
+        logs('info', "───▶︎ :fg-warning:Actualisation par commande ::/fg: NOK");
         CmdbyCmd = '0';
     } else {
-        logs('info', "================= Actualisation par commande : OK");
+        logs('info', "───▶︎ :fg-warning:Actualisation par commande ::/fg: OK");
         CmdbyCmd  = '1';
     };*/
     console.log('CRON TILES : ' + cron_tiles)
     //console.log('CMD BY CMD : ' +CmdbyCmd)
     //SetSettingTiles(cron_tiles, CmdbyCmd);
     SetSettingTiles(cron_tiles);
-    logs('info', "================= {{Sauvegarde des Pièces des Tiles}}");
+    logs('info', "──────────▶︎ :fg-warning:{{Sauvegarde des Pièces des Tiles}}:/fg: ◀︎───────────");
     //SaveTitelRoom();
 });
 
@@ -366,16 +366,16 @@ function GetSetting() {
         },
         success: function (data) {
             $('#input_freeboxIP').val(data.result.ip);
-            logs('info', "IP : " + data.result.ip);
+            logs('info', "───▶︎ :fg-info:IP ::/fg: " + data.result.ip);
             $('#input_freeNameAPP').val(data.result.NameAPP);
-            logs('info', "{{Nom API}} : " + data.result.NameAPP);
+            logs('info', "───▶︎ :fg-info:{{Nom API}} ::/fg: " + data.result.NameAPP);
             $('#input_IdApp').val(data.result.IdApp);
-            logs('info', "Id API : " + data.result.IdApp);
+            logs('info', "───▶︎ :fg-info:Id API ::/fg: " + data.result.IdApp);
             $('#input_DeviceName').val(data.result.DeviceName);
-            logs('info', "{{Nom Jeedom}} : " + data.result.DeviceName);
+            logs('info', "───▶︎ :fg-info:{{Nom de votre Jeedom}} ::/fg: " + data.result.DeviceName);
             $('#sel_object_default').val(data.result.Categorie);
-            logs('info', "{{Objet par défaut}} : " + data.result.Categorie);
-            logs('info', "{{Version API Freebox}} : " + data.result.API);
+            logs('info', "───▶︎ :fg-info:{{Objet par défaut}} ::/fg: " + data.result.Categorie);
+            logs('info', "───▶︎ :fg-info:{{Version API Freebox}} ::/fg: " + data.result.API);
             $('#input_API').val(data.result.API);
 
             console.log('IP : ' + data.result.ip)
@@ -423,11 +423,11 @@ function GetSettingTiles() {
         },
         success: function (data) {
             if (data.result.CronTiles == 0) {
-                logs('info', "================= Cron Global Titles ACTIVATION : NOK");
+                logs('info', "───▶︎ :fg-warning:Cron Global Titles ACTIVATION ::/fg: NOK");
                 console.log('Cron Global Titles ACTIVATION - FALSE - : ' + data.result.CronTiles);
                 $('.checkbox_freeboxTiles').prop('checked', false);
             } else {
-                logs('info', "================= Cron Global Titles ACTIVATION : OK");
+                logs('info', "───▶︎ :fg-info:Cron Global Titles ACTIVATION ::/fg: OK");
                 console.log('Cron Global Titles ACTIVATION - TRUE - : ' + data.result.CronTiles);
                 $('.checkbox_freeboxTiles').prop('checked',true);
             };
@@ -554,7 +554,7 @@ function GetSessionData() {
                     permissions.vm &&
                     permissions.profile &&
                     permissions.settings) {
-                    logs('info', "================= {{Les droits sont OK}}");
+                    logs('info', "───▶︎ :fg-info:{{Les droits sont}}:/fg: OK");
                     $('.textFreebox').show();
                     $('.bt_Freebox_OS_Next').show();
                     $('.bt_Freebox_OS_Previous').show();
@@ -590,9 +590,9 @@ function getBox(type) {
                 } else {
                     funPrev()
                 }
-                logs('info', "================= {{BOX COMPATIBLE AVEC LES TILES}} : NOK");
+                logs('info', "───▶︎ :fg-info:{{Compatibilité avec la partie domotique}} ::/fg: NOK");
             } else {
-                logs('info', "================= {{BOX COMPATIBLE AVEC LES TILES}} : OK");
+                logs('info', "───▶︎ :fg-info:{{Compatibilité avec la partie domotique}} ::/fg: OK");
                 //SearchTile_room();
             }
         }
@@ -637,7 +637,7 @@ function funNext() {
     $('.bt_Freebox_OS_Next').show();
     $('.bt_Freebox_OS_Previous').show();
 
-    logs('info', "================= {{Étape}} : " + $('.li_Freebox_OS_Summary.active').attr('data-href'));
+    logs('info', "──────────▶︎ :fg-warning:{{Étape}} ::/fg: " + $('.li_Freebox_OS_Summary.active').attr('data-href'));
 
     switch ($('.li_Freebox_OS_Summary.active').attr('data-href')) {
         case 'home':

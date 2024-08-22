@@ -54,7 +54,6 @@
     },
     "plugins\/Freebox_OS\/desktop\/js\/authentification.js": {
         "Attente appuie sur le bouton V": "Standby press V button",
-        "Authentification": "Authentication",
         "Authentification réussi": "Successful authentication",
         "BOX COMPATIBLE AVEC LES TILES": "TILE-COMPATIBLE BOX",
         "FIN": "END",

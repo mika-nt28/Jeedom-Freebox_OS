@@ -244,7 +244,7 @@ function sendToBdd(jsonParser) {
 }
 
 function AskTrackAuthorization() {
-    if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "{{Authentification}}") {
+    if ($('.li_Freebox_OS_Summary.active').attr('data-href') == "authentification") {
 
         $('.textFreebox').hide();
         $('.bt_Freebox_OS_Next').hide();

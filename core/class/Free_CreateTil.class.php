@@ -657,7 +657,7 @@ class Free_CreateTil
         return $result;
     }
 
-    private static function search_setting_string($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O, $eq_group = null, $_Cmd_ep_id)
+    private static function search_setting_string($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O = null, $eq_group = null, $_Cmd_ep_id = null)
     {
         $Setting1 = $_Eq_type;
         $Setting2 = $Name;
@@ -750,7 +750,7 @@ class Free_CreateTil
         );
         return $Setting;
     }
-    private static function search_setting_void($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O, $eq_group = null, $_Cmd_ep_id)
+    private static function search_setting_void($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O = null, $eq_group = null, $_Cmd_ep_id = null)
     {
         $Setting1 = $_Eq_type;
         $Setting2 = $Name;
@@ -1132,7 +1132,7 @@ class Free_CreateTil
         );
         return $Setting;
     }
-    private static function search_setting_bool($_Eq_action, $Access, $Name, $_Eq_type, $Label_O = null, $eq_group, $_Cmd_ep_id = null, $Templatecore_V4 = null)
+    private static function search_setting_bool($_Eq_action, $Access, $Name, $_Eq_type, $Label_O = null, $eq_group = null, $_Cmd_ep_id = null, $Templatecore_V4 = null)
     {
         $Setting1 = $_Eq_type;
         $Setting2 = $Name;

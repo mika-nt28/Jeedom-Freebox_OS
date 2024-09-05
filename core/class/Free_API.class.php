@@ -735,7 +735,7 @@ class Free_API
                             }
                             if ($result['result'][$k]['type'] == 'accepted') {
                                 $cptAppel_accepted++;
-                                if ($listNumber_accepted != NULL) {
+                                if ($listNumber_accepted == NULL) {
                                     $newligne = null;
                                 } else {
                                     $newligne = '<br>';
@@ -744,7 +744,7 @@ class Free_API
                             }
                             if ($result['result'][$k]['type'] == 'outgoing') {
                                 $cptAppel_outgoing++;
-                                if ($listNumber_outgoing != NULL) {
+                                if ($listNumber_outgoing == NULL) {
                                     $newligne = null;
                                 } else {
                                     $newligne = '<br>';

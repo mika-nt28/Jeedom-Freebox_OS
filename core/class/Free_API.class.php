@@ -700,7 +700,7 @@ class Free_API
         $listNumber_outgoing = null;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-
+        $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
         if ($result === false) {
             return false;
         }
@@ -754,8 +754,6 @@ class Free_API
                         }
                     }
                     $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
-                } else {
-                    $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
                 }
                 return $retourFbx;
             } else {
@@ -763,7 +761,6 @@ class Free_API
             }
         } else {
             log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . 'AUCUN APPEL' .  ':/fg:');
-            $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
             return $retourFbx;
         }
     }

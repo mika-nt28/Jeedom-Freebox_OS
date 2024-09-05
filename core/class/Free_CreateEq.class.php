@@ -1146,89 +1146,99 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
 
-    private static function createEq_wifi_ap($logicalinfo, $templatecore_V4, $order = 49, $Wifi)
+    private static function createEq_wifi_ap($logicalinfo, $templatecore_V4, $order = 49, $Wifi = null)
     {
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes spécifiques pour : '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiAPName'] . ':/fg: ──');
-        $iconWifi = 'fas fa-wifi icon_blue';
-        $TemplateWifi = 'Freebox_OS::Wifi Statut carte';
-        $updateicon = false;;
-        $Free_API = new Free_API();
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
+        if ($Wifi != null) {
+            $iconWifi = 'fas fa-wifi icon_blue';
+            $TemplateWifi = 'Freebox_OS::Wifi Statut carte';
+            $updateicon = false;;
+            $Free_API = new Free_API();
+            $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
 
-        $nb_card = count($result['result']);
-        if ($result != false) {
-            for ($k = 0; $k < $nb_card; $k++) {
-                log::add('Freebox_OS', 'debug', '| ──────▶︎ Nom de la commande : ' . 'Etat Wifi ' . $result['result'][$k]['name'] . ' - Id : ' . $result['result'][$k]['id'] . ' - Status : ' . $result['result'][$k]['status']['state']);
-                $Wifi->AddCommand('Etat Wifi ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, null, 'CARD', 0, $iconWifi, false, 'default', 'default', $order++, '0', $updateicon, false, false, true);
+            $nb_card = count($result['result']);
+            if ($result != false) {
+                for ($k = 0; $k < $nb_card; $k++) {
+                    log::add('Freebox_OS', 'debug', '| ──────▶︎ Nom de la commande : ' . 'Etat Wifi ' . $result['result'][$k]['name'] . ' - Id : ' . $result['result'][$k]['id'] . ' - Status : ' . $result['result'][$k]['status']['state']);
+                    $Wifi->AddCommand('Etat Wifi ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, null, 'CARD', 0, $iconWifi, false, 'default', 'default', $order++, '0', $updateicon, false, false, true);
+                }
             }
         }
     }
 
-    private static function createEq_wifi_Eco($logicalinfo, $templatecore_V4, $order = 49, $Wifi)
+    private static function createEq_wifi_Eco($logicalinfo, $templatecore_V4, $order = 49, $Wifi = null)
     {
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes spécifiques pour : '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiECOName'] . ':/fg: ──');
-        $iconWifi = 'fas fa-wifi icon_blue';
-        $updateicon = false;;
-        $Free_API = new Free_API();
-        $result = $Free_API->universal_get('system', null, null, null, true, true, null);
+        if ($Wifi != null) {
+            $iconWifi = 'fas fa-wifi icon_blue';
+            $updateicon = false;;
+            $Free_API = new Free_API();
+            $result = $Free_API->universal_get('system', null, null, null, true, true, null);
 
-        if (isset($result['model_info']['has_eco_wifi'])) {
-            $Wifi->AddCommand('Mode Éco-WiFi', 'has_eco_wifi', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconWifi, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
-        } else {
-            config::save('FREEBOX_HAS_ECO_WFI', 0, 'Freebox_OS');
-            log::add('Freebox_OS', 'debug', '| ──────▶︎ Pas de mode Eco non supporté');
+            if (isset($result['model_info']['has_eco_wifi'])) {
+                $Wifi->AddCommand('Mode Éco-WiFi', 'has_eco_wifi', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconWifi, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+            } else {
+                config::save('FREEBOX_HAS_ECO_WFI', 0, 'Freebox_OS');
+                log::add('Freebox_OS', 'debug', '| ──────▶︎ Pas de mode Eco non supporté');
+            }
         }
     }
 
-    private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $order = 29, $Wifi)
+    private static function createEq_wifi_bss($logicalinfo, $templatecore_V4, $order = 29, $Wifi = null)
     {
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes spécifiques pour : '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiWPSName'] . ':/fg: ──');
-        $iconWifiSessionWPSOn = 'fas fa-link icon_orange';
-        $iconWifiSessionWPSOff = 'fas fa-link icon_red';
-        $updateicon = false;
+        if ($Wifi != null) {
+            $iconWifiSessionWPSOn = 'fas fa-link icon_orange';
+            $iconWifiSessionWPSOff = 'fas fa-link icon_red';
+            $updateicon = false;
 
-        $WifiWPS = $Wifi->AddCommand('Etat WPS', 'wifiWPS', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 3, $updateicon, true);
-        $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'SWITCH_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order++, '0', $updateicon, false, false, true);
-        $Free_API = new Free_API();
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/bss', true, true, true);
-        if ($result != false) {
-            foreach ($result['result'] as $wifibss) {
-                if ($wifibss['config']['wps_enabled'] != true) continue;
-                if ($wifibss['config']['use_default_config'] == true) {
-                    $WPSname = 'Wifi Session WPS (' . $wifibss['shared_bss_params']['ssid'] . ') On';
-                } else {
-                    $WPSname = 'Wifi Session WPS (' . $wifibss['config']['ssid'] . ') On';
-                }
-                $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'SWITCH_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
-                if ($wifibss['config']['use_default_config'] == true) {
-                    log::add('Freebox_OS', 'debug', '| ──────▶︎ Configuration Wifi commune pour l\'ensemble des cartes');
-                    break;
-                } else {
-                    //$order++;
+            $WifiWPS = $Wifi->AddCommand('Etat WPS', 'wifiWPS', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 3, $updateicon, true);
+            $Wifi->AddCommand('Wifi Session WPS (toutes les sessions) Off', 'wifiSessionWPSOff', 'action', 'other', null, null, 'SWITCH_OFF', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiSessionWPSOff, true, 'default', 'default', $order++, '0', $updateicon, false, false, true);
+            $Free_API = new Free_API();
+            $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/bss', true, true, true);
+            if ($result != false) {
+                foreach ($result['result'] as $wifibss) {
+                    if ($wifibss['config']['wps_enabled'] != true) continue;
+                    if ($wifibss['config']['use_default_config'] == true) {
+                        $WPSname = 'Wifi Session WPS (' . $wifibss['shared_bss_params']['ssid'] . ') On';
+                    } else {
+                        $WPSname = 'Wifi Session WPS (' . $wifibss['config']['ssid'] . ') On';
+                    }
+                    $Wifi->AddCommand($WPSname, $wifibss['id'], 'action', 'other', null, null, 'SWITCH_ON', 1, $WifiWPS, 'wifiWPS', 0, $iconWifiSessionWPSOn, true, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
+                    if ($wifibss['config']['use_default_config'] == true) {
+                        log::add('Freebox_OS', 'debug', '| ──────▶︎ Configuration Wifi commune pour l\'ensemble des cartes');
+                        break;
+                    } else {
+                        //$order++;
+                    }
                 }
             }
         }
     }
-    private static function createEq_wifi_Standby($logicalinfo, $templatecore_V4, $order = 29, $Wifi)
+    private static function createEq_wifi_Standby($logicalinfo, $templatecore_V4, $order = 29, $Wifi = null)
     {
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes spécifiques pour : ' . $logicalinfo['wifistandbyName'] . ':/fg: ──');
         $updateicon = false;
-
-        $Wifi->AddCommand('Mode de veille', 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
+        if ($Wifi != null) {
+            $Wifi->AddCommand('Mode de veille', 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
+        }
     }
 
-    private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $order = 39, $EqLogic)
+    private static function createEq_mac_filter($logicalinfo, $templatecore_V4, $order = 39, $EqLogic = null)
     {
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes pour : ' . $logicalinfo['wifimmac_filter'] . ':/fg: ──');
-        $iconmac_list_white = 'fas fa-list-alt';
-        $iconmac_list_black = 'far fa-list-alt';
+        if ($EqLogic != null) {
+            $iconmac_list_white = 'fas fa-list-alt';
+            $iconmac_list_black = 'far fa-list-alt';
 
-        //$Statutmac = $EqLogic->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order++, 1, false, true, null, true);
-        //$listValue = 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche';
-        //$EqLogic->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order++, '0', false, false, null, true, null, null, null, null, null, null, null, null, $listValue);
-        $EqLogic->AddCommand('Liste Mac Blanche', 'whitelist', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_white, 0, 'default', 'default',  $order++, '0', null, true, false, true, null, null, null, null, null, null, null, true);
-        $EqLogic->AddCommand('Liste MAC Noire', 'blacklist', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_black, 0, 'default', 'default',  $order++, '0', null, true, false, true, null, null, null, null, null, null, null, true);
+            //$Statutmac = $EqLogic->AddCommand('Etat Mode de filtrage', 'wifimac_filter_state', "info", 'string', $Templatemac, null, null, 1, null, null, null, null, 1, 'default', 'default', $order++, 1, false, true, null, true);
+            //$listValue = 'disabled|Désactiver;blacklist|Liste Noire;whitelist|Liste Blanche';
+            //$EqLogic->AddCommand('Mode de filtrage', 'mac_filter_state', 'action', 'select', null, null, null, 1, $Statutmac, 'wifimac_filter_state', null, $iconmac_filter_state, 0, 'default', 'default', $order++, '0', false, false, null, true, null, null, null, null, null, null, null, null, $listValue);
+            $EqLogic->AddCommand('Liste Mac Blanche', 'whitelist', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_white, 0, 'default', 'default',  $order++, '0', null, true, false, true, null, null, null, null, null, null, null, true);
+            $EqLogic->AddCommand('Liste MAC Noire', 'blacklist', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmac_list_black, 0, 'default', 'default',  $order++, '0', null, true, false, true, null, null, null, null, null, null, null, true);
+        }
     }
+
     private static function createEq_upload($logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : ' . $logicalinfo['notificationName'] . ':/fg: ──');

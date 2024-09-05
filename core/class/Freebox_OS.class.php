@@ -334,7 +334,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type = null, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles = false, $eq_type = null, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', ':fg-info:| Création équipement : :/fg:' . $Name . ' : Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
@@ -438,7 +438,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary_display = '0', $icon = null, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary_display = '0', $icon = null, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = null)
 	{
 		if ($listValue_Update == true) {
 			log::add('Freebox_OS', 'debug', ':fg-info:| Création de la commande : :/fg:' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue . ':/fg:');

@@ -520,7 +520,7 @@ class Free_API
         else
             return false;
     }
-    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null, $_options_2 = null)
+    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options = null, $_status_cmd = null, $_options_2 = null)
     {
         $API_version = $this->API_version;
         $fonction = "PUT";
@@ -700,11 +700,10 @@ class Free_API
         $listNumber_outgoing = null;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-        //if ($result == 'auth_required') {
-        //  $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-        // }
-        if ($result === false)
+        $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
+        if ($result === false) {
             return false;
+        }
         if (isset($result['success'])) {
             if ($result['success']) {
                 $timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
@@ -736,7 +735,7 @@ class Free_API
                             }
                             if ($result['result'][$k]['type'] == 'accepted') {
                                 $cptAppel_accepted++;
-                                if ($listNumber_accepted != NULL) {
+                                if ($listNumber_accepted == NULL) {
                                     $newligne = null;
                                 } else {
                                     $newligne = '<br>';
@@ -745,7 +744,7 @@ class Free_API
                             }
                             if ($result['result'][$k]['type'] == 'outgoing') {
                                 $cptAppel_outgoing++;
-                                if ($listNumber_outgoing != NULL) {
+                                if ($listNumber_outgoing == NULL) {
                                     $newligne = null;
                                 } else {
                                     $newligne = '<br>';
@@ -755,15 +754,14 @@ class Free_API
                         }
                     }
                     $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
-                } else {
-                    $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
                 }
                 return $retourFbx;
             } else {
                 return false;
             }
         } else {
-            return false;
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . 'AUCUN APPEL' .  ':/fg:');
+            return $retourFbx;
         }
     }
 

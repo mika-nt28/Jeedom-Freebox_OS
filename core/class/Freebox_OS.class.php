@@ -800,9 +800,10 @@ class Freebox_OS extends eqLogic
 	public static function getConfigForCommunity()
 	{
 		$box = "Box [" . config::byKey('TYPE_FREEBOX', 'Freebox_OS') . '] ; Box_name [' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS') . ']';
+		$box_Firmware = "Firmware [" . config::byKey('TYPE_FIRMWARE', 'Freebox_OS') . ']';
 		$box_mode = "Mode [" . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') . ']';
 		$IP = "IP Box [" . config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS') . ']';
-		$ligne1 = $box . ' ; ' . $box_mode . ' ; ' . $IP;
+		$ligne1 = $box . ' ; ' . $box_Firmware . ' ; ' . $box_mode . ' ; ' . $IP;
 
 		$Name = "Nom [" . config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS') . ']';
 		$API = "API [" . config::byKey('FREEBOX_API', 'Freebox_OS') . ']';

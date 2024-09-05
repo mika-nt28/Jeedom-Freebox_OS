@@ -296,23 +296,24 @@ class Free_CreateEq
 
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
-    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $order = 19, $result)
+    private static function createEq_connexion_FTTH($logicalinfo, $templatecore_V4, $order = 19, $result = null)
     {
         $updateicon = false;
-
-        $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *', null, null, null, 'system', true);
-        if (isset($result['link_type'])) {
-            $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
-        } else {
-            log::add('Freebox_OS', 'debug', '| ───▶︎ Fonction type de connexion Fibre non présent');
+        if ($result = ! null) {
+            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *', null, null, null, 'system', true);
+            if (isset($result['link_type'])) {
+                $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
+            } else {
+                log::add('Freebox_OS', 'debug', '| ───▶︎ Fonction type de connexion Fibre non présent');
+            }
+            log::add('Freebox_OS', 'debug', '| :fg-success:───▶︎ Ajout des commandes spécifiques pour la fibre : ' . $logicalinfo['connexionName'] . ':/fg:');
+            $Connexion->AddCommand('Module Fibre présent', 'sfp_present', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
+            $Connexion->AddCommand('Signal Fibre présent', 'sfp_has_signal', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
+            $Connexion->AddCommand('Etat Alimentation', 'sfp_alim_ok', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
+            $Connexion->AddCommand('Puissance transmise', 'sfp_pwr_tx', 'info', 'numeric', $templatecore_V4 . 'badge', 'dBm', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, '#value# / 100', '2', null, null, null, null, false);
+            $Connexion->AddCommand('Puissance reçue', 'sfp_pwr_rx', 'info', 'numeric', $templatecore_V4 . 'badge', 'dBm', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, '#value# / 100', '2', null, null, null, null, true);
+            log::add('Freebox_OS', 'debug', '└────────────────────');
         }
-        log::add('Freebox_OS', 'debug', '| :fg-success:───▶︎ Ajout des commandes spécifiques pour la fibre : ' . $logicalinfo['connexionName'] . ':/fg:');
-        $Connexion->AddCommand('Module Fibre présent', 'sfp_present', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
-        $Connexion->AddCommand('Signal Fibre présent', 'sfp_has_signal', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
-        $Connexion->AddCommand('Etat Alimentation', 'sfp_alim_ok', 'info', 'binary', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
-        $Connexion->AddCommand('Puissance transmise', 'sfp_pwr_tx', 'info', 'numeric', $templatecore_V4 . 'badge', 'dBm', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, '#value# / 100', '2', null, null, null, null, false);
-        $Connexion->AddCommand('Puissance reçue', 'sfp_pwr_rx', 'info', 'numeric', $templatecore_V4 . 'badge', 'dBm', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, '#value# / 100', '2', null, null, null, null, true);
-        log::add('Freebox_OS', 'debug', '└────────────────────');
     }
     private static function createEq_connexion_4G($logicalinfo, $templatecore_V4, $order = 19)
     {
@@ -936,7 +937,7 @@ class Free_CreateEq
         Free_Refresh::RefreshInformation($logicalinfo['systemID']);
     }
 
-    private static function createEq_system_SP($logicalinfo, $templatecore_V4, $order = 20, $system)
+    private static function createEq_system_SP($logicalinfo, $templatecore_V4, $order = 20, $system = null)
     {
         log::add('Freebox_OS', 'debug', '|:fg-success:───▶︎ Ajout des commandes spécifiques pour l\'équipement : ' . $logicalinfo['systemName'] . ' - Capteurs' . ':/fg:');
         $Free_API = new Free_API();

@@ -520,7 +520,7 @@ class Free_API
         else
             return false;
     }
-    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options, $_status_cmd = null, $_options_2 = null)
+    public function universal_put($parametre, $update = 'wifi', $id = null, $nodeId = null, $_options = null, $_status_cmd = null, $_options_2 = null)
     {
         $API_version = $this->API_version;
         $fonction = "PUT";
@@ -700,11 +700,10 @@ class Free_API
         $listNumber_outgoing = null;
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-        //if ($result == 'auth_required') {
-        //  $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-        // }
-        if ($result === false)
+
+        if ($result === false) {
             return false;
+        }
         if (isset($result['success'])) {
             if ($result['success']) {
                 $timestampToday = mktime(0, 0, 0, date('n'), date('j'), date('Y'));
@@ -763,7 +762,9 @@ class Free_API
                 return false;
             }
         } else {
-            return false;
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . 'AUCUN APPEL' .  ':/fg:');
+            $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
+            return $retourFbx;
         }
     }
 

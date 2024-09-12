@@ -36,7 +36,7 @@ class Free_CreateTV
     }
     private static function createTV_player($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : ' . $logicalinfo['playerName'] . ':/fg: ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: ' . $logicalinfo['playerName'] . ' ──');
         $Free_API = new Free_API();
         $TemplatePlayer = 'Freebox_OS::Player';
 
@@ -53,25 +53,27 @@ class Free_CreateTV
                     }
                     log::add('Freebox_OS', 'debug', '| ───▶︎ CONFIGURATION PLAYER : ' . $nb_player . ' - ' . $_devicename);
                     if (isset($Equipement['id'])) {
+                        $player_STATE = 'KO';
+                        $player_log = ' -- Il n\'est pas possible de récupérer le status du Player donc pas de création de la commande d\'état';
+                        $player_ID = $Equipement['mac'];
+                        $player_MAC = 'MAC';
                         if ($Equipement['id']) {
                             if ($Equipement['id'] != null) {
                                 $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $Equipement['id'] . '/api/v6/status', true, true, false);
-                                log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT PLAYER : ' . $results_playerID['power_state']);
-                                if ($results_playerID['power_state'] == 'running' || $results_playerID['power_state'] == 'standby') {
-                                    $player_STATE = 'OK';
-                                    $player_log = ' -- Il est possible de récupérer le status du Player';
+                                if (isset($results_playerID['power_state'])) {
+                                    log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT PLAYER : ' . $results_playerID['power_state']);
+                                    if ($results_playerID['power_state'] == 'running' || $results_playerID['power_state'] == 'standby') {
+                                        $player_STATE = 'OK';
+                                        $player_log = ' -- Il est possible de récupérer le status du Player';
+                                    }
+                                    $player_ID = $Equipement['id'];
+                                    $player_MAC = 'ID';
+                                    log::add('Freebox_OS', 'debug', '| ───▶︎ PLAYER : ' . $_devicename . ' -- Id : ' . $Equipement['id'] . $player_log);
                                 } else {
-                                    $player_STATE = 'KO';
-                                    $player_log = ' -- Il n\'est pas possible de récupérer le status du Player donc pas de création de la commande d\'état';
+                                    log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ PLAYER : ' . $_devicename . ' -- Id : ' . $Equipement['id'] . $player_log . ':/fg:');
                                 }
-                                $player_ID = $Equipement['id'];
-                                $player_MAC = 'ID';
-                                log::add('Freebox_OS', 'debug', '| ───▶︎PLAYER : ' . $_devicename . ' -- Id : ' . $Equipement['id'] . $player_log);
                             } else {
-                                $player_ID = $Equipement['mac'];
-                                $player_MAC = 'MAC';
-                                $player_STATE = 'KO';
-                                log::add('Freebox_OS', 'debug', '| ───▶︎ PLAYER : ' . $_devicename . ' -- Mac : ' . $Equipement['mac'] . ' -- L\'Id est vide donc il n\'est pas possible de récupérer le status du Player donc pas de création de la commande d\'état');
+                                log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ PLAYER : ' . $_devicename . ' -- Mac : ' . $Equipement['mac'] . ' -- L\'Id est vide ───▶︎ ' . $player_log . ':/fg:');
                             }
                             $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $player_ID, 'multimedia', true, 'player', null, $player_ID, '*/5 * * * *', null, $player_STATE, null, 'system', true, $player_MAC);
                             log::add('Freebox_OS', 'debug', '| ───▶︎ Nom : ' . $_devicename . ' -- id / mac : player_' . $Equipement['id'] . ' / ' . $Equipement['mac'] . ' -- FREE-ID : ' . $Equipement['id'] . ' -- TYPE-ID : ' . $player_MAC);
@@ -92,7 +94,7 @@ class Free_CreateTV
                     $nb_player++;
                 }
             } else {
-                log::add('Freebox_OS', 'debug', '| ───▶︎ PAS DE ' . $logicalinfo['playerName'] . ' SUR VOTRE BOX ');
+                log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ PAS DE ' . $logicalinfo['playerName'] . ' SUR VOTRE BOX:/fg:');
             }
         }
         log::add('Freebox_OS', 'debug', '└────────────────────');

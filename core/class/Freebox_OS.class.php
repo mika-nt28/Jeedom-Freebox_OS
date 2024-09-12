@@ -929,20 +929,20 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'info', '|:fg-warning: Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue :/fg:');
 		$Free_API = new Free_API();
 		$result = $Free_API->universal_get('universalAPI', null, null, 'api_version', true, true, true);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Type Box : ' . $result['box_model_name']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ API URL : ' . $result['api_base_url']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Port https : ' . $result['https_port']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Nom Box : ' . $result['device_name']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Https disponible : ' . $result['https_available']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Modele de box : ' . $result['box_model']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Type de box : ' . $result['device_type']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ API domaine : ' . $result['api_domain']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ API version : ' . $result['api_version']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Type Box ::/fg: ' . $result['box_model_name']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API URL ::/fg: ' . $result['api_base_url']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Port https ::/fg: ' . $result['https_port']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Nom Box ::/fg: ' . $result['device_name']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Https disponible ::/fg: ' . $result['https_available']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Modele de box ::/fg: ' . $result['box_model']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Type de box ::/fg: ' . $result['device_type']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API domaine ::/fg: ' . $result['api_domain']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API version ::/fg: ' . $result['api_version']);
 		$API_version = 'v'  . $result['api_version'];
 		$API_version = strstr($API_version, '.', true);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Version actuelle dans la base ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
-		log::add('Freebox_OS', 'info', '| ───▶︎ Mise à jour de Version dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Mise à jour de Version dans la base ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		log::add('Freebox_OS', 'debug', '└────────────────────');
 		Free_CreateEq::createEq('box');
 		return $API_version;
@@ -1133,7 +1133,7 @@ class Freebox_OSCmd extends cmd
 		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 
-	public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')
+	/*public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')
 	{
 		$data = null;
 		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version, $_clean, $_widgetName);
@@ -1152,5 +1152,5 @@ class Freebox_OSCmd extends cmd
 			} else return $data;
 		}
 		return parent::getWidgetTemplateCode($_version, $_clean, $_widgetName);
-	}
+	}*/
 }

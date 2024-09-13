@@ -103,7 +103,6 @@
         "Accès aux fichiers de la Freebox": "Acceso a los archivos de Freebox",
         "Accès à la base de contacts de la Freebox": "Acceso a la base de datos de contactos de Freebox",
         "Actualisation Globale des Tiles :": "Global Tile Update :",
-        "Actualisation individuelle des commandes :": "Actualizaciones de comandos individuales :",
         "Ajouter automatiquement les équipements détectés dans :": "Añada automáticamente los equipos detectados en :",
         "Aucune": "Alguna",
         "Authentification": "Autenticación",
@@ -156,9 +155,7 @@
         "Précédent": "Anterior",
         "Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant": "A continuación, una vez modificados los derechos, haga clic en el botón Verificar derechos. En caso afirmativo, haga clic en el siguiente botón",
         "Recherche des Pièces": "Búsqueda de piezas",
-        "Reset API Freebox": "Reinicio de la API de Freebox",
         "Reset de la configuration": "Restablecer configuración",
-        "Reset de la version API ": "Restablecer versión API",
         "Réglages": "Ajustes",
         "Sauvegarder": "Para salvaguardar",
         "Scan des Contrôles parentaux": "Escaneado de control parental",
@@ -174,9 +171,7 @@
         "Une fois validé, cliquez sur le bouton Sauvegarder": "Una vez validado, pulse el botón Guardar",
         "Uniquement sur la Freebox Delta": "Sólo en Freebox Delta",
         "Version API de la Freebox :": "Versión API de Freebox :",
-        "Version de l'application Freebox serveur :": "Versión de la aplicación de servidor Freebox :",
         "Vérification des droits": "Verificación de derechos",
-        "si la case est cochée, l'actualisation des commandes info sera faite de façon individuelle": "si la casilla está marcada, los comandos de información se actualizarán individualmente",
         "si la case est cochée, l'actualisation des tiles est faite de façon globale": "si la casilla está marcada, los azulejos se actualizan globalmente"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/health.php": {

@@ -103,7 +103,6 @@
         "Accès aux fichiers de la Freebox": "Acesso a ficheiros Freebox",
         "Accès à la base de contacts de la Freebox": "Acesso à base de dados de contactos Freebox",
         "Actualisation Globale des Tiles :": "Atualização global dos azulejos :",
-        "Actualisation individuelle des commandes :": "Actualizações de comandos individuais :",
         "Ajouter automatiquement les équipements détectés dans :": "Adicionar automaticamente equipamentos detectados no :",
         "Aucune": "Nenhuma",
         "Authentification": "Autenticação",
@@ -156,9 +155,7 @@
         "Précédent": "Anterior",
         "Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant": "Em seguida, quando os direitos tiverem sido modificados, clique no botão Verificar direitos. Se estiver OK, clique no seguinte botão",
         "Recherche des Pièces": "Pesquisa de peças",
-        "Reset API Freebox": "Reinicialização da API do Freebox",
         "Reset de la configuration": "Repor a configuração",
-        "Reset de la version API ": "Repor a versão da API",
         "Réglages": "Configurações",
         "Sauvegarder": "Guardar",
         "Scan des Contrôles parentaux": "Verificação dos controlos parentais",
@@ -174,9 +171,7 @@
         "Une fois validé, cliquez sur le bouton Sauvegarder": "Uma vez validado, clique no botão Guardar",
         "Uniquement sur la Freebox Delta": "Apenas na Freebox Delta",
         "Version API de la Freebox :": "Versão API do Freebox :",
-        "Version de l'application Freebox serveur :": "Versão da aplicação do servidor Freebox :",
         "Vérification des droits": "Verificação de direitos",
-        "si la case est cochée, l'actualisation des commandes info sera faite de façon individuelle": "se a caixa estiver assinalada, os comandos de informação serão actualizados individualmente",
         "si la case est cochée, l'actualisation des tiles est faite de façon globale": "se a caixa estiver assinalada, os mosaicos são actualizados globalmente"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/health.php": {

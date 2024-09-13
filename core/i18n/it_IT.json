@@ -103,7 +103,6 @@
         "Accès aux fichiers de la Freebox": "Accesso ai file Freebox",
         "Accès à la base de contacts de la Freebox": "Accesso al database dei contatti Freebox",
         "Actualisation Globale des Tiles :": "Aggiornamento globale sulle piastrelle :",
-        "Actualisation individuelle des commandes :": "Aggiornamenti dei singoli comandi :",
         "Ajouter automatiquement les équipements détectés dans :": "Aggiungere automaticamente le apparecchiature rilevate in :",
         "Aucune": "Aucune",
         "Authentification": "Autenticazione",
@@ -156,9 +155,7 @@
         "Précédent": "Precedente",
         "Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant": "Quindi, una volta modificati i diritti, fare clic sul pulsante Verifica diritti. In caso di esito positivo, fare clic sul seguente pulsante",
         "Recherche des Pièces": "Ricerca parti",
-        "Reset API Freebox": "Reset API Freebox",
         "Reset de la configuration": "Ripristino della configurazione",
-        "Reset de la version API ": "Azzeramento della versione API",
         "Réglages": "Impostazioni",
         "Sauvegarder": "Sauvegarder",
         "Scan des Contrôles parentaux": "Scansione dei controlli parentali",
@@ -174,9 +171,7 @@
         "Une fois validé, cliquez sur le bouton Sauvegarder": "Una volta convalidato, fare clic sul pulsante Salva",
         "Uniquement sur la Freebox Delta": "Solo su Freebox Delta",
         "Version API de la Freebox :": "Versione API di Freebox :",
-        "Version de l'application Freebox serveur :": "Versione dell'applicazione server Freebox :",
         "Vérification des droits": "Verifica dei diritti",
-        "si la case est cochée, l'actualisation des commandes info sera faite de façon individuelle": "se la casella è spuntata, i comandi informativi saranno aggiornati singolarmente",
         "si la case est cochée, l'actualisation des tiles est faite de façon globale": "se la casella è spuntata, le tessere vengono aggiornate globalmente"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/health.php": {

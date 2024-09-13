@@ -103,7 +103,6 @@
         "Accès aux fichiers de la Freebox": "Access to Freebox files",
         "Accès à la base de contacts de la Freebox": "Access to Freebox contact database",
         "Actualisation Globale des Tiles :": "Global Tile Update :",
-        "Actualisation individuelle des commandes :": "Individual command updates :",
         "Ajouter automatiquement les équipements détectés dans :": "Automatically add detected devices to :",
         "Aucune": "None",
         "Authentification": "Authentication",
@@ -156,9 +155,7 @@
         "Précédent": "Previous",
         "Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant": "Once the rights have been modified, click on the Verify rights button. If OK, click on the next button",
         "Recherche des Pièces": "Search for rooms",
-        "Reset API Freebox": "Freebox API reset",
         "Reset de la configuration": "Reset configuration",
-        "Reset de la version API ": "Reset API version",
         "Réglages": "Settings",
         "Sauvegarder": "Save",
         "Scan des Contrôles parentaux": "Parental Controls Scan",
@@ -174,9 +171,7 @@
         "Une fois validé, cliquez sur le bouton Sauvegarder": "Once validated, click on the Save button",
         "Uniquement sur la Freebox Delta": "Only on Freebox Delta",
         "Version API de la Freebox :": "Freebox API version :",
-        "Version de l'application Freebox serveur :": "Freebox server application version :",
         "Vérification des droits": "Verification of rights",
-        "si la case est cochée, l'actualisation des commandes info sera faite de façon individuelle": "if checked, info commands will be updated individually",
         "si la case est cochée, l'actualisation des tiles est faite de façon globale": "if checked, tiles are updated globally"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/health.php": {

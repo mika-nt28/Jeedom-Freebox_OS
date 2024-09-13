@@ -38,7 +38,7 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 		//if (result) {
 			$.ajax({
 				type: 'POST',
-				url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+				url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
 				data: {
 					action: 'createCamera',
 					name: camera.name,
@@ -86,7 +86,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 	$.ajax({
 		type: 'POST',
 		async: true,
-		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
 		data: {
 			action: 'SearchArchi'
 		},
@@ -118,7 +118,7 @@ $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 	$.ajax({
 		type: 'POST',
 		async: true,
-		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
 		data: {
 			action: 'SearchParental'
 		},
@@ -150,7 +150,7 @@ $('.eqLogicAction[data-action=search_debugTile]').on('click', function () {
 	$.ajax({
 		type: 'POST',
 		async: true,
-		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
 		data: {
 			action: 'SearchDebugTile'
 		},
@@ -182,7 +182,7 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 	$.ajax({
 		type: 'POST',
 		async: true,
-		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
 		data: {
 			action: 'SearchTile'
 		},
@@ -216,7 +216,7 @@ $('.Equipement').on('click', function () {
 	$.ajax({
 		type: 'POST',
 		async: false,
-		url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+		url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
 		data: {
 			action: 'Search',
 			search: $('.eqLogicAttr[data-l1key=configuration][data-l2key=logicalID]').value()
@@ -387,7 +387,7 @@ function addCmdToTable(_cmd) {
 function setupCron($icon,$icon_type) {
 	$.ajax({	
 		type: "POST",
-		url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+		url: "plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php",
 		data: {
 			action: "GetSettingTiles",
 		},
@@ -465,7 +465,7 @@ function setupPage() {
 
 	$.ajax({
 		type: "POST",
-		url: "plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php",
+		url: "plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php",
 		data: {
 			action: "GetBox",
 		},

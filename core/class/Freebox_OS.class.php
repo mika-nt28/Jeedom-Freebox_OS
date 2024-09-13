@@ -214,7 +214,7 @@ class Freebox_OS extends eqLogic
 		}
 		if (is_object($cron)) {
 			$cron->stop();
-			sleep(1);
+			sleep(3);
 			if ($cron->running()) {
 				$cron->halt();
 			}
@@ -229,7 +229,7 @@ class Freebox_OS extends eqLogic
 				}
 				if (is_object($cron)) {
 					$cron->stop();
-					sleep(1);
+					sleep(3);
 					if ($cron->running()) {
 						$cron->halt();
 					}

@@ -141,7 +141,7 @@ class Free_CreateEq
                     if ($result_disk == true) {
                         Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4, $order);
                     } else {
-                        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : '  . $logicalinfo['downloadsName'] . ':/fg: ──');
+                        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: '  . $logicalinfo['downloadsName'] . ' ──');
                         log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ AUCUN DISQUE => PAS DE CREATION DE L\'EQUIPEMENT:/fg:');
                         log::add('Freebox_OS', 'debug', '└────────────────────');
                     }

@@ -1,5 +1,5 @@
 {
-    "plugins\/Freebox_OS\/core\/ajax\/Freebox_OS.ajax.php": {
+    "plugins\/Freebox_OS\/core\/ajax\/FreeboxOS.ajax.php": {
         "401 - Accès non autorisé": "401 - Acceso no autorizado",
         "Aucune methode correspondante à : ": "Ningún método correspondiente a :"
     },

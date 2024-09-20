@@ -214,7 +214,6 @@ class Free_API
             curl_close($ch);
 
             if ($log_result  != false) {
-
                 log::add('Freebox_OS', 'debug', '[Freebox Request Result] : ' . $content);
             }
             if ($errorno !== 0) {

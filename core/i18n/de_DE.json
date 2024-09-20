@@ -1,5 +1,5 @@
 {
-    "plugins\/Freebox_OS\/core\/ajax\/Freebox_OS.ajax.php": {
+    "plugins\/Freebox_OS\/core\/ajax\/FreeboxOS.ajax.php": {
         "401 - Accès non autorisé": "401 - Nicht autorisierter Zugriff",
         "Aucune methode correspondante à : ": "Keine passende Methode zu :"
     },
@@ -103,7 +103,6 @@
         "Accès aux fichiers de la Freebox": "Zugriff auf Dateien der Freebox",
         "Accès à la base de contacts de la Freebox": "Zugriff auf die Kontaktdatenbank der Freebox",
         "Actualisation Globale des Tiles :": "Globale Aktualisierung der Tiles :",
-        "Actualisation individuelle des commandes :": "Individuelle Aktualisierung von Befehlen :",
         "Ajouter automatiquement les équipements détectés dans :": "Automatisches Hinzufügen von erkannten Geräten in :",
         "Aucune": "Irgendein",
         "Authentification": "Authentifizierung",
@@ -156,9 +155,7 @@
         "Précédent": "Früher",
         "Puis une fois les droits modifiés, cliquez sur le bouton Vérification des droits, si OK cliquez sur le bouton suivant": "Dann, wenn Sie die Rechte geändert haben, klicken Sie auf die Schaltfläche Rechte prüfen, wenn OK klicken Sie auf die folgende Schaltfläche",
         "Recherche des Pièces": "Suche nach Teilen",
-        "Reset API Freebox": "Reset API Freebox",
         "Reset de la configuration": "Reset der Konfiguration",
-        "Reset de la version API ": "Reset der API-Version",
         "Réglages": "Einstellungen",
         "Sauvegarder": "Zu schützen",
         "Scan des Contrôles parentaux": "Scannen von Parental Controls",
@@ -174,9 +171,7 @@
         "Une fois validé, cliquez sur le bouton Sauvegarder": "Klicken Sie nach der Bestätigung auf die Schaltfläche Speichern",
         "Uniquement sur la Freebox Delta": "Nur auf der Freebox Delta",
         "Version API de la Freebox :": "API-Version der Freebox :",
-        "Version de l'application Freebox serveur :": "Version der Freebox Server-Anwendung :",
         "Vérification des droits": "Überprüfung der Rechte",
-        "si la case est cochée, l'actualisation des commandes info sera faite de façon individuelle": "wenn das Kontrollkästchen aktiviert ist, wird die Aktualisierung der Info-Befehle individuell vorgenommen",
         "si la case est cochée, l'actualisation des tiles est faite de façon globale": "wenn das Kontrollkästchen aktiviert ist, erfolgt die Aktualisierung der tiles global"
     },
     "plugins\/Freebox_OS\/desktop\/modal\/health.php": {

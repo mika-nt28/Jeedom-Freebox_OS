@@ -681,7 +681,6 @@ class Free_Update
                 $Free_API->universal_put(0, 'universalAPI', null, null, 'enabled', null, 'connection/aggregation');
                 break;
             case 'avalaible':
-                log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:Début de création des commandes pour :  TESSST');
                 $Free_API->universal_put(null, 'universal_put', null, null, 'lang', 'POST', array('lang' => $_options['select']), null);
                 break;
         }

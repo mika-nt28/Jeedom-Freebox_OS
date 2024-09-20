@@ -470,14 +470,22 @@ class Freebox_OS extends eqLogic
 
 			$Cmd->setType($Type);
 			$Cmd->setSubType($SubType);
+			if ($SubType == 'numeric') {
+				if ($unite != null) {
+					$Cmd->setUnite($unite);
+				}
+				if ($valuemin != 'default') {
+					$Cmd->setconfiguration('minValue', $valuemin);
+				}
+				if ($valuemax != 'default') {
+					$Cmd > setconfiguration('maxValue', $valuemax);
+				}
+			}
 			$Cmd->save();
 
 			if ($Template != null) {
 				$Cmd->setTemplate('dashboard', $Template);
 				$Cmd->setTemplate('mobile', $Template);
-			}
-			if ($unite != null && $SubType == 'numeric') {
-				$Cmd->setUnite($unite);
 			}
 			$Cmd->setIsVisible($IsVisible);
 			$Cmd->setIsHistorized($IsHistorized);

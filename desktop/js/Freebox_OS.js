@@ -362,7 +362,50 @@ function addCmdToTable(_cmd) {
 	}
 	tr += '<i class="fas fa-minus-circle pull-right cmdAction cursor" data-action="remove" title="{{Supprimer la commande}}"></i></td>'
 	tr += '</tr>'
-	$('#table_cmd tbody').append(tr);
+	if (jeeFrontEnd.jeedomVersion.substr(0, 3) < 4.4 && typeof jQuery === 'function') {      
+		/* 
+			à supprimer lorsque le require sera >= 4.4 
+		*/
+		$('#table_cmd tbody').append(tr)
+		var tr = $('#table_cmd tbody tr').last()
+		jeedom.eqLogic.buildSelectCmd({
+		  id:  $('.eqLogicAttr[data-l1key=id]').value(),
+		  filter: {type: 'info'},
+		  error: function (error) {
+			$('#div_alert').showAlert({message: error.message, level: 'danger'})
+		  },
+		  success: function (result) {
+			tr.find('.cmdAttr[data-l1key=value]').append(result)
+			tr.setValues(_cmd, '.cmdAttr')
+			jeedom.cmd.changeType(tr, init(_cmd.subType))
+		  }
+		})
+		
+	  } else {
+		/* 
+			garder que cette partie lorsque le require sera >= 4.4 
+		*/
+		let newRow = document.createElement('tr')
+		newRow.innerHTML = tr
+		newRow.addClass('cmd')
+		newRow.setAttribute('data-cmd_id', init(_cmd.id))
+		document.getElementById('table_cmd').querySelector('tbody').appendChild(newRow)
+		jeedom.eqLogic.buildSelectCmd({
+		  id: document.querySelector('.eqLogicAttr[data-l1key="id"]').jeeValue(),
+		  filter: { type: 'info' },
+		  error: function(error) {
+			jeedomUtils.showAlert({ message: error.message, level: 'danger' })
+		  },
+		  success: function(result) {
+			newRow.querySelector('.cmdAttr[data-l1key="value"]').insertAdjacentHTML('beforeend', result)
+			newRow.setJeeValues(_cmd, '.cmdAttr')
+			jeedom.cmd.changeType(newRow, init(_cmd.subType))
+		  }
+		})
+	  }
+
+
+	/*$('#table_cmd tbody').append(tr);
 	var tr = $('#table_cmd tbody tr').last();
 	jeedom.eqLogic.buildSelectCmd({
 		id: $('.eqLogicAttr[data-l1key=id]').value(),
@@ -381,7 +424,7 @@ function addCmdToTable(_cmd) {
 		$('#table_cmd tbody tr:last .cmdAttr[data-l1key=type]').value(init(_cmd.type));
 	}
    
-	jeedom.cmd.changeType($('#table_cmd tbody tr').last(), init(_cmd.subType));
+	jeedom.cmd.changeType($('#table_cmd tbody tr').last(), init(_cmd.subType));*/
 
 }
 function setupCron($icon,$icon_type) {
@@ -451,34 +494,3 @@ function setupCron($icon,$icon_type) {
 		}
 	});
 }
-/*
-function setupPage() {
-	if (!divEquipements) {
-		$(".eqLogicThumbnailDisplay .divEquipements").addClass('freeOSHidenDiv');
-	}
-	if (!divTiles) {
-		$(".eqLogicThumbnailDisplay .divTiles").addClass('freeOSHidenDiv');
-	}
-	if (!divParental) {
-		$(".eqLogicThumbnailDisplay .divParental").addClass('freeOSHidenDiv');
-	}
-
-	$.ajax({
-		type: "POST",
-		url: "plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php",
-		data: {
-			action: "GetBox",
-		},
-		dataType: 'json',
-		error: function (request, status, error) {
-			handleAjaxError(request, status, error);
-		},
-		success: function (data) {
-			result = data.result.Type_box_tiles;
-
-			if (result !== "OK") {
-				$(".titleAction").addClass('freeOSHidenDiv');
-			}
-		}
-	});
-}*/

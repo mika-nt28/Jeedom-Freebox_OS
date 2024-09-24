@@ -214,7 +214,7 @@ class Freebox_OS extends eqLogic
 		}
 		if (is_object($cron)) {
 			$cron->stop();
-			sleep(1);
+			sleep(3);
 			if ($cron->running()) {
 				$cron->halt();
 			}
@@ -229,7 +229,7 @@ class Freebox_OS extends eqLogic
 				}
 				if (is_object($cron)) {
 					$cron->stop();
-					sleep(1);
+					sleep(3);
 					if ($cron->running()) {
 						$cron->halt();
 					}
@@ -334,7 +334,7 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles, $eq_type, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles = false, $eq_type = null, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', ':fg-info:| Création équipement : :/fg:' . $Name . ' : Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
@@ -438,7 +438,7 @@ class Freebox_OS extends eqLogic
 		return Free_Template::getTemplate();
 	}
 
-	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId,  $invertBinary_display = '0', $icon, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = null)
+	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary_display = '0', $icon = null, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = null)
 	{
 		if ($listValue_Update == true) {
 			log::add('Freebox_OS', 'debug', ':fg-info:| Création de la commande : :/fg:' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue . ':/fg:');
@@ -470,14 +470,22 @@ class Freebox_OS extends eqLogic
 
 			$Cmd->setType($Type);
 			$Cmd->setSubType($SubType);
+			if ($SubType == 'numeric') {
+				if ($unite != null) {
+					$Cmd->setUnite($unite);
+				}
+				if ($valuemin != 'default') {
+					$Cmd->setconfiguration('minValue', $valuemin);
+				}
+				if ($valuemax != 'default') {
+					$Cmd > setconfiguration('maxValue', $valuemax);
+				}
+			}
 			$Cmd->save();
 
 			if ($Template != null) {
 				$Cmd->setTemplate('dashboard', $Template);
 				$Cmd->setTemplate('mobile', $Template);
-			}
-			if ($unite != null && $SubType == 'numeric') {
-				$Cmd->setUnite($unite);
 			}
 			$Cmd->setIsVisible($IsVisible);
 			$Cmd->setIsHistorized($IsHistorized);
@@ -694,13 +702,9 @@ class Freebox_OS extends eqLogic
 		return $Cmd;
 	}
 	/*     * *********************Méthodes d'instance************************* */
-	public function preInsert()
-	{
-	}
+	public function preInsert() {}
 
-	public function postInsert()
-	{
-	}
+	public function postInsert() {}
 
 	public function preSave()
 	{
@@ -796,23 +800,18 @@ class Freebox_OS extends eqLogic
 		}
 	}
 
-	public function postUpdate()
-	{
-	}
+	public function postUpdate() {}
 
-	public function preRemove()
-	{
-	}
+	public function preRemove() {}
 
-	public function postRemove()
-	{
-	}
+	public function postRemove() {}
 	public static function getConfigForCommunity()
 	{
 		$box = "Box [" . config::byKey('TYPE_FREEBOX', 'Freebox_OS') . '] ; Box_name [' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS') . ']';
+		$box_Firmware = "Firmware [" . config::byKey('TYPE_FIRMWARE', 'Freebox_OS') . ']';
 		$box_mode = "Mode [" . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') . ']';
 		$IP = "IP Box [" . config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS') . ']';
-		$ligne1 = $box . ' ; ' . $box_mode . ' ; ' . $IP;
+		$ligne1 = $box . ' ; ' . $box_Firmware . ' ; ' . $box_mode . ' ; ' . $IP;
 
 		$Name = "Nom [" . config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS') . ']';
 		$API = "API [" . config::byKey('FREEBOX_API', 'Freebox_OS') . ']';
@@ -938,20 +937,20 @@ class Freebox_OS extends eqLogic
 		log::add('Freebox_OS', 'info', '|:fg-warning: Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue :/fg:');
 		$Free_API = new Free_API();
 		$result = $Free_API->universal_get('universalAPI', null, null, 'api_version', true, true, true);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Type Box : ' . $result['box_model_name']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ API URL : ' . $result['api_base_url']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Port https : ' . $result['https_port']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Nom Box : ' . $result['device_name']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Https disponible : ' . $result['https_available']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Modele de box : ' . $result['box_model']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Type de box : ' . $result['device_type']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ API domaine : ' . $result['api_domain']);
-		log::add('Freebox_OS', 'info', '| ───▶︎ API version : ' . $result['api_version']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Type Box ::/fg: ' . $result['box_model_name']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API URL ::/fg: ' . $result['api_base_url']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Port https ::/fg: ' . $result['https_port']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Nom Box ::/fg: ' . $result['device_name']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Https disponible ::/fg: ' . $result['https_available']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Modele de box ::/fg: ' . $result['box_model']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Type de box ::/fg: ' . $result['device_type']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API domaine ::/fg: ' . $result['api_domain']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API version ::/fg: ' . $result['api_version']);
 		$API_version = 'v'  . $result['api_version'];
 		$API_version = strstr($API_version, '.', true);
-		log::add('Freebox_OS', 'info', '| ───▶︎ Version actuelle dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Version actuelle dans la base ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
-		log::add('Freebox_OS', 'info', '| ───▶︎ Mise à jour de Version dans la base : ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Mise à jour de Version dans la base ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		log::add('Freebox_OS', 'debug', '└────────────────────');
 		Free_CreateEq::createEq('box');
 		return $API_version;
@@ -1142,7 +1141,7 @@ class Freebox_OSCmd extends cmd
 		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
 
-	public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')
+	/*public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')
 	{
 		$data = null;
 		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version, $_clean, $_widgetName);
@@ -1161,5 +1160,5 @@ class Freebox_OSCmd extends cmd
 			} else return $data;
 		}
 		return parent::getWidgetTemplateCode($_version, $_clean, $_widgetName);
-	}
+	}*/
 }

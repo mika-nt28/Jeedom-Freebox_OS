@@ -69,7 +69,7 @@ if (!isConnect('admin')) {
     $.ajax({
         type: 'POST',
         async: false,
-        url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+        url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
         data: {
             action: 'PortForwarding',
             id: SelectEquipement
@@ -94,7 +94,7 @@ if (!isConnect('admin')) {
         $.ajax({
             type: 'POST',
             async: false,
-            url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+            url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
             data: {
                 action: 'PortForwarding',
                 id: SelectEquipement,
@@ -162,7 +162,7 @@ if (!isConnect('admin')) {
         $.ajax({
             type: 'POST',
             async: false,
-            url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+            url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
             data: {
                 action: 'WakeOnLAN',
                 id: SelectEquipement,
@@ -198,7 +198,7 @@ if (!isConnect('admin')) {
         $.ajax({
             type: 'POST',
             async: false,
-            url: 'plugins/Freebox_OS/core/ajax/Freebox_OS.ajax.php',
+            url: 'plugins/Freebox_OS/core/ajax/FreeboxOS.ajax.php',
             data: {
                 action: 'UpdatePortForwarding',
                 id: $(this).closest('.redir').find('.redirPort[data-l1key=id]').val(),

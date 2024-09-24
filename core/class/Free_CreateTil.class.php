@@ -207,14 +207,14 @@ class Free_CreateTil
 
     private static function createTil_homeadapters($Free_API, $logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : ' . $logicalinfo['homeadaptersName'] . ' :/fg: ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: ' . $logicalinfo['homeadaptersName'] . ' ──');
         log::add('Freebox_OS', 'debug', '[WARNING] - Création équipement : Home Adapters');
         Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, null, 'tiles_SP');
         log::add('Freebox_OS', 'debug', '[  OK  ] - Création équipement : Home Adapters');
     }
     public static function createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : ' . $logicalinfo['homeadaptersName'] . ' :/fg: ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: ' . $logicalinfo['homeadaptersName'] . ' ──');
         $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, null, 'tiles_SP');
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
@@ -337,7 +337,7 @@ class Free_CreateTil
                     );
                     $Equipement['label'] = str_replace(array_keys($replace_device_type), $replace_device_type, $Equipement['label']);
                     if ($_eq_type != 'camera' && $boucle_num != 2) {
-                        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : '  .  $Equipement['label'] . ':/fg: ──');
+                        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: '  .  $Equipement['label'] . ' ──');
                         $Tile = Freebox_OS::AddEqLogic(($Equipement['label'] != '' ? $Equipement['label'] : $_eq_type), $_eq_node, $category, true, $_eq_type,  $_eq_action, null, $_autorefresh, 'default', null, $_eq_type2, $eq_group);
                     } else {
                         //log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION : ' . $Equipement['label']);
@@ -345,7 +345,7 @@ class Free_CreateTil
                     }
 
                     $_eqLogic = null;
-                    log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour : '  .  $Equipement['label'] . ':/fg: ──');
+                    log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: '  .  $Equipement['label'] . ' ──');
                     $Setting_mouv_sensor = null;
                     foreach ($_eq_data as $Command) {
                         if ($boucle_num == 2) { // 
@@ -657,7 +657,7 @@ class Free_CreateTil
         return $result;
     }
 
-    private static function search_setting_string($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O, $eq_group = null, $_Cmd_ep_id)
+    private static function search_setting_string($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O = null, $eq_group = null, $_Cmd_ep_id = null)
     {
         $Setting1 = $_Eq_type;
         $Setting2 = $Name;
@@ -750,7 +750,7 @@ class Free_CreateTil
         );
         return $Setting;
     }
-    private static function search_setting_void($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O, $eq_group = null, $_Cmd_ep_id)
+    private static function search_setting_void($_Eq_action, $Access, $Name, $_Eq_type = null, $Label_O = null, $eq_group = null, $_Cmd_ep_id = null)
     {
         $Setting1 = $_Eq_type;
         $Setting2 = $Name;
@@ -1132,7 +1132,7 @@ class Free_CreateTil
         );
         return $Setting;
     }
-    private static function search_setting_bool($_Eq_action, $Access, $Name, $_Eq_type, $Label_O = null, $eq_group, $_Cmd_ep_id = null, $Templatecore_V4 = null)
+    private static function search_setting_bool($_Eq_action, $Access, $Name, $_Eq_type, $Label_O = null, $eq_group = null, $_Cmd_ep_id = null, $Templatecore_V4 = null)
     {
         $Setting1 = $_Eq_type;
         $Setting2 = $Name;

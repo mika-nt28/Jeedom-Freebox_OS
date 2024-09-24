@@ -47,6 +47,33 @@ class Freebox_OS extends eqLogic
 		return $return;
 	}
 	public static $_widgetPossibility = array('custom' => true);
+	public static function pluginGenericTypes()
+	{
+		$generics = array(
+			'SWITCH_STATE' => array( //capitalise without space
+				'name' => __('Interrupteur Etat (Freebox_OS)', __FILE__),
+				'familyid' => 'Switch', //No space here
+				'family' => __('Interrupteur', __FILE__),
+				'type' => 'Info',
+				'subtype' => array('binary', 'numeric')
+			),
+			'SWITCH_ON' => array( //capitalise without space
+				'name' => __('Interrupteur Bouton On Freebox_OS)', __FILE__),
+				'familyid' => 'Switch', //No space here
+				'family' => __('Interrupteur', __FILE__),
+				'type' => 'Action',
+				'homebridge_type' => true
+			),
+			'SWITCH_OFF' => array( //capitalise without space
+				'name' => __('Interrupteur Bouton Off Freebox_OS)', __FILE__),
+				'familyid' => 'Switch', //No space here
+				'family' => __('Interrupteur', __FILE__),
+				'type' => 'Action',
+				'subtype' => array('other')
+			)
+		);
+		return $generics;
+	}
 	public static function cron()
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');

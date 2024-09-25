@@ -502,10 +502,10 @@ class Freebox_OS extends eqLogic
 					$Cmd->setUnite($unite);
 				}
 				if ($valuemin != 'default') {
-					$Cmd->setconfiguration('minValue', $valuemin);
+					$Cmd->setConfiguration('minValue', $valuemin);
 				}
 				if ($valuemax != 'default') {
-					$Cmd > setconfiguration('maxValue', $valuemax);
+					$Cmd->setConfiguration('maxValue', $valuemax);
 				}
 			}
 			$Cmd->save();

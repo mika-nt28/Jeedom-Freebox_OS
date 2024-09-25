@@ -51,13 +51,13 @@ $('body').off('Freebox_OS::camera').on('Freebox_OS::camera', function (_event, _
 				error: function (request, status, error) {},
 				success: function (data) {
 					if (data.state != 'ok') {
-						$('#div_alert').showAlert({
+						$.fn.showAlert({
 							message: data.result,
 							level: 'danger'
 						});
 						return;
 					}
-					$('#div_alert').showAlert({
+					$.fn.showAlert({
 						message: "{{La caméra (<b>" + camera.name + "</b>) a été ajoutée avec succès}}",
 						level: 'success'
 					});
@@ -79,7 +79,7 @@ $('.health').on('click', function () {
 })
 
 $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
-	$('#div_alert').showAlert({
+	$.fn.showAlert({
 		message: '{{Recherche des Équipements standards}}',
 		level: 'warning'
 	});
@@ -93,13 +93,13 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 		dataType: 'json',
 		global: false,
 		error: function (request, status, error) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: '{{Erreur recherche des Équipements standards}}',
 				level: 'danger'
 			});
 		},
 		success: function (data) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: "{{Opération réalisée avec succès. Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
@@ -111,7 +111,7 @@ $('.eqLogicAction[data-action=eqlogic_standard]').on('click', function () {
 });
 
 $('.eqLogicAction[data-action=control_parental]').on('click', function () {
-	$('#div_alert').showAlert({
+	$.fn.showAlert({
 		message: '{{Recherche Contrôle Parental}}',
 		level: 'warning'
 	});
@@ -125,13 +125,13 @@ $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 		dataType: 'json',
 		global: false,
 		error: function (request, status, error) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: '{{Erreur recherche Contrôle Parental}}',
 				level: 'danger'
 			});
 		},
 		success: function (data) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: "{{Opération réalisée avec succès.Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
@@ -143,7 +143,7 @@ $('.eqLogicAction[data-action=control_parental]').on('click', function () {
 });
 
 $('.eqLogicAction[data-action=search_debugTile]').on('click', function () {
-	$('#div_alert').showAlert({
+	$.fn.showAlert({
 		message: '{{Recherche Debug Tiles}}',
 		level: 'warning'
 	});
@@ -157,13 +157,13 @@ $('.eqLogicAction[data-action=search_debugTile]').on('click', function () {
 		dataType: 'json',
 		global: false,
 		error: function (request, status, error) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: '{{Erreur recherche Debug Tiles}}',
 				level: 'danger'
 			});
 		},
 		success: function (data) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: "{{Opération réalisée avec succès. Vous pouvez télécharger les logs}}",
 				level: 'success'
 
@@ -175,7 +175,7 @@ $('.eqLogicAction[data-action=search_debugTile]').on('click', function () {
 });
 
 $('.eqLogicAction[data-action=tile]').on('click', function () {
-	$('#div_alert').showAlert({
+	$.fn.showAlert({
 		message: '{{Recherche des Tiles}}',
 		level: 'warning'
 	});
@@ -189,13 +189,13 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 		dataType: 'json',
 		global: false,
 		error: function (request, status, error) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: '{{Erreur recherche des Tiles}}',
 				level: 'danger'
 			});
 		},
 		success: function (data) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: "{{Opération réalisée avec succès. Appuyez sur Ctrl + F5 (sur Mac CMD + R) si votre écran ne s'est pas actualisé}}",
 				level: 'success'
 
@@ -209,7 +209,7 @@ $('.eqLogicAction[data-action=tile]').on('click', function () {
 });
 
 $('.Equipement').on('click', function () {
-	$('#div_alert').showAlert({
+	$.fn.showAlert({
 		message: '{{Recherche des commandes}}',
 		level: 'warning'
 	});
@@ -224,14 +224,14 @@ $('.Equipement').on('click', function () {
 		dataType: 'json',
 		global: false,
 		error: function (request, status, error) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: '{{Erreur recherche des commandes}}',
 				level: 'danger'
 			});
 
 		},
 		success: function (data) {
-			$('#div_alert').showAlert({
+			$.fn.showAlert({
 				message: "{{Opération réalisée avec succès.}}",
 				level: 'success'
 
@@ -371,8 +371,10 @@ function addCmdToTable(_cmd) {
 		jeedom.eqLogic.buildSelectCmd({
 		  id:  $('.eqLogicAttr[data-l1key=id]').value(),
 		  filter: {type: 'info'},
-		  error: function (error) {
-			$('#div_alert').showAlert({message: error.message, level: 'danger'})
+			error: function (error) {
+				$.fn.showAlert({
+				  message: error.message, level: 'danger'
+			  })
 		  },
 		  success: function (result) {
 			tr.find('.cmdAttr[data-l1key=value]').append(result)
@@ -411,7 +413,8 @@ function addCmdToTable(_cmd) {
 		id: $('.eqLogicAttr[data-l1key=id]').value(),
 		filter: { type: 'info' },
 		error: function (error) {
-			$('#div_alert').showAlert({ message: error.message, level: 'danger' });
+			$.fn.showAlert({
+			message: error.message, level: 'danger' });
 		},
 		success: function (result) {
 			tr.find('.cmdAttr[data-l1key=value]').append(result);

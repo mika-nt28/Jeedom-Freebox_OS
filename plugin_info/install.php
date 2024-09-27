@@ -39,7 +39,7 @@ function Freebox_OS_install()
 		$cron->save();
 	}
 	updateConfig();
-	config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v10'), 'Freebox_OS');
+	config::save('FREEBOX_API', 'v10', 'Freebox_OS');
 }
 function Freebox_OS_update()
 {

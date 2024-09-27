@@ -39,7 +39,7 @@ function Freebox_OS_install()
 		$cron->save();
 	}
 	updateConfig();
-	config::save('FREEBOX_API', config::byKey('FREEBOX_API', 'Freebox_OS', 'v10'), 'Freebox_OS');
+	config::save('FREEBOX_API', 'v10', 'Freebox_OS');
 }
 function Freebox_OS_update()
 {
@@ -74,7 +74,7 @@ function Freebox_OS_update()
 		$cron->setTimeout('15');
 		$cron->save();
 	}
-	updateConfig();
+	//updateConfig();
 
 
 	try {
@@ -223,12 +223,11 @@ function removeLogicId($cmdDel)
 
 function updateConfig()
 {
-	config::save('FREEBOX_SERVER_IP', config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS', "mafreebox.freebox.fr"), 'Freebox_OS');
-	//config::save('FREEBOX_SERVER_APP_VERSION', config::byKey('FREEBOX_SERVER_APP_VERSION', 'Freebox_OS', "v5.0.0"), 'Freebox_OS');
-	config::save('FREEBOX_SERVER_APP_NAME', config::byKey('FREEBOX_SERVER_APP_NAME', 'Freebox_OS', "Plugin Freebox OS"), 'Freebox_OS');
-	config::save('FREEBOX_SERVER_APP_ID', config::byKey('FREEBOX_SERVER_APP_ID', 'Freebox_OS', "plugin.freebox.jeedom"), 'Freebox_OS');
-	config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS', config::byKey("name")), 'Freebox_OS');
-	config::save('FREEBOX_REBOOT_DEAMON', config::byKey('FREEBOX_REBOOT_DEAMON', 'Freebox_OS', FALSE), 'Freebox_OS');
+	config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
+	config::save('FREEBOX_SERVER_APP_NAME', 'Freebox_OS', "Plugin Freebox OS");
+	config::save('FREEBOX_SERVER_APP_ID', 'Freebox_OS', "plugin.freebox.jeedom");
+	config::save('FREEBOX_SERVER_DEVICE_NAME', config::byKey("name"), 'Freebox_OS');
+	config::save('FREEBOX_REBOOT_DEAMON', FALSE, 'Freebox_OS');
 
 	$version = 1;
 	if (config::byKey('FREEBOX_CONFIG_V', 'Freebox_OS', 0) != $version) {

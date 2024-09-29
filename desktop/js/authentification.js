@@ -75,20 +75,9 @@ $('.bt_FreeboxOS_Save_room').on('click', function () {
         logs('info', "───▶︎ :fg-info:Cron Global Titles ::/fg: OK:");
         cron_tiles = '1';
     };
-    /*checkvalueCmd = $('.checkbox_freeboxCmdbyCmd:checked').val();
-    if (checkvalueCmd == null) {
-        logs('info', "───▶︎ :fg-warning:Actualisation par commande ::/fg: NOK");
-        CmdbyCmd = '0';
-    } else {
-        logs('info', "───▶︎ :fg-warning:Actualisation par commande ::/fg: OK");
-        CmdbyCmd  = '1';
-    };*/
     console.log('CRON TILES : ' + cron_tiles)
-    //console.log('CMD BY CMD : ' +CmdbyCmd)
-    //SetSettingTiles(cron_tiles, CmdbyCmd);
     SetSettingTiles(cron_tiles);
     logs('info', "──────────▶︎ :fg-warning:{{Sauvegarde des Pièces des Tiles}}:/fg: ◀︎───────────");
-    //SaveTitelRoom();
 });
 
 

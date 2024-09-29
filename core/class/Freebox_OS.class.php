@@ -78,39 +78,41 @@ class Freebox_OS extends eqLogic
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
-		if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-			log::add('Freebox_OS', 'debug', ':fg-info: Etat du Démon ' . $deamon_info['state'] . ':/fg:');
-			Freebox_OS::deamon_start();
-			$Free_API = new Free_API();
-			$Free_API->getFreeboxOpenSession();
-			$deamon_info = self::deamon_info();
-			log::add('Freebox_OS', 'debug', ':fg-info: Redémarrage du démon : ' . $deamon_info['state'] . ':/fg:');
-		}
-		foreach ($eqLogics as $eqLogic) {
-			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
-			try {
-				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+		if ($deamon_info['launchable'] == 'ok') {
+			if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
+				log::add('Freebox_OS', 'debug', ':fg-info: Etat du Démon ' . $deamon_info['state'] . ':/fg:');
+				Freebox_OS::deamon_start();
+				$Free_API = new Free_API();
+				$Free_API->getFreeboxOpenSession();
+				$deamon_info = self::deamon_info();
+				log::add('Freebox_OS', 'debug', ':fg-info: Redémarrage du démon : ' . $deamon_info['state'] . ':/fg:');
+			}
+			foreach ($eqLogics as $eqLogic) {
+				$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
+				try {
+					$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
 
-				if ($c->isDue() && $deamon_info['state'] == 'ok') {
-					if ($eqLogic->getIsEnable()) {
-						if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
-						} else {
-							log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-info: CRON pour l\'actualisation de : ' .  $eqLogic->getName() . ':/fg: ◀︎───────────');
-							Free_Refresh::RefreshInformation($eqLogic->getId());
-							log::add('Freebox_OS', 'debug', '───────────────────────────────────────────');
+					if ($c->isDue() && $deamon_info['state'] == 'ok') {
+						if ($eqLogic->getIsEnable()) {
+							if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
+							} else {
+								log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-info: CRON pour l\'actualisation de : ' .  $eqLogic->getName() . ':/fg: ◀︎───────────');
+								Free_Refresh::RefreshInformation($eqLogic->getId());
+								log::add('Freebox_OS', 'debug', '───────────────────────────────────────────');
+							}
 						}
 					}
+					if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
+						log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state']);
+					}
+				} catch (Exception $exc) {
+					//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
 				}
-				if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-					log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state']);
-				}
-			} catch (Exception $exc) {
-				//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
-			}
-			if ($eqLogic->getLogicalId() == 'network' || $eqLogic->getLogicalId() == 'networkwifiguest' || $eqLogic->getLogicalId() == 'disk' || $eqLogic->getLogicalId() == 'homeadapters') {
-				if ($eqLogic->getIsEnable()) {
-					if ($deamon_info['state'] == 'ok') {
-						Freebox_OS::cron_autorefresh_eqLogic($eqLogic, $deamon_info);
+				if ($eqLogic->getLogicalId() == 'network' || $eqLogic->getLogicalId() == 'networkwifiguest' || $eqLogic->getLogicalId() == 'disk' || $eqLogic->getLogicalId() == 'homeadapters') {
+					if ($eqLogic->getIsEnable()) {
+						if ($deamon_info['state'] == 'ok') {
+							Freebox_OS::cron_autorefresh_eqLogic($eqLogic, $deamon_info);
+						}
 					}
 				}
 			}

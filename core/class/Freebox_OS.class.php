@@ -366,8 +366,7 @@ class Freebox_OS extends eqLogic
 	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles = false, $eq_type = null, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		//log::add('Freebox_OS', 'debug', ':fg-info:| ' . (__('Création équipement', __FILE__)) . ' : :/fg:' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
-		log::add('Freebox_OS', 'debug', ':fg-info:/ ' . (__('Création équipement', __FILE__)) . ' : :/fg:' . $Name . ' ── LogicalID : ' . $_logicalId . ' ── ' . (__('catégorie', __FILE__)) . ' : ' . $category . ' ── ' . (__('Équipement Type', __FILE__)) . ' : ' . $eq_type . ' ── Logical ID Equip : ' . $logicalID_equip . ' ── Cron : ' . $_autorefresh . ' ── ' . (__('Objet', __FILE__)) . ' : ' . $_Room . ' ── ' . (__('Regroupement', __FILE__)) . ' : ' . $eq_group);
+		log::add('Freebox_OS', 'debug', ':fg-info:| ' . (__('Création Équipement', __FILE__)) . ' : :/fg:' . $Name . ' ── LogicalID : ' . $_logicalId . ' ── ' . (__('Catégorie', __FILE__)) . ' : ' . $category . ' ── ' . (__('Équipement Type', __FILE__)) . ' : ' . $eq_type . ' ── Logical ID Equip : ' . $logicalID_equip . ' ── Cron : ' . $_autorefresh . ' ── ' . (__('Objet', __FILE__)) . ' : ' . $_Room . ' ── ' . (__('Regroupement', __FILE__)) . ' : ' . $eq_group);
 
 		if (!is_object($EqLogic)) {
 			$EqLogic = new Freebox_OS();

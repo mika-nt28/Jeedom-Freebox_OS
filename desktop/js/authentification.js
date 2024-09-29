@@ -1,11 +1,11 @@
 progress(0);
 eqLogic_id = null;
 
-$('.bt_FreeboxOS_Next').off('click').on('click', function () {
+$('.bt_Freebox_Next').off('click').on('click', function () {
     funNext();
 });
 
-$('.bt_FreeboxOS_Previous').off('click').on('click', function () {
+$('.bt_Freebox_Previous').off('click').on('click', function () {
     funPrev();
 });
 
@@ -27,7 +27,7 @@ $('.bt_eqlogic_control_parental').on('click', function () {
     progress(95);
 });
 
-$('.bt_FreeboxOS_Save').on('click', function () {
+$('.bt_Freebox_Save').on('click', function () {
     logs('info', "──────────▶︎ :fg-warning:{{Sauvegarde des Paramètres}}:/fg: ◀︎───────────");
     ip = $('#input_freeboxIP').val();
     //VersionAPP = $('#input_freeAppVersion').val();
@@ -36,37 +36,37 @@ $('.bt_FreeboxOS_Save').on('click', function () {
     SetSetting(ip, VersionAPP, Categorie);
 });
 
-$('.bt_FreeboxOS_Autorisation').on('click', function () {
+$('.bt_Freebox_Autorisation').on('click', function () {
     logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{Autorisation Freebox}} ◀︎───────────");
     autorisationFreebox();
 });
-$('.bt_FreeboxOS_resetAPI').on('click', function () {
+$('.bt_Freebox_resetAPI').on('click', function () {
     logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{Reset de la version API}} ◀︎───────────");
     ResetAPI();
 });
 
-$('.bt_FreeboxOS_droitVerif').on('click', function () {
+$('.bt_Freebox_droitVerif').on('click', function () {
     logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{vérification des droits}} ◀︎───────────");
     GetSessionData();
 });
-$('.bt_FreeboxOS_droitVerif_pass').on('click', function () {
+$('.bt_Freebox_droitVerif_pass').on('click', function () {
     logs('info', "──────────▶︎ :fg-warning:{{Ignorer la vérification des droits}}:/fg: ◀︎───────────");
     funNext();
 });
 
-$('.bt_FreeboxOS_ResetConfig').on('click', function () {
+$('.bt_Freebox_ResetConfig').on('click', function () {
     logs('info', "──────────▶︎ :fg-warning:{{Reset de la configuration}}:/fg: ◀︎───────────");
     SetDefaultSetting();
     GetSetting();
-    $('.bt_FreeboxOS_Next').show();
+    $('.bt_Freebox_Next').show();
 });
 
-$('.bt_FreeboxOS_Room').on('click', function () {
+$('.bt_Freebox_Room').on('click', function () {
     logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{Recherche des pièces}} ◀︎───────────");
     //SearchTile_room();
 });
 
-$('.bt_FreeboxOS_Save_room').on('click', function () {
+$('.bt_Freebox_Save_room').on('click', function () {
     checkvalue = $('.checkbox_freeboxTiles:checked').val();
     if (checkvalue == null) {
         logs('info', "───▶︎ :fg-info:Cron Global Titles ::/fg: NOK");
@@ -236,8 +236,8 @@ function AskTrackAuthorization() {
     if ($('.li_FreeboxOS_Summary.active').attr('data-href') == "authentification") {
 
         $('.textFreebox').hide();
-        $('.bt_FreeboxOS_Next').hide();
-        $('.bt_FreeboxOS_Previous').hide();
+        $('.bt_Freebox_Next').hide();
+        $('.bt_Freebox_Previous').hide();
         $('.FreeboxOS_OK').hide();
         $('.FreeboxOS_OK_NEXT').hide();
 
@@ -260,8 +260,8 @@ function AskTrackAuthorization() {
                     logs('error', +data.result.msg);
                 } else {
                     $('.textFreebox').show();
-                    $('.bt_FreeboxOS_Next').show();
-                    $('.bt_FreeboxOS_Previous').show();
+                    $('.bt_Freebox_Next').show();
+                    $('.bt_Freebox_Previous').show();
                     switch (data.result.result.status) {
                         case "unknown":
                             $('.textFreebox').text('{{L\'application a un token invalide ou a été révoqué, il faut relancer l\'authentification. Merci}}');
@@ -304,16 +304,16 @@ function AskTrackAuthorization() {
         });
     } else {
         $('.textFreebox').show();
-        $('.bt_FreeboxOS_Next').show();
-        $('.bt_FreeboxOS_Previous').show();
+        $('.bt_Freebox_Next').show();
+        $('.bt_Freebox_Previous').show();
         $('.FreeboxOS_OK').show();
         $('.FreeboxOS_OK_NEXT').show();
     }
 }
 
 function Good() {
-    $('.bt_FreeboxOS_Previous').hide();
-    $('.bt_FreeboxOS_NEXT').hide();
+    $('.bt_Freebox_Previous').hide();
+    $('.bt_Freebox_NEXT').hide();
     $('.alert-info FreeboxOS_OK').text('{{Authentification réussi}}');
     logs('info', "Authentification réussi");
 }
@@ -372,7 +372,7 @@ function GetSetting() {
             console.log('Objet par défaut : ' + data.result.Categorie)
             console.log('Version API : ' + data.result.API)
             if (data.result.DeviceName == null || data.result.DeviceName == "") {
-                $('.bt_FreeboxOS_Next').hide();
+                $('.bt_Freebox_Next').hide();
                 $('.textFreebox').text('{{Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage}}');
                 logs('error', "ERREUR : " + "{{Votre Jeedom n\'a pas de Nom, il est impossible de continuer l\'appairage}}");
                 $('#div_alert').showAlert({
@@ -499,12 +499,12 @@ function SetDefaultSetting() {
 function GetSessionData() {
 
     $('.textFreebox').hide();
-    $('.bt_FreeboxOS_Next').hide();
-    $('.bt_FreeboxOS_Previous').hide();
+    $('.bt_Freebox_Next').hide();
+    $('.bt_Freebox_Previous').hide();
     $('.FreeboxOS_OK').hide();
     $('.FreeboxOS_OK_NEXT').hide();
-    $('.bt_FreeboxOS_droitVerif').show();
-    $('.bt_FreeboxOS').show();
+    $('.bt_Freebox_droitVerif').show();
+    $('.bt_Freebox').show();
 
     $.ajax({
         type: "POST",
@@ -545,12 +545,12 @@ function GetSessionData() {
                     permissions.settings) {
                     logs('info', "───▶︎ :fg-info:{{Les droits sont}}:/fg: OK");
                     $('.textFreebox').show();
-                    $('.bt_FreeboxOS_Next').show();
-                    $('.bt_FreeboxOS_Previous').show();
+                    $('.bt_Freebox_Next').show();
+                    $('.bt_Freebox_Previous').show();
                     $('.FreeboxOS_OK').show();
                     $('.FreeboxOS_OK_NEXT').show();
-                    $('.bt_FreeboxOS_droitVerif').hide();
-                    $('.bt_FreeboxOS').hide();
+                    $('.bt_Freebox_droitVerif').hide();
+                    $('.bt_Freebox').hide();
 
                     progress(65);
                 }
@@ -623,8 +623,8 @@ function SaveTitelRoom() {
 function funNext() {
     updateMenu($('.li_FreeboxOS_Summary.active').next());
 
-    $('.bt_FreeboxOS_Next').show();
-    $('.bt_FreeboxOS_Previous').show();
+    $('.bt_Freebox_Next').show();
+    $('.bt_Freebox_Previous').show();
 
     logs('info', "──────────▶︎ :fg-warning:{{Étape}} ::/fg: " + $('.li_FreeboxOS_Summary.active').attr('data-href'));
 
@@ -660,8 +660,8 @@ function funNext() {
 function funPrev() {
     updateMenu($('.li_FreeboxOS_Summary.active').prev());
 
-    $('.bt_FreeboxOS_Next').show();
-    $('.bt_FreeboxOS_Previous').show();
+    $('.bt_Freebox_Next').show();
+    $('.bt_Freebox_Previous').show();
 
     switch ($('.li_FreeboxOS_Summary.active').attr('data-href')) {
         case 'home':

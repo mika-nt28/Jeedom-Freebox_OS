@@ -5,8 +5,9 @@
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Calculation",
+        "Catégorie": "Category",
         "Création Commande": "Creation Command",
-        "Création équipement": "Equipment design",
+        "Création Équipement": "Creation Equipment",
         "ERREUR CRON UPDATE TILES\/NODE ": "CRON ERROR UPDATE TILES\/NODE",
         "Erreur Cron Actualisation Ajout nouvelle commande ": "Cron error Update Add new command",
         "Expression Cron Actualisation Ajout nouvelle commande  non valide pour ": "Expression Cron Update Add new invalid command for",
@@ -32,7 +33,6 @@
         "Type \/ SubType": "Type \/ SubType",
         "Type de générique": "Generic type",
         "Veuillez vérifier la configuration": "Please check configuration",
-        "catégorie": "category",
         "dans la commande": "in the command",
         "Équipement Type": "Equipment Type"
     },

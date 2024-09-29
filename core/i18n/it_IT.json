@@ -5,8 +5,9 @@
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Calcolo",
+        "Catégorie": "Categoria",
         "Création Commande": "Creazione di ordini",
-        "Création équipement": "Creazione di apparecchiature",
+        "Création Équipement": "Apparecchiature per la creazione",
         "ERREUR CRON UPDATE TILES\/NODE ": "ERRORE CRON AGGIORNAMENTO PIASTRELLE\/NODO",
         "Erreur Cron Actualisation Ajout nouvelle commande ": "Errore Cron Aggiornamento Aggiungi nuovo comando",
         "Expression Cron Actualisation Ajout nouvelle commande  non valide pour ": "Aggiornamento di Expression Cron Aggiunta di un nuovo comando non valido per",
@@ -32,7 +33,6 @@
         "Type \/ SubType": "Tipo \/ Sottotipo",
         "Type de générique": "Tipo di crediti",
         "Veuillez vérifier la configuration": "Controllare la configurazione",
-        "catégorie": "categoria",
         "dans la commande": "nel",
         "Équipement Type": "Tipo di apparecchiatura"
     },

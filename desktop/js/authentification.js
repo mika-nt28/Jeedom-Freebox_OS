@@ -82,10 +82,10 @@ $('.bt_Freebox_Save_room').on('click', function () {
 
 
 function updateMenu(objectclass) {
-    $('.li_FreeboxOS_Summary.active').removeClass('active');
+    $('.li_Freebox_Summary.active').removeClass('active');
     $(objectclass).addClass('active');
-    $('.FreeboxOS_Display').hide();
-    $('.FreeboxOS_Display.' + $(objectclass).attr('data-href')).show();
+    $('.Freebox_Display').hide();
+    $('.Freebox_Display.' + $(objectclass).attr('data-href')).show();
 }
 
 function autorisationFreebox() {
@@ -233,13 +233,13 @@ function sendToBdd(jsonParser) {
 }
 
 function AskTrackAuthorization() {
-    if ($('.li_FreeboxOS_Summary.active').attr('data-href') == "authentification") {
+    if ($('.li_Freebox_Summary.active').attr('data-href') == "authentification") {
 
         $('.textFreebox').hide();
         $('.bt_Freebox_Next').hide();
         $('.bt_Freebox_Previous').hide();
-        $('.FreeboxOS_OK').hide();
-        $('.FreeboxOS_OK_NEXT').hide();
+        $('.Freebox_OK').hide();
+        $('.Freebox_OK_NEXT').hide();
 
         $.ajax({
             type: "POST",
@@ -282,9 +282,9 @@ function AskTrackAuthorization() {
                         case "granted":
                             $('.textFreebox').text('{{Félicitation votre Freebox est maintenant reliée à Jeedom.}}');
                             logs('info', '(' + data.result.result.status + ') ' + "{{Félicitation votre Freebox est maintenant reliée à Jeedom}}");
-                            $('.FreeboxOS_OK').show();
-                            $('.FreeboxOS_OK_NEXT').show();
-                            $('.FreeboxOS_Display.' + $(this).attr('rights')).show();
+                            $('.Freebox_OK').show();
+                            $('.Freebox_OK_NEXT').show();
+                            $('.Freebox_Display.' + $(this).attr('rights')).show();
                             progress(45);
                             break;
                         case "denied":
@@ -306,15 +306,15 @@ function AskTrackAuthorization() {
         $('.textFreebox').show();
         $('.bt_Freebox_Next').show();
         $('.bt_Freebox_Previous').show();
-        $('.FreeboxOS_OK').show();
-        $('.FreeboxOS_OK_NEXT').show();
+        $('.Freebox_OK').show();
+        $('.Freebox_OK_NEXT').show();
     }
 }
 
 function Good() {
     $('.bt_Freebox_Previous').hide();
     $('.bt_Freebox_NEXT').hide();
-    $('.alert-info FreeboxOS_OK').text('{{Authentification réussi}}');
+    $('.alert-info Freebox_OK').text('{{Authentification réussi}}');
     logs('info', "Authentification réussi");
 }
 
@@ -381,7 +381,7 @@ function GetSetting() {
                 });
             } else {
                 $('.textFreebox').text('');
-                $('.FreeboxOS_OK_NEXT').show();
+                $('.Freebox_OK_NEXT').show();
             }
             if (data.result.LogLevel == 100) {
                 var debugHides = document.getElementsByClassName('debugFreeOS');
@@ -474,7 +474,7 @@ function SetSettingTiles(CronTiles) {
         },
         success: function (data) {
             GetSetting();
-            $('.FreeboxOS_OK_NEXT').show();
+            $('.Freebox_OK_NEXT').show();
         }
     });
 }
@@ -501,8 +501,8 @@ function GetSessionData() {
     $('.textFreebox').hide();
     $('.bt_Freebox_Next').hide();
     $('.bt_Freebox_Previous').hide();
-    $('.FreeboxOS_OK').hide();
-    $('.FreeboxOS_OK_NEXT').hide();
+    $('.Freebox_OK').hide();
+    $('.Freebox_OK_NEXT').hide();
     $('.bt_Freebox_droitVerif').show();
     $('.bt_Freebox').show();
 
@@ -547,8 +547,8 @@ function GetSessionData() {
                     $('.textFreebox').show();
                     $('.bt_Freebox_Next').show();
                     $('.bt_Freebox_Previous').show();
-                    $('.FreeboxOS_OK').show();
-                    $('.FreeboxOS_OK_NEXT').show();
+                    $('.Freebox_OK').show();
+                    $('.Freebox_OK_NEXT').show();
                     $('.bt_Freebox_droitVerif').hide();
                     $('.bt_Freebox').hide();
 
@@ -621,14 +621,14 @@ function SaveTitelRoom() {
 }
 
 function funNext() {
-    updateMenu($('.li_FreeboxOS_Summary.active').next());
+    updateMenu($('.li_Freebox_Summary.active').next());
 
     $('.bt_Freebox_Next').show();
     $('.bt_Freebox_Previous').show();
 
-    logs('info', "──────────▶︎ :fg-warning:{{Étape}} ::/fg: " + $('.li_FreeboxOS_Summary.active').attr('data-href'));
+    logs('info', "──────────▶︎ :fg-warning:{{Étape}} ::/fg: " + $('.li_Freebox_Summary.active').attr('data-href'));
 
-    switch ($('.li_FreeboxOS_Summary.active').attr('data-href')) {
+    switch ($('.li_Freebox_Summary.active').attr('data-href')) {
         case 'home':
             progress(0);
             break;
@@ -658,12 +658,12 @@ function funNext() {
 }
 
 function funPrev() {
-    updateMenu($('.li_FreeboxOS_Summary.active').prev());
+    updateMenu($('.li_Freebox_Summary.active').prev());
 
     $('.bt_Freebox_Next').show();
     $('.bt_Freebox_Previous').show();
 
-    switch ($('.li_FreeboxOS_Summary.active').attr('data-href')) {
+    switch ($('.li_Freebox_Summary.active').attr('data-href')) {
         case 'home':
             progress(0);
             break;

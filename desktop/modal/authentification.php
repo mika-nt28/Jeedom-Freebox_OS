@@ -29,13 +29,13 @@ if (!isConnect('admin')) {
     <div class="col-lg-2">
         <div class="bs-sidebar">
             <ul class="nav nav-list bs-sidenav hidden-xs">
-                <li class="cursor li_FreeboxOS_Summary active" data-href="home" title="{{Accueil}}"><a><i class="fab fa-ello"></i> <span class="hidden-xs"> {{Accueil}}</span></a></li>
-                <li class="cursor li_FreeboxOS_Summary" data-href="setting" title="{{Réglages}}"><a><i class="fas fa-cogs"></i><span class="hidden-xs"> {{Réglages}}</span></a></li>
-                <li class="cursor li_FreeboxOS_Summary" data-href="authentification" title="{{Authentification}}"><a><i class="fas fa-rss"></i><span class="hidden-xs"> {{Authentification}}</span></a> </li>
-                <li class="cursor li_FreeboxOS_Summary" data-href="rights" title="{{Droits}}"><a><i class="fas fa-balance-scale-right"></i><span class="hidden-xs"> {{Droits}}</span></a> </li>
-                <li class="cursor li_FreeboxOS_Summary" data-href="room" title="{{Objets}}"><a><i class="fas fa-bezier-curve"></i><span class="hidden-xs"> {{Freebox Delta}}</span></a> </li>
-                <li class="cursor li_FreeboxOS_Summary" data-href="scan" title="{{Scan des équipements}}"><a><i class="fas fa-search-plus"></i><span class="hidden-xs"> {{Scan des équipements}}</span></a> </li>
-                <li class="cursor li_FreeboxOS_Summary" data-href="end" title="{{C'est Fini !!}}"><a><i class="fas fa-check"></i><span class="hidden-xs"> {{Fin}}</span></a>
+                <li class="cursor li_Summary active" data-href="home" title="{{Accueil}}"><a><i class="fab fa-ello"></i> <span class="hidden-xs"> {{Accueil}}</span></a></li>
+                <li class="cursor li_Freebox_Summary" data-href="setting" title="{{Réglages}}"><a><i class="fas fa-cogs"></i><span class="hidden-xs"> {{Réglages}}</span></a></li>
+                <li class="cursor li_Freebox_Summary" data-href="authentification" title="{{Authentification}}"><a><i class="fas fa-rss"></i><span class="hidden-xs"> {{Authentification}}</span></a> </li>
+                <li class="cursor li_Freebox_Summary" data-href="rights" title="{{Droits}}"><a><i class="fas fa-balance-scale-right"></i><span class="hidden-xs"> {{Droits}}</span></a> </li>
+                <li class="cursor li_Freebox_Summary" data-href="room" title="{{Objets}}"><a><i class="fas fa-bezier-curve"></i><span class="hidden-xs"> {{Freebox Delta}}</span></a> </li>
+                <li class="cursor li_Freebox_Summary" data-href="scan" title="{{Scan des équipements}}"><a><i class="fas fa-search-plus"></i><span class="hidden-xs"> {{Scan des équipements}}</span></a> </li>
+                <li class="cursor li_Freebox_Summary" data-href="end" title="{{C'est Fini !!}}"><a><i class="fas fa-check"></i><span class="hidden-xs"> {{Fin}}</span></a>
                 </li>
             </ul>
         </div>
@@ -47,7 +47,7 @@ if (!isConnect('admin')) {
                 </div>
             </div>
         </div>
-        <div class="FreeboxOS_Display home">
+        <div class="Freebox_Display home">
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
@@ -66,7 +66,7 @@ if (!isConnect('admin')) {
             <center>{{Cliquez sur suivant pour commencer}}</center>
         </div>
 
-        <div class="FreeboxOS_Display setting" style="display:none;">
+        <div class="Freebox_Display setting" style="display:none;">
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
@@ -142,7 +142,7 @@ if (!isConnect('admin')) {
             </center>
         </div>
 
-        <div class="FreeboxOS_Display authentification" style="display:none;">
+        <div class="Freebox_Display authentification" style="display:none;">
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
@@ -173,7 +173,7 @@ if (!isConnect('admin')) {
             </center>
         </div>
 
-        <div class="FreeboxOS_Display rights" style="display:none;">
+        <div class="Freebox_Display rights" style="display:none;">
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
@@ -282,7 +282,7 @@ if (!isConnect('admin')) {
             </center>
         </div>
 
-        <div class="FreeboxOS_Display room" style="display:none;">
+        <div class="Freebox_Display room" style="display:none;">
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
@@ -338,7 +338,7 @@ if (!isConnect('admin')) {
                     </center>
                 </center>
         </div>
-        <div class="FreeboxOS_Display scan" style="display:none;">
+        <div class="Freebox_Display scan" style="display:none;">
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_Freebox_doc roundedLeft" title="{{Documentation}}" target='_blank' href='http://mika-nt28.github.io/Documentations/Freebox_OS/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
@@ -403,7 +403,7 @@ if (!isConnect('admin')) {
             </center>
         </div>
 
-        <div class="FreeboxOS_Display end" style="display:none;">
+        <div class="Freebox_Display end" style="display:none;">
             <center><i class="fas fa-check" style="font-size: 8em;"></i></center>
             <br />
             <img class="img-responsive center-block" src="core/img/logo-jeedom-freebox-grand-nom-couleur.png" height="500" width="500" />
@@ -412,7 +412,7 @@ if (!isConnect('admin')) {
                 <div class="alert alert-success">{{Bravo}} !!!</div>
             </center>
             <center>
-                <div class="alert alert-info FreeboxOS_OK">{{Authentification réussie, Vous pouvez fermer cette fenêtre}}</div>
+                <div class="alert alert-info Freebox_OK">{{Authentification réussie, Vous pouvez fermer cette fenêtre}}</div>
             </center>
 
         </div>

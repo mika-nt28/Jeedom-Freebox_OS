@@ -272,7 +272,7 @@ class Free_CreateEq
             $_bandwidth_value_up = '#value#  / 1000000';
             $_bandwidth_up_unit = 'Mb/s';
         }
-        $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *', null, null, null, 'system', true);
+        $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *', null, null, null, null, 'system', true);
         $Connexion->AddCommand('Débit descendant', 'rate_down', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, '#value# / 1024', '2');
         $Connexion->AddCommand('Débit montant', 'rate_up', 'info', 'numeric', $templatecore_V4 . 'badge', 'Ko/s', null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, '#value# / 1024', '2', null, null, null, null, true);
         $Connexion->AddCommand('Débit descendant (max)', 'bandwidth_down', 'info', 'numeric', $templatecore_V4 . 'badge', $_bandwidth_down_unit, null, 1, 'default', 'default', 0, $iconspeed, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, $_bandwidth_value_down, '2');

@@ -5,8 +5,9 @@
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Berechnung",
+        "Catégorie": "Kategorie",
         "Création Commande": "Erstellung Bestellung",
-        "Création équipement": "Erstellung von Ausrüstung",
+        "Création Équipement": "Erstellung Ausstattung",
         "ERREUR CRON UPDATE TILES\/NODE ": "CRON-FEHLER UPDATE TILES\/NODE",
         "Erreur Cron Actualisation Ajout nouvelle commande ": "Cron-Fehler Aktualisierung Hinzufügen neuer Befehl",
         "Expression Cron Actualisation Ajout nouvelle commande  non valide pour ": "Ausdruck Cron Aktualisierung Hinzufügen neuer ungültiger Befehl für",
@@ -32,7 +33,6 @@
         "Type \/ SubType": "Typ \/ SubType",
         "Type de générique": "Art des Vorspanns",
         "Veuillez vérifier la configuration": "Bitte überprüfen Sie die Konfiguration",
-        "catégorie": "kategorie",
         "dans la commande": "in der Bestellung",
         "Équipement Type": "Ausstattung Typ"
     },

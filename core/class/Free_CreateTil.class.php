@@ -209,13 +209,13 @@ class Free_CreateTil
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: ' . $logicalinfo['homeadaptersName'] . ' ──');
         log::add('Freebox_OS', 'debug', '[WARNING] - Création équipement : Home Adapters');
-        Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, null, 'tiles_SP');
+        Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, 'tiles_SP');
         log::add('Freebox_OS', 'debug', '[  OK  ] - Création équipement : Home Adapters');
     }
     public static function createTil_homeadapters_SP($Free_API, $logicalinfo, $templatecore_V4)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: ' . $logicalinfo['homeadaptersName'] . ' ──');
-        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null, null, 'tiles_SP');
+        $homeadapters = Freebox_OS::AddEqLogic($logicalinfo['homeadaptersName'], $logicalinfo['homeadaptersID'], 'default', false, null, null, null, '12 */12 * * *', null, null,  'tiles_SP');
         $result = $Free_API->universal_get('universalAPI', null, null, 'home/adapters');
         foreach ($result as $Equipement) {
             if ($Equipement['label'] != '') {

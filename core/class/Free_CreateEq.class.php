@@ -222,7 +222,7 @@ class Free_CreateEq
             }
         }
 
-        $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['airmediaName'], $logicalinfo['airmediaID'], 'multimedia', false, null, null, null, '*/5 * * * *', null, null, null, 'system', true);
+        $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['airmediaName'], $logicalinfo['airmediaID'], 'multimedia', false, null, null, null, '*/5 * * * *', null, null, 'system', true);
         $receivers = $EqLogic->AddCommand('Player AirMedia choisi', 'receivers_info', 'info', 'string', 'default', null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', $order++, '0', false, true);
         $EqLogic->AddCommand('Choix du Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, $receivers, 'default', $receivers_icon, null, 0, 'default', 'default', $order++, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null);
 
@@ -299,7 +299,7 @@ class Free_CreateEq
     {
         $updateicon = false;
         if ($result = ! null) {
-            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *', null, null, null, 'system', true);
+            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *', null, null, 'system', true);
             if (isset($result['link_type'])) {
                 $Connexion->AddCommand('Type de connexion Fibre', 'link_type', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true);
             } else {
@@ -323,7 +323,7 @@ class Free_CreateEq
         if ($result != false && $result != 'Aucun module 4G détecté') {
             $_modul = 'Module 4G : Présent';
             log::add('Freebox_OS', 'debug', '| ───▶︎ ' . $_modul);
-            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *', null, null, null, 'system', true);
+            $Connexion = Freebox_OS::AddEqLogic($logicalinfo['connexionName'], $logicalinfo['connexionID'], 'default', false, null, null, '*/15 * * * *', null, null, 'system', true);
             log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT CREATION DES COMMANDES POUR LA 4G : ' . $logicalinfo['connexionName']);
             $Connexion->AddCommand('Débit xDSL Descendant', 'tx_used_rate_xdsl', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', null, true, null, null, null, '#value# / 1000', '2', null, null, null, null, true);
             $Connexion->AddCommand('Débit xDSL Montant', 'rx_used_rate_xdsl', 'info', 'numeric', $templatecore_V4 . 'badge', 'ko/s', null, 1, 'default', 'default', 0, null, 0, 'default', 'default',  $order++, '0', null, true, null, null, null, '#value# / 1000', '2', null, null, null, null, true);
@@ -341,7 +341,7 @@ class Free_CreateEq
     private static function createEq_disk_check($logicalinfo)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: '  . $logicalinfo['diskName'] . ' ──');
-        Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, null, 'system', true);
+        Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
 
@@ -370,7 +370,7 @@ class Free_CreateEq
             $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         }
         if ($result != false) {
-            $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, null, 'system', true);
+            $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
             foreach ($result['result'] as $disks) {
                 if ($disks['temp'] != 0) {
                     log::add('Freebox_OS', 'debug', '| ───▶︎ Température : ' . $disks['temp'] . '°C' . '- Disque [' . $disks['serial'] . '] - ' . $disks['id']);
@@ -445,7 +445,7 @@ class Free_CreateEq
         $iconDownloadsnormal = 'fas fa-rocket icon_green';
         $updateicon = true;
 
-        $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *', null, null, null, 'system', true);
+        $downloads = Freebox_OS::AddEqLogic($logicalinfo['downloadsName'], $logicalinfo['downloadsID'], 'multimedia', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
         $downloads->AddCommand('Nb de tâche(s)', 'nb_tasks', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         $downloads->AddCommand('Nb de tâche(s) active', 'nb_tasks_active', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask,  0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         $downloads->AddCommand('Nb de tâche(s) en extraction', 'nb_tasks_extracting', 'info', 'numeric', $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $icontask, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
@@ -482,11 +482,9 @@ class Free_CreateEq
             foreach ($result['result'] as $freeplugs) {
                 foreach ($freeplugs['members'] as $freeplug) {
                     log::add('Freebox_OS', 'debug', '| ───▶︎ Création Freeplug : ' . $freeplug['id']);
-                    $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugID'], null, null, '*/5 * * * *', null, null, null, 'system');
+                    $FreePlug = Freebox_OS::AddEqLogic($logicalinfo['freeplugName'] . ' - ' . $freeplug['id'], $freeplug['id'], 'default', true, $logicalinfo['freeplugID'], null, null, '*/5 * * * *', null, null, 'system');
                     $FreePlug->AddCommand('Rôle', 'net_role', 'info', 'string',  $templatecore_V4 . 'line', null, 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 10, '0', $updateicon, false, false, true);
                     $FreePlug->AddCommand('Redémarrer', 'reset', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',  1, '0', true, false, null, true);
-                    //$FreePlug->AddCommand('Débit TX', 'tx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mb/s', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
-                    //$FreePlug->AddCommand('Débit RX', 'rx_rate', 'info', 'numeric',  $templatecore_V4 . 'line', 'Mb/s', 'default', 0, 'default', 'default', 0, 'default', 0, 'default', 'default', 12, '0', $updateicon, false, false, true);
                 }
             }
         }
@@ -495,7 +493,7 @@ class Free_CreateEq
     private static function createEq_LCD($logicalinfo, $templatecore_V4, $order = 0)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: '  . $logicalinfo['LCDName'] . ' ──');
-        $LCD = Freebox_OS::AddEqLogic($logicalinfo['LCDName'], $logicalinfo['LCDID'], 'default', false, null, null, null, '5 */12 * * *', null, null, null, 'system', true);
+        $LCD = Freebox_OS::AddEqLogic($logicalinfo['LCDName'], $logicalinfo['LCDID'], 'default', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
         $iconbrightness = 'fas fa-adjust icon_green';
         $iconorientation = 'fas fa-map-signs icon_green';
         $updateicon = false;
@@ -536,7 +534,7 @@ class Free_CreateEq
                 $category = 'default';
                 $Equipement['name'] = preg_replace('/\'+/', ' ', $Equipement['name']); // Suppression '
                 log::add('Freebox_OS', 'debug', '| ───▶︎ Nom du controle parental : ' . $Equipement['name']);
-                $parental = Freebox_OS::AddEqLogic($Equipement['name'], 'parental_' . $Equipement['id'], $category, true, 'parental', null, $Equipement['id'], '*/5 * * * *', null, null, null, 'parental_controls');
+                $parental = Freebox_OS::AddEqLogic($Equipement['name'], 'parental_' . $Equipement['id'], $category, true, 'parental', null, $Equipement['id'], '*/5 * * * *', null, null, 'parental_controls');
                 $StatusParental = $parental->AddCommand('Etat', 'current_mode', "info", 'string', $Templateparent, null, null, 1, '', '', '', '', 0, 'default', 'default', $order++, '0', false, true, null, true, null, null, null, null, null, null, null, true);
                 $parental->AddCommand('Autoriser', 'allowed', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconparent_allowed, 0, 'default', 'default', $order++, '0', false, false, null, true);
                 $parental->AddCommand('Bloquer', 'denied', 'action', 'other', null, null, null, 1, $StatusParental, 'parentalStatus', 0, $iconparent_denied, 0, 'default', 'default', $order++, '0', false, false, null, true);
@@ -561,7 +559,7 @@ class Free_CreateEq
         $iconRead_call = 'fab fa-readme icon_blue';
         $updateicon = false;
 
-        $phone = Freebox_OS::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null, null, '*/30 * * * *', null, null, null, 'system', true);
+        $phone = Freebox_OS::AddEqLogic($logicalinfo['phoneName'], $logicalinfo['phoneID'], 'default', false, null, null, null, '*/30 * * * *', null, null, 'system', true);
         $phone->AddCommand('Nb Manqués', 'missed', 'info', 'numeric', $templatecore_V4 . 'badge', null, null, 1, 'default', 'default', 0, $iconmissed, 1, 'default', 'default',  $order++, '0', $updateicon, true, false, true, null, null, null, null);
         $phone->AddCommand('Liste Manqués', 'listmissed', 'info', 'string', null, null, null, 1, 'default', 'default', 0, $iconmissed, 1, 'default', 'default',  $order++, '0', $updateicon, true, false, null, null, null, null, 'NONAME');
         $phone->AddCommand('Nb Reçus', 'accepted', 'info', 'numeric', $templatecore_V4 . 'badge', null, null, 1, 'default', 'default', 0, $iconaccepted, 1, 'default', 'default',  $order++, '0', $updateicon, true, false, true, null, null, null, null);
@@ -586,7 +584,7 @@ class Free_CreateEq
         // Pour test Visibilité
         $_IsVisible = 0;
 
-        $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *', null, null, null, 'system', true, null);
+        $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *', null, null, 'system', true, null);
         // Type de phériphérique
         $host_type_list = "other|Autre;ip_camera|Caméra IP;vg_console|Console de jeux;freebox_crystal|Freebox Crystal;freebox_delta|Freebox Delta;freebox_hd|Freebox HD;freebox_mini|Freebox Mini;freebox_one|Freebox One;freebox_player|Freebox Player;freebox_pop|Freebox Pop;freebox_wifi|Freebox Wi-Fi Pop;printer|Imprimante;nas|NAS;workstation|Ordinateur Fixe;laptop|Ordinateur Portable;multimedia_device|Périphérique multimédia;networking_device|Périphérique réseau;smartphone|Smartphone;tablet|Tablette;ip_phone|Téléphone IP;television|Télévision;car|Véhicule connecté";
         $host_type = $EqLogic->AddCommand('Type de périphérique choisi', 'host_type_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_host_type, 0, 'default', 'default', $order, '0', false, true, null, true);
@@ -659,7 +657,7 @@ class Free_CreateEq
         $color_off = ' icon_red';
         $updateicon = false;
 
-        $netshare = Freebox_OS::AddEqLogic($logicalinfo['netshareName'], $logicalinfo['netshareID'], 'multimedia', false, null, null, null, '5 */12 * * *', null, null, null, 'system', true);
+        $netshare = Freebox_OS::AddEqLogic($logicalinfo['netshareName'], $logicalinfo['netshareID'], 'multimedia', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
         $boucle_num = 1; // 1 = Partage Imprimante - 2 = Partage de fichiers Windows - 3 = Partage Fichier Mac - 4 = Partage Fichier FTP
         $order = 1;
         while ($boucle_num <= 5) {
@@ -850,7 +848,7 @@ class Free_CreateEq
             $_IsVisible = 0;
             //$_networkname = $logicalinfo['managementName'];
             log::add('Freebox_OS', 'debug', '| :fg-success:───▶︎ Ajout des commandes spécifiques pour l\'équipement : ' . $logicalinfo['managementName'] . ':/fg:');
-            $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *', null, null, null, 'system', true, null);
+            $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *', null, null, 'system', true, null);
             $host_type = $EqLogic->AddCommand('Appareil connecté choisi', 'host_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_network, 0, 'default', 'default', 14, '0', false, true, null, true);
             $EqLogic->AddCommand('Sélection appareil connecté', 'host', 'action', 'select', null, null, null, $_IsVisible, $host_type, 'default', 0, $icon_network, 0, 'default', 'default', 15, '0', false, true, null, true, null, null, null, null, null, null, null, null, $network_list, null, null);
             $EqLogic->refreshWidget();
@@ -870,7 +868,7 @@ class Free_CreateEq
     private static function createEq_system_full($logicalinfo, $templatecore_V4, $order = 0)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: '    .  $logicalinfo['systemName'] . ' ──');
-        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *', null, null, null, 'system', true);
+        $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *', null, null, 'system', true);
         $order = 10;
         Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4, $order, $system);
         $order = 1;
@@ -1090,7 +1088,7 @@ class Free_CreateEq
                 } else {
                     $VM_name = 'VM_' . $Equipement['id'];
                 }
-                $_VM = Freebox_OS::AddEqLogic($VM_name, 'VM_' . $Equipement['id'], 'multimedia', true, 'VM', null, $Equipement['id'], '*/5 * * * *', null, null, null, 'system', true);
+                $_VM = Freebox_OS::AddEqLogic($VM_name, 'VM_' . $Equipement['id'], 'multimedia', true, 'VM', null, $Equipement['id'], '*/5 * * * *', null, null, 'system', true);
                 $_VM->AddCommand('Status', 'status', 'info', 'string', $TemplateVM, null, 'default', 1, 'default', 'default', 0, $VMstatus, 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
                 $_VM->AddCommand('Start', 'start', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOn, 0, 'default', 'default', $order++, '0', $updateicon, false);
                 $_VM->AddCommand('Stop', 'stop', 'action', 'other', 'default', null, 'default', 1, 'default', 'default', 0, $VMOff, 0, 'default', 'default', $order++, '0', $updateicon, false);
@@ -1123,7 +1121,7 @@ class Free_CreateEq
         $iconWifiWPSOn = 'fas fa-ethernet icon_green';
         $iconWifiWPSOff = 'fas fa-ethernet icon_red';
 
-        $Wifi = Freebox_OS::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null, null, '*/5 * * * *', null, null, null, 'system', true, null);
+        $Wifi = Freebox_OS::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null, null, '*/5 * * * *', null, null, 'system', true, null);
         $StatusWifi = $Wifi->AddCommand('Etat Wifi', 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateicon, true);
         $Wifi->AddCommand('Wifi On', 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
         $Wifi->AddCommand('Wifi Off', 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 11, '0', $updateicon, false);

@@ -763,6 +763,7 @@ class Free_Refresh
             }
         };
 
+        $_value = null;
         if ($data['ui']['display'] == 'color') {
             $_value = $data['value'];
         } else {

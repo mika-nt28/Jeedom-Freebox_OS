@@ -520,7 +520,7 @@ class Freebox_OS extends eqLogic
 			$Cmd->setIsVisible($IsVisible);
 			$Cmd->setIsHistorized($IsHistorized);
 			if ($invertBinary_display != null && $SubType == 'binary') {
-				$Cmd->setdisplay('invertBinary', 1);
+				$Cmd->setDisplay('invertBinary', 1);
 			}
 			if ($invertBinary_config != null) {
 				$Cmd->setConfiguration('invertBinary', 1);
@@ -533,26 +533,26 @@ class Freebox_OS extends eqLogic
 				}
 			}
 			if ($icon != null) {
-				$Cmd->setdisplay('icon', '<i class="' . $icon . '"></i>');
+				$Cmd->setDisplay('icon', '<i class="' . $icon . '"></i>');
 			}
 			if ($forceLineB != null) {
-				$Cmd->setdisplay('forceReturnLineBefore', 1);
+				$Cmd->setDisplay('forceReturnLineBefore', 1);
 			}
 			if ($forceLineA != null) {
-				$Cmd->setdisplay('forceReturnLineAfter', 1);
+				$Cmd->setDisplay('forceReturnLineAfter', 1);
 			}
 			if ($_iconname != null) {
-				$Cmd->setdisplay('showIconAndNamedashboard', 1);
-				$Cmd->setdisplay('showIconAndNamemobile', 1);
-				//$Cmd->setdisplay('title_disable', true);
+				$Cmd->setDisplay('showIconAndNamedashboard', 1);
+				$Cmd->setDisplay('showIconAndNamemobile', 1);
+				//$Cmd->setDisplay('title_disable', true);
 			}
 			if ($_display_parameters != null) {
-				$Cmd->setdisplay('parameters', $_display_parameters);
+				$Cmd->setDisplay('parameters', $_display_parameters);
 				$Cmd->save();
 			}
 			if ($_noiconname != null) {
-				$Cmd->setdisplay('showNameOndashboard', 0);
-				$Cmd->setdisplay('showNameOnmobile', 0);
+				$Cmd->setDisplay('showNameOndashboard', 0);
+				$Cmd->setDisplay('showNameOnmobile', 0);
 			}
 			if ($_calculValueOffset != null) {
 				$Cmd->setConfiguration('calculValueOffset', $_calculValueOffset);
@@ -586,7 +586,7 @@ class Freebox_OS extends eqLogic
 				if ($invertBinary_config != null  && $SubType == 'binary') { //Correction pour prise en compte fonction Core
 					log::add('Freebox_OS', 'debug', '| ───▶︎ Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
 					$Cmd->setConfiguration('invertBinary', $invertBinary_config);
-					$Cmd->setdisplay('invertBinary', $invertBinary_display);
+					$Cmd->setDisplay('invertBinary', $invertBinary_display);
 				}
 				$Cmd->setConfiguration('info', $_home_config_eq);
 			}
@@ -683,7 +683,7 @@ class Freebox_OS extends eqLogic
 		// Mise à jour des noms de la commande pour le Wifi en cas de changement de box		
 		if ($forceIcone_widget == true) {
 			if ($icon != null) {
-				$Cmd->setdisplay('icon', '<i class="' . $icon . '"></i>');
+				$Cmd->setDisplay('icon', '<i class="' . $icon . '"></i>');
 			}
 			if ($Template != null) {
 				$Cmd->setTemplate('dashboard', $Template);
@@ -692,14 +692,14 @@ class Freebox_OS extends eqLogic
 			$Cmd->setIsVisible($IsVisible);
 
 			if ($forceLineB != null) {
-				$Cmd->setdisplay('forceReturnLineBefore', 1);
+				$Cmd->setDisplay('forceReturnLineBefore', 1);
 			}
 			if ($forceLineA != null) {
-				$Cmd->setdisplay('forceReturnLineAfter', 1);
+				$Cmd->setDisplay('forceReturnLineAfter', 1);
 			}
 
 			if ($_iconname != null) {
-				$Cmd->setdisplay('showIconAndNamedashboard', 1);
+				$Cmd->setDisplay('showIconAndNamedashboard', 1);
 			}
 		}
 		if ($listValue != null) {

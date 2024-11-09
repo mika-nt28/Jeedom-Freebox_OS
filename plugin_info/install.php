@@ -129,7 +129,7 @@ function Freebox_OS_update()
 			UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
 			UpdateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
 		}
-		$eq_version = '2.1';
+		$eq_version = '2.2';
 		Freebox_OS::updateLogicalID($eq_version, true);
 		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Update paramétrage Plugin tiles');
 		if ($eq_version === '2') {
@@ -150,8 +150,8 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Création API');
 		$Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
 		if (empty($Config_KEY)) {
-			config::save('FREEBOX_API', 'v10', 'Freebox_OS');
-			log::add('Freebox_OS', 'debug', '│ Update Version API en V10');
+			config::save('FREEBOX_API', 'v11', 'Freebox_OS');
+			log::add('Freebox_OS', 'debug', '│ Update Version API en V11');
 		}
 		$Config_KEY = config::byKey('FREEBOX_REBOOT_DEAMON', 'Freebox_OS');
 		if (empty($Config_KEY)) {

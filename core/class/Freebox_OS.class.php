@@ -78,39 +78,41 @@ class Freebox_OS extends eqLogic
 	{
 		$eqLogics = eqLogic::byType('Freebox_OS');
 		$deamon_info = self::deamon_info();
-		if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-			log::add('Freebox_OS', 'debug', ':fg-info: Etat du Démon ' . $deamon_info['state'] . ':/fg:');
-			Freebox_OS::deamon_start();
-			$Free_API = new Free_API();
-			$Free_API->getFreeboxOpenSession();
-			$deamon_info = self::deamon_info();
-			log::add('Freebox_OS', 'debug', ':fg-info: Redémarrage du démon : ' . $deamon_info['state'] . ':/fg:');
-		}
-		foreach ($eqLogics as $eqLogic) {
-			$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
-			try {
-				$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
+		if ($deamon_info['launchable'] == 'ok') {
+			if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
+				log::add('Freebox_OS', 'debug', ':fg-info: Etat du Démon ' . $deamon_info['state'] . ':/fg:');
+				Freebox_OS::deamon_start();
+				$Free_API = new Free_API();
+				$Free_API->getFreeboxOpenSession();
+				$deamon_info = self::deamon_info();
+				log::add('Freebox_OS', 'debug', ':fg-info: Redémarrage du démon : ' . $deamon_info['state'] . ':/fg:');
+			}
+			foreach ($eqLogics as $eqLogic) {
+				$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
+				try {
+					$c = new Cron\CronExpression($autorefresh, new Cron\FieldFactory);
 
-				if ($c->isDue() && $deamon_info['state'] == 'ok') {
-					if ($eqLogic->getIsEnable()) {
-						if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
-						} else {
-							log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-info: CRON pour l\'actualisation de : ' .  $eqLogic->getName() . ':/fg: ◀︎───────────');
-							Free_Refresh::RefreshInformation($eqLogic->getId());
-							log::add('Freebox_OS', 'debug', '───────────────────────────────────────────');
+					if ($c->isDue() && $deamon_info['state'] == 'ok') {
+						if ($eqLogic->getIsEnable()) {
+							if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
+							} else {
+								log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-info: CRON pour l\'actualisation de : ' .  $eqLogic->getName() . ':/fg: ◀︎───────────');
+								Free_Refresh::RefreshInformation($eqLogic->getId());
+								log::add('Freebox_OS', 'debug', '───────────────────────────────────────────');
+							}
 						}
 					}
+					if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
+						log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state']);
+					}
+				} catch (Exception $exc) {
+					//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
 				}
-				if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-					log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state']);
-				}
-			} catch (Exception $exc) {
-				//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
-			}
-			if ($eqLogic->getLogicalId() == 'network' || $eqLogic->getLogicalId() == 'networkwifiguest' || $eqLogic->getLogicalId() == 'disk' || $eqLogic->getLogicalId() == 'homeadapters') {
-				if ($eqLogic->getIsEnable()) {
-					if ($deamon_info['state'] == 'ok') {
-						Freebox_OS::cron_autorefresh_eqLogic($eqLogic, $deamon_info);
+				if ($eqLogic->getLogicalId() == 'network' || $eqLogic->getLogicalId() == 'networkwifiguest' || $eqLogic->getLogicalId() == 'disk' || $eqLogic->getLogicalId() == 'homeadapters') {
+					if ($eqLogic->getIsEnable()) {
+						if ($deamon_info['state'] == 'ok') {
+							Freebox_OS::cron_autorefresh_eqLogic($eqLogic, $deamon_info);
+						}
 					}
 				}
 			}
@@ -361,10 +363,11 @@ class Freebox_OS extends eqLogic
 			}
 		}
 	}
-	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles = false, $eq_type = null, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $type2 = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
+	public static function AddEqLogic($Name, $_logicalId, $category = null, $tiles = false, $eq_type = null, $eq_action = null, $logicalID_equip = null, $_autorefresh = null, $_Room = null, $Player = null, $eq_group = 'system', $type_save = false, $Player_MAC = null)
 	{
 		$EqLogic = self::byLogicalId($_logicalId, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', ':fg-info:| Création équipement : :/fg:' . $Name . ' : Name : ' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- catégorie : ' . $category . ' -- Equipement Type : ' . $eq_type . ' -- Logical ID Equip : ' . $logicalID_equip . ' -- Cron : ' . $_autorefresh . ' -- Objet : ' . $_Room);
+		log::add('Freebox_OS', 'debug', ':fg-info:| ' . (__('Création Équipement', __FILE__)) . ' : :/fg:' . $Name . ' ── LogicalID : ' . $_logicalId . ' ── ' . (__('Catégorie', __FILE__)) . ' : ' . $category . ' ── ' . (__('Équipement Type', __FILE__)) . ' : ' . $eq_type . ' ── Logical ID Equip : ' . $logicalID_equip . ' ── Cron : ' . $_autorefresh . ' ── ' . (__('Objet', __FILE__)) . ' : ' . $_Room . ' ── ' . (__('Regroupement', __FILE__)) . ' : ' . $eq_group);
+
 		if (!is_object($EqLogic)) {
 			$EqLogic = new Freebox_OS();
 			$EqLogic->setLogicalId($_logicalId);
@@ -468,10 +471,10 @@ class Freebox_OS extends eqLogic
 	public function AddCommand($Name, $_logicalId, $Type = 'info', $SubType = 'binary', $Template = null, $unite = null, $generic_type = null, $IsVisible = 1, $link_I = 'default', $link_logicalId = 'default',  $invertBinary_display = '0', $icon = null, $forceLineB = '0', $valuemin = 'default', $valuemax = 'default', $_order = null, $IsHistorized = '0', $forceIcone_widget = false, $repeatevent = 'never', $_logicalId_slider = null, $_iconname = null, $_home_config_eq = null, $_calculValueOffset = null, $_historizeRound = null, $_noiconname = null, $invertSlide = null, $request = null, $_eq_type_home = null, $forceLineA = null, $listValue = null, $updatenetwork = false, $name_connectivity_type = null, $listValue_Update = null, $_display_parameters = null, $invertBinary_config = null)
 	{
 		if ($listValue_Update == true) {
-			log::add('Freebox_OS', 'debug', ':fg-info:| Création de la commande : :/fg:' . $Name . ' -- LogicalID : ' . $_logicalId . ' -- Mise à jour de la liste de choix avec les valeurs : ' . $listValue . ':/fg:');
+			log::add('Freebox_OS', 'debug', ':fg-info:| ' . (__('Création Commande', __FILE__)) . ' : :/fg:' . $Name . ' ── LogicalID : ' . $_logicalId . ' ── ' . (__('Mise à jour de la liste de choix avec les valeurs', __FILE__)) . ' : ' . $listValue . ':/fg:');
 		} else if ($updatenetwork != false) {
 		} else {
-			log::add('Freebox_OS', 'debug', ':fg-info:| Création de la commande : :/fg:' . $Name . ' -- Type : ' . $Type . ' -- LogicalID : ' . $_logicalId . ' -- Template Widget / Ligne : ' . $Template . '/' . $forceLineB . '-- Type de générique : ' . $generic_type . ' -- Inverser Affichage : ' . $invertBinary_display . ' -- Inverser Valeur Binaire : ' . $invertBinary_config . ' -- Icône : ' . $icon . ' -- Min/Max : ' . $valuemin . '/' . $valuemax . ' -- Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' -- Ordre : ' . $_order . ':/fg:');
+			log::add('Freebox_OS', 'debug', ':fg-info:| ' . (__('Création Commande', __FILE__)) . ' : :/fg:' . $Name . ' ── ' . (__("Type / SubType", __FILE__)) . ' : '  . $Type . '/' . $SubType . ' ── LogicalID : ' . $_logicalId . ' ──  Template Widget / Ligne : ' . $Template . '/' . $forceLineB . ' ── ' . (__('Type de générique', __FILE__)) . ' : ' . $generic_type . ' ── ' . (__('Inverser Affichage', __FILE__)) . ' : '  .  $invertBinary_display . ' ── ' . (__('Inverser Valeur Binaire', __FILE__)) . ' : '  .  $invertBinary_config . ' ── ' . (__('Icône', __FILE__)) . ' : ' . $icon . ' ── ' . (__('Min/Max', __FILE__)) . ' : ' . $valuemin . '/' . $valuemax . ' ── Calcul/Arrondi : ' . $_calculValueOffset . '/' . $_historizeRound . ' ── ' . (__('Ordre', __FILE__)) . ' : ' . $_order);
 		}
 		$Cmd = $this->getCmd($Type, $_logicalId);
 		if (!is_object($Cmd)) {
@@ -517,7 +520,7 @@ class Freebox_OS extends eqLogic
 			$Cmd->setIsVisible($IsVisible);
 			$Cmd->setIsHistorized($IsHistorized);
 			if ($invertBinary_display != null && $SubType == 'binary') {
-				$Cmd->setdisplay('invertBinary', 1);
+				$Cmd->setDisplay('invertBinary', 1);
 			}
 			if ($invertBinary_config != null) {
 				$Cmd->setConfiguration('invertBinary', 1);
@@ -530,26 +533,26 @@ class Freebox_OS extends eqLogic
 				}
 			}
 			if ($icon != null) {
-				$Cmd->setdisplay('icon', '<i class="' . $icon . '"></i>');
+				$Cmd->setDisplay('icon', '<i class="' . $icon . '"></i>');
 			}
 			if ($forceLineB != null) {
-				$Cmd->setdisplay('forceReturnLineBefore', 1);
+				$Cmd->setDisplay('forceReturnLineBefore', 1);
 			}
 			if ($forceLineA != null) {
-				$Cmd->setdisplay('forceReturnLineAfter', 1);
+				$Cmd->setDisplay('forceReturnLineAfter', 1);
 			}
 			if ($_iconname != null) {
-				$Cmd->setdisplay('showIconAndNamedashboard', 1);
-				$Cmd->setdisplay('showIconAndNamemobile', 1);
-				//$Cmd->setdisplay('title_disable', true);
+				$Cmd->setDisplay('showIconAndNamedashboard', 1);
+				$Cmd->setDisplay('showIconAndNamemobile', 1);
+				//$Cmd->setDisplay('title_disable', true);
 			}
 			if ($_display_parameters != null) {
-				$Cmd->setdisplay('parameters', $_display_parameters);
+				$Cmd->setDisplay('parameters', $_display_parameters);
 				$Cmd->save();
 			}
 			if ($_noiconname != null) {
-				$Cmd->setdisplay('showNameOndashboard', 0);
-				$Cmd->setdisplay('showNameOnmobile', 0);
+				$Cmd->setDisplay('showNameOndashboard', 0);
+				$Cmd->setDisplay('showNameOnmobile', 0);
 			}
 			if ($_calculValueOffset != null) {
 				$Cmd->setConfiguration('calculValueOffset', $_calculValueOffset);
@@ -583,7 +586,7 @@ class Freebox_OS extends eqLogic
 				if ($invertBinary_config != null  && $SubType == 'binary') { //Correction pour prise en compte fonction Core
 					log::add('Freebox_OS', 'debug', '| ───▶︎ Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
 					$Cmd->setConfiguration('invertBinary', $invertBinary_config);
-					$Cmd->setdisplay('invertBinary', $invertBinary_display);
+					$Cmd->setDisplay('invertBinary', $invertBinary_display);
 				}
 				$Cmd->setConfiguration('info', $_home_config_eq);
 			}
@@ -680,7 +683,7 @@ class Freebox_OS extends eqLogic
 		// Mise à jour des noms de la commande pour le Wifi en cas de changement de box		
 		if ($forceIcone_widget == true) {
 			if ($icon != null) {
-				$Cmd->setdisplay('icon', '<i class="' . $icon . '"></i>');
+				$Cmd->setDisplay('icon', '<i class="' . $icon . '"></i>');
 			}
 			if ($Template != null) {
 				$Cmd->setTemplate('dashboard', $Template);
@@ -689,14 +692,14 @@ class Freebox_OS extends eqLogic
 			$Cmd->setIsVisible($IsVisible);
 
 			if ($forceLineB != null) {
-				$Cmd->setdisplay('forceReturnLineBefore', 1);
+				$Cmd->setDisplay('forceReturnLineBefore', 1);
 			}
 			if ($forceLineA != null) {
-				$Cmd->setdisplay('forceReturnLineAfter', 1);
+				$Cmd->setDisplay('forceReturnLineAfter', 1);
 			}
 
 			if ($_iconname != null) {
-				$Cmd->setdisplay('showIconAndNamedashboard', 1);
+				$Cmd->setDisplay('showIconAndNamedashboard', 1);
 			}
 		}
 		if ($listValue != null) {

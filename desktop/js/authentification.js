@@ -36,7 +36,7 @@ $('.bt_FreeboxOS_Save').on('click', function () {
     SetSetting(ip, VersionAPP, Categorie);
 });
 
-$('.bt_FreeboxOS_Autorisation').on('click', function () {
+$('.bt_Freebox_Autorisation').on('click', function () {
     logs('info', "──────────▶︎ :fg-warning:{{Lancement}}:/fg: {{Autorisation Freebox}} ◀︎───────────");
     autorisationFreebox();
 });
@@ -75,20 +75,9 @@ $('.bt_FreeboxOS_Save_room').on('click', function () {
         logs('info', "───▶︎ :fg-info:Cron Global Titles ::/fg: OK:");
         cron_tiles = '1';
     };
-    /*checkvalueCmd = $('.checkbox_freeboxCmdbyCmd:checked').val();
-    if (checkvalueCmd == null) {
-        logs('info', "───▶︎ :fg-warning:Actualisation par commande ::/fg: NOK");
-        CmdbyCmd = '0';
-    } else {
-        logs('info', "───▶︎ :fg-warning:Actualisation par commande ::/fg: OK");
-        CmdbyCmd  = '1';
-    };*/
     console.log('CRON TILES : ' + cron_tiles)
-    //console.log('CMD BY CMD : ' +CmdbyCmd)
-    //SetSettingTiles(cron_tiles, CmdbyCmd);
     SetSettingTiles(cron_tiles);
     logs('info', "──────────▶︎ :fg-warning:{{Sauvegarde des Pièces des Tiles}}:/fg: ◀︎───────────");
-    //SaveTitelRoom();
 });
 
 
@@ -324,7 +313,7 @@ function AskTrackAuthorization() {
 
 function Good() {
     $('.bt_FreeboxOS_Previous').hide();
-    $('.bt_FreeboxOS_NEXT').hide();
+    $('.bt_Freebox_NEXT').hide();
     $('.alert-info FreeboxOS_OK').text('{{Authentification réussi}}');
     logs('info', "Authentification réussi");
 }
@@ -515,7 +504,7 @@ function GetSessionData() {
     $('.FreeboxOS_OK').hide();
     $('.FreeboxOS_OK_NEXT').hide();
     $('.bt_FreeboxOS_droitVerif').show();
-    $('.bt_FreeboxOS').show();
+    $('.bt_Freebox').show();
 
     $.ajax({
         type: "POST",
@@ -561,7 +550,7 @@ function GetSessionData() {
                     $('.FreeboxOS_OK').show();
                     $('.FreeboxOS_OK_NEXT').show();
                     $('.bt_FreeboxOS_droitVerif').hide();
-                    $('.bt_FreeboxOS').hide();
+                    $('.bt_Freebox').hide();
 
                     progress(65);
                 }

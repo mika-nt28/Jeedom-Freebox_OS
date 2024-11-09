@@ -658,7 +658,6 @@ class Free_Update
     }
     private static function update_phone($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
-
         switch ($logicalId) {
             case "phone_dell_call":
                 $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/delete_all', 'POST', null);

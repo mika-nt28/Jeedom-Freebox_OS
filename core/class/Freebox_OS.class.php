@@ -821,11 +821,11 @@ class Freebox_OS extends eqLogic
 	{
 		if (!$this->getIsEnable()) return;
 		if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1 && $this->getConfiguration('eq_group') == 'tiles') {
-			log::add('Freebox_OS', 'debug', '| ───▶︎ CRON : ' . '{{Pas de vérification car Cron global titles actif}}');
+			log::add('Freebox_OS', 'debug', '| ───▶︎ CRON : ' . (__('Pas de vérification car Cron global titles actif', __FILE__)));
 		} else {
 			if ($this->getConfiguration('autorefresh') == '') {
-				log::add('Freebox_OS', 'error', '[CRITICAL] CRON : {{Temps de rafraichissement est vide pour l\'équipement}} : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
-				throw new Exception(__('{{Le champ "Temps de rafraichissement (cron)" ne peut être vide}} : ' . $this->getName(), __FILE__));
+				log::add('Freebox_OS', 'error', '[CRITICAL] CRON : ' . (__('Temps de rafraichissement est vide pour l\'équipement', __FILE__)) . ' : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
+				throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide', __FILE__) . ' : ' . $this->getName());
 			}
 		}
 	}

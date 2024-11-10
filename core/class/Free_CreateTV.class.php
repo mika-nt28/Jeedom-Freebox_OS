@@ -36,7 +36,7 @@ class Free_CreateTV
     }
     private static function createTV_player($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: ' . $logicalinfo['playerName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: ' . $logicalinfo['playerName'] . ' ──');
         $Free_API = new Free_API();
         $TemplatePlayer = 'Freebox_OS::Player';
 
@@ -51,10 +51,10 @@ class Free_CreateTV
                     } else {
                         $_devicename = $Equipement['device_name'];
                     }
-                    log::add('Freebox_OS', 'debug', '| ───▶︎ CONFIGURATION PLAYER : ' . $nb_player . ' - ' . $_devicename);
+                    log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('CONFIGURATION PLAYER', __FILE__)) . ' : ' . $nb_player . ' - ' . $_devicename);
                     if (isset($Equipement['id'])) {
                         $player_STATE = 'KO';
-                        $player_log = ' -- Il n\'est pas possible de récupérer le status du Player donc pas de création de la commande d\'état';
+                        $player_log = ' -- ' . (__('Il n\'est pas possible de récupérer le status du Player donc pas de création de la commande d\'état', __FILE__));
                         $player_ID = $Equipement['mac'];
                         $player_MAC = 'MAC';
                         if ($Equipement['id']) {
@@ -64,7 +64,7 @@ class Free_CreateTV
                                     log::add('Freebox_OS', 'debug', '| ───▶︎ ETAT PLAYER : ' . $results_playerID['power_state']);
                                     if ($results_playerID['power_state'] == 'running' || $results_playerID['power_state'] == 'standby') {
                                         $player_STATE = 'OK';
-                                        $player_log = ' -- Il est possible de récupérer le status du Player';
+                                        $player_log = ' -- ' . (__('Il est possible de récupérer le status du Player', __FILE__));
                                     }
                                     $player_ID = $Equipement['id'];
                                     $player_MAC = 'ID';
@@ -88,13 +88,13 @@ class Free_CreateTV
                             }
                         }
                     } else {
-                        log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ AUCUNE INFO supplémentaire disponible pour le player:/fg:');
+                        log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('AUCUNE INFO supplémentaire disponible pour le player ou absence d\'ID', __FILE__)) . ':/fg:');
                     }
-                    log::add('Freebox_OS', 'debug', '| ───▶︎ FIN CONFIGURATION PLAYER : ' . $nb_player . ' / ' . $_devicename);
+                    log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('FIN CONFIGURATION PLAYER', __FILE__)) . ' : ' . $nb_player . ' / ' . $_devicename);
                     $nb_player++;
                 }
             } else {
-                log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ PAS DE ' . $logicalinfo['playerName'] . ' SUR VOTRE BOX:/fg:');
+                log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('PAS DE', __FILE__)) . ' ' . $logicalinfo['playerName'] . ' ' . (__('SUR VOTRE BOX', __FILE__)) . ':/fg:');
             }
         }
         log::add('Freebox_OS', 'debug', '└────────────────────');

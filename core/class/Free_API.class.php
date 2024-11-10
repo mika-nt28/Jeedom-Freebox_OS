@@ -730,7 +730,7 @@ class Free_API
                                 } else {
                                     $newligne = '<br>';
                                 }
-                                $listNumber_missed .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
+                                $listNumber_missed .= $newligne . $name . " {{à}} " . $time . " {{de}} " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                             if ($result['result'][$k]['type'] == 'accepted') {
                                 $cptAppel_accepted++;
@@ -739,7 +739,7 @@ class Free_API
                                 } else {
                                     $newligne = '<br>';
                                 }
-                                $listNumber_accepted .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
+                                $listNumber_accepted .= $newligne . $name . " {{à}} " . $time . " {{de}} " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                             if ($result['result'][$k]['type'] == 'outgoing') {
                                 $cptAppel_outgoing++;
@@ -748,7 +748,7 @@ class Free_API
                                 } else {
                                     $newligne = '<br>';
                                 }
-                                $listNumber_outgoing .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
+                                $listNumber_outgoing .= $newligne . $name . " {{à}} " . $time . " {{de}} " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                         }
                     }

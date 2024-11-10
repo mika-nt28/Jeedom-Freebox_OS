@@ -3,6 +3,16 @@
         "401 - Accès non autorisé": "401 - Unauthorized access",
         "Aucune methode correspondante à : ": "No method corresponding to :"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_CreateTV.class.php": {
+        "AUCUNE INFO supplémentaire disponible pour le player ou absence d\\'ID": "NO additional INFO available for the player or lack of ID",
+        "CONFIGURATION PLAYER": "CONFIGURATION PLAYER",
+        "Début de création des commandes pour": "Start creating commands for",
+        "FIN CONFIGURATION PLAYER": "FIN CONFIGURATION PLAYER",
+        "Il est possible de récupérer le status du Player": "It is possible to retrieve the Player status",
+        "Il n\\'est pas possible de récupérer le status du Player donc pas de création de la commande d\\'état": "It is not possible to retrieve the status of the Player, so the status command cannot be created",
+        "PAS DE": "NO",
+        "SUR VOTRE BOX": "ON YOUR BOX"
+    },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Calculation",
         "Catégorie": "Category",

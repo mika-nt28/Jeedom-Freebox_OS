@@ -3,6 +3,16 @@
         "401 - Accès non autorisé": "401 - Acceso no autorizado",
         "Aucune methode correspondante à : ": "Ningún método correspondiente a :"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_CreateTV.class.php": {
+        "AUCUNE INFO supplémentaire disponible pour le player ou absence d\\'ID": "SIN INFO adicional disponible para el reproductor o sin ID",
+        "CONFIGURATION PLAYER": "REPRODUCTOR DE CONFIGURACIÓN",
+        "Début de création des commandes pour": "Comience a crear comandos para",
+        "FIN CONFIGURATION PLAYER": "FIN CONFIGURACIÓN REPRODUCTOR",
+        "Il est possible de récupérer le status du Player": "Puede recuperar el estado del reproductor",
+        "Il n\\'est pas possible de récupérer le status du Player donc pas de création de la commande d\\'état": "No es posible recuperar el estado del Reproductor, por lo que no se puede crear el comando de estado",
+        "PAS DE": "NO",
+        "SUR VOTRE BOX": "EN SU CAJA"
+    },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Cálculo",
         "Catégorie": "Categoría",

@@ -3,6 +3,10 @@
         "401 - Accès non autorisé": "401 - Accesso non autorizzato",
         "Aucune methode correspondante à : ": "Nessun metodo corrispondente a :"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_API.class.php": {
+        "de": "de",
+        "à": "a"
+    },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateEq.class.php": {
         "AUCUN DISQUE": "NESSUN DISCO",
         "AUCUN DISQUE => PAS DE CREATION DE L\\'EQUIPEMENT": "NESSUN DISCO => NESSUNA CREAZIONE DI APPARECCHIATURE",

@@ -4,6 +4,8 @@
         "Aucune methode correspondante à : ": "Keine passende Methode zu :"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_API.class.php": {
+        "AUCUN APPEL": "KEIN ANRUF",
+        "avec la valeur": "mit dem Wert",
         "de": "von",
         "à": "bis"
     },

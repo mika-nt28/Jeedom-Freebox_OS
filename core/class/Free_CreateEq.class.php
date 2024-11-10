@@ -341,7 +341,7 @@ class Free_CreateEq
     private static function createEq_disk_check($logicalinfo)
     {
         $Free_API = new Free_API();
-        log::add('Freebox_OS', 'debug', '| :fg-success:| ───▶︎ ' . (__('Contrôle présence disque}', __FILE__)) . ' : ' . ':/fg:');
+        log::add('Freebox_OS', 'debug', '| :fg-success:| ───▶︎ ' . (__('Contrôle présence disque', __FILE__)) . ' : ' . ':/fg:');
         $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         if ($result != false) {
             $result_disk = true;
@@ -354,7 +354,7 @@ class Free_CreateEq
 
     private static function createEq_disk($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour}', __FILE__)) . ' ::/fg: '  . $logicalinfo['diskName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['diskName'] . ' ──');
         Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }

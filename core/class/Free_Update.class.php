@@ -651,7 +651,7 @@ class Free_Update
                 }
                 break;
             default:
-                log::add('Freebox_OS', 'debug', '│ test : ');
+                //log::add('Freebox_OS', 'debug', '│ test : ');
                 $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
                 break;
         }
@@ -660,10 +660,10 @@ class Free_Update
     {
         switch ($logicalId) {
             case "phone_dell_call":
-                $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/delete_all', 'POST', null);
+                $Free_API->universal_put(null, 'universal_put', null, null, 'call/log/delete_all', 'POST', null);
                 break;
             case "phone_read_call":
-                $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/mark_all_as_read', 'POST', null);
+                $Free_API->universal_put(null, 'universal_put', null, null, 'call/log/mark_all_as_read', 'POST', null);
                 break;
         }
     }

@@ -661,7 +661,7 @@ class Free_API
             $return = $this->fetch('/' . $config . '/', null, $fonction, true, true);
         } else {
             if ($config_log != null) {
-                log::add('Freebox_OS', 'debug', '───▶︎ ' . $config_log . ' avec la valeur : ' . $parametre);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . $config_log . ' ' . (__('avec la valeur', __FILE__)) . ' : ' . $parametre);
             }
             if ($cmd_config != null) {
                 $requet = array($cmd_config => $parametre);
@@ -759,7 +759,7 @@ class Free_API
                 return false;
             }
         } else {
-            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . 'AUCUN APPEL' .  ':/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' .  (__('AUCUN APPEL', __FILE__))  .  ':/fg:');
             return $retourFbx;
         }
     }

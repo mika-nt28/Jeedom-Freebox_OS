@@ -3,6 +3,16 @@
         "401 - Accès non autorisé": "401 - Accesso non autorizzato",
         "Aucune methode correspondante à : ": "Nessun metodo corrispondente a :"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_CreateTV.class.php": {
+        "AUCUNE INFO supplémentaire disponible pour le player ou absence d\\'ID": "Nessuna informazione aggiuntiva disponibile per il lettore o nessun ID",
+        "CONFIGURATION PLAYER": "LETTORE DI CONFIGURAZIONE",
+        "Début de création des commandes pour": "Iniziare a creare comandi per",
+        "FIN CONFIGURATION PLAYER": "LETTORE DI CONFIGURAZIONE FIN",
+        "Il est possible de récupérer le status du Player": "È possibile recuperare lo stato del Lettore",
+        "Il n\\'est pas possible de récupérer le status du Player donc pas de création de la commande d\\'état": "Non è possibile recuperare lo stato del lettore, quindi il comando di stato non può essere creato",
+        "PAS DE": "NO",
+        "SUR VOTRE BOX": "SULLA TUA SCATOLA"
+    },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Calcolo",
         "Catégorie": "Categoria",

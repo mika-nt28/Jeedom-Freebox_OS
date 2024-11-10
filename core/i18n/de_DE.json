@@ -9,9 +9,8 @@
         "Ajout des commandes spécifiques pour": "Hinzufügen von spezifischen Befehlen für",
         "BOX COMPATIBLE AVEC LES DISQUES RAID": "BOX KOMPATIBEL MIT RAID-DISKS",
         "BOX NON COMPATIBLE AVEC LES DISQUES RAID": "BOX NICHT KOMPATIBEL MIT RAID-DISKS",
-        "Contrôle présence disque}": "Kontrolle der Anwesenheit von Disks}",
+        "Contrôle présence disque": "Disc Presence Control",
         "Début de création des commandes pour": "Beginn der Erstellung von Aufträgen für",
-        "Début de création des commandes pour}": "Beginn der Erstellung von Aufträgen für}",
         "Présence disque": "Disc-Präsenz"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateTV.class.php": {

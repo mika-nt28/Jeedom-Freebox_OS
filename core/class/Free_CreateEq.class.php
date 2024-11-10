@@ -338,17 +338,10 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
 
-    private static function createEq_disk_check($logicalinfo)
-    {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: '  . $logicalinfo['diskName'] . ' ──');
-        Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
-        log::add('Freebox_OS', 'debug', '└────────────────────');
-    }
-
-    private static function createEq_disk($logicalinfo, $templatecore_V4)
+    private static function createEq_disk_check($logicalinfo, $templatecore_V4)
     {
         $Free_API = new Free_API();
-        log::add('Freebox_OS', 'debug', '| :fg-success:| ───▶︎ Contrôle présence disque : ' . ':/fg:');
+        log::add('Freebox_OS', 'debug', '| :fg-success:| ───▶︎ ' . '{{Contrôle présence disque}}' . ' : ' . ':/fg:');
         $result = $Free_API->universal_get('universalAPI', null, null, 'storage/disk', true, true, true);
         if ($result != false) {
             $result_disk = true;
@@ -359,9 +352,16 @@ class Free_CreateEq
         return $result_disk;
     }
 
+    private static function createEq_disk($logicalinfo, $templatecore_V4)
+    {
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . '{{Début de création des commandes pour}}' . ' ::/fg: '  . $logicalinfo['diskName'] . ' ──');
+        Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
+        log::add('Freebox_OS', 'debug', '└────────────────────');
+    }
+
     private static function createEq_disk_SP($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success:Début de création des commandes pour ::/fg: '  . $logicalinfo['diskName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . '{{Début de création des commandes pour}}' . ' ::/fg: '  . $logicalinfo['diskName'] . ' ──');
         $icontemp = 'fas fa-thermometer-half icon_blue';
         $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
         $Free_API = new Free_API();
@@ -389,20 +389,20 @@ class Free_CreateEq
             }
             if ($Type_box != 'fbxgw1r' && $Type_box != 'fbxgw2r') {
                 $disk_raid = 'OK';
-                log::add('Freebox_OS', 'debug', '| ───▶︎ BOX COMPATIBLE AVEC LES DISQUES RAID : ' . $Type_box . ' -' . $disk_raid);
+                log::add('Freebox_OS', 'debug', '| ───▶︎ ' . '{{BOX COMPATIBLE AVEC LES DISQUES RAID}}' . ' : ' . $Type_box . ' -' . $disk_raid);
                 Free_CreateEq::createEq_disk_RAID($logicalinfo, $templatecore_V4, $order);
             } else {
                 $disk_raid = 'KO';
-                log::add('Freebox_OS', 'debug', '| ───▶︎ BOX NON COMPATIBLE AVEC LES DISQUES RAID : ' . $Type_box . ' -' . $disk_raid);
+                log::add('Freebox_OS', 'debug', '| ───▶︎ ' . '{{BOX NON COMPATIBLE AVEC LES DISQUES RAID}}' . ' : ' . $Type_box . ' -' . $disk_raid);
             }
         } else {
-            log::add('Freebox_OS', 'debug', '| ───▶︎ AUCUN DISQUE - KO');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . '{{AUCUN DISQUE}}' . ' - KO');
         }
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
     private static function createEq_disk_RAID($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '| :fg-success:───▶︎ Ajout des commandes spécifiques pour ::/fg: ' . $logicalinfo['diskName'] . ' - RAID');
+        log::add('Freebox_OS', 'debug', '| :fg-success:───▶︎ ' . '{{Ajout des commandes spécifiques pour}}' . ' ::/fg: ' . $logicalinfo['diskName'] . ' - RAID');
 
         $Free_API = new Free_API();
         $disk = Freebox_OS::AddEqLogic($logicalinfo['diskName'], $logicalinfo['diskID'], 'default', false, null, null, null, '5 */12 * * *');
@@ -423,7 +423,7 @@ class Free_CreateEq
                 }
             }
         } else {
-            log::add('Freebox_OS', 'debug', '| ───▶︎ AUCUN DISQUE - KO');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . '{{AUCUN DISQUE}}' . ' - KO');
         }
     }
 

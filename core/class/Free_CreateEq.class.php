@@ -338,7 +338,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
 
-    private static function createEq_disk_check($logicalinfo, $templatecore_V4)
+    private static function createEq_disk_check($logicalinfo)
     {
         $Free_API = new Free_API();
         log::add('Freebox_OS', 'debug', '| :fg-success:| ───▶︎ ' . '{{Contrôle présence disque}}' . ' : ' . ':/fg:');

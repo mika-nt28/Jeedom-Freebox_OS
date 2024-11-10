@@ -625,7 +625,6 @@ class Free_Update
             case "channel":
                 log::add('Freebox_OS', 'debug', '│ Chaine : '  . $_options['message']);
                 foreach ($logicalId_eq->getCmd('info') as $Cmd) {
-                    //if (is_object($Cmd)) {
                     if ($Cmd->getLogicalId() === 'channel_info') {
                         log::add('Freebox_OS', 'debug', '│ Choix Chaine : '  . $_options['message']);
                         if ($logicalId == 'channel') {
@@ -647,11 +646,9 @@ class Free_Update
                         log::add('Freebox_OS', 'debug', '──────────▶︎ FIN REQUETE');
                         break;
                     }
-                    //}
                 }
                 break;
             default:
-                log::add('Freebox_OS', 'debug', '│ test : ');
                 $Free_API->universal_put($logicalId, 'player_ID_ctrl', $logicalId_eq->getConfiguration('action'), null, $_options);
                 break;
         }
@@ -660,10 +657,10 @@ class Free_Update
     {
         switch ($logicalId) {
             case "phone_dell_call":
-                $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/delete_all', 'POST', null);
+                $Free_API->universal_put(null, 'universal_put', null, null, 'call/log/delete_all', 'POST', null);
                 break;
             case "phone_read_call":
-                $Free_API->universal_put(null, 'universal_put', null, null, '/call/log/mark_all_as_read', 'POST', null);
+                $Free_API->universal_put(null, 'universal_put', null, null, 'call/log/mark_all_as_read', 'POST', null);
                 break;
         }
     }

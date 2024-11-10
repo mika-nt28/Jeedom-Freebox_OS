@@ -1130,7 +1130,7 @@ class Freebox_OS extends eqLogic
 					break;
 			}
 			$eqLogic->save(true);
-			log::add('Freebox_OS', 'debug', '│ .' . '{{Fonction passe en version en}}' . ' V' . $eq_version  . ' - ' . '{{Pour}}' . ' : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
+			log::add('Freebox_OS', 'debug', '│ .' . (__('Fonction passe en version en', __FILE__)) . ' V' . $eq_version  . ' - ' . (__('Pour', __FILE__)) . ' : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
 			//if (!$_update) $eqLogic->setName($eqName);
 
 		}

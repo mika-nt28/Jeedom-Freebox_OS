@@ -5,11 +5,13 @@
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateEq.class.php": {
         "AUCUN DISQUE": "NO DISC",
+        "AUCUN DISQUE => PAS DE CREATION DE L\\'EQUIPEMENT": "NO DISK => NO CREATION OF EQUIPMENT",
         "Ajout des commandes spécifiques pour": "Add specific commands for",
         "BOX COMPATIBLE AVEC LES DISQUES RAID": "BOX COMPATIBLE WITH RAID DISKS",
         "BOX NON COMPATIBLE AVEC LES DISQUES RAID": "BOX NOT COMPATIBLE WITH RAID DISKS",
         "Contrôle présence disque": "Disk presence control",
-        "Début de création des commandes pour": "Start creating commands for"
+        "Début de création des commandes pour": "Start creating commands for",
+        "Présence disque": "Disc presence"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateTV.class.php": {
         "AUCUNE INFO supplémentaire disponible pour le player ou absence d\\'ID": "NO additional INFO available for the player or lack of ID",
@@ -22,9 +24,6 @@
         "SUR VOTRE BOX": "ON YOUR BOX"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
-        "Afficheur LCD": "LCD display",
-        "Appareils connectés": "Connected devices",
-        "Appareils connectés Wifi Invité": "Wifi connected devices Guest",
         "Calcul": "Calculation",
         "Catégorie": "Category",
         "Check Version API de la Freebox": "Check Freebox API version",
@@ -35,9 +34,7 @@
         "Expression Cron Actualisation Ajout nouvelle commande  non valide pour ": "Expression Cron Update Add new invalid command for",
         "Expression cron non valide pour ": "Invalid cron expression for",
         "Fonction passe en version en": "Function upgraded to",
-        "Freebox débits": "Freebox speeds",
         "Freebox_OS": "Freebox_OS",
-        "Gestion réseau": "Network management",
         "Https disponible": "Https available",
         "Icône": "Icon",
         "Il est possible d\\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\\'API inconnue": "The following message may appear in messages: API NOT COMPATIBLE : API version unknown",
@@ -55,16 +52,12 @@
         "Nom Box": "Box name",
         "Nom Information": "Name Information",
         "Nom du type de Box": "Box type name",
-        "Notification": "Notification",
         "Objet": "Object",
         "Ordre": "Order",
-        "Partage Windows - Mac": "Windows - Mac sharing",
         "Pas de vérification car Cron global titles actif": "No check because Cron global titles active",
-        "Planification Wifi": "Wifi planning",
         "Pour": "For",
         "Rafraichir": "Refresh",
         "Regroupement": "Group",
-        "Système": "System",
         "Tache cron FreeboxGET introuvable": "FreeboxGET cron job not found",
         "Tache cron FreeboxPUT introuvable": "FreeboxPUT cron job not found",
         "Tache cron RefreshToken introuvable": "RefreshToken cron job not found",
@@ -72,11 +65,8 @@
         "Type \/ SubType": "Type \/ SubType",
         "Type de box": "Box type",
         "Type de générique": "Generic type",
-        "Téléchargements": "Downloads",
-        "Téléphone": "Phone",
         "Version actuelle dans la base": "Current version in database",
         "Veuillez vérifier la configuration": "Please check configuration",
-        "Wifi Invité": "Guest Wifi",
         "dans la commande": "in the command",
         "Équipement Type": "Equipment Type"
     },

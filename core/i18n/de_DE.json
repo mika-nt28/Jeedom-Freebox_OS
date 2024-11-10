@@ -5,11 +5,13 @@
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateEq.class.php": {
         "AUCUN DISQUE": "KEINE DISK",
+        "AUCUN DISQUE => PAS DE CREATION DE L\\'EQUIPEMENT": "KEINE PLATTE => KEIN ERSTELLEN VON GERÄTEN",
         "Ajout des commandes spécifiques pour": "Hinzufügen von spezifischen Befehlen für",
         "BOX COMPATIBLE AVEC LES DISQUES RAID": "BOX KOMPATIBEL MIT RAID-DISKS",
         "BOX NON COMPATIBLE AVEC LES DISQUES RAID": "BOX NICHT KOMPATIBEL MIT RAID-DISKS",
         "Contrôle présence disque": "Disc Presence Control",
-        "Début de création des commandes pour": "Beginn der Erstellung von Aufträgen für"
+        "Début de création des commandes pour": "Beginn der Erstellung von Aufträgen für",
+        "Présence disque": "Disc-Präsenz"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateTV.class.php": {
         "AUCUNE INFO supplémentaire disponible pour le player ou absence d\\'ID": "KEINE zusätzlichen Informationen für den Player verfügbar oder keine ID vorhanden",
@@ -22,9 +24,6 @@
         "SUR VOTRE BOX": "AUF IHRER BOX"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
-        "Afficheur LCD": "LCD-Display",
-        "Appareils connectés": "Angeschlossene Geräte",
-        "Appareils connectés Wifi Invité": "Angeschlossene Geräte Wifi Gast",
         "Calcul": "Berechnung",
         "Catégorie": "Kategorie",
         "Check Version API de la Freebox": "Check Version API der Freebox",
@@ -35,9 +34,7 @@
         "Expression Cron Actualisation Ajout nouvelle commande  non valide pour ": "Ausdruck Cron Aktualisierung Hinzufügen neuer ungültiger Befehl für",
         "Expression cron non valide pour ": "Ungültiger Cron-Ausdruck für",
         "Fonction passe en version en": "Funktion wechselt in die Version en",
-        "Freebox débits": "Freebox débits",
         "Freebox_OS": "Freebox_OS",
-        "Gestion réseau": "Netzwerkverwaltung",
         "Https disponible": "Https verfügbar",
         "Icône": "Symbol",
         "Il est possible d\\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\\'API inconnue": "Es ist möglich, dass die folgende Meldung in den Meldungen erscheint: API NICHT KOMPATIBEL: Unbekannte API-Version",
@@ -55,16 +52,12 @@
         "Nom Box": "Name Box",
         "Nom Information": "Name Information",
         "Nom du type de Box": "Name des Box-Typs",
-        "Notification": "Benachrichtigung",
         "Objet": "Objekt",
         "Ordre": "Befehl",
-        "Partage Windows - Mac": "Windows - Mac Sharing",
         "Pas de vérification car Cron global titles actif": "Keine Überprüfung, da Cron global titles aktiv ist",
-        "Planification Wifi": "Wifi-Planung",
         "Pour": "Für",
         "Rafraichir": "Auffrischen",
         "Regroupement": "Gruppierung",
-        "Système": "Systeme",
         "Tache cron FreeboxGET introuvable": "Cronjob FreeboxGET nicht gefunden",
         "Tache cron FreeboxPUT introuvable": "Cronjob FreeboxPUT nicht gefunden",
         "Tache cron RefreshToken introuvable": "Cronjob RefreshToken nicht gefunden",
@@ -72,11 +65,8 @@
         "Type \/ SubType": "Typ \/ SubType",
         "Type de box": "Art der Box",
         "Type de générique": "Art des Vorspanns",
-        "Téléchargements": "Downloads",
-        "Téléphone": "Telefon",
         "Version actuelle dans la base": "Aktuelle Version in der Datenbank",
         "Veuillez vérifier la configuration": "Bitte überprüfen Sie die Konfiguration",
-        "Wifi Invité": "Wifi Gast",
         "dans la commande": "in der Bestellung",
         "Équipement Type": "Ausstattung Typ"
     },

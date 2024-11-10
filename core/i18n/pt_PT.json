@@ -4,6 +4,8 @@
         "Aucune methode correspondante à : ": "Nenhum método correspondente a :"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_API.class.php": {
+        "AUCUN APPEL": "SEM CHAMADA",
+        "avec la valeur": "com o valor",
         "de": "de",
         "à": "às"
     },

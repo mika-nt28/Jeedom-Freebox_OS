@@ -821,11 +821,11 @@ class Freebox_OS extends eqLogic
 	{
 		if (!$this->getIsEnable()) return;
 		if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1 && $this->getConfiguration('eq_group') == 'tiles') {
-			log::add('Freebox_OS', 'debug', '| ───▶︎ CRON : Pas de vérification car Cron global titles actif');
+			log::add('Freebox_OS', 'debug', '| ───▶︎ CRON : ' . (__('Pas de vérification car Cron global titles actif', __FILE__)));
 		} else {
 			if ($this->getConfiguration('autorefresh') == '') {
-				log::add('Freebox_OS', 'error', '[CRITICAL] CRON : Temps de rafraichissement est vide pour l\'équipement : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
-				throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide : ' . $this->getName(), __FILE__));
+				log::add('Freebox_OS', 'error', '[CRITICAL] CRON : ' . (__('Temps de rafraichissement est vide pour l\'équipement', __FILE__)) . ' : ' . $this->getName() . ' ' . $this->getConfiguration('autorefresh'));
+				throw new Exception(__('Le champ "Temps de rafraichissement (cron)" ne peut être vide', __FILE__) . ' : ' . $this->getName());
 			}
 		}
 	}
@@ -917,7 +917,7 @@ class Freebox_OS extends eqLogic
 			'airmediaID' => 'airmedia',
 			'airmediaName' => 'Air Média',
 			'connexionID' => 'connexion',
-			'connexionName' => 'Freebox Débits',
+			'connexionName' => 'Freebox débits',
 			'diskID' => 'disk',
 			'diskName' => 'Disque Dur',
 			'downloadsID' => 'downloads',
@@ -963,24 +963,24 @@ class Freebox_OS extends eqLogic
 	}
 	public static function FreeboxAPI()
 	{
-		log::add('Freebox_OS', 'debug', '┌── :fg-success: Check Version API de la Freebox :/fg:──');
-		log::add('Freebox_OS', 'info', '|:fg-warning: Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue :/fg:');
+		log::add('Freebox_OS', 'debug', '┌── :fg-success: ' . (__('Check Version API de la Freebox', __FILE__)) . ' :/fg:──');
+		log::add('Freebox_OS', 'info', '|:fg-warning: ' . (__('Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue', __FILE__)) . ' :/fg:');
 		$Free_API = new Free_API();
 		$result = $Free_API->universal_get('universalAPI', null, null, 'api_version', true, true, true);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Type Box ::/fg: ' . $result['box_model_name']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Nom du type de Box', __FILE__)) . ' ::/fg: ' . $result['box_model_name']);
 		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API URL ::/fg: ' . $result['api_base_url']);
 		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Port https ::/fg: ' . $result['https_port']);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Nom Box ::/fg: ' . $result['device_name']);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Https disponible ::/fg: ' . $result['https_available']);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Modele de box ::/fg: ' . $result['box_model']);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Type de box ::/fg: ' . $result['device_type']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Nom Box', __FILE__)) . ' ::/fg: ' . $result['device_name']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Https disponible', __FILE__)) . ' ::/fg: ' . $result['https_available']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Modele de Box', __FILE__)) . ' ::/fg: ' . $result['box_model']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Type de box', __FILE__)) . ' ::/fg: ' . $result['device_type']);
 		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API domaine ::/fg: ' . $result['api_domain']);
 		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API version ::/fg: ' . $result['api_version']);
 		$API_version = 'v'  . $result['api_version'];
 		$API_version = strstr($API_version, '.', true);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Version actuelle dans la base ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Version actuelle dans la base', __FILE__)) . ' ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Mise à jour de Version dans la base ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Mise à jour de Version dans la base', __FILE__)) . ' ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		log::add('Freebox_OS', 'debug', '└────────────────────');
 		Free_CreateEq::createEq('box');
 		return $API_version;
@@ -1130,7 +1130,7 @@ class Freebox_OS extends eqLogic
 					break;
 			}
 			$eqLogic->save(true);
-			log::add('Freebox_OS', 'debug', '│ Fonction passe en version en V' . $eq_version  . ' - Pour : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
+			log::add('Freebox_OS', 'debug', '│ .' . (__('Fonction passe en version en', __FILE__)) . ' V' . $eq_version  . ' - ' . (__('Pour', __FILE__)) . ' : ' . $eqLogic->getLogicalId() . ' - ' . $eqLogic->getName());
 			//if (!$_update) $eqLogic->setName($eqName);
 
 		}
@@ -1170,25 +1170,4 @@ class Freebox_OSCmd extends cmd
 		cache::set("Freebox_OS::actionlist", $array);
 		//Free_Update::UpdateAction($this->getLogicalId(), $this->getSubType(), $this->getName(), $this->getvalue(), $this->getConfiguration('logicalId'), $this->getEqLogic(), $_options, $this);
 	}
-
-	/*public function getWidgetTemplateCode($_version = 'dashboard', $_clean = true, $_widgetName = '')
-	{
-		$data = null;
-		if ($_version != 'scenario') return parent::getWidgetTemplateCode($_version, $_clean, $_widgetName);
-		list($Cmd, $arguments) = explode('?', $this->getConfiguration('request'), 2);
-		if ($Cmd == 'wol')
-			$data = getTemplate('core', 'scenario', 'cmd.WakeonLAN', 'Freebox_OS');
-		if ($Cmd == 'add_del_mac')
-			$data = getTemplate('core', 'scenario', 'cmd.mac_filter', 'Freebox_OS');
-		if ($Cmd == 'add_del_dhcp')
-			$data = getTemplate('core', 'scenario', 'cmd.dhcp', 'Freebox_OS');
-		if ($Cmd == 'redir')
-			$data = getTemplate('core', 'scenario', 'cmd.port_forwarding', 'Freebox_OS');
-		if (!is_null($data)) {
-			if (version_compare(jeedom::version(), '4.2.0', '>=')) {
-				if (!is_array($data)) return array('template' => $data, 'isCoreWidget' => false);
-			} else return $data;
-		}
-		return parent::getWidgetTemplateCode($_version, $_clean, $_widgetName);
-	}*/
 }

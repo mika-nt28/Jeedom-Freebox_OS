@@ -36,7 +36,7 @@ class Free_CreateTV
     }
     private static function createTV_player($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . '{{Début de création des commandes pour}}' . ' ::/fg: ' . $logicalinfo['playerName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: ' . $logicalinfo['playerName'] . ' ──');
         $Free_API = new Free_API();
         $TemplatePlayer = 'Freebox_OS::Player';
 

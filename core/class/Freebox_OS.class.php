@@ -917,70 +917,70 @@ class Freebox_OS extends eqLogic
 			'airmediaID' => 'airmedia',
 			'airmediaName' => 'Air Média',
 			'connexionID' => 'connexion',
-			'connexionName' => '{{Freebox débits}}',
+			'connexionName' => 'Freebox débits',
 			'diskID' => 'disk',
 			'diskName' => 'Disque Dur',
 			'downloadsID' => 'downloads',
-			'downloadsName' => '{{Téléchargements}}',
+			'downloadsName' => 'Téléchargements',
 			'freeplugID' => 'freeplug',
 			'freeplugName' => 'Freeplug',
 			'homeadaptersID' => 'homeadapters',
 			'homeadaptersName' => 'Home Adapters',
 			'LCDID' => 'LCD',
-			'LCDName' => '{{Afficheur LCD}}',
+			'LCDName' => 'Afficheur LCD',
 			'managementID' => 'management',
-			'managementName' => '{{Gestion réseau}}',
+			'managementName' => 'Gestion réseau',
 			'networkID' => 'network',
-			'networkName' => '{{Appareils connectés}}',
+			'networkName' => 'Appareils connectés',
 			'netshareID' => 'netshare',
-			'netshareName' => '{{Partage Windows - Mac}}',
+			'netshareName' => 'Partage Windows - Mac',
 			'networkwifiguestID' => 'networkwifiguest',
-			'networkwifiguestName' => '{{Appareils connectés Wifi Invité}}',
+			'networkwifiguestName' => 'Appareils connectés Wifi Invité',
 			'notificationID' => 'notification',
-			'notificationName' => '{{Notification}}',
+			'notificationName' => 'Notification',
 			'parentalID' => 'parental',
 			'parentalName' => 'Parental',
 			'phoneID' => 'phone',
-			'phoneName' => '{{Téléphone}}',
+			'phoneName' => 'Téléphone',
 			'playerID' => 'player',
 			'playerName' => 'Player',
 			'systemID' => 'system',
-			'systemName' => '{{Système}}',
+			'systemName' => 'Système',
 			'VMID' => 'VM',
 			'VMName' => 'VM',
 			'wifiID' => 'wifi',
 			'wifiName' => 'Wifi',
 			'wifiguestID' => 'wifiguest',
-			'wifiguestName' => '{{Wifi Invité}}',
+			'wifiguestName' => 'Wifi Invité',
 			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
 			'wifiWPSName' => 'Wifi WPS',
 			'wifiAPID' => 'wifiAP',
 			'wifiAPName' => 'Wifi Access Points',
-			'wifistandbyName' => '{{Planification Wifi}}',
+			'wifistandbyName' => 'Planification Wifi',
 			'wifiECOName' => 'Mode Eco Wifi'
 		);
 	}
 	public static function FreeboxAPI()
 	{
-		log::add('Freebox_OS', 'debug', '┌── :fg-success: ' . '{{Check Version API de la Freebox}}' . ' :/fg:──');
-		log::add('Freebox_OS', 'info', '|:fg-warning: ' . '{{Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue}}' . ' :/fg:');
+		log::add('Freebox_OS', 'debug', '┌── :fg-success: ' . (__('Check Version API de la Freebox', __FILE__)) . ' :/fg:──');
+		log::add('Freebox_OS', 'info', '|:fg-warning: ' . (__('Il est possible d\'avoir le message suivant dans les messages : API NON COMPATIBLE : Version d\'API inconnue', __FILE__)) . ' :/fg:');
 		$Free_API = new Free_API();
 		$result = $Free_API->universal_get('universalAPI', null, null, 'api_version', true, true, true);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . '{{Nom du type de Box}}' . ' ::/fg: ' . $result['box_model_name']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Nom du type de Box', __FILE__)) . ' ::/fg: ' . $result['box_model_name']);
 		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API URL ::/fg: ' . $result['api_base_url']);
 		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Port https ::/fg: ' . $result['https_port']);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ .{{Nom Box}}' . ' ::/fg: ' . $result['device_name']);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . '{{Https disponible}}' . ' ::/fg: ' . $result['https_available']);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . '{{Modele de Box}}' . ' ::/fg: ' . $result['box_model']);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . '{{Type de box}}' . ' ::/fg: ' . $result['device_type']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Nom Box', __FILE__)) . ' ::/fg: ' . $result['device_name']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Https disponible', __FILE__)) . ' ::/fg: ' . $result['https_available']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Modele de Box', __FILE__)) . ' ::/fg: ' . $result['box_model']);
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Type de box', __FILE__)) . ' ::/fg: ' . $result['device_type']);
 		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API domaine ::/fg: ' . $result['api_domain']);
 		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ API version ::/fg: ' . $result['api_version']);
 		$API_version = 'v'  . $result['api_version'];
 		$API_version = strstr($API_version, '.', true);
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . '{{Version actuelle dans la base}}' . ' ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Version actuelle dans la base', __FILE__)) . ' ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		config::save('FREEBOX_API', $API_version, 'Freebox_OS');
-		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . '{{Mise à jour de Version dans la base}}' . ' ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
+		log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Mise à jour de Version dans la base', __FILE__)) . ' ::/fg: ' . config::byKey('FREEBOX_API', 'Freebox_OS'));
 		log::add('Freebox_OS', 'debug', '└────────────────────');
 		Free_CreateEq::createEq('box');
 		return $API_version;

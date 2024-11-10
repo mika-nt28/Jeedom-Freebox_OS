@@ -3,6 +3,14 @@
         "401 - Accès non autorisé": "401 - Acceso no autorizado",
         "Aucune methode correspondante à : ": "Ningún método correspondiente a :"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_CreateEq.class.php": {
+        "AUCUN DISQUE": "SIN DISCO",
+        "Ajout des commandes spécifiques pour": "Adición de comandos específicos para",
+        "BOX COMPATIBLE AVEC LES DISQUES RAID": "CAJA COMPATIBLE CON DISCOS RAID",
+        "BOX NON COMPATIBLE AVEC LES DISQUES RAID": "CAJA NO COMPATIBLE CON DISCOS RAID",
+        "Contrôle présence disque": "Control de presencia en disco",
+        "Début de création des commandes pour": "Comience a crear comandos para"
+    },
     "plugins\/Freebox_OS\/core\/class\/Free_CreateTV.class.php": {
         "AUCUNE INFO supplémentaire disponible pour le player ou absence d\\'ID": "SIN INFO adicional disponible para el reproductor o sin ID",
         "CONFIGURATION PLAYER": "REPRODUCTOR DE CONFIGURACIÓN",

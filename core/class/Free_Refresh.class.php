@@ -28,7 +28,7 @@ class Free_Refresh
         $TYPE_FREEBOX_TILES = config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS');
         if ($API_version == null || $API_version === 'TEST_V8') {
             $result_API = Freebox_OS::FreeboxAPI();
-            log::add('Freebox_OS', 'debug', ':fg-info: Version API Compatible avec la Freebox : ' . $result_API . ':/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-info: ' . (__('Version API Compatible avec la Freebox', __FILE__)) . ' : ' . $result_API . ':/fg:');
         }
         if ($_freeboxID == 'Tiles_global') {
             Free_Refresh::refresh_titles_global($EqLogics, $Free_API);
@@ -36,7 +36,7 @@ class Free_Refresh
 
         if (is_object($EqLogics) && $EqLogics->getIsEnable()) {
             if ($_freeboxID != 'Tiles_global') {
-                log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : ' . $EqLogics->getName() . ' :/fg: ◀︎───────────');
+                log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' : ' . $EqLogics->getName() . ' :/fg: ◀︎───────────');
             }
             if ($EqLogics->getConfiguration('type') == 'player' || $EqLogics->getConfiguration('type') == 'parental' || $EqLogics->getConfiguration('type') == 'freeplug' || $EqLogics->getConfiguration('type') == 'VM') {
                 $refresh = $EqLogics->getConfiguration('type');
@@ -45,7 +45,7 @@ class Free_Refresh
             }
             switch ($refresh) {
                 case 'management':
-                    log::add('Freebox_OS', 'debug', '───▶︎ Pas de fonction rafraichir pour cet équipement');
+                    log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Pas de fonction rafraichir pour cet équipement', __FILE__)));
                     break;
                 case 'airmedia':
                     Free_Refresh::refresh_airmedia($EqLogics, $Free_API);
@@ -82,22 +82,12 @@ class Free_Refresh
                             }
                         }
                     } else {
-                        log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎  La box n\'est plus comptatible avec cette application :/fg:──');
+                        log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . (__('La box n\'est plus comptatible avec cette application', __FILE__)) . ' :/fg:──');
                         Freebox_OS::DisableEqLogic($EqLogics, true);
                     }
                     break;
                 case 'parental':
                     Free_Refresh::refresh_parental($EqLogics, $Free_API);
-                    /*
-                    foreach ($EqLogics->getCmd('info') as $Command) {
-                        $results = $Free_API->universal_get('   parental', $EqLogics->getConfiguration('action'));
-                        if ($results != false) {
-                            $EqLogics->checkAndUpdateCmd($Command->getLogicalId(), $results['current_mode']);
-                        } else {
-                            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎  AUCUN CONTROLE PARENTAL AVEC CET ID :/fg:──');
-                            Freebox_OS::DisableEqLogic($EqLogics, false);
-                        }
-                    }*/
                     break;
                 case 'phone':
                     Free_Refresh::refresh_phone($EqLogics, $Free_API);
@@ -128,7 +118,7 @@ class Free_Refresh
                         Free_Refresh::refresh_titles($EqLogics, $Free_API);
                         // Free_Refresh::refresh_titles_global_CmdbyCmd($EqLogics, $Free_API, true);
                     } else {
-                        log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎  La box n\'est plus comptatible avec cette application :/fg:──');
+                        log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . (__('La box n\'est plus comptatible avec cette application', __FILE__)) . ' :/fg:──');
                         Freebox_OS::DisableEqLogic($EqLogics, true);
                     }
 
@@ -156,10 +146,10 @@ class Free_Refresh
                         }
                     }
                 } else {
-                    $cdayranges = 'Aucune periode de Vacances associées au profil';
+                    $cdayranges =  (__('Aucune periode de Vacances associées au profil', __FILE__));
                 }
             }
-            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ Vacances : ' . $cdayranges . ':/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Vacances', __FILE__)) . ' : ' . $cdayranges . ':/fg:');
             $macs = null;
             if (isset($result['macs'])) {
                 if ($result['macs'] != null) {
@@ -177,7 +167,7 @@ class Free_Refresh
             $Value_calcul = array('cdayranges' => $cdayranges, 'macs' => $macs);
             Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultP, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $Value_calcul);
         } else {
-            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . 'Pas de contrôle de réseau existant avec ce profil' .  ':/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . (__('Pas de contrôle de réseau existant avec ce profil', __FILE__)) .  ':/fg:');
             Freebox_OS::DisableEqLogic($EqLogics, false);
         }
     }
@@ -203,7 +193,7 @@ class Free_Refresh
                                     $receivers_list .= ';' . $airmedia['name'] . '|' . $airmedia['name'];
                                 }
                             }
-                            log::add('Freebox_OS', 'debug', '───▶︎ Liste des Airmedia : ' . $receivers_list);
+                            log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Liste des Airmedia', __FILE__)) . ' : '  . $receivers_list);
                             $EqLogics->AddCommand('Choix du Player AirMedia', 'receivers', 'action', 'select', null, null, null, 1, 'default', 'default', null, null, 0, 'default', 'default', 2, '0', false, true, null, null, null, null, null, null, null, null, null, null, $receivers_list, null, null, true);
                         }
                         // Gestion Liste déroulante Type de média
@@ -242,7 +232,7 @@ class Free_Refresh
                                                 $media_type_list .= ';' . 'video' . '|' . 'Vidéo';
                                             }
                                         }
-                                        log::add('Freebox_OS', 'debug', '───▶︎  Liste des médias compatible pour : ' . $receivers_Value . ' avec les valeurs : ' . $media_type_list);
+                                        log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Liste des médias compatible pour', __FILE__)) . ' : ' . $receivers_Value . ' ' . (__('avec les valeurs', __FILE__)) . ' : ' . $media_type_list);
                                         $EqLogics->AddCommand('Choix du Media', 'media_type', 'action', 'select', null, null, null, 1, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, true, null, null, null, null, null, null, null, null, null, null, $media_type_list, null, null, true);
                                         $EqLogics->refreshWidget();
                                     }
@@ -287,22 +277,22 @@ class Free_Refresh
     private static function refresh_connexion_4G($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Connexion 4G - xDSL');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Connexion 4G - xDSL');
         $result = $Free_API->universal_get('universalAPI', null, null, 'connection/aggregation', true, true, true);
 
         $list = 'rx_max_rate,rx_used_rate,tx_max_rate,tx_used_rate';
         $para_LogicalId = array('rx_max_rate' => 'rx_max_rate_lte', 'rx_used_rate' => 'rx_used_rate_lte', 'tx_max_rate' => 'tx_max_rate_lte', 'tx_used_rate' => 'tx_used_rate_lte');
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Connexion 4G - xDSL / lte');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Connexion 4G - xDSL / lte');
         $para_result4 = array('nb' => 3, 1 => 'result', 2 => 'tunnel', 3 => 'lte');
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_result4, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, null);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Connexion 4G - xDSL / xDSL');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Connexion 4G - xDSL / xDSL');
         $para_LogicalId = array('rx_max_rate' => 'rx_max_rate_xdsl', 'rx_used_rate' => 'rx_used_rate_xdsl', 'tx_max_rate' => 'tx_max_rate_xdsl', 'tx_used_rate' => 'tx_used_rate_xdsl');
         $para_result4 = array('nb' => 3, 1 => 'result', 2 => 'tunnel', 3 => 'xdsl');
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_result4, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, null);
         $para_LogicalId = null;
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Connexion 4G - xDSL / Config');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Connexion 4G - xDSL / Config');
         $list = 'enabled';
         $para_LogicalId = array('enabled' => 'state');
         $para_result4 = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
@@ -311,7 +301,7 @@ class Free_Refresh
     }
     private static function refresh_connexion_Config($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Config PING');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Config PING');
         $list = 'ping,wol';
         $result =  $Free_API->universal_get('connexion', null, null, 'config', true, true, null);
         $para_resultCO = array('nb' => 0, 1 => null, 2 => null, 3 => null);
@@ -320,7 +310,7 @@ class Free_Refresh
 
     private static function refresh_connexion_FTTH($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Connexion FTTH');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Connexion FTTH');
         $list = 'link_type,sfp_present,sfp_has_signal,sfp_alim_ok,sfp_pwr_tx,sfp_pwr_rx';
         $result = $Free_API->universal_get('connexion', null, null, 'ftth', true, true, null);
         $para_resultFT = array('nb' => 0, 1 => null, 2 => null, 3 => null);
@@ -356,7 +346,7 @@ class Free_Refresh
         }
         $log_Erreur = null;
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: RAID');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: RAID');
         $Type_box = config::byKey('TYPE_FREEBOX', 'Freebox_OS');
         $log_Erreur = 'AUCUN DISQUE RAID';
         if ($Type_box != 'fbxgw1r' && $Type_box != 'fbxgw2r') {
@@ -387,13 +377,13 @@ class Free_Refresh
 
     private static function refresh_download($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Config');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Config');
         $list = 'mode';
         $result = $Free_API->universal_get('universalAPI', null, null, 'downloads/config', true, true, true);
         $para_resultDO = array('nb' => 2, 1 => 'result', 2 => 'throttling', 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultDO, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Etat');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Etat');
         $list = 'conn_ready,throttling_is_scheduled,nb_tasks,nb_tasks_downloading,nb_tasks_done,nb_rss,nb_rss_items_unread,rx_rate,tx_rate,nb_tasks_active,nb_tasks_stopped,nb_tasks_queued,nb_tasks_repairing,nb_tasks_extracting,nb_tasks_error,nb_tasks_checking';
         $para_Value_calcul  = array('rx_rate' => '_bcdiv_', 'tx_rate' => '_bcdiv_');
         $result = $Free_API->universal_get('universalAPI', null, null, 'downloads/stats', true, true, true);
@@ -592,7 +582,7 @@ class Free_Refresh
     {
         log::add('Freebox_OS', 'debug', '───▶︎ Récupération des valeurs du Système');
         // Config réeseau
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: LAN');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: LAN');
         $para_Config = array('name' => 'TYPE_FREEBOX_NAME', 'mode' => 'TYPE_FREEBOX_MODE');
         $list = 'ip,mode,name';
         $result =  $Free_API->universal_get('network', null, null, 'lan/config/', true, true, true);
@@ -601,7 +591,7 @@ class Free_Refresh
         $para_Config = null;
 
         //Config Lang
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: langue');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: langue');
         $para_Value = array('lang__fra' => 'Français', 'lang_eng' => 'English', 'lang_ita' => 'Italiano');
         $list = 'lang';
         $result = $Free_API->universal_get('universalAPI', null, null, 'lang', true, true, null);
@@ -610,7 +600,7 @@ class Free_Refresh
         $para_Value = null;
 
         //Mise à jour
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: MISE A JOUR');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: MISE A JOUR');
         $para_Value = array('state__initializing_' => 'Le processus de mise à jour est en cours d\'initialisation', 'state__upgrading' => 'Le micrologiciel est en cours de mise à jour', 'state__up_to_date' => 'Le micrologiciel est à jour', 'state__error' => 'Une erreur s\'est produite pendant la mise à jour');
         $list = 'state';
         $result = $Free_API->universal_get('universalAPI', null, null, 'update', true, true, null);
@@ -618,7 +608,7 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY, $para_LogicalId, $para_Value, $para_Config, $log_Erreur,  $para_Value_calcul);
 
         // Système
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour : Autres' .  ':/fg:');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' : ' . (__('Autres', __FILE__)) .  ':/fg:');
         $list = 'name,pretty_name,wifi_type,has_standby,has_eco_wifi';
         $para_LogicalId = array('name' => 'model_name');
         $result = $Free_API->universal_get('system', null, null, null, true, true, null);
@@ -650,7 +640,7 @@ class Free_Refresh
     }
     private  static function refresh_system_sensor($EqLogics, $result)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Sensors');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Sensors');
         foreach ($EqLogics->getCmd('info') as $Cmd) {
             foreach ($result['fans'] as $system) {
                 if ($Cmd->getLogicalId('data') == $system['id']) {
@@ -688,12 +678,12 @@ class Free_Refresh
     }
     private static function refresh_system_4G($EqLogics, $Free_API, $para_LogicalId, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: 4G');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: 4G');
 
         $list = 'enabled,state';
         $para_LogicalId = array('enabled' => '4GStatut', 'state' => 'state_lte');
         $result = $Free_API->universal_get('universalAPI', null, null, 'connection/lte/aggregation', true, true, true);
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Connexion 4G - xDSL / lte');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Connexion 4G - xDSL / lte');
         $para_resultSY4 = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY4, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 

@@ -29,6 +29,18 @@
         "PAS DE": "NO",
         "SUR VOTRE BOX": "EN SU CAJA"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
+        "AUCUN APPEL": "SIN LLAMADA",
+        "Aucun port USB de connecté": "Sin puerto USB conectado",
+        "Eco Energie": "Eco Energie",
+        "Erreur freeplug : Pas de plug avec cet identifiant": "Error de Freeplug: No hay enchufe con este identificador",
+        "Liste Noire \/ Blanche": "Lista en blanco y negro",
+        "Mise à jour": "Actualización",
+        "Planning": "Planificación",
+        "Planning Mode": "Modo de planificación",
+        "Status des Cartes": "Estado de la tarjeta",
+        "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM : Imposible recuperar el estado de esta VM : La máquina virtual no existe"
+    },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Cálculo",
         "Catégorie": "Categoría",

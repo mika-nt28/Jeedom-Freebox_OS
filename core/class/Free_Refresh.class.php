@@ -431,15 +431,15 @@ class Free_Refresh
         $order_count_noactive = 400;
         if ($EqLogics->getConfiguration('UpdateVisible') == true) {
             $_UpdateVisible = true;
-            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:ETAT Option "Afficher uniquement les connectés" = :/fg:' . $_UpdateVisible . ' => : les équipements avec statut 0 ne seront pas affichés');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('ETAT Option "Afficher uniquement les connectés"', __FILE__)) . ' = :/fg:' . $_UpdateVisible . ' => ' . (__('les équipements avec statut 0 ne seront pas affichés', __FILE__)));
         } else {
             $_UpdateVisible = false;
-            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:ETAT Option "Afficher uniquement les connectés" = 0 => :/fg:: les équipements avec statut 0 seront affichés');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('ETAT Option "Afficher uniquement les connectés"', __FILE__)) . ' = :/fg:' . '0' . ' => ' . (__('les équipements avec statut 0 seront affichés', __FILE__)));
         }
 
         if (!isset($result_network_ping['result'])) {
             //  if (!$result_network_ping['success']) {
-            log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ RESULTAT Requête pas correct ou Pas d\'appareil trouvé' . ':/fg:');
+            log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('RESULTAT Requête pas correct ou Pas d\'appareil trouvé', __FILE__)) . ':/fg:');
         } else {
             foreach ($EqLogics->getCmd('info') as $Command) {
                 $result_network = $result_network_ping['result'];
@@ -448,7 +448,7 @@ class Free_Refresh
                 if ($_control_id  === false) {
                     if ($Command->getLogicalId() == 'host_info' || $Command->getLogicalId() == 'host_type_info' || $Command->getLogicalId() == 'method_info' || $Command->getLogicalId() == 'add_del_ip_info' || $Command->getLogicalId() == 'primary_name_info' || $Command->getLogicalId() == 'comment_info') {
                     } else {
-                        log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ APPAREIL PAS TROUVE : ' . $Command->getLogicalId() . ' => SUPPRESSION' . ':/fg:');
+                        log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('APPAREIL PAS TROUVE', __FILE__)) . ' : ' . $Command->getLogicalId() . ' => ' . (__('SUPPRESSION', __FILE__))  . ':/fg:');
                         $Command->remove();
                     }
                 }
@@ -545,9 +545,9 @@ class Free_Refresh
                     }
                 }
             }
-            log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) connecté(s) : ' . $active_list);
-            log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) connecté(s) avec IP Fixe : ' . $active_listIP);
-            log::add('Freebox_OS', 'debug', '| ───▶︎ Appareil(s) non connecté(s) : ' . $noactive_list);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Appareil(s) connecté(s)', __FILE__)) . ' : ' . $active_list);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Appareil(s) connecté(s) avec IP Fixe', __FILE__)) . ' : ' . $active_listIP);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Appareil(s) non connecté(s)', __FILE__)) . ' : ' . $noactive_list);
         }
     }
 

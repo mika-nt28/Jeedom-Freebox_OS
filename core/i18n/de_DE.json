@@ -30,10 +30,15 @@
         "SUR VOTRE BOX": "AUF IHRER BOX"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
+        "APPAREIL PAS TROUVE": "GERÄT NICHT GEFUNDEN",
         "AUCUN APPEL": "KEIN ANRUF",
+        "Appareil(s) connecté(s)": "Angeschlossene(s) Gerät(e)",
+        "Appareil(s) connecté(s) avec IP Fixe": "Angeschlossene(s) Gerät(e) mit fester IP",
+        "Appareil(s) non connecté(s)": "Nicht angeschlossene(s) Gerät(e)",
         "Aucun port USB de connecté": "Kein USB-Anschluss angeschlossen",
         "Aucune periode de Vacances associées au profil": "Keine dem Profil zugeordneten Ferienzeiten",
         "Autres": "Andere",
+        "ETAT Option \"Afficher uniquement les connectés\"": "STATUS Option \"Nur die Verbundenen anzeigen\"",
         "Eco Energie": "Eco Energie",
         "Erreur freeplug : Pas de plug avec cet identifiant": "Freeplug-Fehler: Kein Plug mit dieser ID",
         "La box n\\'est plus comptatible avec cette application": "Die Box ist nicht mehr mit dieser Anwendung kompatibel",
@@ -45,11 +50,15 @@
         "Pas de fonction rafraichir pour cet équipement": "Keine Auffrischungsfunktion für dieses Gerät",
         "Planning": "Planung",
         "Planning Mode": "Planning Mode",
+        "RESULTAT Requête pas correct ou Pas d\\'appareil trouvé": "RESULTAT Abfrage nicht korrekt oder Kein Gerät gefunden",
+        "SUPPRESSION": "LÖSCHEN",
         "Status des Cartes": "Kartenstatus",
         "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM: Es ist nicht möglich, den Status dieser VM abzurufen : Die VM existiert nicht",
         "Vacances": "Urlaub",
         "Version API Compatible avec la Freebox": "API-Version Kompatibel mit der Freebox",
-        "avec les valeurs": "mit den Werten"
+        "avec les valeurs": "mit den Werten",
+        "les équipements avec statut 0 ne seront pas affichés": "geräte mit Status 0 werden nicht angezeigt",
+        "les équipements avec statut 0 seront affichés": "werden Geräte mit Status 0 angezeigt"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Berechnung",

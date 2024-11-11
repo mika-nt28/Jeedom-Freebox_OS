@@ -30,10 +30,15 @@
         "SUR VOTRE BOX": "EN SU CAJA"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
+        "APPAREIL PAS TROUVE": "DISPOSITIVO NO ENCONTRADO",
         "AUCUN APPEL": "SIN LLAMADA",
+        "Appareil(s) connecté(s)": "Dispositivo(s) conectado(s)",
+        "Appareil(s) connecté(s) avec IP Fixe": "Dispositivo(s) conectado(s) con IP fija",
+        "Appareil(s) non connecté(s)": "Dispositivo(s) no conectado(s)",
         "Aucun port USB de connecté": "Sin puerto USB conectado",
         "Aucune periode de Vacances associées au profil": "No hay periodos vacacionales asociados al perfil",
         "Autres": "Otros",
+        "ETAT Option \"Afficher uniquement les connectés\"": "ESTADO Opción \"Mostrar sólo usuarios conectados\"",
         "Eco Energie": "Eco Energie",
         "Erreur freeplug : Pas de plug avec cet identifiant": "Error de Freeplug: No hay enchufe con este identificador",
         "La box n\\'est plus comptatible avec cette application": "La caja ya no es compatible con esta aplicación",
@@ -45,11 +50,15 @@
         "Pas de fonction rafraichir pour cet équipement": "No hay función de actualización para este equipo",
         "Planning": "Planificación",
         "Planning Mode": "Modo de planificación",
+        "RESULTAT Requête pas correct ou Pas d\\'appareil trouvé": "RESULTADO La consulta no es correcta o No se ha encontrado ningún dispositivo",
+        "SUPPRESSION": "BORRAR",
         "Status des Cartes": "Estado de la tarjeta",
         "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM : Imposible recuperar el estado de esta VM : La máquina virtual no existe",
         "Vacances": "Vacaciones",
         "Version API Compatible avec la Freebox": "Versión de la API Compatible con Freebox",
-        "avec les valeurs": "con los valores"
+        "avec les valeurs": "con los valores",
+        "les équipements avec statut 0 ne seront pas affichés": "los equipos con estado 0 no se mostrarán",
+        "les équipements avec statut 0 seront affichés": "se mostrarán los equipos con estado 0"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Cálculo",

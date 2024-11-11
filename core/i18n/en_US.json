@@ -30,10 +30,15 @@
         "SUR VOTRE BOX": "ON YOUR BOX"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
+        "APPAREIL PAS TROUVE": "DEVICE NOT FOUND",
         "AUCUN APPEL": "NO CALL",
+        "Appareil(s) connecté(s)": "Connected device(s)",
+        "Appareil(s) connecté(s) avec IP Fixe": "Connected device(s) with Fixed IP",
+        "Appareil(s) non connecté(s)": "Device(s) not connected",
         "Aucun port USB de connecté": "No USB port connected",
         "Aucune periode de Vacances associées au profil": "No vacation periods associated with the profile",
         "Autres": "Others",
+        "ETAT Option \"Afficher uniquement les connectés\"": "STATUS \"Show only connected\" option",
         "Eco Energie": "Eco Energie",
         "Erreur freeplug : Pas de plug avec cet identifiant": "Freeplug error: No plug with this identifier",
         "La box n\\'est plus comptatible avec cette application": "The box is no longer compatible with this application",
@@ -45,11 +50,15 @@
         "Pas de fonction rafraichir pour cet équipement": "No refresh function for this equipment",
         "Planning": "Planning",
         "Planning Mode": "Planning Mode",
+        "RESULTAT Requête pas correct ou Pas d\\'appareil trouvé": "RESULT Query not correct or No device found",
+        "SUPPRESSION": "DELETE",
         "Status des Cartes": "Card status",
         "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM: Impossible to retrieve the state of this VM: VM does not exist",
         "Vacances": "Vacations",
         "Version API Compatible avec la Freebox": "API version Compatible with Freebox",
-        "avec les valeurs": "with the values"
+        "avec les valeurs": "with the values",
+        "les équipements avec statut 0 ne seront pas affichés": "equipment with status 0 will not be displayed",
+        "les équipements avec statut 0 seront affichés": "equipment with status 0 will be displayed"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Calculation",

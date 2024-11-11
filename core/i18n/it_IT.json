@@ -30,10 +30,15 @@
         "SUR VOTRE BOX": "SULLA TUA SCATOLA"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
+        "APPAREIL PAS TROUVE": "DISPOSITIVO NON TROVATO",
         "AUCUN APPEL": "NESSUNA CHIAMATA",
+        "Appareil(s) connecté(s)": "Dispositivo\/i collegato\/i",
+        "Appareil(s) connecté(s) avec IP Fixe": "Dispositivo\/i collegato\/i con IP fisso",
+        "Appareil(s) non connecté(s)": "Dispositivo\/i non collegato\/i",
         "Aucun port USB de connecté": "Nessuna porta USB collegata",
         "Aucune periode de Vacances associées au profil": "Nessun periodo di vacanza associato al profilo",
         "Autres": "Altri",
+        "ETAT Option \"Afficher uniquement les connectés\"": "STATUS Opzione \"Mostra solo gli utenti connessi\"",
         "Eco Energie": "Eco Energie",
         "Erreur freeplug : Pas de plug avec cet identifiant": "Errore Freeplug: nessuna spina con questo identificatore",
         "La box n\\'est plus comptatible avec cette application": "Il box non è più compatibile con questa applicazione",
@@ -45,11 +50,15 @@
         "Pas de fonction rafraichir pour cet équipement": "Nessuna funzione di aggiornamento per questa apparecchiatura",
         "Planning": "Pianificazione",
         "Planning Mode": "Modalità di pianificazione",
+        "RESULTAT Requête pas correct ou Pas d\\'appareil trouvé": "RISULTATO Query non corretta o Nessun dispositivo trovato",
+        "SUPPRESSION": "CANCELLARE",
         "Status des Cartes": "Stato della carta",
         "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM : Impossibile recuperare lo stato di questa VM : La VM non esiste",
         "Vacances": "Vacanze",
         "Version API Compatible avec la Freebox": "Versione API Compatibile con Freebox",
-        "avec les valeurs": "con i valori"
+        "avec les valeurs": "con i valori",
+        "les équipements avec statut 0 ne seront pas affichés": "le apparecchiature con stato 0 non vengono visualizzate",
+        "les équipements avec statut 0 seront affichés": "vengono visualizzate le apparecchiature con stato 0"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Calcolo",

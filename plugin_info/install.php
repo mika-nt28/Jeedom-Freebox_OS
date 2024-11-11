@@ -39,7 +39,7 @@ function Freebox_OS_install()
 		$cron->save();
 	}
 	updateConfig();
-	config::save('FREEBOX_API', 'v10', 'Freebox_OS');
+	config::save('FREEBOX_API', 'v11', 'Freebox_OS');
 }
 function Freebox_OS_update()
 {
@@ -79,7 +79,7 @@ function Freebox_OS_update()
 
 	try {
 		$plugin = plugin::byId('Freebox_OS');
-		log::add('Freebox_OS', 'debug', '│ Mise à jour Plugin');
+		log::add('Freebox_OS', 'debug', '│ ' . (__('Mise à jour Plugin', __FILE__)));
 
 		/*$WifiEX = 0;
 		foreach (eqLogic::byLogicalId('Wifi', 'Freebox_OS', true) as $eqLogic) {
@@ -92,10 +92,10 @@ function Freebox_OS_update()
 			log::add('Freebox_OS', 'debug', '│ Etape 1/3 : Création Equipement WIFI -- ID N° : ' . $link_IA);
 		}*/
 
-		log::add('Freebox_OS', 'debug', '│ Etape 1/4 : Update(s) nouveautée(s) + correction(s) commande(s)');
+		log::add('Freebox_OS', 'debug', '│ Etape 1/4 : ' . (__('Mise à jour des nouveautées + corrections des commandes', __FILE__)));
 
 
-		log::add('Freebox_OS', 'debug', '[WARNING] - DEBUT DE NETTOYAGE LORS MIGRATION DE BOX');
+		log::add('Freebox_OS', 'debug', '[WARNING] - ' . (__('DEBUT DE NETTOYAGE LORS MIGRATION DE BOX', __FILE__)));
 		if (config::byKey('TYPE_FREEBOX', 'Freebox_OS') == 'fbxgw9r') {
 			// Amélioration - Suppression des commandes en cas de migration de freebox de la delta a l'ultra
 			removeLogicId('temp_cpu_cp_master');
@@ -114,9 +114,9 @@ function Freebox_OS_update()
 			removeLogicId('rx_used_rate_xdsl');
 			removeLogicId('rx_max_rate_xdsl');
 		}
-		log::add('Freebox_OS', 'debug', '[  OK  ] - FIN DE NETTOYAGE LORS MIGRATION DE BOX');
+		log::add('Freebox_OS', 'debug', '[  OK  ] - ' . (__('FIN DE NETTOYAGE LORS MIGRATION DE BOX', __FILE__)));
 
-		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : Changement de nom de certains équipements');
+		log::add('Freebox_OS', 'debug', '│ Etape 2/4 : ' . (__('Changement de nom de certains équipements', __FILE__)));
 		$eqLogics = eqLogic::byType($plugin->getId());
 		foreach ($eqLogics as $eqLogic) {
 			// Changement Id pour Wifi
@@ -131,7 +131,7 @@ function Freebox_OS_update()
 		}
 		$eq_version = '2.2';
 		Freebox_OS::updateLogicalID($eq_version, true);
-		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : Update paramétrage Plugin tiles');
+		log::add('Freebox_OS', 'debug', '│ Etape 3/4 : ' . (__('Mise à jour du paramétrage Plugin tiles', __FILE__)));
 		if ($eq_version === '2') {
 			/* CRON GLOBAL TITLES
 			if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
@@ -147,11 +147,11 @@ function Freebox_OS_update()
 				config::save('FREEBOX_TILES_CmdbyCmd', '1', 'Freebox_OS');
 			}*/
 		}
-		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : Création API');
+		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : ' . (__('Création API', __FILE__)));
 		$Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
 		if (empty($Config_KEY)) {
 			config::save('FREEBOX_API', 'v11', 'Freebox_OS');
-			log::add('Freebox_OS', 'debug', '│ Update Version API en V11');
+			log::add('Freebox_OS', 'debug', '│ ' . (__('Mise à jour de la version API en V11', __FILE__)));
 		}
 		$Config_KEY = config::byKey('FREEBOX_REBOOT_DEAMON', 'Freebox_OS');
 		if (empty($Config_KEY)) {

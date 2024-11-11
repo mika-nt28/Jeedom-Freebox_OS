@@ -407,7 +407,7 @@ class Free_API
                 break;
             case 'WebSocket':
                 $config = 'api/' . $API_version . '/ws/event';
-                $config_log = 'Traitement de la Mise à jour de WebSocket';
+                $config_log = (__('Traitement de la Mise à jour de WebSocket', __FILE__));
                 $Parameter = array(
                     "action" => 'notification',
                     "success" => true,
@@ -417,7 +417,7 @@ class Free_API
                 break;
             case 'PortForwarding':
                 $config = '/api/' . $API_version . '/fw/redir/';
-                $config_log = 'Redirection de port';
+                $config_log = (__('Redirection de port', __FILE__));
                 break;
             case 'upload':
                 $config = 'api/' . $API_version . '/ws/';

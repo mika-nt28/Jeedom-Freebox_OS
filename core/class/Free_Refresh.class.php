@@ -1070,7 +1070,7 @@ class Free_Refresh
         $para_resultWI = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Eco Energie', __FILE__)));
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Economie Energie', __FILE__)));
         $result = $Free_API->universal_get('system', null, null, null, true, true, null);
         $list = 'has_eco_wifi';
         $para_resultWI = array('nb' => 1, 1 => 'model_info', 2 => null, 3 => null);
@@ -1090,7 +1090,7 @@ class Free_Refresh
         $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: Config');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__(' Configuration', __FILE__)));
         $list = 'mac_filter_state,enabled';
         $para_LogicalId = array('enabled' => 'wifiStatut');
         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
@@ -1197,7 +1197,7 @@ class Free_Refresh
                             if ($para_Config != null) { // Mise à jour des paramétres Config
                                 if (isset($para_Config[$fieldname])) {
                                     config::save($para_Config[$fieldname], $value, 'Freebox_OS');
-                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ Update Config Plugin ' . ' ::/fg: ' . $para_Config[$fieldname]);
+                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('Mise à jour de la configuratuon du Plugin', __FILE__)) . ' ::/fg: ' . $para_Config[$fieldname]);
                                 }
                             }
                             break;

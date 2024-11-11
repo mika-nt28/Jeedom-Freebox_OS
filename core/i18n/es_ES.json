@@ -32,14 +32,24 @@
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         "AUCUN APPEL": "SIN LLAMADA",
         "Aucun port USB de connecté": "Sin puerto USB conectado",
+        "Aucune periode de Vacances associées au profil": "No hay periodos vacacionales asociados al perfil",
+        "Autres": "Otros",
         "Eco Energie": "Eco Energie",
         "Erreur freeplug : Pas de plug avec cet identifiant": "Error de Freeplug: No hay enchufe con este identificador",
+        "La box n\\'est plus comptatible avec cette application": "La caja ya no es compatible con esta aplicación",
         "Liste Noire \/ Blanche": "Lista en blanco y negro",
+        "Liste des Airmedia": "Lista de Airmedia",
+        "Liste des médias compatible pour": "Lista de soportes compatibles para",
         "Mise à jour": "Actualización",
+        "Pas de contrôle de réseau existant avec ce profil": "No existe control de red con este perfil",
+        "Pas de fonction rafraichir pour cet équipement": "No hay función de actualización para este equipo",
         "Planning": "Planificación",
         "Planning Mode": "Modo de planificación",
         "Status des Cartes": "Estado de la tarjeta",
-        "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM : Imposible recuperar el estado de esta VM : La máquina virtual no existe"
+        "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM : Imposible recuperar el estado de esta VM : La máquina virtual no existe",
+        "Vacances": "Vacaciones",
+        "Version API Compatible avec la Freebox": "Versión de la API Compatible con Freebox",
+        "avec les valeurs": "con los valores"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Cálculo",

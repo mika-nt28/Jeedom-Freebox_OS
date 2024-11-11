@@ -576,15 +576,15 @@ class Freebox_OS extends eqLogic
 				$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Name);
 				$this->setConfiguration('SetModePresent', "NOT");
 				$this->setConfiguration('ModeAbsent', $Name);
-				log::add('Freebox_OS', 'debug', '| ───▶︎ Paramétrage du Mode Homebridge Set Mode : SetModePresent => NOT' . ' -- Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Paramétrage du Mode Homebridge', __FILE__)) . ' Set Mode : SetModePresent => NOT' . ' -- ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'SetModeNuit') {
 				$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Name);
 				$this->setConfiguration('ModeNuit', $Name);
-				log::add('Freebox_OS', 'debug', '| ───▶︎ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
 				if ($invertBinary_config != null  && $SubType == 'binary') { //Correction pour prise en compte fonction Core
-					log::add('Freebox_OS', 'debug', '| ───▶︎ Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
+					log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Application Correctif pour prendre en compte fonction Core pour la commande', __FILE__)) . ' : ' . $Name . ' - ' . (__('Type de capteur', __FILE__)) . ' :' . $_home_config_eq);
 					$Cmd->setConfiguration('invertBinary', $invertBinary_config);
 					$Cmd->setDisplay('invertBinary', $invertBinary_display);
 				}
@@ -630,7 +630,7 @@ class Freebox_OS extends eqLogic
 		if ($updatenetwork != false) {
 			if ($updatenetwork['updatename'] == true) {
 				if ($Name != $Cmd->getName()) {
-					log::add('Freebox_OS', 'debug', '| ───▶︎ Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Cmd->getName());
+					log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Nom différent sur la Freebox', __FILE__)) . ' : ' . $Name . ' -- ' . (__('Nom de la commande Jeedom', __FILE__)) . ' : ' . $Cmd->getName());
 					if ($name_connectivity_type != 'Wifi Ethernet ?') {
 						$Name_verif = $Name . ' (' . ucwords($name_connectivity_type)  . ')';
 					} else {
@@ -752,7 +752,7 @@ class Freebox_OS extends eqLogic
 	{
 		if ($this->getConfiguration('eq_group') === 'tiles') {
 			if ($this->getConfiguration('type') === 'alarm_control') {
-				log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-warning: SAUVEGARDE : Mise à jour des paramètrages spécifiques pour Homebridge' . $this->getName() . '/' . $this->getConfiguration('type')  . ':/fg: ◀︎───────────');
+				log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-warning: ' . (__('SAUVEGARDE : Mise à jour des paramètrages spécifiques pour Homebridge', __FILE__))  . $this->getName() . '/' . $this->getConfiguration('type')  . ':/fg: ◀︎───────────');
 				foreach ($this->getCmd('action') as $Cmd) {
 					if (is_object($Cmd)) {
 						switch ($Cmd->getLogicalId()) {
@@ -767,7 +767,7 @@ class Freebox_OS extends eqLogic
 						}
 						if (isset($_home_config_eq)) {
 							if ($_home_config_eq != null) {
-								log::add('Freebox_OS', 'debug', '| ───▶︎ Mode : ' . $_home_config_eq . '(Commande : ' . $Cmd->getName() . ')');
+								log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Mode', __FILE__)) . ' : ' . $_home_config_eq . '(' . (__('Commandee', __FILE__))  . ' : ' . $Cmd->getName() . ')');
 								$this->setConfiguration($_home_mode, $Cmd->getName());
 								$this->save(true);
 								$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Cmd->getName());
@@ -917,48 +917,48 @@ class Freebox_OS extends eqLogic
 			'airmediaID' => 'airmedia',
 			'airmediaName' => 'Air Média',
 			'connexionID' => 'connexion',
-			'connexionName' => 'Freebox débits',
+			'connexionName' => (__('Freebox débits', __FILE__)),
 			'diskID' => 'disk',
-			'diskName' => 'Disque Dur',
+			'diskName' => (__('Disque Dur', __FILE__)),
 			'downloadsID' => 'downloads',
-			'downloadsName' => 'Téléchargements',
+			'downloadsName' => (__('Téléchargements', __FILE__)),
 			'freeplugID' => 'freeplug',
 			'freeplugName' => 'Freeplug',
 			'homeadaptersID' => 'homeadapters',
 			'homeadaptersName' => 'Home Adapters',
 			'LCDID' => 'LCD',
-			'LCDName' => 'Afficheur LCD',
+			'LCDName' => (__('Afficheur LCD', __FILE__)),
 			'managementID' => 'management',
-			'managementName' => 'Gestion réseau',
+			'managementName' => (__('Gestion réseau', __FILE__)),
 			'networkID' => 'network',
-			'networkName' => 'Appareils connectés',
+			'networkName' => (__('Appareils connectés', __FILE__)),
 			'netshareID' => 'netshare',
-			'netshareName' => 'Partage Windows - Mac',
+			'netshareName' => (__('Partage Windows - Mac', __FILE__)),
 			'networkwifiguestID' => 'networkwifiguest',
-			'networkwifiguestName' => 'Appareils connectés Wifi Invité',
+			'networkwifiguestName' => (__('Appareils connectés Wifi Invité', __FILE__)),
 			'notificationID' => 'notification',
-			'notificationName' => 'Notification',
+			'notificationName' => (__('Notification', __FILE__)),
 			'parentalID' => 'parental',
 			'parentalName' => 'Parental',
 			'phoneID' => 'phone',
-			'phoneName' => 'Téléphone',
+			'phoneName' => (__('Téléphone', __FILE__)),
 			'playerID' => 'player',
 			'playerName' => 'Player',
 			'systemID' => 'system',
-			'systemName' => 'Système',
+			'systemName' => (__('Système', __FILE__)),
 			'VMID' => 'VM',
 			'VMName' => 'VM',
 			'wifiID' => 'wifi',
-			'wifiName' => 'Wifi',
+			'wifiName' => (__('Wifi', __FILE__)),
 			'wifiguestID' => 'wifiguest',
-			'wifiguestName' => 'Wifi Invité',
+			'wifiguestName' => (__('Wifi Invité', __FILE__)),
 			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
 			'wifiWPSName' => 'Wifi WPS',
 			'wifiAPID' => 'wifiAP',
 			'wifiAPName' => 'Wifi Access Points',
-			'wifistandbyName' => 'Planification Wifi',
-			'wifiECOName' => 'Mode Eco Wifi'
+			'wifistandbyName' => (__('Planification Wifi', __FILE__)),
+			'wifiECOName' => (__('Mode Eco Wifi', __FILE__))
 		);
 	}
 	public static function FreeboxAPI()

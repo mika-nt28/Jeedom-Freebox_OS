@@ -267,7 +267,6 @@
         "Type": "Tipo"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
-        " Configuration": " Configuración",
         " Connexion 4G - xDSL \/ lte": " Conexión 4G - xDSL \/ lte",
         "API Disponible": "API disponible",
         "APPAREIL PAS TROUVE": "DISPOSITIVO NO ENCONTRADO",
@@ -281,6 +280,7 @@
         "Aucune periode de Vacances associées au profil": "No hay periodos vacacionales asociados al perfil",
         "Autres": "Otros",
         "Capteurs": "Sensores",
+        "Configuration": "Configuración ",
         "Configuration PING": "Configuración PING",
         "Connexion": "Conexión",
         "Connexion 4G - xDSL": "Conexión 4G - xDSL",

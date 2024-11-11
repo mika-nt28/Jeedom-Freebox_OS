@@ -32,14 +32,24 @@
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         "AUCUN APPEL": "NO CALL",
         "Aucun port USB de connecté": "No USB port connected",
+        "Aucune periode de Vacances associées au profil": "No vacation periods associated with the profile",
+        "Autres": "Others",
         "Eco Energie": "Eco Energie",
         "Erreur freeplug : Pas de plug avec cet identifiant": "Freeplug error: No plug with this identifier",
+        "La box n\\'est plus comptatible avec cette application": "The box is no longer compatible with this application",
         "Liste Noire \/ Blanche": "Black \/ White list",
+        "Liste des Airmedia": "List of Airmedia",
+        "Liste des médias compatible pour": "List of compatible media for",
         "Mise à jour": "Update",
+        "Pas de contrôle de réseau existant avec ce profil": "No existing network control with this profile",
+        "Pas de fonction rafraichir pour cet équipement": "No refresh function for this equipment",
         "Planning": "Planning",
         "Planning Mode": "Planning Mode",
         "Status des Cartes": "Card status",
-        "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM: Impossible to retrieve the state of this VM: VM does not exist"
+        "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM: Impossible to retrieve the state of this VM: VM does not exist",
+        "Vacances": "Vacations",
+        "Version API Compatible avec la Freebox": "API version Compatible with Freebox",
+        "avec les valeurs": "with the values"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Calculation",

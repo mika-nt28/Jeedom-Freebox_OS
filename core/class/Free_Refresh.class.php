@@ -1090,7 +1090,7 @@ class Free_Refresh
         $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__(' Configuration', __FILE__)));
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Configuration', __FILE__)));
         $list = 'mac_filter_state,enabled';
         $para_LogicalId = array('enabled' => 'wifiStatut');
         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);

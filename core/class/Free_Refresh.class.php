@@ -377,13 +377,13 @@ class Free_Refresh
 
     private static function refresh_download($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg:' . (__('de la configuration', __FILE__)));
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('de la configuration', __FILE__)));
         $list = 'mode';
         $result = $Free_API->universal_get('universalAPI', null, null, 'downloads/config', true, true, true);
         $para_resultDO = array('nb' => 2, 1 => 'result', 2 => 'throttling', 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultDO, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg:' . (__('de l\'Etat', __FILE__)));
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('de l\'Etat', __FILE__)));
         $list = 'conn_ready,throttling_is_scheduled,nb_tasks,nb_tasks_downloading,nb_tasks_done,nb_rss,nb_rss_items_unread,rx_rate,tx_rate,nb_tasks_active,nb_tasks_stopped,nb_tasks_queued,nb_tasks_repairing,nb_tasks_extracting,nb_tasks_error,nb_tasks_checking';
         $para_Value_calcul  = array('rx_rate' => '_bcdiv_', 'tx_rate' => '_bcdiv_');
         $result = $Free_API->universal_get('universalAPI', null, null, 'downloads/stats', true, true, true);

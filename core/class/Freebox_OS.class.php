@@ -80,12 +80,12 @@ class Freebox_OS extends eqLogic
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] == 'ok') {
 			if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-				log::add('Freebox_OS', 'debug', ':fg-info: Etat du Démon ' . $deamon_info['state'] . ':/fg:');
+				log::add('Freebox_OS', 'debug', ':fg-info: ' . (__('Etat du Démon', __FILE__)) . ' ' .  $deamon_info['state'] . ':/fg:');
 				Freebox_OS::deamon_start();
 				$Free_API = new Free_API();
 				$Free_API->getFreeboxOpenSession();
 				$deamon_info = self::deamon_info();
-				log::add('Freebox_OS', 'debug', ':fg-info: Redémarrage du démon : ' . $deamon_info['state'] . ':/fg:');
+				log::add('Freebox_OS', 'debug', ':fg-info: ' . (__('Redémarrage du démon', __FILE__)) . ' : ' . $deamon_info['state'] . ':/fg:');
 			}
 			foreach ($eqLogics as $eqLogic) {
 				$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
@@ -96,14 +96,14 @@ class Freebox_OS extends eqLogic
 						if ($eqLogic->getIsEnable()) {
 							if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
 							} else {
-								log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-info: CRON pour l\'actualisation de : ' .  $eqLogic->getName() . ':/fg: ◀︎───────────');
+								log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-info: CRON ' . (__('pour l\'actualisation de', __FILE__)) . ' : ' .  $eqLogic->getName() . ':/fg: ◀︎───────────');
 								Free_Refresh::RefreshInformation($eqLogic->getId());
 								log::add('Freebox_OS', 'debug', '───────────────────────────────────────────');
 							}
 						}
 					}
 					if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-						log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state']);
+						log::add('Freebox_OS', 'debug', '[WARNING] - ' . (__('PAS DE CRON pour d\'actualisation', __FILE__)) . ' ' . $eqLogic->getName() . ' ' . (__('à cause du Démon', __FILE__)) . ' : ' . $deamon_info['state']);
 					}
 				} catch (Exception $exc) {
 					//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
@@ -144,7 +144,7 @@ class Freebox_OS extends eqLogic
 					try {
 						$cron = new Cron\CronExpression($autorefresh_eqLogic, new Cron\FieldFactory);
 						if ($cron->isDue()) {
-							log::add('Freebox_OS', 'debug', ':fg-info: CRON ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement  : ' . $eqLogic->getName() . ':/fg:');
+							log::add('Freebox_OS', 'debug', ':fg-info: CRON ' . (__('ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement', __FILE__)) . ' : ' . $eqLogic->getName() . ':/fg:');
 							if ($_crondailyEq != null) {
 								Free_CreateEq::createEq($_crondailyEq, false);
 							}
@@ -322,7 +322,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function resetConfig()
 	{
-		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ RESET DES PARAMETRES STANDARDS' . ':/fg:');
+		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('RESET DES PARAMETRES STANDARDS', __FILE__))  . ':/fg:');
 		config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_NAME', "Plugin Freebox OS", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_ID', "plugin.freebox.jeedom", 'Freebox_OS');
@@ -330,7 +330,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_API', "v10", 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', 'RESET [  OK  ]');
 		config::save('FREEBOX_REBOOT_DEAMON', FALSE, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ RESET DU TYPE DE BOX' . ':/fg:');
+		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('RESET DU TYPE DE BOX', __FILE__))  . ':/fg:');
 		config::save('TYPE_FREEBOX', '', 'Freebox_OS');
 		config::save('TYPE_FREEBOX_NAME', "", 'Freebox_OS');
 		config::save('TYPE_FREEBOX_TILES', "", 'Freebox_OS');
@@ -347,7 +347,7 @@ class Freebox_OS extends eqLogic
 	{
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 		if ($EqLogic != null) {
-			log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ DESACTIVATION DE : ' . $EqLogic->getname() . ':/fg:');
+			log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('DESACTIVATION DE', __FILE__))  .' : ' . $EqLogic->getname() . ':/fg:');
 			if (!is_object($EqLogic->getLogicalId())) {
 				$EqLogic->setIsEnable(0);
 				$EqLogic->save(true);
@@ -357,7 +357,7 @@ class Freebox_OS extends eqLogic
 		if ($TILES == true) {
 			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 			if (is_object($cron)) {
-				log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ SUPPRESSION CRON GLOBAL TITLES' . ':/fg:');
+				log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('SUPPRESSION CRON GLOBAL TITLES', __FILE__))  . . ':/fg:');
 				$cron->stop();
 				$cron->remove();
 			}

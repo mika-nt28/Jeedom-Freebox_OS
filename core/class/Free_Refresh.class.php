@@ -580,7 +580,7 @@ class Free_Refresh
     }
     private static function refresh_system($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '───▶︎ Récupération des valeurs du Système');
+        log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Récupération des valeurs du Système', __FILE__)));
         // Config réeseau
         log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: LAN');
         $para_Config = array('name' => 'TYPE_FREEBOX_NAME', 'mode' => 'TYPE_FREEBOX_MODE');
@@ -591,8 +591,8 @@ class Free_Refresh
         $para_Config = null;
 
         //Config Lang
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: langue');
-        $para_Value = array('lang__fra' => 'Français', 'lang_eng' => 'English', 'lang_ita' => 'Italiano');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('langue', __FILE__)));
+        $para_Value = array('lang__fra' => (__('Français', __FILE__)), 'lang_eng' => (__('Anglais', __FILE__)), 'lang_ita' => (__('Italien', __FILE__)));
         $list = 'lang';
         $result = $Free_API->universal_get('universalAPI', null, null, 'lang', true, true, null);
         $para_resultSY = array('nb' => 0, 1 => null, 2 => null, 3 => null);
@@ -600,8 +600,8 @@ class Free_Refresh
         $para_Value = null;
 
         //Mise à jour
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: MISE A JOUR');
-        $para_Value = array('state__initializing_' => 'Le processus de mise à jour est en cours d\'initialisation', 'state__upgrading' => 'Le micrologiciel est en cours de mise à jour', 'state__up_to_date' => 'Le micrologiciel est à jour', 'state__error' => 'Une erreur s\'est produite pendant la mise à jour');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('MISE A JOUR', __FILE__)));
+        $para_Value = array('state__initializing_' => (__('Le processus de mise à jour est en cours d\'initialisation', __FILE__)), 'state__upgrading' => (__('Le micrologiciel est en cours de mise à jour', __FILE__)), 'state__up_to_date' => (__('Le micrologiciel est à jour', __FILE__)), 'state__error' => (__('Une erreur s\'est produite pendant la mise à jour', __FILE__)));
         $list = 'state';
         $result = $Free_API->universal_get('universalAPI', null, null, 'update', true, true, null);
         $para_resultSY = array('nb' => 0, 1 => null, 2 => null, 3 => null);
@@ -683,7 +683,7 @@ class Free_Refresh
         $list = 'enabled,state';
         $para_LogicalId = array('enabled' => '4GStatut', 'state' => 'state_lte');
         $result = $Free_API->universal_get('universalAPI', null, null, 'connection/lte/aggregation', true, true, true);
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: Connexion 4G - xDSL / lte');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Connexion', __FILE__)) . ' 4G - xDSL / lte');
         $para_resultSY4 = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY4, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
@@ -743,13 +743,13 @@ class Free_Refresh
                     break;
             }
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '───▶︎ Update commande spécifique pour Homebridge : ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Mise à jour commande spécifique pour Homebridge', __FILE__)) . ' : ' . $EqLogic->getConfiguration('type') . ' -- ' . $_Alarm_log);
             }
             $EqLogic->checkAndUpdateCmd('ALARM_state', $_Alarm_stat_value);
             $EqLogic->checkAndUpdateCmd('ALARM_enable', $_Alarm_enable_value);
             $EqLogic->checkAndUpdateCmd('ALARM_mode', $_Alarm_mode_value);
             if ($log_result == true) {
-                log::add('Freebox_OS', 'debug', '───▶︎ Statut (ALARM_state) = ' . $_Alarm_stat_value . ' / Actif (ALARM_enable) = ' . $_Alarm_enable_value . ' / Mode (ALARM_mode) = ' . $_Alarm_mode_value);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Statut', __FILE__)) . ' (ALARM_state) = ' . $_Alarm_stat_value . ' / Actif (ALARM_enable) = ' . $_Alarm_enable_value . ' / Mode (ALARM_mode) = ' . $_Alarm_mode_value);
             }
         };
 
@@ -761,7 +761,7 @@ class Free_Refresh
                 if ($data['value'] == null) {
                     $_value = 'Pas de message d\'erreur';
                     if ($log_result == true) {
-                        log::add('Freebox_OS', 'debug', '───▶︎ Update commande spécifique Message erreur : ' . $EqLogic->getConfiguration('type') . ' -- ' . $data['value']);
+                        log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Mise à jour commande spécifique Message erreur', __FILE__)) . ' : '  . $EqLogic->getConfiguration('type') . ' -- ' . $data['value']);
                     }
                 }
             } else {
@@ -961,11 +961,11 @@ class Free_Refresh
     }
     private static function refresh_player($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '───▶︎ ETAT PLAYER DISPONIBLE ? : [  ' . $EqLogics->getConfiguration('player') . '  ]');
+        log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('ETAT PLAYER DISPONIBLE', __FILE__)) . ' ? : [  ' . $EqLogics->getConfiguration('player') . '  ]');
         if ($EqLogics->getConfiguration('player') == 'OK' && $EqLogics->getConfiguration('player_MAC') != 'MAC') {
             $results_playerID = $Free_API->universal_get('universalAPI', null, null, 'player/' . $EqLogics->getConfiguration('action') . '/api/v6/status', false, true, false);
             if (!isset($results_playerID['power_state'])) {
-                log::add('Freebox_OS', 'debug', ':fg-info:l\'etat n\'est pas disponible car le Player n\'est pas joignable:/fg:');
+                log::add('Freebox_OS', 'debug', ':fg-info:' . (__('l\'etat n\'est pas disponible car le Player n\'est pas joignable', __FILE__)) . ':/fg:');
                 $player_power_state = 'standby';
             } else {
                 log::add('Freebox_OS', 'debug', '───▶︎ l\'etat est disponible');
@@ -973,7 +973,7 @@ class Free_Refresh
             }
         } else {
             $player_power_state = 'KO';
-            log::add('Freebox_OS', 'debug', ':fg-info:Il n\'est pas possible de récupérer le status du Player :/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-info:' . (__('Il n\'est pas possible de récupérer le status du Player', __FILE__)) . ':/fg:');
         }
 
         $results_players = $Free_API->universal_get('universalAPI', null, null, 'player/', true, true, true);
@@ -987,13 +987,13 @@ class Free_Refresh
             if ($results_player_ID != $EqLogics->getConfiguration('action')) {
                 continue;
             } else {
-                log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ PLAYER TROUVE' . ':/fg:');
+                log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('PLAYER TROUVE', __FILE__)) . ':/fg:');
                 foreach ($EqLogics->getCmd('info') as $Cmd) {
                     if (is_object($Cmd)) {
                         switch ($Cmd->getLogicalId()) {
                             case "power_state":
                                 if ($player_power_state != 'KO') {
-                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ Etat ::/fg: ' . $player_power_state);
+                                    log::add('Freebox_OS', 'debug', ':fg-info:───▶︎' . (__('Etat', __FILE__)) . ' ::/fg: ' . $player_power_state);
                                     $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $player_power_state);
                                 }
                                 break;
@@ -1004,7 +1004,7 @@ class Free_Refresh
                                 }
                                 break;
                                 break;
-                                log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ API Disponible ::/fg:    ' . $results_player['api_available']);
+                                log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . (__('API Disponible', __FILE__)) . ' ::/fg:    ' . $results_player['api_available']);
                                 $EqLogics->checkAndUpdateCmd($Cmd->getLogicalId(), $results_player['api_available']);
                                 break;
                         }
@@ -1018,7 +1018,7 @@ class Free_Refresh
     {
         $list = 'net_role,rx_rate,tx_rate';
         $log_Erreur =  (__('Erreur freeplug : Pas de plug avec cet identifiant', __FILE__));
-        $para_Value = array('net_role__cco' => 'Coordinateur', 'net_role__sta' => 'Station');
+        $para_Value = array('net_role__cco' => (__('Coordinateur', __FILE__)), 'net_role__sta' => (__('Station', __FILE__)));
         $result = $Free_API->universal_get('universalAPI', $EqLogics->getLogicalId(), null, 'freeplug', true, true, false);
         $para_resultFPL = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
         if (isset($result['result']['id'])) {

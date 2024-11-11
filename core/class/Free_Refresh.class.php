@@ -640,7 +640,7 @@ class Free_Refresh
     }
     private  static function refresh_system_sensor($EqLogics, $result)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: '. (__('Capteurs', __FILE__));
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Capteurs', __FILE__)));
         foreach ($EqLogics->getCmd('info') as $Cmd) {
             foreach ($result['fans'] as $system) {
                 if ($Cmd->getLogicalId('data') == $system['id']) {

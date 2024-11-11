@@ -411,8 +411,8 @@ class Free_Refresh
 
     private static function refresh_phone($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null,  $para_Value_calcul = null)
     {
-        $log_Erreur = 'AUCUN APPEL';
-        $list = 'missed,accepted,outgoing,listmissed,listaccepted,listoutgoing';
+        $log_Erreur = (__('AUCUN APPEL', __FILE__));
+        $list = 'missed,listmissed_new,missed_new,listmissed_new,accepted,listaccepted,accepted_new,listaccepted_new,outgoing,listoutgoing';
         $result = $Free_API->nb_appel_absence();
         $para_resultPH = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultPH, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
@@ -1027,7 +1027,7 @@ class Free_Refresh
     private static function refresh_freeplug($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
         $list = 'net_role,rx_rate,tx_rate';
-        $log_Erreur = 'Erreur freeplug : Pas de plug avec cet identifiant';
+        $log_Erreur =  (__('Erreur freeplug : Pas de plug avec cet identifiant', __FILE__));
         $para_Value = array('net_role__cco' => 'Coordinateur', 'net_role__sta' => 'Station');
         $result = $Free_API->universal_get('universalAPI', $EqLogics->getLogicalId(), null, 'freeplug', true, true, false);
         $para_resultFPL = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
@@ -1042,7 +1042,7 @@ class Free_Refresh
     private static function refresh_VM($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
         $list = 'enable_screen,disk_type,mac,memory,name,status,vcpus,bind_usb_ports';
-        $log_Erreur = 'VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas';
+        $log_Erreur =  (__('VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas', __FILE__));
         $result = $Free_API->universal_get('universalAPI', $EqLogics->getConfiguration('action'), null, 'vm/', true, true, false);
         $para_resultVM = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         $bind_usb_ports = null;
@@ -1058,7 +1058,7 @@ class Free_Refresh
                     }
                 }
             } else {
-                $bind_usb_ports = 'Aucun port USB de connecté';
+                $bind_usb_ports = (__('Aucun port USB de connecté', __FILE__));
             }
             $Value_calcul = array('bind_usb_ports' => $bind_usb_ports);
             Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultVM, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul, $Value_calcul);
@@ -1074,19 +1074,19 @@ class Free_Refresh
     }
     private static function refresh_wifi($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Liste Noire/Blanche');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Liste Noire / Blanche', __FILE__)));
         $result = $Free_API->mac_filter_list();
         $list = 'blacklist,whitelist';
         $para_resultWI = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Eco Energie');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Eco Energie', __FILE__)));
         $result = $Free_API->universal_get('system', null, null, null, true, true, null);
         $list = 'has_eco_wifi';
         $para_resultWI = array('nb' => 1, 1 => 'model_info', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Planning Mode');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Planning Mode', __FILE__)));
         $list = 'planning_mode';
         $para_Value = array('planning_mode__suspend' => 'Veille totale', 'planning_mode__wifi_off' => 'Veille WiFi');
         $result = $Free_API->universal_get('universalAPI', null, null, 'standby/status', true, true, true);
@@ -1094,13 +1094,13 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         $para_Value = null;
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Planning');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Planning', __FILE__)));
         $list = 'use_planning';
         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/planning', true, true, true);
         $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Config');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: Config');
         $list = 'mac_filter_state,enabled';
         $para_LogicalId = array('enabled' => 'wifiStatut');
         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
@@ -1108,7 +1108,7 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         $para_LogicalId = null;
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: WPS');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: WPS');
         $list = 'enabled';
         $para_LogicalId = array('enabled' => 'wifiWPS');
         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
@@ -1116,7 +1116,7 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         $para_LogicalId = null;
 
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: Mise à jour ::/fg: Status des Cartes');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Status des Cartes', __FILE__)));
         $result_ap = $Free_API->universal_get('universalAPI', null, null, 'wifi/ap', true, true, true);
         $nb_card = count($result_ap['result']);
         $Card_value = null;

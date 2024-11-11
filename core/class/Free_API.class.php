@@ -694,12 +694,18 @@ class Free_API
 
     public function nb_appel_absence()
     {
-        $listNumber_missed = null;
-        $listNumber_accepted = null;
-        $listNumber_outgoing = null;
+        // Outgoing
+        $listNumber_outgoing = '';
+        $listNumber_outgoing_new = '';
+        // Missed
+        $listNumber_missed = '';
+        $listNumber_missed_new = '';
+        // Accepted
+        $listNumber_accepted = '';
+        $listNumber_accepted_new = '';
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-        $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
+        $retourFbx = array('missed' => 0, 'listmissed' => "", 'missed_new' => 0, 'listmissed_new' => "", 'accepted' => 0, 'listaccepted' => "", 'accepted_new' => 0, 'listaccepted_new' => "", 'outgoing' => 0, 'listoutgoing' => "");
         if ($result === false) {
             return false;
         }
@@ -709,12 +715,17 @@ class Free_API
 
                 if (isset($result['result'])) {
                     $nb_call = count($result['result']);
+                    // Outgoing
                     $cptAppel_outgoing = 0;
+                    $cptAppel_outgoing_new = 0;
+                    // Missed
                     $cptAppel_missed = 0;
+                    $cptAppel_missed_new = 0;
+                    // Accepted
                     $cptAppel_accepted = 0;
+                    $cptAppel_accepted_new = 0;
                     for ($k = 0; $k < $nb_call; $k++) {
                         $jour = $result['result'][$k]['datetime'];
-
                         $time = date('H:i', $result['result'][$k]['datetime']);
                         if ($timestampToday <= $jour) {
                             if ($result['result'][$k]['name'] == null) {
@@ -724,35 +735,62 @@ class Free_API
                             }
 
                             if ($result['result'][$k]['type'] == 'missed') {
-                                $cptAppel_missed++;
-                                if ($listNumber_missed == NULL) {
-                                    $newligne = null;
+                                if ($result['result'][$k]['new'] == true) {
+                                    // Uniquement les nouveaux appels
+                                    $cptAppel_missed_new++;
+                                    if ($listNumber_missed_new == NULL) {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_missed_new .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
                                 } else {
-                                    $newligne = '<br>';
+                                    // Ensemble des appels
+                                    $cptAppel_missed++;
+                                    if ($listNumber_missed == NULL) {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_missed .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' '  . $this->fmt_duree($result['result'][$k]['duration']);
                                 }
-                                $listNumber_missed .= $newligne . $name . " {{à}} " . $time . " {{de}} " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                             if ($result['result'][$k]['type'] == 'accepted') {
-                                $cptAppel_accepted++;
-                                if ($listNumber_accepted == NULL) {
-                                    $newligne = null;
+                                if ($result['result'][$k]['new'] == true) {
+                                    // Uniquement les nouveaux appels
+                                    $cptAppel_accepted_new++;
+                                    if ($listNumber_accepted_new == NULL) {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_accepted_new .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
                                 } else {
-                                    $newligne = '<br>';
+                                    // Ensemble des appels
+                                    $cptAppel_accepted++;
+                                    if ($listNumber_accepted == NULL) {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_accepted .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' '  . $this->fmt_duree($result['result'][$k]['duration']);
                                 }
-                                $listNumber_accepted .= $newligne . $name . " {{à}} " . $time . " {{de}} " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                             if ($result['result'][$k]['type'] == 'outgoing') {
                                 $cptAppel_outgoing++;
+                                if ($result['result'][$k]['new'] == true) {
+                                    $cptAppel_outgoing_new++;
+                                }
                                 if ($listNumber_outgoing == NULL) {
                                     $newligne = null;
                                 } else {
                                     $newligne = '<br>';
                                 }
-                                $listNumber_outgoing .= $newligne . $name . " {{à}} " . $time . " {{de}} " . $this->fmt_duree($result['result'][$k]['duration']);
+                                $listNumber_outgoing .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                         }
                     }
-                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
+                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'missed_new' => $cptAppel_missed_new, 'listmissed_new' => $listNumber_missed_new, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'accepted_new' => $cptAppel_accepted_new, 'listaccepted_new' => $listNumber_accepted_new, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
                 }
                 return $retourFbx;
             } else {

@@ -330,6 +330,27 @@
         "les équipements avec statut 0 ne seront pas affichés": "os equipamentos com estado 0 não serão visualizados",
         "les équipements avec statut 0 seront affichés": "o equipamento com o estado 0 será apresentado"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_Update.class.php": {
+        "Adresse IP vide": "Endereço IP vazio",
+        "Chaine": "Cadeia",
+        "Choix Chaine": "Seleção de canais",
+        "Equipement avec déjà un paramètrage IP": "Equipamento com definições de IP existentes",
+        "FIN REQUETE": "PEDIDO FINAL",
+        "Gestion réseau : Adresse mac vide => Impossible de continuer": "Gestão de rede: Endereço Mac vazio => Impossível continuar",
+        "Gestion réseau : IP  ou adresse mac vide": "Gestão da rede: IP ou endereço MAC vazio",
+        "Gestion réseau : IP  ou adresse mac vide => Impossible de continuer": "Gestão da rede: Endereço IP ou mac vazio => Impossível continuar",
+        "Gestion réseau : Les données sont incomplètes => Impossible de continuer": "Gestão da rede: Dados incompletos => Impossível continuar",
+        "Impossible d\\'envoyer la demande, Pas de média": "Não é possível enviar o pedido, Não há media",
+        "Impossible d\\'envoyer la demande, les paramètres sont incomplets Player": "Não é possível enviar o pedido, parâmetros incompletos Leitor",
+        "METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION": "MÉTODO OBSOLETO => CONSULTE A DOCUMENTAÇÃO",
+        "Mot de Passe": "Palavra-passe",
+        "Média": "Media",
+        "Média type": "Tipo de suporte",
+        "Méthode Filtrage  ou type de Filtrage incorrect": "Método de filtragem ou tipo de filtragem incorreto",
+        "Player": "Jogador",
+        "REQUETE": "PEDIDO",
+        "avec ID": "com ID"
+    },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\\'équipement": "ACTUALIZAR ADICIONAR NOVO CONTROLO para equipamentos",
         "Afficheur LCD": "Ecrã LCD",

@@ -80,7 +80,7 @@ class Freebox_OS extends eqLogic
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] == 'ok') {
 			if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-				log::add('Freebox_OS', 'debug', ':fg-info: ' . (__('Etat du Démon', __FILE__)) . ' ' .  $deamon_info['state'] . ':/fg:');
+				log::add('Freebox_OS', 'debug', ':fg-info: ' . (__('Etat du Démon', __FILE__)) . ' ' . $deamon_info['state'] . ':/fg:');
 				Freebox_OS::deamon_start();
 				$Free_API = new Free_API();
 				$Free_API->getFreeboxOpenSession();
@@ -330,7 +330,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_API', "v10", 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', 'RESET [  OK  ]');
 		config::save('FREEBOX_REBOOT_DEAMON', FALSE, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('RESET DU TYPE DE BOX', __FILE__))  . ':/fg:');
+		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('RESET DU TYPE DE BOX', __FILE__)) . ':/fg:');
 		config::save('TYPE_FREEBOX', '', 'Freebox_OS');
 		config::save('TYPE_FREEBOX_NAME', "", 'Freebox_OS');
 		config::save('TYPE_FREEBOX_TILES', "", 'Freebox_OS');
@@ -347,7 +347,7 @@ class Freebox_OS extends eqLogic
 	{
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 		if ($EqLogic != null) {
-			log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('DESACTIVATION DE', __FILE__))  .' : ' . $EqLogic->getname() . ':/fg:');
+			log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('DESACTIVATION DE', __FILE__)) . ' : ' . $EqLogic->getname() . ':/fg:');
 			if (!is_object($EqLogic->getLogicalId())) {
 				$EqLogic->setIsEnable(0);
 				$EqLogic->save(true);
@@ -357,7 +357,7 @@ class Freebox_OS extends eqLogic
 		if ($TILES == true) {
 			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 			if (is_object($cron)) {
-				log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('SUPPRESSION CRON GLOBAL TITLES', __FILE__))  . . ':/fg:');
+				log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('SUPPRESSION CRON GLOBAL TITLES', __FILE__))  . ':/fg:');
 				$cron->stop();
 				$cron->remove();
 			}
@@ -869,17 +869,17 @@ class Freebox_OS extends eqLogic
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (is_object($cron)) {
 			$cron->stop();
-			log::add('Freebox_OS', 'debug', ' OK  CRON Arrêt Freebox PUT');
+			log::add('Freebox_OS', 'debug', ' OK  CRON ' . (__('Arrêt', __FILE__)) . ' Freebox PUT');
 		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 		if (is_object($cron)) {
 			$cron->stop();
-			log::add('Freebox_OS', 'debug', ' OK  CRON Arrêt Freebox GET');
+			log::add('Freebox_OS', 'debug', ' OK  CRON ' . (__('Arrêt', __FILE__)) . ' Freebox GET');
 		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxAPI');
 		if (is_object($cron)) {
 			$cron->stop();
-			log::add('Freebox_OS', 'debug', ' OK  CRON Arrêt Freebox API');
+			log::add('Freebox_OS', 'debug', ' OK  CRON ' . (__('Arrêt', __FILE__)) . ' Freebox API');
 		}
 		sleep(1);
 		$Free_API = new Free_API();
@@ -894,7 +894,7 @@ class Freebox_OS extends eqLogic
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		} else {
 			$cron->run();
-			log::add('Freebox_OS', 'debug', ' OK  Redémarrage CRON Freebox PUT');
+			log::add('Freebox_OS', 'debug', ' OK  ' . (__('Redémarrage', __FILE__)) . ' CRON Freebox PUT');
 		}
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
@@ -903,7 +903,7 @@ class Freebox_OS extends eqLogic
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				} else {
 					$cron->run();
-					log::add('Freebox_OS', 'debug', ' OK  Redémarrage CRON Freebox GET');
+					log::add('Freebox_OS', 'debug', ' OK  ' . (__('Redémarrage', __FILE__)) . ' CRON Freebox GET');
 				}
 			}
 		}

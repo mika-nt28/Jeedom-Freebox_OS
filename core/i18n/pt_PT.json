@@ -29,6 +29,18 @@
         "PAS DE": "NÃO",
         "SUR VOTRE BOX": "NA SUA CAIXA"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
+        "AUCUN APPEL": "SEM CHAMADA",
+        "Aucun port USB de connecté": "Sem porta USB ligada",
+        "Eco Energie": "Eco Energia",
+        "Erreur freeplug : Pas de plug avec cet identifiant": "Erro de ficha livre: Não existe nenhuma ficha com este identificador",
+        "Liste Noire \/ Blanche": "Lista a preto e branco",
+        "Mise à jour": "Actualização",
+        "Planning": "Planeamento",
+        "Planning Mode": "Modo de planeamento",
+        "Status des Cartes": "Estado do cartão",
+        "VM : Impossible de récupérer l’état de cette VM : La VM n’existe pas": "VM : Impossível recuperar o estado desta VM : A VM não existe"
+    },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "Calcul": "Cálculo",
         "Catégorie": "Categoria",

@@ -768,7 +768,7 @@ class Free_API
                                 } else {
                                     // Ensemble des appels
                                     $cptAppel_accepted++;
-                                    if ($listNumber_accepted == '') {
+                                    if ($listNumber_accepted === '') {
                                         $newligne = null;
                                     } else {
                                         $newligne = '<br>';

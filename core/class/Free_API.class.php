@@ -25,7 +25,7 @@ class Free_API
         // Gestion API
         $Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
         if (empty($Config_KEY)) {
-            log::add('Freebox_OS', 'debug', '───▶︎ Version API Non Défini Compatible avec la Freebox : ' . $this->API_version);
+            log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Version API Non Défini Compatible avec la Freebox', __FILE__)) . ' : ' . $this->API_version);
             $this->API_version = 'v10';
         } else {
             $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
@@ -38,7 +38,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '───▶︎ La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
             $http = new com_http($_URL);
@@ -68,7 +68,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '───▶︎ La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
             $http = new com_http($_URL . $this->track_id);
@@ -88,7 +88,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '───▶︎ La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/';
             $http = new com_http($_URL);
@@ -117,7 +117,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '───▶︎ La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/session/';
             $http = new com_http($_URL);
@@ -161,7 +161,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '───▶︎ La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/session';
             $http = new com_http($_URL);
@@ -185,7 +185,7 @@ class Free_API
             while ($session_token->getValue('') == '') {
                 $session_token = cache::byKey('Freebox_OS::SessionToken');
             }
-            $requetURL = '[Freebox Request Connexion] : ' . $method . ' sur la l\'adresse ' . $this->serveur . $api_url . '(' . json_encode($params) . ')';
+            $requetURL = '[Freebox Request Connexion] : ' . $method . ' ' . (__('sur la l\'adresse', __FILE__)) . ' ' . $this->serveur . $api_url . '(' . json_encode($params) . ')';
             if ($log_request  != false) {
                 log::add('Freebox_OS', 'debug', $requetURL);
             };
@@ -227,30 +227,30 @@ class Free_API
                             log::add('Freebox_OS', 'error', 'Erreur Droits : '  . $result['msg']);
                             return false;
                         } else if ($result['error_code'] == "auth_required") {
-                            log::add('Freebox_OS', 'Debug', '[Redémarrage session à cause de l\'erreur] : ' . $result['error_code']);
+                            log::add('Freebox_OS', 'Debug', (__('[Redémarrage session à cause de l\'erreur]', __FILE__)) . ' : ' . $result['error_code']);
                             $this->close_session();
                             $this->getFreeboxOpenSessionData();
-                            log::add('Freebox_OS', 'Debug', '[Redémarrage session Terminée à cause de l\'erreur] : ' . $result['error_code']);
+                            log::add('Freebox_OS', 'Debug', (__('[Redémarrage session Terminée à cause de l\'erreur]', __FILE__)) . ' : ' . $result['error_code']);
                             $result = 'auth_required';
                             return $result;
                         } else if ($result['error_code'] == 'denied_from_external_ip') {
-                            log::add('Freebox_OS', 'error', 'Erreur Accès : '  . $result['msg']);
+                            log::add('Freebox_OS', 'error', (__('Erreur Accès', __FILE__)) . ' : '  . $result['msg']);
                             return false;
                         } else if ($result['error_code'] == 'new_apps_denied' || $result['error_code'] == 'apps_denied') {
-                            log::add('Freebox_OS', 'error', 'Erreur Application : '  . $result['msg']);
+                            log::add('Freebox_OS', 'error', (__('Erreur Application', __FILE__)) . ' : '  . $result['msg']);
                             return false;
                         } else if ($result['error_code'] == 'invalid_token' || $result['error_code'] == 'pending_token') {
-                            log::add('Freebox_OS', 'error', 'Erreur Token : ' . $result['msg']);
+                            log::add('Freebox_OS', 'error', (__('Erreur Token', __FILE__)) . ' : ' . $result['msg']);
                             return false;
                         } else if ($result['error_code'] == 'invalid_api_version') {
-                            log::add('Freebox_OS', 'error', 'API NON COMPATIBLE : ' . $result['msg'] . ' - ' . $requetURL);
+                            log::add('Freebox_OS', 'error', (__('API NON COMPATIBLE', __FILE__)) . ' : ' . $result['msg'] . ' - ' . $requetURL);
                             $result = $result['error_code'];
                             return $result;
                         } else if ($result['error_code'] == "invalid_request" || $result['error_code'] == 'ratelimited') {
-                            log::add('Freebox_OS', 'error', 'Erreur AUTRE : '  . $result['msg']);
+                            log::add('Freebox_OS', 'error', (__('Erreur AUTRE', __FILE__)) . ' : '  . $result['msg']);
                             return false;
                         } else if ($result['error_code'] == "no_such_vm") {
-                            log::add('Freebox_OS', 'error', 'Erreur VM : '  . $result['msg']);
+                            log::add('Freebox_OS', 'error', (__('Erreur VM', __FILE__)) . ' : '  . $result['msg']);
                             return false;
                         }
                     }
@@ -277,7 +277,7 @@ class Free_API
             $API_version = $this->API_version;
             if ($API_version == null) {
                 $API_version = 'v10';
-                log::add('Freebox_OS', 'debug', '───▶︎ La version API est nulle mise en place version provisoire : ' . $API_version);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/logout/';
             $http = new com_http($_URL);
@@ -291,7 +291,7 @@ class Free_API
             }
             return $json;
         } catch (Exception $e) {
-            log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $e->getCode() . ' ou session déjà fermée');
+            log::add('Freebox_OS', 'debug', '[Freebox Close Session] : ' . $e->getCode() . ' ' . (__('ou session déjà fermée', __FILE__)));
         }
     }
 
@@ -302,9 +302,9 @@ class Free_API
         $PortForwarding = $this->fetch($PortForwardingUrl, null, "GET", true, true);
         $id = str_replace("ether-", "", $id);
         $id = strtoupper($id);
-        log::add('Freebox_OS', 'debug', '───▶︎ Lecture des Ports l\'adresse Mac : '  . $Mac . ' - FONCTION ' . $fonction . ' - action ' . $active);
+        log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Lecture des Ports l\'adresse Mac', __FILE__)) . ' : '  . $Mac . ' - ' . (__('FONCTION', __FILE__)) . ' ' . $fonction . ' - ' . (__('action', __FILE__)) . ' ' . $active);
         if ($PortForwarding === false) {
-            log::add('Freebox_OS', 'debug', '───▶︎ Aucune donnée');
+            log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Aucune donnée', __FILE__)));
             return false;
         }
         if ($fonction == "GET") {
@@ -346,7 +346,7 @@ class Free_API
         $API_version = $this->API_version;
         if ($API_version == null) {
             $API_version = 'v10';
-            log::add('Freebox_OS', 'debug', '───▶︎ La version API est nulle mise en place version provisoire : ' . $API_version);
+            log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
         };
         $config_log = null;
         $fonction = "GET";
@@ -359,15 +359,15 @@ class Free_API
         switch ($update) {
             case 'connexion':
                 $config = 'api/' . $API_version . '/connection/' . $update_type;
-                $config_log = 'Traitement de la Mise à jour de ' . $update_type . ' avec la valeur';
+                $config_log =  (__('Traitement de la Mise à jour de', __FILE__)) . ' ' . $update_type . ' avec la valeur';
                 break;
             case 'notification_ID':
                 $config = 'api/' . $API_version . '/notif/targets' . $id;
-                $config_log = 'Etat des notifications';
+                $config_log = (__('Etat des notifications', __FILE__));
                 break;
             case 'parental':
                 $config = 'api/' . $API_version . '/network_control' . $id;
-                $config_log = 'Etat Contrôle Parental';
+                $config_log = (__('Etat Contrôle Parental', __FILE__));
                 break;
             case 'parentalprofile':
                 $config = 'api/' . $API_version . '/profile';
@@ -377,7 +377,7 @@ class Free_API
                 break;
             case 'player_ID':
                 $config = 'api/' . $API_version . '/player' . $id . '/api/v6/status';
-                $config_log = 'Traitement de la Mise à jour de l\'id ';
+                $config_log = (__('Traitement de la Mise à jour de l\'ID', __FILE__)) . ' ';
                 break;
             case 'network':
                 $config = 'api/' . $API_version . '/' . $update_type;
@@ -389,7 +389,7 @@ class Free_API
                     $config = 'api/' . $API_version . '/' . $update_type . $id;
                 }
                 if ($update_type != 'vm/') {
-                    $config_log = 'Traitement de la Mise à jour de l\'id ';
+                    $config_log = (__('Traitement de la Mise à jour de l\'ID', __FILE__)) . ' ';
                 }
                 break;
             case 'network_ID':
@@ -407,7 +407,7 @@ class Free_API
                 break;
             case 'WebSocket':
                 $config = 'api/' . $API_version . '/ws/event';
-                $config_log = 'Traitement de la Mise à jour de WebSocket';
+                $config_log = (__('Traitement de la Mise à jour de WebSocket', __FILE__));
                 $Parameter = array(
                     "action" => 'notification',
                     "success" => true,
@@ -417,7 +417,7 @@ class Free_API
                 break;
             case 'PortForwarding':
                 $config = '/api/' . $API_version . '/fw/redir/';
-                $config_log = 'Redirection de port';
+                $config_log = (__('Redirection de port', __FILE__));
                 break;
             case 'upload':
                 $config = 'api/' . $API_version . '/ws/';
@@ -535,7 +535,7 @@ class Free_API
                 }
                 break;
             case 'parental':
-                $config_log = 'Mise à jour du : Contrôle Parental';
+                $config_log = (__('Mise à jour du : Contrôle Parental', __FILE__));
                 $cmd_config = 'parental';
                 $config = "/api/" . $API_version . "/network_control/" . $id;
                 $jsontestprofile = $this->fetch($config);
@@ -562,13 +562,13 @@ class Free_API
                 break;
             case 'player_ID_ctrl':
                 $config = 'api/' . $API_version . '/player' . $id . '/api/v6/control/mediactrl';
-                $config_log = 'Traitement de la Mise à jour de l\'id ';
+                $config_log = (__('Traitement de la Mise à jour de l\'ID ', __FILE__));
                 $cmd_config = 'name';
                 $fonction = "POST";
                 break;
             case 'player_ID_open':
                 $config = 'api/' . $API_version . '/player' . $id . '/api/v6/control/open';
-                $config_log = 'Traitement de la Mise à jour de l\'id ';
+                $config_log =  (__('Traitement de la Mise à jour de l\'ID ', __FILE__));
                 $cmd_config = 'url';
                 $fonction = "POST";
                 break;
@@ -585,11 +585,11 @@ class Free_API
                     $config = 'api/' . $API_version . '/' . $_options  . $id;
                     $fonction = $_status_cmd;
                 } else {
-                    log::add('Freebox_OS', 'debug', '───▶︎ Type de requête : ' . $_options);
+                    log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Type de requête', __FILE__)) . ' : ' . $_options);
                     $config = 'api/' . $API_version . '/' . $_options;
                     $fonction = "POST";
                 }
-                log::add('Freebox_OS', 'debug', '───▶︎ Type de requête : ' . $fonction);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Type de requête', __FILE__)) . ' : ' . $fonction);
                 break;
             case 'VM':
                 $config = 'api/' . $API_version . '/vm/' . $id  . '/' . $_options_2;
@@ -606,7 +606,7 @@ class Free_API
                     $fonction = "POST";
                     $cmd_config = 'session_id';
                 } else if ($_options == 'mac_filter') {
-                    log::add('Freebox_OS', 'debug', '───▶︎ Fonction : ' . $_options_2['function']);
+                    log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Fonction', __FILE__)) . ' : ' . $_options_2['function']);
                     $fonction = $_options_2['function'];
                     if ($fonction != 'POST') {
                         $id = $_options_2['mac_address'] . '-' . $_options_2['filter'];
@@ -618,14 +618,14 @@ class Free_API
                         $id = null;
                         $parametre = array("mac" => $mac_adress, "type" => $_filter, "comment" => $comment);
                     }
-                    log::add('Freebox_OS', 'debug', '───▶︎ Fonction 2 : ' . $fonction);
+                    log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Fonction 2', __FILE__)) . ' : ' . $fonction);
                 } else if ($_options == 'config' && $_options_2 == 'mac_filter_state') {
                     $cmd_config = 'mac_filter_state';
                 } else {
                     $cmd_config = 'enabled';
                 }
                 if ($_options == 'planning' || $_options == 'wifi') {
-                    $config_log = 'Mise à jour de : Etat du Wifi ' . $_options;
+                    $config_log = (__('Mise à jour de : Etat du Wifi', __FILE__)) . ' ' . $_options;
                 } else {
                     $config_log = null;
                 }
@@ -634,7 +634,7 @@ class Free_API
                 //log::add('Freebox_OS', 'debug', '───▶︎ Info nodeid : ' . $nodeId . ' -- Id: ' . $id . ' -- Paramètre : ' . $parametre);
                 $config = 'api/' . $API_version . '/home/endpoints/';
                 $cmd_config = 'enabled';
-                $config_log = 'Mise à jour de : ';
+                $config_log = (__('Mise à jour de', __FILE__)) . ' : ';
                 break;
         }
         if ($parametre['value_type'] === 'bool' && $parametre['value'] === 1) {
@@ -661,7 +661,7 @@ class Free_API
             $return = $this->fetch('/' . $config . '/', null, $fonction, true, true);
         } else {
             if ($config_log != null) {
-                log::add('Freebox_OS', 'debug', '───▶︎ ' . $config_log . ' avec la valeur : ' . $parametre);
+                log::add('Freebox_OS', 'debug', '───▶︎ ' . $config_log . ' ' . (__('avec la valeur', __FILE__)) . ' : ' . $parametre);
             }
             if ($cmd_config != null) {
                 $requet = array($cmd_config => $parametre);
@@ -694,12 +694,18 @@ class Free_API
 
     public function nb_appel_absence()
     {
-        $listNumber_missed = null;
-        $listNumber_accepted = null;
-        $listNumber_outgoing = null;
+        // Outgoing
+        $listNumber_outgoing = '';
+        $listNumber_outgoing_new = '';
+        // Missed
+        $listNumber_missed = '';
+        $listNumber_missed_new = '';
+        // Accepted
+        $listNumber_accepted = '';
+        $listNumber_accepted_new = '';
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('universalAPI', null, null, 'call/log/', true, true, true);
-        $retourFbx = array('missed' => 0, 'listmissed' => "", 'accepted' => 0, 'listaccepted' => "", 'outgoing' => 0, 'listoutgoing' => "");
+        $retourFbx = array('missed' => 0, 'listmissed' => "", 'missed_new' => 0, 'listmissed_new' => "", 'accepted' => 0, 'listaccepted' => "", 'accepted_new' => 0, 'listaccepted_new' => "", 'outgoing' => 0, 'listoutgoing' => "");
         if ($result === false) {
             return false;
         }
@@ -709,12 +715,17 @@ class Free_API
 
                 if (isset($result['result'])) {
                     $nb_call = count($result['result']);
+                    // Outgoing
                     $cptAppel_outgoing = 0;
+                    $cptAppel_outgoing_new = 0;
+                    // Missed
                     $cptAppel_missed = 0;
+                    $cptAppel_missed_new = 0;
+                    // Accepted
                     $cptAppel_accepted = 0;
+                    $cptAppel_accepted_new = 0;
                     for ($k = 0; $k < $nb_call; $k++) {
                         $jour = $result['result'][$k]['datetime'];
-
                         $time = date('H:i', $result['result'][$k]['datetime']);
                         if ($timestampToday <= $jour) {
                             if ($result['result'][$k]['name'] == null) {
@@ -724,42 +735,69 @@ class Free_API
                             }
 
                             if ($result['result'][$k]['type'] == 'missed') {
-                                $cptAppel_missed++;
-                                if ($listNumber_missed == NULL) {
-                                    $newligne = null;
+                                if ($result['result'][$k]['new'] == true) {
+                                    // Uniquement les nouveaux appels
+                                    $cptAppel_missed_new++;
+                                    if ($listNumber_missed_new === '') {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_missed_new .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
                                 } else {
-                                    $newligne = '<br>';
+                                    // Ensemble des appels
+                                    $cptAppel_missed++;
+                                    if ($listNumber_missed === '') {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_missed .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' '  . $this->fmt_duree($result['result'][$k]['duration']);
                                 }
-                                $listNumber_missed .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                             if ($result['result'][$k]['type'] == 'accepted') {
-                                $cptAppel_accepted++;
-                                if ($listNumber_accepted == NULL) {
-                                    $newligne = null;
+                                if ($result['result'][$k]['new'] == true) {
+                                    // Uniquement les nouveaux appels
+                                    $cptAppel_accepted_new++;
+                                    if ($listNumber_accepted_new === '') {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_accepted_new .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
                                 } else {
-                                    $newligne = '<br>';
+                                    // Ensemble des appels
+                                    $cptAppel_accepted++;
+                                    if ($listNumber_accepted == '') {
+                                        $newligne = null;
+                                    } else {
+                                        $newligne = '<br>';
+                                    }
+                                    $listNumber_accepted .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' '  . $this->fmt_duree($result['result'][$k]['duration']);
                                 }
-                                $listNumber_accepted .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                             if ($result['result'][$k]['type'] == 'outgoing') {
                                 $cptAppel_outgoing++;
-                                if ($listNumber_outgoing == NULL) {
+                                if ($result['result'][$k]['new'] == true) {
+                                    $cptAppel_outgoing_new++;
+                                }
+                                if ($listNumber_outgoing === '') {
                                     $newligne = null;
                                 } else {
                                     $newligne = '<br>';
                                 }
-                                $listNumber_outgoing .= $newligne . $name . " à " . $time . " de " . $this->fmt_duree($result['result'][$k]['duration']);
+                                $listNumber_outgoing .= $newligne . $name . ' ' . (__('à', __FILE__)) . ' ' . $time . ' ' . (__('de', __FILE__)) . ' ' . $this->fmt_duree($result['result'][$k]['duration']);
                             }
                         }
                     }
-                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
+                    $retourFbx = array('missed' => $cptAppel_missed, 'listmissed' => $listNumber_missed, 'missed_new' => $cptAppel_missed_new, 'listmissed_new' => $listNumber_missed_new, 'accepted' => $cptAppel_accepted, 'listaccepted' => $listNumber_accepted, 'accepted_new' => $cptAppel_accepted_new, 'listaccepted_new' => $listNumber_accepted_new, 'outgoing' => $cptAppel_outgoing, 'listoutgoing' => $listNumber_outgoing);
                 }
                 return $retourFbx;
             } else {
                 return false;
             }
         } else {
-            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . 'AUCUN APPEL' .  ':/fg:');
+            log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' .  (__('AUCUN APPEL', __FILE__))  .  ':/fg:');
             return $retourFbx;
         }
     }

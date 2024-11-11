@@ -80,12 +80,12 @@ class Freebox_OS extends eqLogic
 		$deamon_info = self::deamon_info();
 		if ($deamon_info['launchable'] == 'ok') {
 			if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-				log::add('Freebox_OS', 'debug', ':fg-info: Etat du Démon ' . $deamon_info['state'] . ':/fg:');
+				log::add('Freebox_OS', 'debug', ':fg-info: ' . (__('Etat du Démon', __FILE__)) . ' ' . $deamon_info['state'] . ':/fg:');
 				Freebox_OS::deamon_start();
 				$Free_API = new Free_API();
 				$Free_API->getFreeboxOpenSession();
 				$deamon_info = self::deamon_info();
-				log::add('Freebox_OS', 'debug', ':fg-info: Redémarrage du démon : ' . $deamon_info['state'] . ':/fg:');
+				log::add('Freebox_OS', 'debug', ':fg-info: ' . (__('Redémarrage du démon', __FILE__)) . ' : ' . $deamon_info['state'] . ':/fg:');
 			}
 			foreach ($eqLogics as $eqLogic) {
 				$autorefresh = $eqLogic->getConfiguration('autorefresh', '*/5 * * * *');
@@ -96,14 +96,14 @@ class Freebox_OS extends eqLogic
 						if ($eqLogic->getIsEnable()) {
 							if (($eqLogic->getConfiguration('eq_group') == 'nodes' || $eqLogic->getConfiguration('eq_group') == 'tiles') && (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK' && config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1)) {
 							} else {
-								log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-info: CRON pour l\'actualisation de : ' .  $eqLogic->getName() . ':/fg: ◀︎───────────');
+								log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-info: CRON ' . (__('pour l\'actualisation de', __FILE__)) . ' : ' .  $eqLogic->getName() . ':/fg: ◀︎───────────');
 								Free_Refresh::RefreshInformation($eqLogic->getId());
 								log::add('Freebox_OS', 'debug', '───────────────────────────────────────────');
 							}
 						}
 					}
 					if ($deamon_info['state'] != 'ok' && config::byKey('deamonAutoMode', 'Freebox_OS') != 0) {
-						log::add('Freebox_OS', 'debug', '[WARNING] - PAS DE CRON pour d\'actualisation ' . $eqLogic->getName() . ' à cause du Démon : ' . $deamon_info['state']);
+						log::add('Freebox_OS', 'debug', '[WARNING] - ' . (__('PAS DE CRON pour d\'actualisation', __FILE__)) . ' ' . $eqLogic->getName() . ' ' . (__('à cause du Démon', __FILE__)) . ' : ' . $deamon_info['state']);
 					}
 				} catch (Exception $exc) {
 					//log::add('Freebox_OS', 'error', __('Expression cron non valide pour ', __FILE__) . $eqLogic->getHumanName() . ' : ' . $autorefresh . ' Ou problème dans le CRON');
@@ -144,7 +144,7 @@ class Freebox_OS extends eqLogic
 					try {
 						$cron = new Cron\CronExpression($autorefresh_eqLogic, new Cron\FieldFactory);
 						if ($cron->isDue()) {
-							log::add('Freebox_OS', 'debug', ':fg-info: CRON ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement  : ' . $eqLogic->getName() . ':/fg:');
+							log::add('Freebox_OS', 'debug', ':fg-info: CRON ' . (__('ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\'équipement', __FILE__)) . ' : ' . $eqLogic->getName() . ':/fg:');
 							if ($_crondailyEq != null) {
 								Free_CreateEq::createEq($_crondailyEq, false);
 							}
@@ -322,7 +322,7 @@ class Freebox_OS extends eqLogic
 	}
 	public static function resetConfig()
 	{
-		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ RESET DES PARAMETRES STANDARDS' . ':/fg:');
+		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('RESET DES PARAMETRES STANDARDS', __FILE__))  . ':/fg:');
 		config::save('FREEBOX_SERVER_IP', "mafreebox.freebox.fr", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_NAME', "Plugin Freebox OS", 'Freebox_OS');
 		config::save('FREEBOX_SERVER_APP_ID', "plugin.freebox.jeedom", 'Freebox_OS');
@@ -330,7 +330,7 @@ class Freebox_OS extends eqLogic
 		config::save('FREEBOX_API', "v10", 'Freebox_OS');
 		log::add('Freebox_OS', 'debug', 'RESET [  OK  ]');
 		config::save('FREEBOX_REBOOT_DEAMON', FALSE, 'Freebox_OS');
-		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ RESET DU TYPE DE BOX' . ':/fg:');
+		log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('RESET DU TYPE DE BOX', __FILE__)) . ':/fg:');
 		config::save('TYPE_FREEBOX', '', 'Freebox_OS');
 		config::save('TYPE_FREEBOX_NAME', "", 'Freebox_OS');
 		config::save('TYPE_FREEBOX_TILES', "", 'Freebox_OS');
@@ -347,7 +347,7 @@ class Freebox_OS extends eqLogic
 	{
 		$logicalinfo = Freebox_OS::getlogicalinfo();
 		if ($EqLogic != null) {
-			log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ DESACTIVATION DE : ' . $EqLogic->getname() . ':/fg:');
+			log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('DESACTIVATION DE', __FILE__)) . ' : ' . $EqLogic->getname() . ':/fg:');
 			if (!is_object($EqLogic->getLogicalId())) {
 				$EqLogic->setIsEnable(0);
 				$EqLogic->save(true);
@@ -357,7 +357,7 @@ class Freebox_OS extends eqLogic
 		if ($TILES == true) {
 			$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 			if (is_object($cron)) {
-				log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ SUPPRESSION CRON GLOBAL TITLES' . ':/fg:');
+				log::add('Freebox_OS', 'debug', ':fg-info: ───▶︎ ' . (__('SUPPRESSION CRON GLOBAL TITLES', __FILE__))  . ':/fg:');
 				$cron->stop();
 				$cron->remove();
 			}
@@ -576,15 +576,15 @@ class Freebox_OS extends eqLogic
 				$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Name);
 				$this->setConfiguration('SetModePresent', "NOT");
 				$this->setConfiguration('ModeAbsent', $Name);
-				log::add('Freebox_OS', 'debug', '| ───▶︎ Paramétrage du Mode Homebridge Set Mode : SetModePresent => NOT' . ' -- Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Paramétrage du Mode Homebridge', __FILE__)) . ' Set Mode : SetModePresent => NOT' . ' -- ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'SetModeNuit') {
 				$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Name);
 				$this->setConfiguration('ModeNuit', $Name);
-				log::add('Freebox_OS', 'debug', '| ───▶︎ Paramétrage du Mode Homebridge Set Mode : ' . $_home_config_eq);
+				log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Paramétrage du Mode Homebridge Set Mode', __FILE__)) . ' : ' . $_home_config_eq);
 			} else if ($_home_config_eq == 'mouv_sensor') {
 				$this->setConfiguration('info', $_home_config_eq);
 				if ($invertBinary_config != null  && $SubType == 'binary') { //Correction pour prise en compte fonction Core
-					log::add('Freebox_OS', 'debug', '| ───▶︎ Application Correctif pour prendre en compte fonction Core pour la commande : ' . $Name . ' - Type de sensor :' . $_home_config_eq);
+					log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Application Correctif pour prendre en compte fonction Core pour la commande', __FILE__)) . ' : ' . $Name . ' - ' . (__('Type de capteur', __FILE__)) . ' :' . $_home_config_eq);
 					$Cmd->setConfiguration('invertBinary', $invertBinary_config);
 					$Cmd->setDisplay('invertBinary', $invertBinary_display);
 				}
@@ -630,7 +630,7 @@ class Freebox_OS extends eqLogic
 		if ($updatenetwork != false) {
 			if ($updatenetwork['updatename'] == true) {
 				if ($Name != $Cmd->getName()) {
-					log::add('Freebox_OS', 'debug', '| ───▶︎ Nom différent sur la Freebox : ' . $Name . ' -- Nom de la commande Jeedom : ' . $Cmd->getName());
+					log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Nom différent sur la Freebox', __FILE__)) . ' : ' . $Name . ' -- ' . (__('Nom de la commande Jeedom', __FILE__)) . ' : ' . $Cmd->getName());
 					if ($name_connectivity_type != 'Wifi Ethernet ?') {
 						$Name_verif = $Name . ' (' . ucwords($name_connectivity_type)  . ')';
 					} else {
@@ -752,7 +752,7 @@ class Freebox_OS extends eqLogic
 	{
 		if ($this->getConfiguration('eq_group') === 'tiles') {
 			if ($this->getConfiguration('type') === 'alarm_control') {
-				log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-warning: SAUVEGARDE : Mise à jour des paramètrages spécifiques pour Homebridge' . $this->getName() . '/' . $this->getConfiguration('type')  . ':/fg: ◀︎───────────');
+				log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-warning: ' . (__('SAUVEGARDE : Mise à jour des paramètrages spécifiques pour Homebridge', __FILE__))  . $this->getName() . '/' . $this->getConfiguration('type')  . ':/fg: ◀︎───────────');
 				foreach ($this->getCmd('action') as $Cmd) {
 					if (is_object($Cmd)) {
 						switch ($Cmd->getLogicalId()) {
@@ -767,7 +767,7 @@ class Freebox_OS extends eqLogic
 						}
 						if (isset($_home_config_eq)) {
 							if ($_home_config_eq != null) {
-								log::add('Freebox_OS', 'debug', '| ───▶︎ Mode : ' . $_home_config_eq . '(Commande : ' . $Cmd->getName() . ')');
+								log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Mode', __FILE__)) . ' : ' . $_home_config_eq . '(' . (__('Commandee', __FILE__))  . ' : ' . $Cmd->getName() . ')');
 								$this->setConfiguration($_home_mode, $Cmd->getName());
 								$this->save(true);
 								$this->setConfiguration($_home_config_eq, $Cmd->getId() . "|" . $Cmd->getName());
@@ -869,17 +869,17 @@ class Freebox_OS extends eqLogic
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxPUT');
 		if (is_object($cron)) {
 			$cron->stop();
-			log::add('Freebox_OS', 'debug', ' OK  CRON Arrêt Freebox PUT');
+			log::add('Freebox_OS', 'debug', ' OK  CRON ' . (__('Arrêt', __FILE__)) . ' Freebox PUT');
 		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxGET');
 		if (is_object($cron)) {
 			$cron->stop();
-			log::add('Freebox_OS', 'debug', ' OK  CRON Arrêt Freebox GET');
+			log::add('Freebox_OS', 'debug', ' OK  CRON ' . (__('Arrêt', __FILE__)) . ' Freebox GET');
 		}
 		$cron = cron::byClassAndFunction('Freebox_OS', 'FreeboxAPI');
 		if (is_object($cron)) {
 			$cron->stop();
-			log::add('Freebox_OS', 'debug', ' OK  CRON Arrêt Freebox API');
+			log::add('Freebox_OS', 'debug', ' OK  CRON ' . (__('Arrêt', __FILE__)) . ' Freebox API');
 		}
 		sleep(1);
 		$Free_API = new Free_API();
@@ -894,7 +894,7 @@ class Freebox_OS extends eqLogic
 			throw new Exception(__('Tache cron FreeboxPUT introuvable', __FILE__));
 		} else {
 			$cron->run();
-			log::add('Freebox_OS', 'debug', ' OK  Redémarrage CRON Freebox PUT');
+			log::add('Freebox_OS', 'debug', ' OK  ' . (__('Redémarrage', __FILE__)) . ' CRON Freebox PUT');
 		}
 		if (config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') == 'OK') {
 			if (config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') == 1) {
@@ -903,7 +903,7 @@ class Freebox_OS extends eqLogic
 					throw new Exception(__('Tache cron FreeboxGET introuvable', __FILE__));
 				} else {
 					$cron->run();
-					log::add('Freebox_OS', 'debug', ' OK  Redémarrage CRON Freebox GET');
+					log::add('Freebox_OS', 'debug', ' OK  ' . (__('Redémarrage', __FILE__)) . ' CRON Freebox GET');
 				}
 			}
 		}
@@ -917,48 +917,48 @@ class Freebox_OS extends eqLogic
 			'airmediaID' => 'airmedia',
 			'airmediaName' => 'Air Média',
 			'connexionID' => 'connexion',
-			'connexionName' => 'Freebox débits',
+			'connexionName' => (__('Freebox débits', __FILE__)),
 			'diskID' => 'disk',
-			'diskName' => 'Disque Dur',
+			'diskName' => (__('Disque Dur', __FILE__)),
 			'downloadsID' => 'downloads',
-			'downloadsName' => 'Téléchargements',
+			'downloadsName' => (__('Téléchargements', __FILE__)),
 			'freeplugID' => 'freeplug',
 			'freeplugName' => 'Freeplug',
 			'homeadaptersID' => 'homeadapters',
 			'homeadaptersName' => 'Home Adapters',
 			'LCDID' => 'LCD',
-			'LCDName' => 'Afficheur LCD',
+			'LCDName' => (__('Afficheur LCD', __FILE__)),
 			'managementID' => 'management',
-			'managementName' => 'Gestion réseau',
+			'managementName' => (__('Gestion réseau', __FILE__)),
 			'networkID' => 'network',
-			'networkName' => 'Appareils connectés',
+			'networkName' => (__('Appareils connectés', __FILE__)),
 			'netshareID' => 'netshare',
-			'netshareName' => 'Partage Windows - Mac',
+			'netshareName' => (__('Partage Windows - Mac', __FILE__)),
 			'networkwifiguestID' => 'networkwifiguest',
-			'networkwifiguestName' => 'Appareils connectés Wifi Invité',
+			'networkwifiguestName' => (__('Appareils connectés Wifi Invité', __FILE__)),
 			'notificationID' => 'notification',
-			'notificationName' => 'Notification',
+			'notificationName' => (__('Notification', __FILE__)),
 			'parentalID' => 'parental',
 			'parentalName' => 'Parental',
 			'phoneID' => 'phone',
-			'phoneName' => 'Téléphone',
+			'phoneName' => (__('Téléphone', __FILE__)),
 			'playerID' => 'player',
 			'playerName' => 'Player',
 			'systemID' => 'system',
-			'systemName' => 'Système',
+			'systemName' => (__('Système', __FILE__)),
 			'VMID' => 'VM',
 			'VMName' => 'VM',
 			'wifiID' => 'wifi',
-			'wifiName' => 'Wifi',
+			'wifiName' => (__('Wifi', __FILE__)),
 			'wifiguestID' => 'wifiguest',
-			'wifiguestName' => 'Wifi Invité',
+			'wifiguestName' => (__('Wifi Invité', __FILE__)),
 			'wifimmac_filter' => 'Wifi Filtrage Adresse Mac',
 			'wifiWPSID' => 'wifiWPS',
 			'wifiWPSName' => 'Wifi WPS',
 			'wifiAPID' => 'wifiAP',
 			'wifiAPName' => 'Wifi Access Points',
-			'wifistandbyName' => 'Planification Wifi',
-			'wifiECOName' => 'Mode Eco Wifi'
+			'wifistandbyName' => (__('Planification Wifi', __FILE__)),
+			'wifiECOName' => (__('Mode Eco Wifi', __FILE__))
 		);
 	}
 	public static function FreeboxAPI()

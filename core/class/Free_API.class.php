@@ -738,7 +738,7 @@ class Free_API
                                 if ($result['result'][$k]['new'] == true) {
                                     // Uniquement les nouveaux appels
                                     $cptAppel_missed_new++;
-                                    if ($listNumber_missed_new == NULL) {
+                                    if ($listNumber_missed_new === '') {
                                         $newligne = null;
                                     } else {
                                         $newligne = '<br>';
@@ -747,7 +747,7 @@ class Free_API
                                 } else {
                                     // Ensemble des appels
                                     $cptAppel_missed++;
-                                    if ($listNumber_missed == NULL) {
+                                    if ($listNumber_missed === '') {
                                         $newligne = null;
                                     } else {
                                         $newligne = '<br>';
@@ -759,7 +759,7 @@ class Free_API
                                 if ($result['result'][$k]['new'] == true) {
                                     // Uniquement les nouveaux appels
                                     $cptAppel_accepted_new++;
-                                    if ($listNumber_accepted_new == NULL) {
+                                    if ($listNumber_accepted_new === '') {
                                         $newligne = null;
                                     } else {
                                         $newligne = '<br>';
@@ -768,7 +768,7 @@ class Free_API
                                 } else {
                                     // Ensemble des appels
                                     $cptAppel_accepted++;
-                                    if ($listNumber_accepted == NULL) {
+                                    if ($listNumber_accepted == '') {
                                         $newligne = null;
                                     } else {
                                         $newligne = '<br>';
@@ -781,7 +781,7 @@ class Free_API
                                 if ($result['result'][$k]['new'] == true) {
                                     $cptAppel_outgoing_new++;
                                 }
-                                if ($listNumber_outgoing == NULL) {
+                                if ($listNumber_outgoing === '') {
                                     $newligne = null;
                                 } else {
                                     $newligne = '<br>';

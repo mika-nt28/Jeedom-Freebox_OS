@@ -402,7 +402,7 @@ class Free_Refresh
     private static function refresh_phone($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null,  $para_Value_calcul = null)
     {
         $log_Erreur = (__('AUCUN APPEL', __FILE__));
-        $list = 'missed,listmissed_new,missed_new,listmissed_new,accepted,listaccepted,accepted_new,listaccepted_new,outgoing,listoutgoing';
+        $list = 'missed,listmissed,missed_new,listmissed_new,accepted,listaccepted,accepted_new,listaccepted_new,outgoing,listoutgoing';
         $result = $Free_API->nb_appel_absence();
         $para_resultPH = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultPH, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);

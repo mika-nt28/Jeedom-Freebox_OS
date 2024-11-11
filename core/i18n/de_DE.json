@@ -84,6 +84,7 @@
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\\'équipement": "AKTUALISIERUNG HINZUFÜGEN NEUER BEFEHL für die Ausrüstung",
+        "Arrêt": "Anschlag",
         "Calcul": "Berechnung",
         "Catégorie": "Kategorie",
         "Check Version API de la Freebox": "Check Version API der Freebox",
@@ -122,6 +123,7 @@
         "RESET DES PARAMETRES STANDARDS": "ZURÜCKSETZEN DER STANDARDPARAMETER",
         "RESET DU TYPE DE BOX": "RESET DES BOXENTYPS",
         "Rafraichir": "Auffrischen",
+        "Redémarrage": "Wiederaufnahme",
         "Redémarrage du démon": "Neustart des Daemons",
         "Regroupement": "Gruppierung",
         "SUPPRESSION CRON GLOBAL TITLES": "CRON LÖSCHEN GLOBAL TITLES",

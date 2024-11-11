@@ -84,6 +84,7 @@
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\\'équipement": "ACTUALIZAR AÑADIR NUEVO CONTROL para equipos",
+        "Arrêt": "Parada",
         "Calcul": "Cálculo",
         "Catégorie": "Categoría",
         "Check Version API de la Freebox": "Comprobar la versión de la API de Freebox",
@@ -122,6 +123,7 @@
         "RESET DES PARAMETRES STANDARDS": "RESTABLECER LA CONFIGURACIÓN ESTÁNDAR",
         "RESET DU TYPE DE BOX": "TIPO DE CAJA RESET",
         "Rafraichir": "Refrescar",
+        "Redémarrage": "Reanudar",
         "Redémarrage du démon": "Reiniciar el demonio",
         "Regroupement": "Grupo",
         "SUPPRESSION CRON GLOBAL TITLES": "ELIMINAR TÍTULOS GLOBALES DE CRON",

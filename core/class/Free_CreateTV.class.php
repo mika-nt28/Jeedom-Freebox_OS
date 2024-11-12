@@ -75,12 +75,12 @@ class Free_CreateTV
                             } else {
                                 log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . __('PLAYER', __FILE__) . ' : ' . $_devicename . ' -- Mac : ' . $Equipement['mac'] . ' -- ' . __('L\'ID est vide', __FILE__) . ' ───▶︎ ' . $player_log . ':/fg:');
                             }
-                            $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $player_ID, 'multimedia', true, 'player', null, $player_ID, '*/5 * * * *', null, $player_STATE, null, 'system', true, $player_MAC);
+                            $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $player_ID, 'multimedia', true, 'player', null, $player_ID, '*/5 * * * *', null, $player_STATE, 'system', true, $player_MAC);
                             log::add('Freebox_OS', 'debug', '| ───▶︎ ' . __('Nom', __FILE__) . ' : ' . $_devicename . ' -- id / mac : player_' . $Equipement['id'] . ' / ' . $Equipement['mac'] . ' -- FREE-ID : ' . $Equipement['id'] . ' -- TYPE-ID : ' . $player_MAC);
                             $EqLogic->AddCommand(__('Mac', __FILE__), 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
                             $EqLogic->AddCommand(__('Type', __FILE__), 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);
                             $EqLogic->AddCommand(__('Modèle', __FILE__), 'device_model', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 3, '0', false, false);
-                            $EqLogic->AddCommand(__('Version', 'api_version', __FILE__), 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
+                            $EqLogic->AddCommand(__('Version', __FILE__), 'api_version', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 4, '0', false, false);
                             $EqLogic->AddCommand(__('API Disponible', __FILE__), 'api_available', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 5, '0', false, false);
                             $EqLogic->AddCommand(__('Disponible sur le réseau', __FILE__), 'reachable', 'info', 'binary', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 6, '0', false, false);
                             if ($player_STATE == 'OK') {

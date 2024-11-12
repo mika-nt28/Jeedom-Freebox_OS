@@ -264,7 +264,8 @@
         "PAS DE": "NO",
         "PLAYER": "REPRODUCTOR",
         "SUR VOTRE BOX": "EN SU CAJA",
-        "Type": "Tipo"
+        "Type": "Tipo",
+        "Version": "Versión"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " Conexión 4G - xDSL \/ lte",
@@ -329,6 +330,27 @@
         "langue": "idioma",
         "les équipements avec statut 0 ne seront pas affichés": "los equipos con estado 0 no se mostrarán",
         "les équipements avec statut 0 seront affichés": "se mostrarán los equipos con estado 0"
+    },
+    "plugins\/Freebox_OS\/core\/class\/Free_Update.class.php": {
+        "Adresse IP vide": "Dirección IP vacía",
+        "Chaine": "Cadena",
+        "Choix Chaine": "Selección de canales",
+        "Equipement avec déjà un paramètrage IP": "Equipos con configuración IP existente",
+        "FIN REQUETE": "SOLICITUD DE FIN",
+        "Gestion réseau : Adresse mac vide => Impossible de continuer": "Gestión de red: Dirección Mac vacía => Imposible continuar",
+        "Gestion réseau : IP  ou adresse mac vide": "Gestión de red: dirección IP o mac vacía",
+        "Gestion réseau : IP  ou adresse mac vide => Impossible de continuer": "Gestión de red: dirección IP o mac vacía => Imposible continuar",
+        "Gestion réseau : Les données sont incomplètes => Impossible de continuer": "Gestión de la red: Datos incompletos => Imposible continuar",
+        "Impossible d\\'envoyer la demande, Pas de média": "No se puede enviar la solicitud, No hay medios de comunicación",
+        "Impossible d\\'envoyer la demande, les paramètres sont incomplets Player": "No se puede enviar la solicitud, parámetros incompletos Reproductor",
+        "METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION": "MÉTODO OBSOLETO => CONSULTE LA DOCUMENTACIÓN",
+        "Mot de Passe": "Contraseña",
+        "Média": "Multimedia",
+        "Média type": "Tipo de soporte",
+        "Méthode Filtrage  ou type de Filtrage incorrect": "Método o tipo de filtrado incorrecto",
+        "Player": "Reproductor",
+        "REQUETE": "SOLICITAR",
+        "avec ID": "con ID"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\\'équipement": "ACTUALIZAR AÑADIR NUEVO CONTROL para equipos",

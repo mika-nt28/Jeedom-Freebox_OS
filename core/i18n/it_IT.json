@@ -330,6 +330,27 @@
         "les équipements avec statut 0 ne seront pas affichés": "le apparecchiature con stato 0 non vengono visualizzate",
         "les équipements avec statut 0 seront affichés": "vengono visualizzate le apparecchiature con stato 0"
     },
+    "plugins\/Freebox_OS\/core\/class\/Free_Update.class.php": {
+        "Adresse IP vide": "Indirizzo IP vuoto",
+        "Chaine": "Chaine",
+        "Choix Chaine": "Selezione dei canali",
+        "Equipement avec déjà un paramètrage IP": "Apparecchiature con impostazioni IP esistenti",
+        "FIN REQUETE": "RICHIESTA FINALE",
+        "Gestion réseau : Adresse mac vide => Impossible de continuer": "Gestione della rete: indirizzo Mac vuoto => Impossibile proseguire",
+        "Gestion réseau : IP  ou adresse mac vide": "Gestione della rete: indirizzo IP o mac vuoto",
+        "Gestion réseau : IP  ou adresse mac vide => Impossible de continuer": "Gestione della rete: indirizzo IP o mac vuoto => Impossibile proseguire",
+        "Gestion réseau : Les données sont incomplètes => Impossible de continuer": "Gestione della rete: Dati incompleti => Impossibile proseguire",
+        "Impossible d\\'envoyer la demande, Pas de média": "Impossibile inviare la richiesta, nessun supporto",
+        "Impossible d\\'envoyer la demande, les paramètres sont incomplets Player": "Impossibile inviare la richiesta, i parametri sono incompleti",
+        "METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION": "METODO OBSOLETO => CONSULTARE LA DOCUMENTAZIONE",
+        "Mot de Passe": "Password",
+        "Média": "Media",
+        "Média type": "Tipo di media",
+        "Méthode Filtrage  ou type de Filtrage incorrect": "Metodo di filtraggio o tipo di filtraggio errato",
+        "Player": "Giocatore",
+        "REQUETE": "RICHIESTA",
+        "avec ID": "con ID"
+    },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\\'équipement": "AGGIORNARE AGGIUNGERE NUOVO CONTROLLO per le apparecchiature",
         "Afficheur LCD": "Display LCD",

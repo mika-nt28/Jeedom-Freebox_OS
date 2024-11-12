@@ -75,7 +75,7 @@ class Free_CreateTV
                             } else {
                                 log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . __('PLAYER', __FILE__) . ' : ' . $_devicename . ' -- Mac : ' . $Equipement['mac'] . ' -- ' . __('L\'ID est vide', __FILE__) . ' ───▶︎ ' . $player_log . ':/fg:');
                             }
-                            $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $player_ID, 'multimedia', true, 'player', null, $player_ID, '*/5 * * * *', null, $player_STATE, null, 'system', true, $player_MAC);
+                            $EqLogic = Freebox_OS::AddEqLogic($_devicename, 'player_' . $player_ID, 'multimedia', true, 'player', null, $player_ID, '*/5 * * * *', null, $player_STATE, 'system', true, $player_MAC);
                             log::add('Freebox_OS', 'debug', '| ───▶︎ ' . __('Nom', __FILE__) . ' : ' . $_devicename . ' -- id / mac : player_' . $Equipement['id'] . ' / ' . $Equipement['mac'] . ' -- FREE-ID : ' . $Equipement['id'] . ' -- TYPE-ID : ' . $player_MAC);
                             $EqLogic->AddCommand(__('Mac', __FILE__), 'mac', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 1, '0', false, false);
                             $EqLogic->AddCommand(__('Type', __FILE__), 'stb_type', 'info', 'string', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 2, '0', false, false);

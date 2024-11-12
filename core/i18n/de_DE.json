@@ -264,7 +264,8 @@
         "PAS DE": "KEINE",
         "PLAYER": "PLAYER",
         "SUR VOTRE BOX": "AUF IHRER BOX",
-        "Type": "Typ"
+        "Type": "Typ",
+        "Version": "Version"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " 4G-Verbindung - xDSL \/ lte",
@@ -329,6 +330,27 @@
         "langue": "sprache",
         "les équipements avec statut 0 ne seront pas affichés": "geräte mit Status 0 werden nicht angezeigt",
         "les équipements avec statut 0 seront affichés": "werden Geräte mit Status 0 angezeigt"
+    },
+    "plugins\/Freebox_OS\/core\/class\/Free_Update.class.php": {
+        "Adresse IP vide": "Leere IP-Adresse",
+        "Chaine": "Kette",
+        "Choix Chaine": "Auswahl Kanal",
+        "Equipement avec déjà un paramètrage IP": "Geräte, die bereits über IP-Parameter verfügen",
+        "FIN REQUETE": "ENDE REQUEST",
+        "Gestion réseau : Adresse mac vide => Impossible de continuer": "Netzwerkverwaltung: Leere Mac-Adresse => Kann nicht fortfahren",
+        "Gestion réseau : IP  ou adresse mac vide": "Netzwerkverwaltung: IP oder leere Mac-Adresse",
+        "Gestion réseau : IP  ou adresse mac vide => Impossible de continuer": "Netzwerkverwaltung: IP oder Mac-Adresse leer => Kann nicht fortfahren",
+        "Gestion réseau : Les données sont incomplètes => Impossible de continuer": "Netzwerkverwaltung: Die Daten sind unvollständig => Kann nicht fortfahren",
+        "Impossible d\\'envoyer la demande, Pas de média": "Unable to send the request, No media",
+        "Impossible d\\'envoyer la demande, les paramètres sont incomplets Player": "Die Anfrage kann nicht gesendet werden, die Parameter sind unvollständig Player",
+        "METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION": "VERALTETE METHODE => BITTE SCHAUEN SIE SICH DIE DOKUMENTATION AN",
+        "Mot de Passe": "Passwort",
+        "Média": "Medien",
+        "Média type": "Medientyp",
+        "Méthode Filtrage  ou type de Filtrage incorrect": "Methode Filtern oder Art des Filterns falsch",
+        "Player": "Player",
+        "REQUETE": "REQUETE",
+        "avec ID": "mit ID"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\\'équipement": "AKTUALISIERUNG HINZUFÜGEN NEUER BEFEHL für die Ausrüstung",

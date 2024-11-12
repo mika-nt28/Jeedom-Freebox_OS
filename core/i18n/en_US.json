@@ -264,7 +264,8 @@
         "PAS DE": "NO",
         "PLAYER": "PLAYER",
         "SUR VOTRE BOX": "ON YOUR BOX",
-        "Type": "Type"
+        "Type": "Type",
+        "Version": "Version"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " 4G connection - xDSL \/ lte",
@@ -329,6 +330,27 @@
         "langue": "language",
         "les équipements avec statut 0 ne seront pas affichés": "equipment with status 0 will not be displayed",
         "les équipements avec statut 0 seront affichés": "equipment with status 0 will be displayed"
+    },
+    "plugins\/Freebox_OS\/core\/class\/Free_Update.class.php": {
+        "Adresse IP vide": "IP address empty",
+        "Chaine": "Chain",
+        "Choix Chaine": "Channel selection",
+        "Equipement avec déjà un paramètrage IP": "Equipment with existing IP settings",
+        "FIN REQUETE": "END REQUEST",
+        "Gestion réseau : Adresse mac vide => Impossible de continuer": "Network management: Mac address empty => Cannot continue",
+        "Gestion réseau : IP  ou adresse mac vide": "Network management: IP or empty mac address",
+        "Gestion réseau : IP  ou adresse mac vide => Impossible de continuer": "Network management: IP or mac address empty => Cannot continue",
+        "Gestion réseau : Les données sont incomplètes => Impossible de continuer": "Network management: Data incomplete => Cannot continue",
+        "Impossible d\\'envoyer la demande, Pas de média": "Unable to send request, No media",
+        "Impossible d\\'envoyer la demande, les paramètres sont incomplets Player": "Unable to send request, parameters incomplete Player",
+        "METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION": "OBSOLETE METHOD => PLEASE LOOK AT THE DOCUMENTATION",
+        "Mot de Passe": "Password",
+        "Média": "Media",
+        "Média type": "Media type",
+        "Méthode Filtrage  ou type de Filtrage incorrect": "Incorrect filtering method or type",
+        "Player": "Player",
+        "REQUETE": "REQUEST",
+        "avec ID": "with ID"
     },
     "plugins\/Freebox_OS\/core\/class\/Freebox_OS.class.php": {
         "ACTUALISATION AJOUT NOUVELLE COMMANDE pour l\\'équipement": "UPDATE ADD NEW COMMAND for equipment",

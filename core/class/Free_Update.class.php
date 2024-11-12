@@ -170,13 +170,13 @@ class Free_Update
             $Parameter["media"] = $media_value;
             $Parameter["password"] = $password_value;
             $Parameter["action"] = $logicalId;
-            log::add('Freebox_OS', 'debug', '│ Player : ' . $receivers_value . ' -- Media type : ' . $media_type_value . ' -- Media : ' . $media_value . ' -- Mot de Passe : ' . $password_value . ' -- Action : ' . $logicalId);
+            log::add('Freebox_OS', 'debug', '│ ' . (__('Player', __FILE__)) . ' : ' . $receivers_value . ' -- ' . (__('Média type', __FILE__)) . ' : ' . $media_type_value . ' -- ' . (__('Média', __FILE__)) . ' : ' . $media_value . ' -- ' . (__('Mot de Passe', __FILE__)) . ' : ' . $password_value . ' -- Action : ' . $logicalId);
             if ($media_type_value == NULL || $receivers_value == NULL) {
-                log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, les paramètres sont incomplets Player : ' . $receivers_value . '-- Media type : ' . $media_type_value . ' -- Media : ' . $media_value);
+                log::add('Freebox_OS', 'error', '[AirPlay] ' . (__('Impossible d\'envoyer la demande, les paramètres sont incomplets Player', __FILE__)) . ' : ' . $receivers_value . '-- Media type : ' . $media_type_value . ' -- Media : ' . $media_value);
                 return;
             }
             if ($media_value == NULL && $logicalId == 'start') {
-                log::add('Freebox_OS', 'error', '[AirPlay] Impossible d\'envoyer la demande, Pas de média : '  . $media_value);
+                log::add('Freebox_OS', 'error', '[AirPlay] ' . (__('Impossible d\'envoyer la demande, Pas de média', __FILE__)) . ' : '  . $media_value);
                 return;
             }
             $Free_API->universal_put($Parameter, 'universal_put', null, null, 'airmedia//receivers/' . $receivers_value  . '/', 'POST', $Parameter);
@@ -391,7 +391,7 @@ class Free_Update
                                 $result_network = $result['result'];
                                 foreach ($result_network as $result) {
                                     if ($result['id'] == $host_value_mac_ID) {
-                                        log::add('Freebox_OS', 'debug', '│ Equipement avec déjà un paramètrage IP : ' . $result['mac']);
+                                        log::add('Freebox_OS', 'debug', '│ ' . (__('Equipement avec déjà un paramètrage IP', __FILE__)) . ' : ' . $result['mac']);
                                         if ($method_value == 'POST' && $method_value != 'DELETE') {
                                             $method_value = 'PUT';
                                         }
@@ -482,25 +482,25 @@ class Free_Update
                     if ($update_WIFI === 'WIFI') {
                         log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . '/' . $mac_filter_value  . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
                         if ($host_value === null || $add_del_ip_value === null || $mac_filter_value === null) {
-                            log::add('Freebox_OS', 'error', 'Gestion réseau : IP  ou adresse mac vide');
+                            log::add('Freebox_OS', 'error', (__('Gestion réseau : IP  ou adresse mac vide', __FILE__)));
                             break;
                         }
                     } else if ($update_TYPE === 'DEVICE') {
                         log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Type : ' . $host_type_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
                         if ($primary_name_value === null || $host_value === null || $host_type_value === null) {
-                            log::add('Freebox_OS', 'error', 'Gestion réseau : Les données sont incomplètes => Impossible de continuer');
+                            log::add('Freebox_OS', 'error', (__('Gestion réseau : Les données sont incomplètes => Impossible de continuer', __FILE__)));
                             break;
                         }
                     } else if ($update_IP === 'IP') {
                         log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- IP : ' . $add_del_ip_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
                         if ($host_value === '0' || $host_value === null || $add_del_ip_value === null) {
-                            log::add('Freebox_OS', 'error', 'Gestion réseau : IP  ou adresse mac vide => Impossible de continuer');
+                            log::add('Freebox_OS', 'error', (__('Gestion réseau : IP  ou adresse mac vide => Impossible de continuer', __FILE__)));
                             break;
                         }
                     } else if ($update_WOL === 'POST_WOL') {
                         log::add('Freebox_OS', 'debug', '│ Appareil/Nom : ' . $host_value . '/' . $primary_name_value . ' -- Action à faire : ' . $method_value . ' -- Commentaire : ' . $comment_value . ' -- ACTION : ' . $logicalId);
                         if ($host_value === '0' || $host_value === null) {
-                            log::add('Freebox_OS', 'error', 'Gestion réseau : Adresse mac vide => Impossible de continuer');
+                            log::add('Freebox_OS', 'error', (__('Gestion réseau : Adresse mac vide => Impossible de continuer', __FILE__)));
                             break;
                         }
                     }
@@ -556,7 +556,7 @@ class Free_Update
                 break;
             case "WakeonLAN":
                 // Commande a supprimer
-                log::add('Freebox_OS', 'ERROR', '│ METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION');
+                log::add('Freebox_OS', 'ERROR', '│ ' . (__('METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION', __FILE__)));
                 if ($_options['mac_address'] == null) {
                     log::add('Freebox_OS', 'error', 'Adresse mac vide');
                     break;
@@ -569,7 +569,7 @@ class Free_Update
                 break;
             case "add_del_mac":
                 // Commande a supprimer
-                log::add('Freebox_OS', 'ERROR', '│ METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION');
+                log::add('Freebox_OS', 'ERROR', '│ ' . (__('METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION', __FILE__)));
                 if ($_options['ip'] == null || $_options['mac_address'] == null) {
                     log::add('Freebox_OS', 'error', 'IP  ou adresse mac vide');
                     break;
@@ -591,7 +591,7 @@ class Free_Update
                 break;
             case "redir":
                 if ($_options['lan_ip'] == null) {
-                    log::add('Freebox_OS', 'error', 'Adresse IP vide');
+                    log::add('Freebox_OS', 'error', (__('Adresse IP vide', __FILE__)));
                     break;
                 }
                 $option = array(
@@ -626,24 +626,24 @@ class Free_Update
                 log::add('Freebox_OS', 'debug', '│ Chaine : '  . $_options['message']);
                 foreach ($logicalId_eq->getCmd('info') as $Cmd) {
                     if ($Cmd->getLogicalId() === 'channel_info') {
-                        log::add('Freebox_OS', 'debug', '│ Choix Chaine : '  . $_options['message']);
+                        log::add('Freebox_OS', 'debug', '│ ' . (__('Choix Chaine', __FILE__)) . ' : '  . $_options['message']);
                         if ($logicalId == 'channel') {
                             $logicalId_eq->checkAndUpdateCmd($Cmd->getLogicalId(), $_options['message']);
                         }
                         $ID_Player = $logicalId_eq->getlogicalId();
                         $ID_Player = str_replace('player_', '', $ID_Player);
-                        log::add('Freebox_OS', 'debug', '│ Player ' . $logicalId_eq->getlogicalId() . ' -  avec ID : ' . $ID_Player);
+                        log::add('Freebox_OS', 'debug', '│ ' . (__('Player', __FILE__)) . ' ' . $logicalId_eq->getlogicalId() . ' -  ' . (__('avec ID', __FILE__)) . ' : ' . $ID_Player);
                         $channel_value = $_cmd->execCmd();
                         $channel_value = 'tv:?channel=' . $channel_value;
-                        log::add('Freebox_OS', 'debug', '│ Chaine : ' . $channel_value . ' / ' . $_options['message']);
+                        log::add('Freebox_OS', 'debug', '│ ' . (__('Chaine', __FILE__)) . ' : ' . $channel_value . ' / ' . $_options['message']);
                         //Option par défaut
                         $option = array(
                             "url" =>  $channel_value,
                         );
                         $playerURL = '/api/v6/control/open';
-                        log::add('Freebox_OS', 'debug', '──────────▶︎ REQUETE');
+                        log::add('Freebox_OS', 'debug', '──────────▶︎ ' . (__('REQUETE', __FILE__)));
                         $Free_API->universal_put(null, 'universal_put', null, null, 'player/' . $ID_Player .  $playerURL, null, $option);
-                        log::add('Freebox_OS', 'debug', '──────────▶︎ FIN REQUETE');
+                        log::add('Freebox_OS', 'debug', '──────────▶︎ ' . (__('FIN REQUETE', __FILE__)));
                         break;
                     }
                 }
@@ -694,9 +694,9 @@ class Free_Update
                     break;
                 case 'add_del_mac';
                     // Commande a supprimer
-                    log::add('Freebox_OS', 'ERROR', '│ METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION');
+                    log::add('Freebox_OS', 'ERROR', '│ ' . (__('METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION', __FILE__)));
                     if ($_options['function'] == null || $_options['filter'] == null || $_options['mac_address'] == null) {
-                        log::add('Freebox_OS', 'error', 'Méthode Filtrage  ou type de Filtrage incorrect ');
+                        log::add('Freebox_OS', 'error', (__('Méthode Filtrage  ou type de Filtrage incorrect', __FILE__)));
                         break;
                     }
                     $Free_API->universal_put(null, 'wifi', $_options['mac_address'], null, 'mac_filter', null, $_options);

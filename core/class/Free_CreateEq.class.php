@@ -105,7 +105,7 @@ class Free_CreateEq
                 log::add('Freebox_OS', 'debug', ':fg-info:=================:/fg: ' . $logicalinfo['networkName']);
                 log::add('Freebox_OS', 'debug', ':fg-info:=================:/fg: ' . $logicalinfo['networkwifiguestName']);
                 log::add('Freebox_OS', 'debug', ':fg-info:=================:/fg: ' . $logicalinfo['netshareName']);
-                log::add('Freebox_OS', 'debug', ':fg-info:================= /fg: ' . $logicalinfo['wifiName']);
+                log::add('Freebox_OS', 'debug', ':fg-info:=================:/fg: ' . $logicalinfo['wifiName']);
                 log::add('Freebox_OS', 'debug', ':fg-info:=================:/fg: ' . (__('ENSEMBLE DES PLAYERS SOUS TENSION', __FILE__)));
                 log::add('Freebox_OS', 'debug', ':fg-info:=================:/fg: ' . (__('ENSEMBLE DES VM', __FILE__)));
                 log::add('Freebox_OS', 'debug', '');
@@ -1152,7 +1152,8 @@ class Free_CreateEq
             $nb_card = count($result['result']);
             if ($result != false) {
                 for ($k = 0; $k < $nb_card; $k++) {
-                    log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Nom de la commande', __FILE__)) . ' : ' .  (__('Etat Wifi', __FILE__)) . ' ' . $result['result'][$k]['name'] . ' - Id : ' . $result['result'][$k]['id'] . ' - '(__('Status', __FILE__)) . ' : ' . $result['result'][$k]['status']['state']);
+                    log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Nom de la commande', __FILE__)) . ' : ' .  (__('Etat Wifi', __FILE__)) . ' ' . $result['result'][$k]['name'] . ' - Id : ' . $result['result'][$k]['id'] . ' - ' . (__('Status', __FILE__)) . ' : ' . $result['result'][$k]['status']['state']);
+                    $Wifi->AddCommand('Etat Wifi ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, null, 'CARD', 0, $iconWifi, false, 'default', 'default', $order++, '0', $updateicon, false, false, true);
                     $Wifi->AddCommand(__('Etat Wifi', __FILE__) . ' ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, null, 'CARD', 0, $iconWifi, false, 'default', 'default', $order++, '0', $updateicon, false, false, true);
                 }
             }

@@ -524,6 +524,7 @@ class Free_API
         $API_version = $this->API_version;
         $fonction = "PUT";
         $config_log = null;
+        $cmd_config = null;
         if ($id != null) {
             $id = $id . '/';
         }

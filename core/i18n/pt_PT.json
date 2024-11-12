@@ -264,7 +264,8 @@
         "PAS DE": "NÃO",
         "PLAYER": "JOGADOR",
         "SUR VOTRE BOX": "NA SUA CAIXA",
-        "Type": "Tipo"
+        "Type": "Tipo",
+        "Version": "Versão"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " Ligação 4G - xDSL \/ lte",

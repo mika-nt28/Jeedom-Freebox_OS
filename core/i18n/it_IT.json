@@ -264,7 +264,8 @@
         "PAS DE": "NO",
         "PLAYER": "GIOCATORE",
         "SUR VOTRE BOX": "SULLA TUA SCATOLA",
-        "Type": "Tipo"
+        "Type": "Tipo",
+        "Version": "Versione"
     },
     "plugins\/Freebox_OS\/core\/class\/Free_Refresh.class.php": {
         " Connexion 4G - xDSL \/ lte": " Connessione 4G - xDSL \/ lte",

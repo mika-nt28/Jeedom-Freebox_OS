@@ -235,20 +235,29 @@ class Free_Update
     private static function update_LCD($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
         switch ($logicalId) {
-            case 'brightness':
+            case 'brightness_action':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('brightness' => $_options['slider']));
                 break;
             case 'orientation_forcedOn':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('orientation_forced' => true));
                 break;
             case 'orientation_forcedOff':
-                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('orientation_forcedy' => false));
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('orientation_forced' => false));
                 break;
             case 'hide_wifi_keyOn':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => true));
                 break;
             case 'hide_wifi_keyOff':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => false));
+                break;
+            case 'led_strip_enableddOn':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_enabled' => true));
+                break;
+            case 'led_strip_enableddOff':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_enabled' => false));
+                break;
+            case 'led_strip_animation_action':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_animation' => $_options['slider']));
                 break;
             case 'orientation':
                 if ($_options['select'] != 0) {

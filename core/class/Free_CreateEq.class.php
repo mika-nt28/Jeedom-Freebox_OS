@@ -523,7 +523,7 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
-    private static function createEq_LCD($logicalinfo, $templatecore_V4, $order = 0, $Setting)
+    private static function createEq_LCD($logicalinfo, $templatecore_V4, $order = 0, $Setting = null)
     {
         log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['LCDName'] . ' ──');
         $LCD = Freebox_OS::AddEqLogic($logicalinfo['LCDName'], $logicalinfo['LCDID'], 'default', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
@@ -533,6 +533,12 @@ class Free_CreateEq
         $updateicon = false;
         $StatusLCD = $LCD->AddCommand(__('Etat Lumininosité écran LCD', __FILE__), 'brightness', "info", 'numeric', null, '%', null, 0, '', '', '', $iconbrightness, 0, '0', 100, $order++, 2, $updateicon, true, false, true);
         $LCD->AddCommand(__('Lumininosité écran LCD', __FILE__), 'brightness_action', 'action', 'slider', null, '%', null, 1, $StatusLCD, 'default', 0, $iconbrightness, 0, 1, 100, $order++, '0', $updateicon, false, null, true, null, 'floor(#value#)');
+
+        // Afficher Clef Wifi
+        $StatusWifi = $LCD->AddCommand(__('Cacher Clef Wifi', __FILE__), 'hide_wifi_key', "info", 'binary', null, null, 'default', 0, '', '', '', '', 0, 'default', 'default', $order++, 1, $updateicon, true);
+        $LCD->AddCommand(__('Cacher Clef Wifi On', __FILE__), 'hide_wifi_keyOn', 'action', 'other', 'default', null, 'default', 1, $StatusWifi, 'hide_wifi_key', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
+        $LCD->AddCommand(__('Cacher Clef Wifi Off', __FILE__), 'hide_wifi_keyOff', 'action', 'other', 'default', null, 'default', 1, $StatusWifi, 'hide_wifi_key', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
+
         // Gestion orientation de l'affichage sur la box
         if ($Setting['has_lcd_orientation']) {
             // Affichage Orientation
@@ -547,10 +553,6 @@ class Free_CreateEq
         } else {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box non compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ':/fg:');
         }
-        // Afficher Clef Wifi
-        $StatusWifi = $LCD->AddCommand(__('Cacher Clef Wifi', __FILE__), 'hide_wifi_key', "info", 'binary', null, null, 'default', 0, '', '', '', '', 0, 'default', 'default', $order++, 1, $updateicon, true);
-        $LCD->AddCommand(__('Cacher Clef Wifi On', __FILE__), 'hide_wifi_keyOn', 'action', 'other', 'default', null, 'default', 1, $StatusWifi, 'hide_wifi_key', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
-        $LCD->AddCommand(__('Cacher Clef Wifi Off', __FILE__), 'hide_wifi_keyOff', 'action', 'other', 'default', null, 'default', 1, $StatusWifi, 'hide_wifi_key', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
 
         // LED Box      
         if ($Setting['$has_led_strip']) {

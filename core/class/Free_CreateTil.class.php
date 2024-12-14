@@ -108,20 +108,6 @@ class Free_CreateTil
             }
         }
     }
-    private static function createTil_modelBox()
-    {
-        $Free_API = new Free_API();
-        $result = $Free_API->universal_get('system', null, null);
-        if ($result['board_name'] == 'fbxgw7r') {
-            $Type_box = 'OK';
-        } else {
-            $Type_box = 'KO';
-        }
-        config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
-        config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
-        config::save('TYPE_FREEBOX_TILES', $Type_box, 'Freebox_OS');
-        return $Type_box;
-    }
     public static function createTil_Camera()
     {
         $EqLogic = eqLogic::byLogicalId(init('id'), 'camera');

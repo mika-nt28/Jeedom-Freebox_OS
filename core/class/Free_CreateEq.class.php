@@ -176,7 +176,7 @@ class Free_CreateEq
             $has_vm = $result['model_info']['has_vm'];
         } else {
             $has_vm = false;
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: Non');
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
 
         if (isset($result['model_info']['has_led_strip'])) {
@@ -184,21 +184,21 @@ class Free_CreateEq
             $has_led_strip = $result['model_info']['has_led_strip'];
         } else {
             $has_led_strip = false;
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: Non');
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
         if (isset($result['model_info']['has_lcd_orientation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_lcd_orientation']);
             $has_lcd_orientation = $result['model_info']['has_lcd_orientation'];
         } else {
             $has_lcd_orientation = false;
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box non compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ':/fg:');
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
         if (isset($result['model_info']['has_home_automation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_vm']);
             $has_home_automation = $result['model_info']['has_home_automation'];
         } else {
             $has_home_automation = false;
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique', __FILE__)) . ': :/fg: Non présent');
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique', __FILE__)) . ': :/fg: ' . (__('Non présent', __FILE__)));
         }
         if ($result['board_name'] == 'fbxgw7r') {
             $has_home_box = 'OK';

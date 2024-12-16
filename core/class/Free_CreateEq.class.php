@@ -178,13 +178,7 @@ class Free_CreateEq
             $has_vm = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box non compatible avec les VM', __FILE__)) . ':/fg:');
         }
-        if (isset($result['model_info']['has_home_automation'])) {
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_vm']);
-            $has_home_automation = $result['model_info']['has_home_automation'];
-        } else {
-            $has_home_automation = false;
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique non présent', __FILE__)) . ':/fg:');
-        }
+
         if (isset($result['model_info']['has_led_strip'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_led_strip']);
             $has_led_strip = $result['model_info']['has_led_strip'];
@@ -198,6 +192,13 @@ class Free_CreateEq
         } else {
             $has_lcd_orientation = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box non compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ':/fg:');
+        }
+        if (isset($result['model_info']['has_home_automation'])) {
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_vm']);
+            $has_home_automation = $result['model_info']['has_home_automation'];
+        } else {
+            $has_home_automation = false;
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique non présent', __FILE__)) . ':/fg:');
         }
         if ($result['board_name'] == 'fbxgw7r') {
             $has_home_box = 'OK';
@@ -541,7 +542,7 @@ class Free_CreateEq
 
         if ($Setting != null) {
             // Gestion orientation de l'affichage sur la box
-            if ($Setting['has_lcd_orientation']) {
+            if ($Setting['has_lcd_orientation'] == 1) {
                 // Affichage Orientation
                 log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ' ::/fg:');
                 $StatusLCD = $LCD->AddCommand(__('Etat Orientation', __FILE__), 'orientation', "info", 'string', null, null, null, 0, '', '', '', $iconorientation, 0, '0', 100, $order++, 2, $updateicon, true, false, true);
@@ -556,7 +557,7 @@ class Free_CreateEq
             }
 
             // LED Box      
-            if ($Setting['$has_led_strip']) {
+            if ($Setting['has_led_strip'] == 1) {
                 //Animation LED
                 log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ' ::/fg:');
                 $led_strip_animation = $LCD->AddCommand(__('LED Animation', __FILE__), 'led_strip_animation', "info", 'string', null, null, null, 0, '', '', '', $iconled_strip_animation, 0, '0', 100, $order++, 2, $updateicon, true, false, true);

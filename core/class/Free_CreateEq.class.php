@@ -176,7 +176,7 @@ class Free_CreateEq
             $has_vm = $result['model_info']['has_vm'];
         } else {
             $has_vm = false;
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box non compatible avec les VM', __FILE__)) . ':/fg:');
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: Non');
         }
 
         if (isset($result['model_info']['has_led_strip'])) {
@@ -184,7 +184,7 @@ class Free_CreateEq
             $has_led_strip = $result['model_info']['has_led_strip'];
         } else {
             $has_led_strip = false;
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box non compatible avec les LED rouges', __FILE__)) . ':/fg:');
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: Non');
         }
         if (isset($result['model_info']['has_lcd_orientation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_lcd_orientation']);
@@ -198,7 +198,7 @@ class Free_CreateEq
             $has_home_automation = $result['model_info']['has_home_automation'];
         } else {
             $has_home_automation = false;
-            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique non présent', __FILE__)) . ':/fg:');
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique', __FILE__)) . ': :/fg: Non présent');
         }
         if ($result['board_name'] == 'fbxgw7r') {
             $has_home_box = 'OK';
@@ -544,7 +544,7 @@ class Free_CreateEq
             // Gestion orientation de l'affichage sur la box
             if ($Setting['has_lcd_orientation'] == 1) {
                 // Affichage Orientation
-                log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ' ::/fg:');
+                log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ':/fg:');
                 $StatusLCD = $LCD->AddCommand(__('Etat Orientation', __FILE__), 'orientation', "info", 'string', null, null, null, 0, '', '', '', $iconorientation, 0, '0', 100, $order++, 2, $updateicon, true, false, true);
                 $listValue = "0|" . __('Horizontal', __FILE__) . ";90|" . __('90 degrés', __FILE__) . ";180|" . __('180 degrés', __FILE__) . ";270|" . __('270 degrés', __FILE__);
                 $LCD->AddCommand(__('Orientation', __FILE__), 'orientation', 'action', 'select', null, null, null, 1, $StatusLCD, 'default', 0, $iconorientation, 0, '0', 100, $order++, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
@@ -553,13 +553,13 @@ class Free_CreateEq
                 $LCD->AddCommand(__('Forcer Orientation On', __FILE__), 'orientation_forcedOn', 'action', 'other', 'default', null, 'default', 1, $Orientation, 'orientation_forced', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
                 $LCD->AddCommand(__('Forcer Orientation Off', __FILE__), 'orientation_forcedOff', 'action', 'other', 'default', null, 'default', 1, $Orientation, 'orientation_forced', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
             } else {
-                log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box non compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ':/fg:');
+                log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box non compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ':/fg:');
             }
 
             // LED Box      
             if ($Setting['has_led_strip'] == 1) {
                 //Animation LED
-                log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ' ::/fg:');
+                log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ':/fg:');
                 $led_strip_animation = $LCD->AddCommand(__('LED Animation', __FILE__), 'led_strip_animation', "info", 'string', null, null, null, 0, '', '', '', $iconled_strip_animation, 0, '0', 100, $order++, 2, $updateicon, true, false, true);
                 $listValue = "organic|" . __('Organique', __FILE__) . ";static|" . __('Statique', __FILE__) . ";breathing|" . __('Respiration', __FILE__) . ";rain|" . __('Pluie', __FILE__) . ";trail|" . __('Chenillard', __FILE__) . ";wave|" . __('Vague', __FILE__);
                 $LCD->AddCommand(__('Orientation', __FILE__), 'led_strip_animation_action', 'action', 'select', null, null, null, 1, $led_strip_animation, 'default', 0, $iconled_strip_animation, 0, '0', 100, $order++, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
@@ -571,7 +571,7 @@ class Free_CreateEq
                 $LCD->AddCommand(__('Bandeau LED On', __FILE__), 'led_strip_enabledOn', 'action', 'other', 'default', null, 'default', 1, $led_strip, 'led_strip_enabled', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
                 $LCD->AddCommand(__('Bandeau LED Off', __FILE__), 'led_strip_enableddOff', 'action', 'other', 'default', null, 'default', 1, $led_strip, 'led_strip_enabled', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
             } else {
-                log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box non compatible avec les LED rouges', __FILE__)) . ':/fg:');
+                log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box non compatible avec les LED rouges', __FILE__)) . ':/fg:');
             }
         }
         log::add('Freebox_OS', 'debug', '└────────────────────');

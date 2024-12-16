@@ -213,6 +213,7 @@ class Free_CreateEq
             }
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Etat CRON Domotique', __FILE__)) . ' ::/fg: ' . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS'));
         }
+        log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec la domotique', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
 
         $Setting = array(
             'has_vm' => $has_vm,
@@ -226,7 +227,7 @@ class Free_CreateEq
         config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Type de box', __FILE__)) . '  ::/fg: ' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'));
         config::save('TYPE_FREEBOX_TILES', $Setting['has_home_box'], 'Freebox_OS');
-        log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Compatibilité Domotique', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
+
         log::add('Freebox_OS', 'info', '└────────────────────');
         return $Setting;
     }

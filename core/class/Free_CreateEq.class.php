@@ -526,7 +526,7 @@ class Free_CreateEq
     }
     private static function createEq_LCD($logicalinfo, $templatecore_V4, $order = 0, $Setting = null)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['LCDName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['LCDName'] . ' ──');
         $LCD = Freebox_OS::AddEqLogic($logicalinfo['LCDName'], $logicalinfo['LCDID'], 'default', false, null, null, null, '5 */12 * * *', null, null, 'system', true);
         $iconbrightness = 'fas fa-adjust icon_green';
         $iconorientation = 'fas fa-map-signs icon_green';
@@ -553,7 +553,7 @@ class Free_CreateEq
                 $LCD->AddCommand(__('Forcer Orientation On', __FILE__), 'orientation_forcedOn', 'action', 'other', 'default', null, 'default', 1, $Orientation, 'orientation_forced', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
                 $LCD->AddCommand(__('Forcer Orientation Off', __FILE__), 'orientation_forcedOff', 'action', 'other', 'default', null, 'default', 1, $Orientation, 'orientation_forced', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
             } else {
-                log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box non compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ':/fg:');
+                log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
             }
 
             // LED Box      
@@ -571,7 +571,7 @@ class Free_CreateEq
                 $LCD->AddCommand(__('Bandeau LED On', __FILE__), 'led_strip_enabledOn', 'action', 'other', 'default', null, 'default', 1, $led_strip, 'led_strip_enabled', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
                 $LCD->AddCommand(__('Bandeau LED Off', __FILE__), 'led_strip_enableddOff', 'action', 'other', 'default', null, 'default', 1, $led_strip, 'led_strip_enabled', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false);
             } else {
-                log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box non compatible avec les LED rouges', __FILE__)) . ':/fg:');
+                log::add('Freebox_OS', 'info', '| :fg-success:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
             }
         }
         log::add('Freebox_OS', 'debug', '└────────────────────');

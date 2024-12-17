@@ -257,7 +257,15 @@ class Free_Update
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_enabled' => false));
                 break;
             case 'led_strip_animation_action':
-                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_animation' => $_options['slider']));
+                if ($_options['select'] != 0) {
+                    $led_strip_enabled = true;
+                } else {
+                    $led_strip_enabled = false;
+                }
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_animation' => $_options['select'], 'led_strip_enabled' => $led_strip_enabled));
+                break;
+            case 'led_strip_brightness_action':
+                $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_brightness' => $_options['slider']));
                 break;
             case 'orientation':
                 if ($_options['select'] != 0) {

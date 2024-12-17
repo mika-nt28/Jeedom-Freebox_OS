@@ -58,14 +58,14 @@ class Freebox_OS extends eqLogic
 				'subtype' => array('binary', 'numeric')
 			),
 			'SWITCH_ON' => array( //capitalise without space
-				'name' => __('Interrupteur Bouton On Freebox_OS)', __FILE__),
+				'name' => __('Interrupteur Bouton On (Freebox_OS)', __FILE__),
 				'familyid' => 'Switch', //No space here
 				'family' => __('Interrupteur', __FILE__),
 				'type' => 'Action',
 				'homebridge_type' => true
 			),
 			'SWITCH_OFF' => array( //capitalise without space
-				'name' => __('Interrupteur Bouton Off Freebox_OS)', __FILE__),
+				'name' => __('Interrupteur Bouton Off (Freebox_OS)', __FILE__),
 				'familyid' => 'Switch', //No space here
 				'family' => __('Interrupteur', __FILE__),
 				'type' => 'Action',

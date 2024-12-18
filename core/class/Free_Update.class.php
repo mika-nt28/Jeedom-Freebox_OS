@@ -250,14 +250,14 @@ class Free_Update
             case 'hide_wifi_keyOff':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('hide_wifi_key' => false));
                 break;
-            case 'led_strip_enableddOn':
+            case 'led_strip_enabledOn':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_enabled' => true));
                 break;
-            case 'led_strip_enableddOff':
+            case 'led_strip_enabledOff':
                 $Free_API->universal_put(1, 'universal_put', null, null, 'lcd/config', 'PUT', array('led_strip_enabled' => false));
                 break;
             case 'led_strip_animation_action':
-                if ($_options['select'] != 0) {
+                if ($_options['select'] != null) {
                     $led_strip_enabled = true;
                 } else {
                     $led_strip_enabled = false;

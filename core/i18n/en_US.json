@@ -118,6 +118,7 @@
         "Etat Alimentation": "Power supply status",
         "Etat CRON Domotique": "State CRON Home automation",
         "Etat Lumininosité écran LCD": "LCD brightness status",
+        "Etat Luninosité du bandeau LED": "LED strip brightness status",
         "Etat Orientation": "Status Orientation",
         "Etat Planning": "Planning status",
         "Etat WPS": "WPS status",

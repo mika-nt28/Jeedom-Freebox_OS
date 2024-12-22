@@ -119,14 +119,14 @@ class Free_CreateEq
                 Free_CreateEq::createEq_connexion($logicalinfo, $templatecore_V4);
                 //log::add('Freebox_OS', 'debug', '====================================================================================');
                 Free_CreateEq::createEq_FreePlug($logicalinfo, $templatecore_V4, $order);
-                $result_disk = Free_CreateEq::createEq_disk_check($logicalinfo);
-                log::add('Freebox_OS', 'debug', '┌── :fg-success:Check ' . (__('Présence disque', __FILE__)) . ' :/fg:──');
-                if ($result_disk == true) {
+                if ($Setting['disk_status'] == 'active') {
+                    //$result_disk = Free_CreateEq::createEq_disk_check($logicalinfo);
+                    //if ($result_disk == true) {
                     Free_CreateEq::createEq_disk($logicalinfo, $templatecore_V4, $order);
+                    //}
                 } else {
-                    log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('AUCUN DISQUE => PAS DE CREATION DE L\'EQUIPEMENT', __FILE__)) . ':/fg:');
+                    log::add('Freebox_OS', 'debug', ':fg-warning: ───▶︎ ' . (__('AUCUN DISQUE => PAS DE CREATION DE L\'EQUIPEMENT', __FILE__)) . ':/fg: (' . $Setting['disk_status'] . ' / ' . $Setting['disk_status_description'] . ')');
                 }
-                log::add('Freebox_OS', 'debug', '└────────────────────');
 
                 Free_CreateEq::createEq_phone($logicalinfo, $templatecore_V4, $order);
                 Free_CreateEq::createEq_netshare($logicalinfo, $templatecore_V4, $order);
@@ -135,13 +135,13 @@ class Free_CreateEq
 
                 if (config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') == 'router') {
                     Free_CreateEq::createEq_airmedia($logicalinfo, $templatecore_V4, $order);
-                    if ($result_disk == true) {
+                    log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['downloadsName'] . ' ──');
+                    if ($Setting['disk_status'] == 'active') {
                         Free_CreateEq::createEq_download($logicalinfo, $templatecore_V4, $order);
                     } else {
-                        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['downloadsName'] . ' ──');
-                        log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('AUCUN DISQUE => PAS DE CREATION DE L\'EQUIPEMENT', __FILE__)) . ':/fg:');
-                        log::add('Freebox_OS', 'debug', '└────────────────────');
+                        log::add('Freebox_OS', 'debug', '|:fg-warning: ───▶︎ ' . (__('AUCUN DISQUE => PAS DE CREATION DE L\'EQUIPEMENT', __FILE__)) . ':/fg: (' . $Setting['disk_status'] . ' / ' . $Setting['disk_status_description'] . ')');
                     }
+                    log::add('Freebox_OS', 'debug', '└────────────────────');
 
                     Free_CreateEq::createEq_management($logicalinfo, $templatecore_V4, $order);
                     Free_CreateEq::createEq_network($logicalinfo, $templatecore_V4, $order, 'LAN');
@@ -171,6 +171,16 @@ class Free_CreateEq
         log::add('Freebox_OS', 'info', '┌── :fg-success: ' . (__('Vérification de la compatibilité de la box avec certaines options', __FILE__)) . ' :/fg:──');
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('system', null, null);
+        if (isset($result['disk_status'])) {
+            $disk_status_description = $result['disk_status'];
+            $disk_status_description = str_ireplace('not_detected', __('Le disque n\'a pas été détecté', __FILE__), $disk_status_description);
+            $disk_status_description = str_ireplace('disabled', __('Le disque est désactivé', __FILE__), $disk_status_description);
+            $disk_status_description = str_ireplace('initializing', __('Le disque est en cours d\'initialisation', __FILE__), $disk_status_description);
+            $disk_status_description = str_ireplace('error', __('Le disque n\'a pas pu être monté', __FILE__), $disk_status_description);
+            $disk_status_description = str_ireplace('active', __('Le disque est prêt', __FILE__), $disk_status_description);
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Etat du disque', __FILE__)) . ' ::/fg: ' . $result['disk_status'] . ' / ' . $disk_status_description);
+            $disk_status = $result['disk_status'];
+        }
         if (isset($result['model_info']['has_vm'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_vm']);
             $has_vm = $result['model_info']['has_vm'];
@@ -220,7 +230,9 @@ class Free_CreateEq
             'has_home_automation' => $has_home_automation,
             'has_home_box' => $has_home_box,
             'has_led_strip' => $has_led_strip,
-            'has_lcd_orientation' => $has_lcd_orientation
+            'has_lcd_orientation' => $has_lcd_orientation,
+            'disk_status_description' => $disk_status_description,
+            'disk_status' => $disk_status
         );
         config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Board name ::/fg: ' . config::byKey('TYPE_FREEBOX', 'Freebox_OS'));
@@ -947,26 +959,29 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '|:fg-success:───▶︎ ' . (__('Ajout des commandes spécifiques', __FILE__)) . ' ::/fg: ' . $logicalinfo['systemName'] . ' - ' . (__('Standards', __FILE__)));
         $iconReboot = 'fas fa-sync icon_red';
+        $icondisk_status = 'mdi-harddisk icon_green';
+        $icondisk_model_name = 'techno-freebox icon_green';
         $updateicon = false;
         if ($system != null) {
             //Model_info
-            $system->AddCommand(__('Modele de Freebox', __FILE__), 'model_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info',  0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+            $system->AddCommand(__('Modele de Freebox', __FILE__), 'model_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info',  0, $icondisk_model_name, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             //SYSTEM
             $system->AddCommand(__('Freebox firmware version', __FILE__), 'firmware_version', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'system', 0, null, 0, 'default', 'default', 1, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             $system->AddCommand(__('Mac', __FILE__), 'mac', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'system', 0, null, 0, 'default', 'default',  2, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             $system->AddCommand(__('Allumée depuis', __FILE__), 'uptime', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'system', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             $system->AddCommand('Board name', 'board_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'system', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             $system->AddCommand(__('Numéro de série', __FILE__), 'serial', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'system', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+            $system->AddCommand(__('Status du disque', __FILE__), 'disk_status', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', null, 0,  $icondisk_status, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             //Mise à jour
             $system->AddCommand(__('Info mise à jour Freebox Server', __FILE__), 'state', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'update', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             //Model_info
             $system->AddCommand(__('Type de Freebox', __FILE__), 'pretty_name', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'model_info', 0, null, 0, 'default', 'default',   $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
-            $system->AddCommand(__('Type de Wifi', __FILE__), 'wifi_type', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'model_info',  0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+            $system->AddCommand(__('Type de Wifi', __FILE__), 'wifi_type', 'info', 'string',  $templatecore_V4 . 'line', null, null, 0, 'default', 'model_info',  0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+
 
             // A traiter a part
             $order = 130;
-            $system->AddCommand(__('Redémarrage', __FILE__), 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, 0, 'default', 'default',   $order++, '0', true, false, null, true);
-            //$system->AddCommand('Redirection de ports', 'port_forwarding', 'action', 'message', null, null, null, 0, 'default', 'default', 0, null, 0, 'default', 'default', 'default', 6, '0', $updateicon);
+            $system->AddCommand(__('Redémarrage', __FILE__), 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, true, 'default', 'default',   $order++, '0', true, null, null, true, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         }
     }
     private static function createEq_system_standby($logicalinfo, $templatecore_V4, $order = 1, $system = null)
@@ -991,12 +1006,12 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '|:fg-success:───▶︎ ' . (__('Ajout des commandes spécifiques pour l\'équipement', __FILE__)) . ' ::/fg: ' .  $logicalinfo['systemName'] . ' - LAN');
         if ($system != null) {
+            $icondisk_model_name = 'kiko-router icon_green';
             $updateicon = false;
             //LAN
             $system->AddCommand(__('Nom Freebox', __FILE__), 'name', 'info', 'string', $templatecore_V4 . 'line', null, null, 1, 'default', 'LAN', 0, null, 0, 'default', 'default', $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
-            $system->AddCommand(__('Mode Freebox', __FILE__), 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'LAN', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+            $system->AddCommand(__('Mode Freebox', __FILE__), 'mode', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'LAN', 0, $icondisk_model_name, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             $system->AddCommand(__('Ip', __FILE__), 'ip', 'info', 'string',  $templatecore_V4 . 'line', null, null, 1, 'default', 'LAN', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
-
             Free_Refresh::RefreshInformation($logicalinfo['systemID']);
         }
     }

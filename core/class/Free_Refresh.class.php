@@ -393,8 +393,9 @@ class Free_Refresh
     }
     private static function refresh_LCD($EqLogics, $Free_API, $para_LogicalId = null, $para_Value = null, $para_Config = null, $log_Erreur = null, $para_Value_calcul = null)
     {
-        $list = 'orientation,orientation_forced,brightness,hide_wifi_key';
+        $list = 'orientation,orientation_forced,brightness,hide_wifi_key,led_strip_animation,led_strip_brightness,led_strip_enabled';
         $result = $Free_API->universal_get('universalAPI', null, null, 'lcd/config/', true, true, null);
+        $para_Value = array('orientation__0' =>  __('Horizontal', __FILE__), 'orientation__90' => __('90 degrés', __FILE__), 'orientation__180' => __('280 degrés', __FILE__), 'orientation__270' => __('270 degrés', __FILE__), 'led_strip_animation__organic' => __('Organique', __FILE__), 'led_strip_animation__static' => __('Statique', __FILE__), 'led_strip_animation__breathing' => __('Respiration', __FILE__), 'led_strip_animation__rain' => __('Pluie', __FILE__), 'led_strip_animation__trail' => __('Chenillard', __FILE__), 'led_strip_animation__wave' => __('Vague', __FILE__));
         $para_resultDO = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultDO, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, null);
     }
@@ -617,9 +618,11 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY, $para_LogicalId, $para_Value, $para_Config, $log_Erreur,  $para_Value_calcul);
         $para_LogicalId = null;
 
-        $list = 'firmware_version,mac,uptime,board_name,info,serial';
+        $list = 'firmware_version,mac,uptime,board_name,info,serial,disk_status';
         $para_Value_calcul  = array('uptime' => '_TIME_');
         $para_Config = array('board_name' => 'TYPE_FREEBOX', 'firmware_version' => 'TYPE_FIRMWARE');
+        $para_Value = array('disk_status__not_detected_' => (__('Le disque n\'a pas été détecté', __FILE__)), 'disk_status__disabled' => (__('Le disque est désactivé', __FILE__)), 'disk_status__initializing' => (__('Le disque est en cours d\'initialisation', __FILE__)), 'disk_status__error' => (__('Le disque n\'a pas pu être monté', __FILE__)), 'disk_status__active' => (__('Le disque est prêt', __FILE__)));
+        $para_resultSY = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         $para_resultSY = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY, $para_LogicalId, $para_Value, $para_Config, $log_Erreur,  $para_Value_calcul);
         $para_Config = null;

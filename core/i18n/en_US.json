@@ -692,7 +692,7 @@
         "Cette fonction permet de créer les commandes pour les équipements standards": "This function is used to create commands for standard equipment",
         "Cette fonction permet de lancer l'apparaige et paramétrer certaines options": "This function allows you to launch apparaige and set certain options",
         "Cette fonction permet juste de lancer l'ensemble des requêtes pour la partie domotique, cela ne crée pas de commande": "This function simply launches all home automation queries, without creating a command",
-        "Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard)": "This option displays only connected devices on the Dashboard.)",
+        "Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard": "This option displays only connected devices on the Dashboard",
         "Cliquer sur ? pour afficher l'assistant cron": "Click on ? to display the cron wizard",
         "Cliquer sur ? pour afficher l'assistant cron, Vide pas d'ajout": "Click on ? to display the cron wizard, Empty no addition",
         "Commandes": "Commands",

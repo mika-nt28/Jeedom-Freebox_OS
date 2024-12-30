@@ -692,7 +692,7 @@
         "Cette fonction permet de créer les commandes pour les équipements standards": "Esta função é utilizada para criar comandos para equipamento standard",
         "Cette fonction permet de lancer l'apparaige et paramétrer certaines options": "Esta função é utilizada para lançar a aplicação e definir determinadas opções",
         "Cette fonction permet juste de lancer l'ensemble des requêtes pour la partie domotique, cela ne crée pas de commande": "Esta função lança simplesmente todos os pedidos para a parte da domótica, não cria um comando",
-        "Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard)": "Esta opção apresenta apenas os dispositivos ligados no painel de controlo)",
+        "Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard": "Esta opção apresenta apenas os dispositivos ligados no painel de controlo",
         "Cliquer sur ? pour afficher l'assistant cron": "Clique em ? para visualizar o assistente de cron",
         "Cliquer sur ? pour afficher l'assistant cron, Vide pas d'ajout": "Clicar em ? para visualizar o assistente de cron, Empty no addition",
         "Commandes": "Comandos",

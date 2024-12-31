@@ -317,7 +317,7 @@ $eqLogics = eqLogic::byType($plugin->getId());
 							</div>
 							<div class="form-group IPV">
 								<label class="col-sm-4 control-label">{{Afficher uniquement les connectés}}
-									<sup><i class="fas fa-question-circle" title="{{Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard)}}"></i></sup>
+									<sup><i class="fas fa-question-circle" title="{{Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard}}"></i></sup>
 								</label>
 								<div class="col-sm-6">
 									<label class="checkbox-inline"><input type="checkbox" class="eqLogicAttr" title="Afficher uniquement les équipements connectés" data-l1key="configuration" data-l2key="UpdateVisible" />{{Activer}}</label>

@@ -692,7 +692,7 @@
         "Cette fonction permet de créer les commandes pour les équipements standards": "Mit dieser Funktion können Sie Befehle für Standardgeräte erstellen",
         "Cette fonction permet de lancer l'apparaige et paramétrer certaines options": "Mit dieser Funktion können Sie den apparaige starten und bestimmte Optionen einstellen",
         "Cette fonction permet juste de lancer l'ensemble des requêtes pour la partie domotique, cela ne crée pas de commande": "Diese Funktion erlaubt es nur, alle Abfragen für die Hausautomatisierung zu starten, es wird kein Befehl erstellt",
-        "Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard)": "Mit dieser Option werden nur die angeschlossenen Geräte auf dem Dashboard angezeigt)",
+        "Cette option permet d'afficher uniquement les équipements connectés sur le Dashboard": "Mit dieser Option werden nur die angeschlossenen Geräte im Dashboard angezeigt",
         "Cliquer sur ? pour afficher l'assistant cron": "Klicken Sie auf ?, um den Cron-Assistenten anzuzeigen",
         "Cliquer sur ? pour afficher l'assistant cron, Vide pas d'ajout": "Klicken Sie auf ?, um den Cron-Assistenten anzuzeigen, Vide keine Hinzufügung",
         "Commandes": "Befehle",

@@ -282,7 +282,7 @@ class Free_Refresh
 
         $list = 'rx_max_rate,rx_used_rate,tx_max_rate,tx_used_rate';
         $para_LogicalId = array('rx_max_rate' => 'rx_max_rate_lte', 'rx_used_rate' => 'rx_used_rate_lte', 'tx_max_rate' => 'tx_max_rate_lte', 'tx_used_rate' => 'tx_used_rate_lte');
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg' . (__(' Connexion 4G - xDSL / lte', __FILE__)));
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg:' . (__(' Connexion 4G - xDSL / lte', __FILE__)));
         $para_result4 = array('nb' => 3, 1 => 'result', 2 => 'tunnel', 3 => 'lte');
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_result4, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, null);
 
@@ -649,7 +649,7 @@ class Free_Refresh
                 if ($Cmd->getLogicalId('data') == $system['id']) {
                     if (isset($system['value'])) {
                         $EqLogics->checkAndUpdateCmd($system['id'], $system['value']);
-                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $system['value']);
+                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $system['value'] . ' ' . $Cmd->getUnite());
                     }
                 }
             }
@@ -659,7 +659,7 @@ class Free_Refresh
                 if ($Cmd->getLogicalId('data') == $system['id']) {
                     if (isset($system['value'])) {
                         $EqLogics->checkAndUpdateCmd($system['id'], $system['value']);
-                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $system['value']);
+                        log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $system['value'] . ' ' . $Cmd->getUnite());
                     }
                 }
             }
@@ -1122,7 +1122,7 @@ class Free_Refresh
                     if ($Cmd->getLogicalId('data') == $Card_id) {
                         if ($Cmd->getConfiguration('logicalId') == 'CARD') {
                             $EqLogics->checkAndUpdateCmd($Card_id, $Card_value);
-                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $Card_value);
+                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $Card_value . ' ' . $Cmd->getUnite());
                         }
                     }
                 }
@@ -1195,7 +1195,7 @@ class Free_Refresh
                                 }
                             }
                             $EqLogics->checkAndUpdateCmd($fielLogicalId, $value);
-                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $value);
+                            log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $value . ' ' . $Cmd->getUnite());
 
                             if ($para_Config != null) { // Mise à jour des paramétres Config
                                 if (isset($para_Config[$fieldname])) {

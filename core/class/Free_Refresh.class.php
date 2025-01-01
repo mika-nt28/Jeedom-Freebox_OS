@@ -623,7 +623,6 @@ class Free_Refresh
         $para_Config = array('board_name' => 'TYPE_FREEBOX', 'firmware_version' => 'TYPE_FIRMWARE');
         $para_Value = array('disk_status__not_detected_' => (__('Le disque n\'a pas été détecté', __FILE__)), 'disk_status__disabled' => (__('Le disque est désactivé', __FILE__)), 'disk_status__initializing' => (__('Le disque est en cours d\'initialisation', __FILE__)), 'disk_status__error' => (__('Le disque n\'a pas pu être monté', __FILE__)), 'disk_status__active' => (__('Le disque est prêt', __FILE__)));
         $para_resultSY = array('nb' => 0, 1 => null, 2 => null, 3 => null);
-        $para_resultSY = array('nb' => 0, 1 => null, 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultSY, $para_LogicalId, $para_Value, $para_Config, $log_Erreur,  $para_Value_calcul);
         $para_Config = null;
         $para_Value_calcul = null;

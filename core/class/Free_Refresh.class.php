@@ -432,10 +432,10 @@ class Free_Refresh
         $order_count_noactive = 400;
         if ($EqLogics->getConfiguration('UpdateVisible') == true) {
             $_UpdateVisible = true;
-            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('ETAT Option "Afficher uniquement les connectés"', __FILE__)) . ' = :/fg:' . $_UpdateVisible . ' => ' . (__('les équipements avec statut 0 ne seront pas affichés', __FILE__)));
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('ETAT Option "Afficher uniquement les connectés"', __FILE__)) . ' = :/fg:' . $_UpdateVisible . ' :fg-info:───▶︎ ' . (__('Les équipements avec statut 0 ne seront pas affichés', __FILE__) . ':/fg:'));
         } else {
             $_UpdateVisible = false;
-            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('ETAT Option "Afficher uniquement les connectés"', __FILE__)) . ' = :/fg:' . '0' . ' => ' . (__('les équipements avec statut 0 seront affichés', __FILE__)));
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('ETAT Option "Afficher uniquement les connectés"', __FILE__)) . ' = :/fg:' . '0' . ' :fg-info:───▶︎ ' . (__('Les équipements avec statut 0 seront affichés', __FILE__) . ':/fg:'));
         }
 
         if (!isset($result_network_ping['result'])) {
@@ -546,9 +546,9 @@ class Free_Refresh
                     }
                 }
             }
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Appareil(s) connecté(s)', __FILE__)) . ' : ' . $active_list);
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Appareil(s) connecté(s) avec IP Fixe', __FILE__)) . ' : ' . $active_listIP);
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Appareil(s) non connecté(s)', __FILE__)) . ' : ' . $noactive_list);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('Appareil(s) connecté(s)', __FILE__)) . ' ::/fg: ' . $active_list);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('Appareil(s) connecté(s) avec IP Fixe', __FILE__)) . ' ::/fg: ' . $active_listIP);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('Appareil(s) non connecté(s)', __FILE__)) . ' ::/fg: ' . $noactive_list);
         }
     }
 
@@ -583,7 +583,7 @@ class Free_Refresh
     {
         log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Récupération des valeurs du Système', __FILE__)));
         // Config réeseau
-        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: LAN');
+        log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success: ' . (__('Mise à jour', __FILE__)) . ' ::/fg: LAN');
         $para_Config = array('name' => 'TYPE_FREEBOX_NAME', 'mode' => 'TYPE_FREEBOX_MODE');
         $list = 'ip,mode,name';
         $result =  $Free_API->universal_get('network', null, null, 'lan/config/', true, true, true);

@@ -476,7 +476,7 @@ class Free_CreateEq
 
     private static function createEq_download($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['downloadsName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['downloadsName'] . ' ──');
         $iconDownloadsOn = 'fas fa-play icon_green';
         $iconDownloadsOff = 'fas fa-stop icon_red';
         $iconRSSnb = 'fas fa-rss icon_green';
@@ -519,7 +519,7 @@ class Free_CreateEq
     }
     private static function createEq_FreePlug($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['freeplugName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['freeplugName'] . ' ──');
         $updateicon = false;
         $Free_API = new Free_API();
         $iconReboot = 'fas fa-sync icon_red';
@@ -595,7 +595,7 @@ class Free_CreateEq
 
     private static function createEq_parental($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['parentalName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['parentalName'] . ' ──');
         $Free_API = new Free_API();
         $result = $Free_API->universal_get('parentalprofile', null, null, true, true, true, false);
         if (isset($result['result'])) {
@@ -627,7 +627,7 @@ class Free_CreateEq
     }
     private static function createEq_phone($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['phoneName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['phoneName'] . ' ──');
         $iconmissed = 'icon techno-phone1 icon_red';
         $iconaccepted = 'icon techno-phone3 icon_blue';
         $iconoutgoing = 'icon techno-phone2 icon_green';
@@ -653,7 +653,7 @@ class Free_CreateEq
 
     private static function createEq_management($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['managementName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['managementName'] . ' ──');
         $icon_dhcp = 'fas fa-network-wired icon_blue';
         $icon_host_type = 'fas fa-laptop icon_green';
         $icon_method = 'fas fa-list icon_orange';
@@ -723,14 +723,14 @@ class Free_CreateEq
         $updateWidget = false;
         // Pour test Visibilité
         $_IsVisible = 0;
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $_networkname . ': ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $_networkname . ': ──');
         $EqLogic = Freebox_OS::AddEqLogic($_networkname, $_networkID, 'default', false, null, null, null, '*/5 * * * *');
         $EqLogic->AddCommand(__('Rechercher les nouveaux appareils', __FILE__), 'search', 'action', 'other',  $templatecore_V4 . 'line', null, null, true, 'default', 'default', 0, $icon_search, true, 'default', 'default',  $order++, '0', $updateWidget, false, null, true, null, null, null, null, null, null, null, true);
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
     private static function createEq_netshare($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['netshareName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['netshareName'] . ' ──');
         $order = 1;
         $color_on = ' icon_green';
         $color_off = ' icon_red';
@@ -784,7 +784,7 @@ class Free_CreateEq
 
     private static function createEq_network_SP($logicalinfo, $templatecore_V4, $order = 0, $_network = 'LAN', $IsVisible = true)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $_network . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $_network . ' ──');
         $icon_search = null;
         $icon_network = 'fas fa-network-wired icon_green';
         $updateWidget = false;
@@ -817,10 +817,10 @@ class Free_CreateEq
         if (isset($result['result'])) {
             if ($EqLogic->getConfiguration('UpdateName') == 1) {
                 $updatename_disable = 1;
-                log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Mise à jour des noms : non actif', __FILE__)) . ' - ' . $updatename_disable);
+                log::add('Freebox_OS', 'debug', '| └───▶︎ :fg-info:' . (__('Mise à jour des noms', __FILE__)) . ' ::/fg: ' . (__('non actif', __FILE__)));
             } else {
                 $updatename_disable = 0;
-                log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Mise à jour des noms : actif', __FILE__)) . ' - ' . $updatename_disable);
+                log::add('Freebox_OS', 'debug', '| └───▶︎ :fg-info:' . (__('Mise à jour des noms', __FILE__)) . ' ::/fg: ' . (__('actif', __FILE__)));
             }
             $result_network = $result['result'];
 
@@ -917,11 +917,11 @@ class Free_CreateEq
                     }
                 }
             }
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Appareil(s) connecté(s)', __FILE__)) . ' ' . $active_list);
-            log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Appareil(s) non connecté(s)', __FILE__)) . ' ' . $noactive_list);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('Appareil(s) connecté(s)', __FILE__)) . ' ::/fg: ' . $active_list);
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('Appareil(s) non connecté(s)', __FILE__)) . ' ::/fg: ' . $noactive_list);
             $_IsVisible = 0;
             //$_networkname = $logicalinfo['managementName'];
-            log::add('Freebox_OS', 'debug', '| :fg-success:───▶︎ ' . (__('Ajout des commandes spécifiques pour l\'équipement', __FILE__)) . ' : ' . $logicalinfo['managementName'] . ':/fg:');
+            log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-success:' . (__('Ajout des commandes spécifiques pour l\'équipement', __FILE__)) . ' ::/fg: ' . $logicalinfo['managementName']);
             $EqLogic = Freebox_OS::AddEqLogic($logicalinfo['managementName'], $logicalinfo['managementID'], 'default', false, null, null, null, '0 0 1 1 *', null, null, 'system', true, null);
             $host_type = $EqLogic->AddCommand(__('Appareil connecté choisi', __FILE__), 'host_info', 'info', 'string', 'default', null, null, $_IsVisible, 'default', 'default', 0, $icon_network, 0, 'default', 'default', 14, '0', false, true, null, true);
             $EqLogic->AddCommand(__('Sélection appareil connecté', __FILE__), 'host', 'action', 'select', null, null, null, $_IsVisible, $host_type, 'default', 0, $icon_network, 0, 'default', 'default', 15, '0', false, true, null, true, null, null, null, null, null, null, null, null, $network_list, null, null);
@@ -934,14 +934,14 @@ class Free_CreateEq
 
     private static function createEq_notification($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '    . $logicalinfo['notificationName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '    . $logicalinfo['notificationName'] . ' ──');
         $Free_API = new Free_API();
         $Free_API->universal_get('universalAPI', null, null, '/notif/targets', true, true, false);
         log::add('Freebox_OS', 'debug', '└────────────────────');
     }
     private static function createEq_system_full($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '    .  $logicalinfo['systemName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '    .  $logicalinfo['systemName'] . ' ──');
         $system = Freebox_OS::AddEqLogic($logicalinfo['systemName'], $logicalinfo['systemID'], 'default', false, null, null, null, '*/30 * * * *', null, null, 'system', true);
         $order = 10;
         Free_CreateEq::createEq_system($logicalinfo, $templatecore_V4, $order, $system);
@@ -1192,7 +1192,7 @@ class Free_CreateEq
 
     private static function createEq_wifi($logicalinfo, $templatecore_V4, $order = 0)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' ──');
         $updateicon = false;
         $TemplateWifiOnOFF = 'Freebox_OS::Wifi';
         $TemplateWifiPlanningOnOFF = 'Freebox_OS::Planning Wifi';
@@ -1228,7 +1228,7 @@ class Free_CreateEq
 
     private static function createEq_wifi_ap($logicalinfo, $templatecore_V4, $order = 49, $Wifi = null)
     {
-        log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiAPName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiAPName'] . ' ──');
         if ($Wifi != null) {
             $iconWifi = 'fas fa-wifi icon_blue';
             $TemplateWifi = 'Freebox_OS::Wifi Statut carte';
@@ -1249,7 +1249,7 @@ class Free_CreateEq
 
     private static function createEq_wifi_Eco($logicalinfo, $templatecore_V4, $order = 49, $Wifi = null)
     {
-        log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiECOName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiECOName'] . ' ──');
         if ($Wifi != null) {
             $iconWifi = 'fas fa-wifi icon_blue';
             $updateicon = false;;
@@ -1322,7 +1322,7 @@ class Free_CreateEq
 
     private static function createEq_upload($logicalinfo, $templatecore_V4)
     {
-        log::add('Freebox_OS', 'debug', '┌── :fg-success::' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: ' . $logicalinfo['notificationName'] . ' ──');
+        log::add('Freebox_OS', 'debug', '┌── :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: ' . $logicalinfo['notificationName'] . ' ──');
         $Free_API = new Free_API();
         $Free_API->universal_get('upload', null, null, null, null, null);
         log::add('Freebox_OS', 'debug', '└────────────────────');

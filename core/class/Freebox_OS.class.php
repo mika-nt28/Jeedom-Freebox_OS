@@ -630,15 +630,29 @@ class Freebox_OS extends eqLogic
 		if ($updatenetwork != false) {
 			if ($updatenetwork['updatename'] == true) {
 				if ($Name != $Cmd->getName()) {
-					log::add('Freebox_OS', 'debug', '| ───▶︎ ' . (__('Nom différent sur la Freebox', __FILE__)) . ' : ' . $Name . ' -- ' . (__('Nom de la commande Jeedom', __FILE__)) . ' : ' . $Cmd->getName());
+					log::add('Freebox_OS', 'debug', '| ───▶︎ :fg-info:' . (__('Nom différent sur la Freebox', __FILE__)) . ' ::/fg: ' . $Name . ':fg-info: -- ' . (__('Nom de la commande Jeedom', __FILE__)) . ' ::/fg: ' . $Cmd->getName());
 					if ($name_connectivity_type != 'Wifi Ethernet ?') {
-						$Name_verif = $Name . ' (' . ucwords($name_connectivity_type)  . ')';
+						if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name))) {
+							$Name_verif = $Name . ' (' . ucwords($name_connectivity_type)  . ')';
+							log::add('Freebox_OS', 'debug', '|  :fg-warning:└───▶︎  ' . __('Une commande porte déjà ce nom donc ajout du type de connection', __FILE__) . ' ::/fg: ' . $Name_verif);
+						} else {
+							$Name_verif = $Name;
+							log::add('Freebox_OS', 'debug', '|  :fg-success:└───▶︎  ' . __('Aucune commande ne porte ce nom, changement du nom OK', __FILE__) . ' ::/fg: ' . $Name_verif);
+						}
 					} else {
-						$Name_verif = $Name;
+						if (is_object(cmd::byEqLogicIdCmdName($this->getId(), $Name))) {
+							$Name_verif = $Name . ' (' . $updatenetwork['mac_address'] . ')';
+							log::add('Freebox_OS', 'debug', '|  :fg-warning:└───▶︎  ' . __('Une commande porte déjà ce nom donc ajout de l\'adresse MAC', __FILE__) . ' ::/fg: ' . $Name_verif);
+						} else {
+							$Name_verif = $Name;
+							log::add('Freebox_OS', 'debug', '|  :fg-success:└───▶︎  ' . __('Aucune commande ne porte ce nom, changement du nom OK', __FILE__) . ' ::/fg: ' . $Name_verif);
+						}
 					}
 					$Name_wifi = $Name . '(Wifi)';
 					$Name_ethernet = $Name . '(Ethernet)';
-					if ($Name_verif == $Cmd->getName() || $Name_wifi == $Cmd->getName() || $Name_ethernet == $Cmd->getName()) {
+
+
+					if ($Name_verif === $Cmd->getName() || $Name_wifi === $Cmd->getName() || $Name_ethernet === $Cmd->getName()) {
 						$Cmd->setName($Name_verif);
 						$Cmd->save();
 					} else {

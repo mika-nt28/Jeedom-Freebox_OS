@@ -119,6 +119,7 @@
         "Etat CRON Domotique": "Stato CRON Domotica",
         "Etat Lumininosité écran LCD": "Stato di luminosità dello schermo LCD",
         "Etat Luninosité du bandeau LED": "Stato della luce a LED",
+        "Etat Mode Éco-WiFi": "Stato della modalità Eco-WiFi",
         "Etat Orientation": "Orientamento allo stato",
         "Etat Planning": "Stato di pianificazione",
         "Etat WPS": "Stato WPS",
@@ -168,7 +169,6 @@
         "Mode Veille Wifi": "Modalità Sleep Wifi",
         "Mode Veille Wifi pas disponible": "Modalità di sospensione Wifi non disponibile",
         "Mode de veille": "Modalità standby",
-        "Mode Éco-WiFi": "Modalità Eco-WiFi",
         "Modele de Freebox": "Modello Freebox",
         "Module 4G : Non Présent": "Modulo 4G: non presente",
         "Module 4G : Présent": "Modulo 4G: Presente",
@@ -239,6 +239,7 @@
         "Status du disque": "Stato del disco",
         "Stop": "Ferma",
         "Stop Téléchargement": "Stop Download",
+        "Support Mode Éco-WiFi": "Supporto della modalità Eco-WiFi",
         "Sélection Type de périphérique": "Selezione del tipo di dispositivo",
         "Sélection appareil connecté": "Selezione dei dispositivi connessi",
         "Sélection modification Appareil": "Seleziona la modifica del dispositivo",
@@ -403,6 +404,7 @@
         "Appareils connectés Wifi Invité": "Dispositivi connessi al Wifi per gli ospiti",
         "Application Correctif pour prendre en compte fonction Core pour la commande": "Applicazione Fissa per tenere conto della funzione Core per il controllo",
         "Arrêt": "Arresto",
+        "Aucune commande ne porte ce nom, changement du nom  OK": "Nessun comando ha questo nome, cambio nome OK",
         "Aucune commande ne porte ce nom, changement du nom OK": "Nessun comando ha questo nome, cambio nome OK",
         "Calcul": "Calcolo",
         "Catégorie": "Categoria",
@@ -441,6 +443,7 @@
         "Nom Information": "Nome Informazioni",
         "Nom de la commande Jeedom": "Nome del comando Jeedom",
         "Nom différent sur la Freebox": "Nome diverso su Freebox",
+        "Nom différent sur la Freebox pour la commande Wifi": "Nome diverso sul Freebox per il controllo Wifi",
         "Nom du type de Box": "Nome del tipo di scatola",
         "Notification": "Notifiche",
         "Objet": "Oggetto",
@@ -471,6 +474,7 @@
         "Type de générique": "Tipo di crediti",
         "Téléchargements": "Download",
         "Téléphone": "Telefono",
+        "Une commande porte déjà ce nom": "Un comando ha già questo nome",
         "Une commande porte déjà ce nom donc ajout de l\\'adresse MAC": "Un comando ha già questo nome, quindi aggiungere l'indirizzo MAC",
         "Une commande porte déjà ce nom donc ajout du type de connection": "Un comando ha già questo nome, quindi aggiungete il tipo di connessione",
         "Version actuelle dans la base": "Versione attuale nel database",
@@ -755,6 +759,7 @@
         "Mise à jour Plugin": "Aggiornamento dei plugin",
         "Mise à jour de la version API en V11": "Versione API aggiornata alla V11",
         "Mise à jour des nouveautées + corrections des commandes": "Aggiornamento dei nuovi prodotti + correzioni dei comandi",
-        "Mise à jour du paramétrage Plugin tiles": "Aggiornamento delle impostazioni Tessere del plugin"
+        "Mise à jour du paramétrage Plugin tiles": "Aggiornamento delle impostazioni Tessere del plugin",
+        "Support Mode Éco-WiFi": "Supporto della modalità Eco-WiFi"
     }
 }

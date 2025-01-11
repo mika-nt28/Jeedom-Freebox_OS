@@ -135,6 +135,18 @@ class Free_Template
 				'#_time_widget_#' => '1'
 			)
 		);
+		// Template pour le Wifi (action)
+		$return['action']['other']['Mode Eco Wifi'] = array(
+			'template' => 'tmplicon',
+			'display' => array(
+				'#icon#' => '<i class=\'icon_orange icon fas fa-wifi\'></i>',
+			),
+			'replace' => array(
+				'#_icon_on_#' => '<i class=\'icon_green icon fas fa-wifi\'></i>',
+				'#_icon_off_#' => '<i class=\'icon_red icon fas fa-wifi\'></i>',
+				'#_time_widget_#' => '1'
+			)
+		);
 		// Template pour l'état des VM (info)
 		$return['info']['string']['VM'] = array(
 			'template' => 'tmplmultistate',

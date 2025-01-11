@@ -128,6 +128,13 @@ function Freebox_OS_update()
 			UpdateLogicalId($eqLogic, 'nbmissed', 'missed', null);
 			UpdateLogicalId($eqLogic, 'nbaccepted', 'accepted', null);
 			UpdateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
+			//Changement Nom Support Mode Éco-WiFi 20250111
+			UpdateLogicalId($eqLogic, 'has_eco_wifi', null, null, __('Support Mode Éco-WiFi', __FILE__));
+			UpdateLogicalId($eqLogic, 'planning_mode', null, null, __('Etat Mode de veille planning', __FILE__));
+			UpdateLogicalId($eqLogic, 'wifiPlanningOn', 'use_planningOn', null, null);
+			UpdateLogicalId($eqLogic, 'wifiPlanningOff', 'use_planningOff', null, null);
+			UpdateLogicalId($eqLogic, 'wifiOn', 'wifiStatutOn', null, null);
+			UpdateLogicalId($eqLogic, 'wifiOff', 'wifiStatutOff', null, null);
 		}
 		$eq_version = '2.2';
 		Freebox_OS::updateLogicalID($eq_version, true);
@@ -199,7 +206,7 @@ function updateLogicalId($eqLogic, $from, $to, $_historizeRound = null, $name = 
 			$Cmd->setConfiguration('historizeRound', $_historizeRound);
 		}
 		if ($name != null) {
-			//$command->setName($name);
+			$Cmd->setName($name);
 		}
 		if ($unite != null) {
 			if ($unite == 'DELETE') {

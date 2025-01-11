@@ -1095,9 +1095,9 @@ class Free_CreateEq
                                     if ($Equipement['type'] == 'dsl_lte') {
                                         // Début ajout 4G
                                         $order = 31;
-                                        $_4G = $system->AddCommand(__('Etat 4G', __FILE__), '4GStatut', "info", 'binary', null . 'line', null, null, 0, '', '4G', '', '', 1, 'default', 'default', $order++, '0', false, 'never', null, true);
-                                        $system->AddCommand(__('4G On', __FILE__), '4GOn', 'action', 'other', $Template4G, null, 'ENERGY_ON', 1, $_4G, '4GStatut', 0, $icon4Gon, 1, 'default', 'default', $order++, '0', false, false, null, true);
-                                        $system->AddCommand(__('4G Off', __FILE__), '4GOff', 'action', 'other', $Template4G, null, 'ENERGY_OFF', 1, $_4G, '4GStatut', 0, $icon4Goff, 0, 'default', 'default', $order++, '0', false, false, null, true);
+                                        $_4G = $system->AddCommand(__('Etat 4G', __FILE__), '4GStatut', "info", 'binary', $templatecore_V4 . 'line', null, 'SWITCH_STATE', 0, '', '4G', '', '', 1, 'default', 'default', $order++, '0', false, 'never', null, true);
+                                        $system->AddCommand(__('4G On', __FILE__), '4GOn', 'action', 'other', $Template4G, null, 'STATE_ON', 1, $_4G, '4GStatut', 0, $icon4Gon, 1, 'default', 'default', $order++, '0', false, false, null, true);
+                                        $system->AddCommand(__('4G Off', __FILE__), '4GOff', 'action', 'other', $Template4G, null, 'STATE_OFF', 1, $_4G, '4GStatut', 0, $icon4Goff, 0, 'default', 'default', $order++, '0', false, false, null, true);
                                         $system->AddCommand(__('Etat du réseau 4G', __FILE__), 'state_lte', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', false, false, null, true);
                                         $system->AddCommand(__('Etat de la radio 4G', __FILE__), 'associated_lte', 'info', 'binary', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', false, false, null, true);
                                     }
@@ -1205,9 +1205,9 @@ class Free_CreateEq
         $iconWifiWPSOff = 'fas fa-ethernet icon_red';
 
         $Wifi = Freebox_OS::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null, null, '*/5 * * * *', null, null, 'system', true, null);
-        $StatusWifi = $Wifi->AddCommand(__('Etat Wifi', __FILE__), 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateicon, true);
-        $Wifi->AddCommand(__('Wifi On', __FILE__), 'wifiStatutOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
-        $Wifi->AddCommand(__('Wifi Off', __FILE__), 'wifiStatutOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 11, '0', $updateicon, false);
+        $StatusWifi = $Wifi->AddCommand(__('Etat Wifi', __FILE__), 'wifiStatut', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateicon, true);
+        $Wifi->AddCommand(__('Wifi On', __FILE__), 'wifiStatutOn', 'action', 'other', $TemplateWifiOnOFF, null, 'SWITCH_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
+        $Wifi->AddCommand(__('Wifi Off', __FILE__), 'wifiStatutOff', 'action', 'other', $TemplateWifiOnOFF, null, 'SWITCH_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 11, '0', $updateicon, false);
         // Planification Wifi
         $PlanningWifi = $Wifi->AddCommand(__('Etat Planning', __FILE__), 'use_planning', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateicon, true);
         $Wifi->AddCommand(__('Wifi Planning On', __FILE__), 'use_planningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'SWITCH_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 12, '0', $updateicon, false);

@@ -710,6 +710,12 @@ class Free_Update
                 case 'mac_filter_state':
                     $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state');
                     break;
+                case 'mode_planning':
+                    $option = array(
+                        'planning_mode' => $_options['select']
+                    );
+                    $Free_API->universal_put(1, 'universal_put', null, null, 'standby/config', 'PUT', $option);
+                    break;
                 case 'wifiStatutOn':
                 case 'wifiStatutOff':
                 case 'power_savingOn':

@@ -1240,8 +1240,7 @@ class Free_CreateEq
             if ($result != false) {
                 for ($k = 0; $k < $nb_card; $k++) {
                     log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Nom de la commande', __FILE__)) . ' : ' .  (__('Etat Wifi', __FILE__)) . ' ' . $result['result'][$k]['name'] . ' - Id : ' . $result['result'][$k]['id'] . ' - ' . (__('Status', __FILE__)) . ' : ' . $result['result'][$k]['status']['state']);
-                    $Wifi->AddCommand('Etat Wifi ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, null, 'CARD', 0, $iconWifi, false, 'default', 'default', $order++, '0', $updateicon, false, false, true);
-                    $Wifi->AddCommand(__('Etat Wifi', __FILE__) . ' ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, null, 'CARD', 0, $iconWifi, false, 'default', 'default', $order++, '0', $updateicon, false, false, true);
+                    $Wifi->AddCommand(__('Etat Wifi', __FILE__) . ' ' . $result['result'][$k]['name'], $result['result'][$k]['id'], 'info', 'string', $TemplateWifi, null, null, 1, 'CARD', 0, $iconWifi, false, 'default', 'default', $order++, '0', $updateicon, false, false, true);
                 }
             }
         }
@@ -1251,13 +1250,15 @@ class Free_CreateEq
     {
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:' . (__('Début de création des commandes pour', __FILE__)) . ' ::/fg: '  . $logicalinfo['wifiName'] . ' / ' . $logicalinfo['wifiECOName'] . ' ──');
         if ($Wifi != null) {
-            $iconWifi = 'fas fa-wifi icon_blue';
+            $iconWifi = 'fas fa-wifi icon_red';
+            $iconpower_saving = 'fas fa-wifi icon_orange';
             $updateicon = false;;
             $Free_API = new Free_API();
             $result = $Free_API->universal_get('system', null, null, null, true, true, null);
 
             if (isset($result['model_info']['has_eco_wifi'])) {
-                $Wifi->AddCommand(__('Mode Éco-WiFi', __FILE__), 'has_eco_wifi', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconWifi, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+                $Wifi->AddCommand(__('Support Mode Éco-WiFi', __FILE__), 'has_eco_wifi', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconWifi, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+                $power_saving = $Wifi->AddCommand(__('Etat Mode Éco-WiFi', __FILE__), 'power_saving', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconpower_saving, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
             } else {
                 config::save('FREEBOX_HAS_ECO_WFI', 0, 'Freebox_OS');
                 log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Pas de mode Eco non supporté', __FILE__)));

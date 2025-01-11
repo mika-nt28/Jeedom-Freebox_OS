@@ -1093,7 +1093,7 @@ class Free_Refresh
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
 
         log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: ' . (__('Configuration', __FILE__)));
-        $list = 'mac_filter_state,enabled';
+        $list = 'mac_filter_state,enabled,power_saving';
         $para_LogicalId = array('enabled' => 'wifiStatut');
         $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
         $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
@@ -1119,7 +1119,7 @@ class Free_Refresh
                 $Card_id = $result_ap['result'][$k]['id'];
                 foreach ($EqLogics->getCmd('info') as $Cmd) {
                     if ($Cmd->getLogicalId('data') == $Card_id) {
-                        if ($Cmd->getConfiguration('logicalId') == 'CARD') {
+                        if ($Cmd->getConfiguration('WIFI_CARD') == 'CARD') {
                             $EqLogics->checkAndUpdateCmd($Card_id, $Card_value);
                             log::add('Freebox_OS', 'debug', ':fg-info:───▶︎ ' . $Cmd->getName() . ' ::/fg: ' . $Card_value . ' ' . $Cmd->getUnite());
                         }

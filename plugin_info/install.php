@@ -201,7 +201,7 @@ function updateLogicalId($eqLogic, $from, $to, $_historizeRound = null, $name = 
 			$Cmd->setConfiguration('historizeRound', $_historizeRound);
 		}
 		if ($name != null) {
-			//$command->setName($name);
+			$Cmd->setName($name);
 		}
 		if ($unite != null) {
 			if ($unite == 'DELETE') {

@@ -636,10 +636,12 @@ class Free_API
                 $config_log = (__('Mise à jour de', __FILE__)) . ' : ';
                 break;
         }
-        if ($parametre['value_type'] === 'bool' && $parametre['value'] === 1) {
-            $parametre['value'] = 'true';
-        } elseif ($parametre['value_type'] === 'bool' && $parametre['value'] === 0) {
-            $parametre['value'] = 'false';
+        if (isset($parametre['value_type'])) {
+            if ($parametre['value_type'] === 'bool' && $parametre['value'] === 1) {
+                $parametre['value'] = 'true';
+            } elseif ($parametre['value_type'] === 'bool' && $parametre['value'] === 0) {
+                $parametre['value'] = 'false';
+            }
         } elseif ($parametre == '0') {
             $parametre = false;
         } elseif ($parametre == '1') {

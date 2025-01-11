@@ -130,6 +130,11 @@ function Freebox_OS_update()
 			UpdateLogicalId($eqLogic, 'nboutgoing', 'outgoing', null);
 			//Changement Nom Support Mode Éco-WiFi 20250111
 			UpdateLogicalId($eqLogic, 'has_eco_wifi', null, null, __('Support Mode Éco-WiFi', __FILE__));
+			UpdateLogicalId($eqLogic, 'planning_mode', null, null, __('Etat Mode de veille planning', __FILE__));
+			UpdateLogicalId($eqLogic, 'wifiPlanningOn', 'use_planningOn', null, null);
+			UpdateLogicalId($eqLogic, 'wifiPlanningOff', 'use_planningOff', null, null);
+			UpdateLogicalId($eqLogic, 'wifiOn', 'wifiStatutOn', null, null);
+			UpdateLogicalId($eqLogic, 'wifiOff', 'wifiStatutOff', null, null);
 		}
 		$eq_version = '2.2';
 		Freebox_OS::updateLogicalID($eq_version, true);

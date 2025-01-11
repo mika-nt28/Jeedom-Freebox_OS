@@ -1103,7 +1103,7 @@ class Free_Refresh
         log::add('Freebox_OS', 'debug', '──────────▶︎ :fg-success:' . (__('Mise à jour', __FILE__)) . ' ::/fg: WPS');
         $list = 'enabled';
         $para_LogicalId = array('enabled' => 'wifiWPS');
-        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/config', true, true, true);
+        $result = $Free_API->universal_get('universalAPI', null, null, 'wifi/wps/config', true, true, true);
         $para_resultWI = array('nb' => 1, 1 => 'result', 2 => null, 3 => null);
         Free_Refresh::refresh_VALUE($EqLogics, $result, $list, $para_resultWI, $para_LogicalId, $para_Value, $para_Config, $log_Erreur, $para_Value_calcul);
         $para_LogicalId = null;

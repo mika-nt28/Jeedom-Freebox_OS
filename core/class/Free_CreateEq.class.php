@@ -1206,12 +1206,12 @@ class Free_CreateEq
 
         $Wifi = Freebox_OS::AddEqLogic($logicalinfo['wifiName'], $logicalinfo['wifiID'], 'default', false, null, null, null, '*/5 * * * *', null, null, 'system', true, null);
         $StatusWifi = $Wifi->AddCommand(__('Etat Wifi', __FILE__), 'wifiStatut', "info", 'binary', null, null, 'ENERGY_STATE', 0, '', '', '', '', 0, 'default', 'default', 1, 1, $updateicon, true);
-        $Wifi->AddCommand(__('Wifi On', __FILE__), 'wifiOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
-        $Wifi->AddCommand(__('Wifi Off', __FILE__), 'wifiOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 11, '0', $updateicon, false);
+        $Wifi->AddCommand(__('Wifi On', __FILE__), 'wifiStatutOn', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_ON', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOn, 0, 'default', 'default', 10, '0', $updateicon, false);
+        $Wifi->AddCommand(__('Wifi Off', __FILE__), 'wifiStatutOff', 'action', 'other', $TemplateWifiOnOFF, null, 'ENERGY_OFF', 1, $StatusWifi, 'wifiStatut', 0, $iconWifiOff, 0, 'default', 'default', 11, '0', $updateicon, false);
         // Planification Wifi
         $PlanningWifi = $Wifi->AddCommand(__('Etat Planning', __FILE__), 'use_planning', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', 2, $updateicon, true);
-        $Wifi->AddCommand(__('Wifi Planning On', __FILE__), 'wifiPlanningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'SWITCH_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 12, '0', $updateicon, false);
-        $Wifi->AddCommand(__('Wifi Planning Off', __FILE__), 'wifiPlanningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'SWITCH_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 13, '0', $updateicon, false);
+        $Wifi->AddCommand(__('Wifi Planning On', __FILE__), 'use_planningOn', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'SWITCH_ON', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOn, 0, 'default', 'default', 12, '0', $updateicon, false);
+        $Wifi->AddCommand(__('Wifi Planning Off', __FILE__), 'use_planningOff', 'action', 'other', $TemplateWifiPlanningOnOFF, null, 'SWITCH_OFF', 1, $PlanningWifi, 'wifiPlanning', 0, $iconWifiPlanningOff, 0, 'default', 'default', 13, '0', $updateicon, false);
         $order = 49;
         Free_CreateEq::createEq_wifi_ap($logicalinfo, $templatecore_V4, $order, $Wifi);
         $order = 29;
@@ -1252,13 +1252,17 @@ class Free_CreateEq
         if ($Wifi != null) {
             $iconWifi = 'fas fa-wifi icon_red';
             $iconpower_saving = 'fas fa-wifi icon_orange';
-            $updateicon = false;;
+            $iconWifiOn = 'fas fa-wifi icon_green';
+            $iconWifiOff = 'fas fa-wifi icon_red';
+            $TemplateEcoWifi = 'Freebox_OS::Mode Eco Wifi';
             $Free_API = new Free_API();
             $result = $Free_API->universal_get('system', null, null, null, true, true, null);
 
             if (isset($result['model_info']['has_eco_wifi'])) {
-                $Wifi->AddCommand(__('Support Mode Éco-WiFi', __FILE__), 'has_eco_wifi', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconWifi, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
-                $power_saving = $Wifi->AddCommand(__('Etat Mode Éco-WiFi', __FILE__), 'power_saving', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconpower_saving, 0, 'default', 'default',  $order++, '0', $updateicon, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+                $Wifi->AddCommand(__('Support Mode Éco-WiFi', __FILE__), 'has_eco_wifi', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconWifi, 0, 'default', 'default',  $order++, '0', false, true, null, null, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+                $power_saving = $Wifi->AddCommand(__('Etat Mode Éco-WiFi', __FILE__), 'power_saving', 'info', 'binary',  $templatecore_V4 . 'line', null, null, 0, 'default', 'default',  0, $iconpower_saving, 1, 'default', 'default',  $order++, true, false, true, null, true, null, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
+                $Wifi->AddCommand(__('Mode Éco-WiFi On', __FILE__), 'power_savingOn', 'action', 'other', $TemplateEcoWifi, null, 'SWITCH_ON', 1, $power_saving, null, 0, $iconWifiOn, 0, 'default', 'default', $order++, '0', false, false);
+                $Wifi->AddCommand(__('Mode Éco-WiFi Off', __FILE__), 'power_savingOff', 'action', 'other', $TemplateEcoWifi, null, 'SWITCH_OFF', 1, $power_saving, null, 0, $iconWifiOff, 0, 'default', 'default', $order++, '0', false, false);
             } else {
                 config::save('FREEBOX_HAS_ECO_WFI', 0, 'Freebox_OS');
                 log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Pas de mode Eco non supporté', __FILE__)));
@@ -1302,7 +1306,7 @@ class Free_CreateEq
         log::add('Freebox_OS', 'debug', '| ──────▶︎ :fg-success:' . (__('Début de création des commandes spécifiques pour', __FILE__)) . ' ::/fg: ' . $logicalinfo['wifistandbyName'] . ' ──');
         $updateicon = false;
         if ($Wifi != null) {
-            $Wifi->AddCommand(__('Mode de veille', __FILE__), 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
+            $Wifi->AddCommand(__('Etat Mode de veille planning', __FILE__), 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
         }
     }
 

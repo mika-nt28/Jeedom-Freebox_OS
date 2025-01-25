@@ -704,36 +704,51 @@ class Free_Update
     }
     private static function update_wifi($logicalId, $logicalId_type, $logicalId_eq, $Free_API, $_options)
     {
+        $value = false;
         if ($logicalId != 'refresh') {
             switch ($logicalId) {
                 case 'mac_filter_state':
                     $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state');
                     break;
-                case 'add_del_mac';
-                    // Commande a supprimer
-                    log::add('Freebox_OS', 'ERROR', '│ ' . (__('METHODE OBSOLETE => MERCI DE REGARDER LA DOCUMENTATION', __FILE__)));
-                    if ($_options['function'] == null || $_options['filter'] == null || $_options['mac_address'] == null) {
-                        log::add('Freebox_OS', 'error', (__('Méthode Filtrage  ou type de Filtrage incorrect', __FILE__)));
-                        break;
+                case 'mode_planning':
+                    $option = array(
+                        'planning_mode' => $_options['select']
+                    );
+                    $Free_API->universal_put(1, 'universal_put', null, null, 'standby/config', 'PUT', $option);
+                    break;
+                case 'wifiStatutOn':
+                case 'wifiStatutOff':
+                case 'power_savingOn':
+                case 'power_savingOff':
+                    if ($logicalId == 'wifiStatutOn' || $logicalId == 'wifiStatutOff') {
+                        $param = 'enabled';
+                    } else {
+                        $param = 'power_saving';
                     }
-                    $Free_API->universal_put(null, 'wifi', $_options['mac_address'], null, 'mac_filter', null, $_options);
-                case 'wifiOn':
-                    $Free_API->universal_put(1, 'wifi', null, null, 'config', null, null);
+                    if ($logicalId == 'wifiStatutOn' || $logicalId == 'power_savingOn') {
+                        $value = true;
+                    }
+                    $option = array(
+                        $param =>  $value,
+                    );
+                    $Free_API->universal_put(1, 'universal_put', null, null, 'wifi/config', 'PUT', $option);
                     break;
-                case 'wifiOff':
-                    $Free_API->universal_put(0, 'wifi', null, null, 'config', null, null);
-                    break;
-                case 'wifiPlanningOn':
-                    $Free_API->universal_put(1, 'wifi', null, null, 'planning', null, null);
-                    break;
-                case 'wifiPlanningOff':
-                    $Free_API->universal_put(0, 'wifi', null, null, 'planning', null, null);
+                case 'use_planningOn':
+                case 'use_planningOff':
+                    if ($logicalId == 'use_planningOn') {
+                        $value = true;
+                    }
+                    $option = array(
+                        "use_planning" =>  $value,
+                    );
+                    $Free_API->universal_put(1, 'universal_put', null, null, 'wifi/planning', 'PUT', $option);
                     break;
                 case 'wifiSessionWPSOff':
                 case 'wifiWPSOff':
                     $parametre = 1;
                     $Free_API->universal_put($parametre, 'wifi', null, null, 'wps/stop', null, null);
                     break;
+
                 default:
                     $Free_API->universal_put($logicalId, 'wifi', null, null, 'wps/start', null, null);
                     break;

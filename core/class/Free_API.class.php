@@ -598,9 +598,7 @@ class Free_API
                 break;
             case 'wifi':
                 $config = 'api/' . $API_version . '/wifi/' . $_options;
-                if ($_options == 'planning') {
-                    $cmd_config = 'use_planning';
-                } else if ($_options == 'wps/start') {
+                if ($_options == 'wps/start') {
                     $fonction = "POST";
                     $cmd_config = 'bssid';
                 } else if ($_options == 'wps/stop') {
@@ -625,7 +623,7 @@ class Free_API
                 } else {
                     $cmd_config = 'enabled';
                 }
-                if ($_options == 'planning' || $_options == 'wifi') {
+                if ($_options == 'wifi') {
                     $config_log = (__('Mise à jour de : Etat du Wifi', __FILE__)) . ' ' . $_options;
                 } else {
                     $config_log = null;
@@ -638,10 +636,12 @@ class Free_API
                 $config_log = (__('Mise à jour de', __FILE__)) . ' : ';
                 break;
         }
-        if ($parametre['value_type'] === 'bool' && $parametre['value'] === 1) {
-            $parametre['value'] = 'true';
-        } elseif ($parametre['value_type'] === 'bool' && $parametre['value'] === 0) {
-            $parametre['value'] = 'false';
+        if (isset($parametre['value_type'])) {
+            if ($parametre['value_type'] === 'bool' && $parametre['value'] === 1) {
+                $parametre['value'] = 'true';
+            } elseif ($parametre['value_type'] === 'bool' && $parametre['value'] === 0) {
+                $parametre['value'] = 'false';
+            }
         } elseif ($parametre == '0') {
             $parametre = false;
         } elseif ($parametre == '1') {
@@ -677,11 +677,8 @@ class Free_API
             switch ($update) {
                 case 'wifi':
                 case '4G':
-                    if ($_options == 'planning') {
-                        return $return['result']['use_planning'];
-                    } else {
-                        return $return['result']['enabled'];
-                    };
+                    return $return['result']['enabled'];
+
                     break;
                 case 'settile':
                     return $return['result'];

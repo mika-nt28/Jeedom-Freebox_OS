@@ -190,8 +190,7 @@ class Free_CreateEq
         }
         // board_Name
         config::save('FREEBOX_VM', $has_vm, 'Freebox_OS');
-        log::add('Freebox_OS', 'info', '| :fg-info:───▶︎  ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: ' . config::byKey('VM_FREEBOX', 'Freebox_OS'));
-
+        // Compatibilité LED Rouges
         if (isset($result['model_info']['has_led_strip'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_led_strip']);
             $has_led_strip = $result['model_info']['has_led_strip'];
@@ -199,6 +198,16 @@ class Free_CreateEq
             $has_led_strip = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
+        // Compatibilité mode Eco Wfi
+        if (isset($result['model_info']['has_eco_wifi'])) {
+            $has_eco_wifi = 1;
+            log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_eco_wifi']);
+        } else {
+            $has_eco_wifi = 0;
+            log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . (__('Non', __FILE__)));
+        }
+        config::save('FREEBOX_HAS_ECO_WFI', 0, $has_eco_wifi);
+
         if (isset($result['model_info']['has_lcd_orientation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_lcd_orientation']);
             $has_lcd_orientation = $result['model_info']['has_lcd_orientation'];
@@ -232,6 +241,7 @@ class Free_CreateEq
             'has_vm' => $has_vm,
             'has_home_automation' => $has_home_automation,
             'has_home_box' => $has_home_box,
+            'has_eco_wifi' => $has_eco_wifi,
             'has_led_strip' => $has_led_strip,
             'has_lcd_orientation' => $has_lcd_orientation,
             'disk_status_description' => $disk_status_description,

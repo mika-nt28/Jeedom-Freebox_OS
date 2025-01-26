@@ -874,23 +874,23 @@ class Freebox_OS extends eqLogic
 	{
 		$box = "Box [" . config::byKey('TYPE_FREEBOX', 'Freebox_OS') . '] ; Box_name [' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS') . ']';
 		$box_Firmware = "Firmware [" . config::byKey('TYPE_FIRMWARE', 'Freebox_OS') . ']';
-		$box_mode = "Mode [" . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') . ']';
+		$box_mode = (__('Mode', __FILE__)) . ' [' . config::byKey('TYPE_FREEBOX_MODE', 'Freebox_OS') . ']';
 		$IP = "IP Box [" . config::byKey('FREEBOX_SERVER_IP', 'Freebox_OS') . ']';
 		$ligne1 = $box . ' ; ' . $box_Firmware . ' ; ' . $box_mode . ' ; ' . $IP;
 
-		$Name = "Nom [" . config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS') . ']';
+		$Name = (__('Nom', __FILE__)) . ' [' . config::byKey('FREEBOX_SERVER_DEVICE_NAME', 'Freebox_OS') . ']';
 		$API = "API [" . config::byKey('FREEBOX_API', 'Freebox_OS') . ']';
-		$tiles = "Freebox Compatible Tiles [" . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') . ']';
-		$tiles_cron = "Cron Tiles [" . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') . ']';
+		$tiles = (__('Box compatible avec la domotique', __FILE__)) . ' [' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') . ']';
+		$tiles_cron = (__('Cron pour la domotique', __FILE__)) . ' [' .  config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') . ']';
 		$VM = (__('Box compatible avec les VM', __FILE__)) . ' [' . config::byKey('FREEBOX_VM', 'Freebox_OS') . ']';
 		$ligne2 = $Name . ' ; ' . $API . ' ; ' . $tiles . ' ; ' . $tiles_cron . ' ; ' . $VM;
 
 		$SEARCH_EQ = "EQ [" . config::byKey('SEARCH_EQ', 'Freebox_OS') . ']';
 		$SEARCH_TILES = "Tiles [" . config::byKey('SEARCH_TILES', 'Freebox_OS') . ']';
-		$SEARCH_PARENTAL = "Parental [" . config::byKey('SEARCH_PARENTAL', 'Freebox_OS') . ']';
+		$SEARCH_PARENTAL = (__('Parental', __FILE__)) . ' [' . config::byKey('SEARCH_PARENTAL', 'Freebox_OS') . ']';
 		$ligne3 = 'Scans : ' . $SEARCH_EQ . ' ; ' . $SEARCH_TILES . ' ; ' . $SEARCH_PARENTAL;
 
-		$SEARCH_ECO = "ECO WIFI DISPO : [" . config::byKey('FREEBOX_HAS_ECO_WFI', 'Freebox_OS') . ']';
+		$SEARCH_ECO =  (__('Support mode Eco WFI', __FILE__)) . ' [' . config::byKey('FREEBOX_HAS_ECO_WFI', 'Freebox_OS') . ']';
 		$ligne4 = $SEARCH_ECO;
 
 		$FreeboxInfo = '<br>```<br>' . $ligne1 . '<br>' . $ligne2 . '<br>' . $ligne3 . '<br>' . $ligne4 . '<br>```	';

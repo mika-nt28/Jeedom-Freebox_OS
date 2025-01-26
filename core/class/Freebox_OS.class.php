@@ -891,8 +891,9 @@ class Freebox_OS extends eqLogic
 		$ligne3 = 'Scans : ' . $SEARCH_EQ . ' ; ' . $SEARCH_TILES . ' ; ' . $SEARCH_PARENTAL;
 
 		$WFI_ECO =  __('Box compatible avec le mode Eco Wifi', __FILE__) .  ' [' . config::byKey('FREEBOX_HAS_ECO_WFI', 'Freebox_OS') . ']';
-		$LED_RD =  __('Box compatible avec les LED rouges', __FILE__) .  ' [' . config::byKey('FREEBOX_LED_RD', 'Freebox_OS') . ']';
-		$ligne4 = $WFI_ECO . ' ; ' . $LED_RD;
+		$LCD_LED_RD =  __('Box compatible avec les LED rouges', __FILE__) .  ' [' . config::byKey('FREEBOX_LED_RD', 'Freebox_OS') . ']';
+		$LCD_TEXTE =  __('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__) .  ' [' . config::byKey('FREEBOX_LCD_TEXTE', 'Freebox_OS') . ']';
+		$ligne4 = $WFI_ECO . ' ; ' . $LCD_LED_RD . ' ; ' . $LCD_TEXTE;
 
 		$FreeboxInfo = '<br>```<br>' . $ligne1 . '<br>' . $ligne2 . '<br>' . $ligne3 . '<br>' . $ligne4 . '<br>```	';
 		return $FreeboxInfo;

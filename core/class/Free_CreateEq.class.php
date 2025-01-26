@@ -181,6 +181,8 @@ class Free_CreateEq
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Etat du disque', __FILE__)) . ' ::/fg: ' . $result['disk_status'] . ' / ' . $disk_status_description);
             $disk_status = $result['disk_status'];
         }
+
+        // Compatibilité VM
         if (isset($result['model_info']['has_vm'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_vm']);
             $has_vm = $result['model_info']['has_vm'];
@@ -188,8 +190,8 @@ class Free_CreateEq
             $has_vm = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
-        // board_Name
         config::save('FREEBOX_VM', $has_vm, 'Freebox_OS');
+
         // Compatibilité LED Rouges
         if (isset($result['model_info']['has_led_strip'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_led_strip']);
@@ -210,6 +212,7 @@ class Free_CreateEq
         }
         config::save('FREEBOX_HAS_ECO_WFI', $has_eco_wifi, 'Freebox_OS');
 
+        // Compatibilité oritentation texte
         if (isset($result['model_info']['has_lcd_orientation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_lcd_orientation']);
             $has_lcd_orientation = $result['model_info']['has_lcd_orientation'];
@@ -217,6 +220,9 @@ class Free_CreateEq
             $has_lcd_orientation = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
+        config::save('FREEBOX_LCD_TEXTE', $has_led_strip, 'Freebox_OS');
+
+        // Compatibilité Domotique
         if (isset($result['model_info']['has_home_automation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_vm']);
             $has_home_automation = $result['model_info']['has_home_automation'];
@@ -239,6 +245,7 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec la domotique', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
 
+        // Ecriture variable
         $Setting = array(
             'has_vm' => $has_vm,
             'has_home_automation' => $has_home_automation,
@@ -1282,7 +1289,6 @@ class Free_CreateEq
                 $Wifi->AddCommand(__('Mode Éco-WiFi On', __FILE__), 'power_savingOn', 'action', 'other', $TemplateEcoWifi, null, 'SWITCH_ON', 1, $power_saving, null, 0, $iconWifiOn, 0, 'default', 'default', $order++, '0', false, false);
                 $Wifi->AddCommand(__('Mode Éco-WiFi Off', __FILE__), 'power_savingOff', 'action', 'other', $TemplateEcoWifi, null, 'SWITCH_OFF', 1, $power_saving, null, 0, $iconWifiOff, 0, 'default', 'default', $order++, '0', false, false);
             } else {
-                config::save('FREEBOX_HAS_ECO_WFI', 0, 'Freebox_OS');
                 log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Pas de mode Eco non supporté', __FILE__)));
             }
         }

@@ -195,16 +195,17 @@ class Free_CreateEq
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_led_strip']);
             $has_led_strip = $result['model_info']['has_led_strip'];
         } else {
-            $has_led_strip = false;
+            $has_led_strip = '0';
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
         config::save('FREEBOX_LED_RD', $has_led_strip, 'Freebox_OS');
+
         // Compatibilité mode Eco Wfi
         if (isset($result['model_info']['has_eco_wifi'])) {
             $has_eco_wifi = 1;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_eco_wifi']);
         } else {
-            $has_eco_wifi = false;
+            $has_eco_wifi = '0';
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . (__('Non', __FILE__)));
         }
         config::save('FREEBOX_HAS_ECO_WFI', $has_eco_wifi, 'Freebox_OS');

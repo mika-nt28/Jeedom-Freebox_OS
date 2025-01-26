@@ -882,7 +882,8 @@ class Freebox_OS extends eqLogic
 		$API = "API [" . config::byKey('FREEBOX_API', 'Freebox_OS') . ']';
 		$tiles = "Freebox Compatible Tiles [" . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS') . ']';
 		$tiles_cron = "Cron Tiles [" . config::byKey('FREEBOX_TILES_CRON', 'Freebox_OS') . ']';
-		$ligne2 = $Name . ' ; ' . $API . ' ; ' . $tiles . ' ; ' . $tiles_cron;
+		$VM = (__('Box compatible avec les VM', __FILE__)) . ' [' . config::byKey('FREEBOX_VM', 'Freebox_OS') . ']';
+		$ligne2 = $Name . ' ; ' . $API . ' ; ' . $tiles . ' ; ' . $tiles_cron . ' ; ' . $VM;
 
 		$SEARCH_EQ = "EQ [" . config::byKey('SEARCH_EQ', 'Freebox_OS') . ']';
 		$SEARCH_TILES = "Tiles [" . config::byKey('SEARCH_TILES', 'Freebox_OS') . ']';

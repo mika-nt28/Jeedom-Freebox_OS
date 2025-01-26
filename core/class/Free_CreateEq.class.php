@@ -155,7 +155,7 @@ class Free_CreateEq
                     log::add('Freebox_OS', 'debug', '| ───▶︎ ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
                 }
                 log::add('Freebox_OS', 'debug', '┌── :fg-success: ' . (__('Vérification Compatibilité avec l\'option VM', __FILE__)) . ' :/fg:──');
-                if ($Setting['has_home_box'] == true) {
+                if ($Setting['has_vm'] == true) {
                     log::add('Freebox_OS', 'debug', '| :fg-info:───▶︎ ' . (__('BOX COMPATIBLE AVEC LES VM', __FILE__)) . ':/fg:');
                     Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4, $order);
                 } else {
@@ -189,7 +189,7 @@ class Free_CreateEq
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
         // board_Name
-        config::save('VM_FREEBOX', $has_vm, 'Freebox_OS');
+        config::save('FREEBOX_VM', $has_vm, 'Freebox_OS');
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎  ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: ' . config::byKey('VM_FREEBOX', 'Freebox_OS'));
 
         if (isset($result['model_info']['has_led_strip'])) {

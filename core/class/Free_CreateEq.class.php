@@ -188,6 +188,9 @@ class Free_CreateEq
             $has_vm = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
+        // board_Name
+        config::save('VM_FREEBOX', $has_vm, 'Freebox_OS');
+        log::add('Freebox_OS', 'info', '| :fg-info:───▶︎  ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: ' . config::byKey('VM_FREEBOX', 'Freebox_OS'));
 
         if (isset($result['model_info']['has_led_strip'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_led_strip']);
@@ -234,10 +237,13 @@ class Free_CreateEq
             'disk_status_description' => $disk_status_description,
             'disk_status' => $disk_status
         );
+        // board_Name
         config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Board name ::/fg: ' . config::byKey('TYPE_FREEBOX', 'Freebox_OS'));
+        // pretty_name
         config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Type de box', __FILE__)) . '  ::/fg: ' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'));
+        // Titles
         config::save('TYPE_FREEBOX_TILES', $Setting['has_home_box'], 'Freebox_OS');
 
         log::add('Freebox_OS', 'info', '└────────────────────');

@@ -220,7 +220,7 @@ class Free_CreateEq
             $has_lcd_orientation = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
-        config::save('FREEBOX_LCD_TEXTE', $has_led_strip, 'Freebox_OS');
+        config::save('FREEBOX_LCD_TEXTE', $has_lcd_orientation, 'Freebox_OS');
 
         // Compatibilité Domotique
         if (isset($result['model_info']['has_home_automation'])) {

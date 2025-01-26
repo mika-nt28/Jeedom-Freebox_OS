@@ -201,12 +201,12 @@ class Free_CreateEq
         // Compatibilité mode Eco Wfi
         if (isset($result['model_info']['has_eco_wifi'])) {
             $has_eco_wifi = 1;
-            log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_eco_wifi']);
+            log::add('Freebox_OS', 'debug', '| :fg-info:───▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_eco_wifi']);
         } else {
             $has_eco_wifi = 0;
-            log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . (__('Non', __FILE__)));
+            log::add('Freebox_OS', 'debug', '| :fg-info:───▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . (__('Non', __FILE__)));
         }
-        config::save('FREEBOX_HAS_ECO_WFI', 0, $has_eco_wifi);
+        config::save('FREEBOX_HAS_ECO_WFI', $has_eco_wifi, 'Freebox_OS');
 
         if (isset($result['model_info']['has_lcd_orientation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_lcd_orientation']);

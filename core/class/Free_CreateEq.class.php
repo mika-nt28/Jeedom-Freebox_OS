@@ -204,7 +204,7 @@ class Free_CreateEq
             $has_eco_wifi = 1;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_eco_wifi']);
         } else {
-            $has_eco_wifi = 0;
+            $has_eco_wifi = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . (__('Non', __FILE__)));
         }
         config::save('FREEBOX_HAS_ECO_WFI', $has_eco_wifi, 'Freebox_OS');

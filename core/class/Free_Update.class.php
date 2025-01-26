@@ -711,8 +711,19 @@ class Free_Update
                     $Free_API->universal_put($_options['select'], 'wifi', null, null, 'config', null, 'mac_filter_state');
                     break;
                 case 'mode_planning':
+                    $result = $Free_API->universal_get('universalAPI', null, null, 'standby/config', true, true, true);
+                    if ($_options['select'] === 'off') {
+                        $use_planning = false;
+                        $planning_mode = $result['result']['planning_mode'];
+                    } else {
+                        $planning_mode = $_options['select'];
+                        $use_planning = true;
+                    }
                     $option = array(
-                        'planning_mode' => $_options['select']
+                        'use_planning' => $use_planning,
+                        'planning_mode' => $planning_mode,
+                        'mapping' => $result['result']['mapping'],
+                        'resolution' => $result['result']['resolution']
                     );
                     $Free_API->universal_put(1, 'universal_put', null, null, 'standby/config', 'PUT', $option);
                     break;

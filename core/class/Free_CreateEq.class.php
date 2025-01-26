@@ -1331,8 +1331,8 @@ class Free_CreateEq
         $updateicon = false;
         if ($Wifi != null) {
             $planning_mode = $Wifi->AddCommand(__('Etat Mode de veille planning', __FILE__), 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
-            $listValue = "wifi_off|" . __('Veille Wifi', __FILE__) . ";suspend|" . __('Veille totale', __FILE__);
-            //$Wifi->AddCommand(__('Choix Mode de veille planning', __FILE__), 'mode_planning', 'action', 'select', null, null, null, 1, $planning_mode, 'mode', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
+            $listValue = "wifi_off|" . __('Veille Wifi', __FILE__) . ";suspend|" . __('Veille totale', __FILE__) . ";off|" . __('Désactiver la planification', __FILE__);
+            $Wifi->AddCommand(__('Choix Mode de veille planning', __FILE__), 'mode_planning', 'action', 'select', null, null, null, 1, $planning_mode, 'mode', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
         }
     }
 

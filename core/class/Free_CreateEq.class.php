@@ -198,6 +198,7 @@ class Free_CreateEq
             $has_led_strip = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
+        config::save('FREEBOX_LED_RD', $has_led_strip, 'Freebox_OS');
         // Compatibilité mode Eco Wfi
         if (isset($result['model_info']['has_eco_wifi'])) {
             $has_eco_wifi = 1;

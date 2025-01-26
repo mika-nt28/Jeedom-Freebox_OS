@@ -447,6 +447,7 @@
         "Arrêt": "Stop",
         "Aucune commande ne porte ce nom, changement du nom  OK": "No command with this name, name change OK",
         "Aucune commande ne porte ce nom, changement du nom OK": "No command with this name, name change OK",
+        "Box compatible avec les VM": "VM-compatible box",
         "Calcul": "Calculation",
         "Catégorie": "Category",
         "Check Version API de la Freebox": "Check Freebox API version",

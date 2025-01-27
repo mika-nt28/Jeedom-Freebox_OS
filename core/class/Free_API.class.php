@@ -26,7 +26,7 @@ class Free_API
         $Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
         if (empty($Config_KEY)) {
             log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('Version API Non Défini Compatible avec la Freebox', __FILE__)) . ' : ' . $this->API_version);
-            $this->API_version = 'v10';
+            $this->API_version = 'v13';
         } else {
             $this->API_version = config::byKey('FREEBOX_API', 'Freebox_OS');
         }
@@ -37,7 +37,7 @@ class Free_API
         try {
             $API_version = $this->API_version;
             if ($API_version == null) {
-                $API_version = 'v10';
+                $API_version = 'v13';
                 log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
@@ -67,7 +67,7 @@ class Free_API
         try {
             $API_version = $this->API_version;
             if ($API_version == null) {
-                $API_version = 'v10';
+                $API_version = 'v13';
                 log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/authorize/';
@@ -87,7 +87,7 @@ class Free_API
         try {
             $API_version = $this->API_version;
             if ($API_version == null) {
-                $API_version = 'v10';
+                $API_version = 'v13';
                 log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/';
@@ -116,7 +116,7 @@ class Free_API
             }
             $API_version = $this->API_version;
             if ($API_version == null) {
-                $API_version = 'v10';
+                $API_version = 'v13';
                 log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/session/';
@@ -160,7 +160,7 @@ class Free_API
             }
             $API_version = $this->API_version;
             if ($API_version == null) {
-                $API_version = 'v10';
+                $API_version = 'v13';
                 log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/session';
@@ -276,7 +276,7 @@ class Free_API
             }
             $API_version = $this->API_version;
             if ($API_version == null) {
-                $API_version = 'v10';
+                $API_version = 'v13';
                 log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
             };
             $_URL = $this->serveur . '/api/' . $API_version . '/login/logout/';
@@ -345,7 +345,7 @@ class Free_API
     {
         $API_version = $this->API_version;
         if ($API_version == null) {
-            $API_version = 'v10';
+            $API_version = 'v13';
             log::add('Freebox_OS', 'debug', '───▶︎ ' . (__('La version API est nulle mise en place version provisoire', __FILE__)) . ' : ' . $API_version);
         };
         $config_log = null;

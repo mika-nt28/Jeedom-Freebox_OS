@@ -155,7 +155,7 @@ class Free_CreateEq
                     log::add('Freebox_OS', 'debug', '| ───▶︎ ' . $logicalinfo['networkName'] . ' / ' . $logicalinfo['networkwifiguestName']);
                 }
                 log::add('Freebox_OS', 'debug', '┌── :fg-success: ' . (__('Vérification Compatibilité avec l\'option VM', __FILE__)) . ' :/fg:──');
-                if ($Setting['has_home_box'] == true) {
+                if ($Setting['has_vm'] == true) {
                     log::add('Freebox_OS', 'debug', '| :fg-info:───▶︎ ' . (__('BOX COMPATIBLE AVEC LES VM', __FILE__)) . ':/fg:');
                     Free_CreateEq::createEq_VM($logicalinfo, $templatecore_V4, $order);
                 } else {
@@ -181,6 +181,8 @@ class Free_CreateEq
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Etat du disque', __FILE__)) . ' ::/fg: ' . $result['disk_status'] . ' / ' . $disk_status_description);
             $disk_status = $result['disk_status'];
         }
+
+        // Compatibilité VM
         if (isset($result['model_info']['has_vm'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_vm']);
             $has_vm = $result['model_info']['has_vm'];
@@ -188,14 +190,29 @@ class Free_CreateEq
             $has_vm = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les VM', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
+        config::save('FREEBOX_VM', $has_vm, 'Freebox_OS');
 
+        // Compatibilité LED Rouges
         if (isset($result['model_info']['has_led_strip'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_led_strip']);
             $has_led_strip = $result['model_info']['has_led_strip'];
         } else {
-            $has_led_strip = false;
+            $has_led_strip = '0';
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec les LED rouges', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
+        config::save('FREEBOX_LED_RD', $has_led_strip, 'Freebox_OS');
+
+        // Compatibilité mode Eco Wfi
+        if (isset($result['model_info']['has_eco_wifi'])) {
+            $has_eco_wifi = 1;
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_eco_wifi']);
+        } else {
+            $has_eco_wifi = '0';
+            log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec le mode Eco Wifi', __FILE__)) . ' ::/fg: ' . (__('Non', __FILE__)));
+        }
+        config::save('FREEBOX_HAS_ECO_WFI', $has_eco_wifi, 'Freebox_OS');
+
+        // Compatibilité oritentation texte
         if (isset($result['model_info']['has_lcd_orientation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_lcd_orientation']);
             $has_lcd_orientation = $result['model_info']['has_lcd_orientation'];
@@ -203,6 +220,9 @@ class Free_CreateEq
             $has_lcd_orientation = false;
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec l\'orientation du texte sur l\'afficheur', __FILE__)) . '::/fg: ' . (__('Non', __FILE__)));
         }
+        config::save('FREEBOX_LCD_TEXTE', $has_lcd_orientation, 'Freebox_OS');
+
+        // Compatibilité Domotique
         if (isset($result['model_info']['has_home_automation'])) {
             log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Module domotique', __FILE__)) . ' ::/fg: ' . $result['model_info']['has_vm']);
             $has_home_automation = $result['model_info']['has_home_automation'];
@@ -225,19 +245,24 @@ class Free_CreateEq
         }
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Box compatible avec la domotique', __FILE__)) . ' ::/fg: ' . config::byKey('TYPE_FREEBOX_TILES', 'Freebox_OS'));
 
+        // Ecriture variable
         $Setting = array(
             'has_vm' => $has_vm,
             'has_home_automation' => $has_home_automation,
             'has_home_box' => $has_home_box,
+            'has_eco_wifi' => $has_eco_wifi,
             'has_led_strip' => $has_led_strip,
             'has_lcd_orientation' => $has_lcd_orientation,
             'disk_status_description' => $disk_status_description,
             'disk_status' => $disk_status
         );
+        // board_Name
         config::save('TYPE_FREEBOX', $result['board_name'], 'Freebox_OS');
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ Board name ::/fg: ' . config::byKey('TYPE_FREEBOX', 'Freebox_OS'));
+        // pretty_name
         config::save('TYPE_FREEBOX_NAME', $result['model_info']['pretty_name'], 'Freebox_OS');
         log::add('Freebox_OS', 'info', '| :fg-info:───▶︎ ' . (__('Type de box', __FILE__)) . '  ::/fg: ' . config::byKey('TYPE_FREEBOX_NAME', 'Freebox_OS'));
+        // Titles
         config::save('TYPE_FREEBOX_TILES', $Setting['has_home_box'], 'Freebox_OS');
 
         log::add('Freebox_OS', 'info', '└────────────────────');
@@ -984,6 +1009,17 @@ class Free_CreateEq
             $system->AddCommand(__('Redémarrage', __FILE__), 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, true, 'default', 'default',   $order++, '0', true, null, null, true, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         }
     }
+    // A FINALISER
+    /*  private static function createEq_system_upnp($logicalinfo, $templatecore_V4, $order = 50, $system = null)
+    {
+        log::add('Freebox_OS', 'debug', '|:fg-success:───▶︎ ' . (__('Ajout des commandes spécifiques pour l\'équipement', __FILE__)) . ' ::/fg: ' .  $logicalinfo['systemName'] . ' - ' . (__('Mutimédia / UPnP AV', __FILE__)));
+        if ($system != null) {
+            // Planification Wifi
+            $upnpav = $system->AddCommand(__('Etat UPnP Av', __FILE__), 'upnpav', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', $order++, 'default', true);
+            $system->AddCommand(__('UPnP Av On', __FILE__), 'upnpavOn', 'action', 'other', null, null, 'SWITCH_ON', 1, $upnpav, 'upnpav', 0, 'default', 0, 'default', 'default', $order++, '0', 'default', false);
+            $system->AddCommand(__('UPnP Av Off', __FILE__), 'upnpavOff', 'action', 'other', null, null, 'SWITCH_OFF', 1, $upnpav, 'upnpav', 0, 'default', 0, 'default', 'default', $order++, '0', 'default', false);
+        }
+    }*/
     private static function createEq_system_standby($logicalinfo, $templatecore_V4, $order = 1, $system = null)
     {
         log::add('Freebox_OS', 'debug', '|:fg-success:───▶︎ ' . (__('Ajout des commandes spécifiques pour l\'équipement', __FILE__)) . ' ::/fg: ' .  $logicalinfo['systemName'] . ' - Mode Standby Disponible');
@@ -1264,7 +1300,6 @@ class Free_CreateEq
                 $Wifi->AddCommand(__('Mode Éco-WiFi On', __FILE__), 'power_savingOn', 'action', 'other', $TemplateEcoWifi, null, 'SWITCH_ON', 1, $power_saving, null, 0, $iconWifiOn, 0, 'default', 'default', $order++, '0', false, false);
                 $Wifi->AddCommand(__('Mode Éco-WiFi Off', __FILE__), 'power_savingOff', 'action', 'other', $TemplateEcoWifi, null, 'SWITCH_OFF', 1, $power_saving, null, 0, $iconWifiOff, 0, 'default', 'default', $order++, '0', false, false);
             } else {
-                config::save('FREEBOX_HAS_ECO_WFI', 0, 'Freebox_OS');
                 log::add('Freebox_OS', 'debug', '| ──────▶︎ ' . (__('Pas de mode Eco non supporté', __FILE__)));
             }
         }
@@ -1307,8 +1342,8 @@ class Free_CreateEq
         $updateicon = false;
         if ($Wifi != null) {
             $planning_mode = $Wifi->AddCommand(__('Etat Mode de veille planning', __FILE__), 'planning_mode', 'info', 'string', 'default', null, 'default', 1, 'default', 'default', 0, 'default', 0, 'default', 'default', $order++, '0', $updateicon, false, false, true, null, null, null, null, null, null, null, true);
-            $listValue = "wifi_off|" . __('Veille Wifi', __FILE__) . ";suspend|" . __('Veille totale', __FILE__);
-            //$Wifi->AddCommand(__('Choix Mode de veille planning', __FILE__), 'mode_planning', 'action', 'select', null, null, null, 1, $planning_mode, 'mode', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
+            $listValue = "wifi_off|" . __('Veille Wifi', __FILE__) . ";suspend|" . __('Veille totale', __FILE__) . ";off|" . __('Désactiver la planification', __FILE__);
+            $Wifi->AddCommand(__('Choix Mode de veille planning', __FILE__), 'mode_planning', 'action', 'select', null, null, null, 1, $planning_mode, 'mode', 0, null, 0, 'default', 'default',  $order++, '0', $updateicon, false, null, true, null, null, null, null, null, null, null, null, $listValue);
         }
     }
 

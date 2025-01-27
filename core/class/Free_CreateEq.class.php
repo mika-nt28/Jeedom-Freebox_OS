@@ -1009,6 +1009,17 @@ class Free_CreateEq
             $system->AddCommand(__('Redémarrage', __FILE__), 'reboot', 'action', 'other',  $templatecore_V4 . 'line', null, null, 1, 'default', 'default', 0, $iconReboot, true, 'default', 'default',   $order++, '0', true, null, null, true, null, null, null, null, null, null, true, null, null, null, null, null, null, null, null, null, null);
         }
     }
+    // A FINALISER
+    /*  private static function createEq_system_upnp($logicalinfo, $templatecore_V4, $order = 50, $system = null)
+    {
+        log::add('Freebox_OS', 'debug', '|:fg-success:───▶︎ ' . (__('Ajout des commandes spécifiques pour l\'équipement', __FILE__)) . ' ::/fg: ' .  $logicalinfo['systemName'] . ' - ' . (__('Mutimédia / UPnP AV', __FILE__)));
+        if ($system != null) {
+            // Planification Wifi
+            $upnpav = $system->AddCommand(__('Etat UPnP Av', __FILE__), 'upnpav', "info", 'binary', null, null, 'SWITCH_STATE', 0, '', '', '', '', 0, 'default', 'default', '0', $order++, 'default', true);
+            $system->AddCommand(__('UPnP Av On', __FILE__), 'upnpavOn', 'action', 'other', null, null, 'SWITCH_ON', 1, $upnpav, 'upnpav', 0, 'default', 0, 'default', 'default', $order++, '0', 'default', false);
+            $system->AddCommand(__('UPnP Av Off', __FILE__), 'upnpavOff', 'action', 'other', null, null, 'SWITCH_OFF', 1, $upnpav, 'upnpav', 0, 'default', 0, 'default', 'default', $order++, '0', 'default', false);
+        }
+    }*/
     private static function createEq_system_standby($logicalinfo, $templatecore_V4, $order = 1, $system = null)
     {
         log::add('Freebox_OS', 'debug', '|:fg-success:───▶︎ ' . (__('Ajout des commandes spécifiques pour l\'équipement', __FILE__)) . ' ::/fg: ' .  $logicalinfo['systemName'] . ' - Mode Standby Disponible');

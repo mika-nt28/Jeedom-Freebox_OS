@@ -39,7 +39,7 @@ function Freebox_OS_install()
 		$cron->save();
 	}
 	updateConfig();
-	config::save('FREEBOX_API', 'v11', 'Freebox_OS');
+	config::save('FREEBOX_API', 'v12', 'Freebox_OS');
 }
 function Freebox_OS_update()
 {
@@ -157,7 +157,7 @@ function Freebox_OS_update()
 		log::add('Freebox_OS', 'debug', '│ Etape 4/4 : ' . (__('Création API', __FILE__)));
 		$Config_KEY = config::byKey('FREEBOX_API', 'Freebox_OS');
 		if (empty($Config_KEY)) {
-			config::save('FREEBOX_API', 'v11', 'Freebox_OS');
+			config::save('FREEBOX_API', 'v12', 'Freebox_OS');
 			log::add('Freebox_OS', 'debug', '│ ' . (__('Mise à jour de la version API en V11', __FILE__)));
 		}
 		$Config_KEY = config::byKey('FREEBOX_REBOOT_DEAMON', 'Freebox_OS');

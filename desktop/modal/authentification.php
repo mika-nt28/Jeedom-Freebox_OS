@@ -146,7 +146,7 @@ if (!isConnect('admin')) {
             <div class="input-group pull-right" style="display:inline-flex;">
                 <span class="input-group-btn">
                     <a class="btn btn-sm btn-primary bt_FreeboxOS_doc roundedLeft" title="{{Documentation}}" target='_blank' href='https://jealg.github.io/documentation/plugin-freebox_os/fr_FR/'><i class="fas fa-book"></i><span class="hidden-xs"> {{Documentation}}</span>
-                    </a><a class="btn btn-sm btn-warning bt_FreeboxOS_Autorisation" title="{{Lancer la procédure d'authentification}}"><i class="fas fa-exclamation-circle"></i><span class="hidden-xs"> {{Lancement de l'authentification}}</span>
+                    </a><a class="btn btn-sm btn-warning bt_Freebox_Autorisation" title="{{Lancer la procédure d'authentification}}"><i class="fas fa-exclamation-circle"></i><span class="hidden-xs"> {{Lancement de l'authentification}}</span>
                     </a><a class="btn btn-sm bt_FreeboxOS_Previous" title="{{Précedent}}"><i class="fas fa-angle-double-left"></i><span class="hidden-xs"> {{Précédent}}</span>
                     </a><a class="btn btn-sm bt_FreeboxOS_Next roundedRight" title="{{Suivant}}"><span class="hidden-xs">{{Suivant}} </span><i class="fas fa-angle-double-right"></i>
                     </a>
